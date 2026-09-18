@@ -1,0 +1,32 @@
+{
+  "name": "ai-agent-context",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Git-native context layer for AI coding agents (monorepo root)",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "workspaces": [
+    "packages/core",
+    "packages/cli",
+    "packages/mcp"
+  ],
+  "scripts": {
+    "build": "tsc -b packages/core/tsconfig.json packages/cli/tsconfig.json packages/mcp/tsconfig.json",
+    "rebuild": "tsc -b --force packages/core/tsconfig.json packages/cli/tsconfig.json packages/mcp/tsconfig.json",
+    "typecheck": "tsc -p tsconfig.tests.json",
+    "test": "npm run build && node --test \"packages/core/test/**/*.test.ts\" \"packages/cli/test/**/*.test.ts\" \"packages/mcp/test/**/*.test.ts\"",
+    "test:core": "npm run build && node --test \"packages/core/test/**/*.test.ts\"",
+    "test:cli": "npm run build && node --test \"packages/cli/test/**/*.test.ts\"",
+    "test:mcp": "npm run build && node --test \"packages/mcp/test/**/*.test.ts\"",
+    "fixtures": "node tools/generate-fixtures.mjs",
+    "clean": "node tools/clean.mjs",
+    "verify": "npm run typecheck && npm run build && node --test \"packages/core/test/**/*.test.ts\" \"packages/cli/test/**/*.test.ts\" \"packages/mcp/test/**/*.test.ts\""
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}

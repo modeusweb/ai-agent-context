@@ -1,0 +1,41 @@
+{
+  "name": "ai-agent-context",
+  "version": "0.1.0",
+  "description": "Git-native context layer for AI coding agents: scan a repository into a structured, versionable .agent/ knowledge layer and query it (CLI + programmatic API).",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "keywords": [
+    "ai-agent",
+    "coding-agent",
+    "context",
+    "cli",
+    "architecture",
+    "repository-analysis",
+    "knowledge-graph"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "agent-context": "./dist/bin.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.json"
+  },
+  "dependencies": {
+    "@ai-agent-context/core": "0.1.0"
+  }
+}

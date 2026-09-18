@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "rootDir": ".",
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false
+  },
+  "include": [
+    "packages/core/src/**/*.ts",
+    "packages/core/test/**/*.ts",
+    "packages/cli/src/**/*.ts",
+    "packages/cli/test/**/*.ts",
+    "packages/mcp/src/**/*.ts",
+    "packages/mcp/test/**/*.ts"
+  ]
+}

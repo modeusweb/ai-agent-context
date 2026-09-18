@@ -1,0 +1,38 @@
+{
+  "name": "@ai-agent-context/core",
+  "version": "0.1.0",
+  "description": "Core of ai-agent-context: repository knowledge graph, architecture detection, incremental scanning, deterministic .agent/ serialization. Local-first, zero runtime dependencies, no LLM required.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "keywords": [
+    "ai-agent",
+    "coding-agent",
+    "context",
+    "architecture",
+    "repository-analysis",
+    "knowledge-graph",
+    "git",
+    "llm-context"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -b tsconfig.json"
+  },
+  "dependencies": {}
+}
