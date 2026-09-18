@@ -4,6 +4,15 @@
   "description": "Model Context Protocol adapter for ai-agent-context. Exposes the repository knowledge graph to MCP clients over stdio. Contains no business logic of its own.",
   "type": "module",
   "license": "MIT",
+  "author": "modeusweb <modeusweb@gmail.com>",
+  "homepage": "https://github.com/modeusweb/ai-agent-context",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/modeusweb/ai-agent-context"
+  },
+  "bugs": {
+    "url": "https://github.com/modeusweb/ai-agent-context/issues"
+  },
   "engines": {
     "node": ">=20.11.0"
   },
@@ -12,7 +21,9 @@
     "model-context-protocol",
     "ai-agent",
     "context",
-    "knowledge-graph"
+    "knowledge-graph",
+    "claude",
+    "anthropic"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -28,12 +39,16 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -b tsconfig.json"
   },
   "dependencies": {
-    "@ai-agent-context/core": "0.1.0"
+    "@ai-agent-context/core": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

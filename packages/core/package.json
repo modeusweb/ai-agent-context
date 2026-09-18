@@ -4,6 +4,15 @@
   "description": "Core of ai-agent-context: repository knowledge graph, architecture detection, incremental scanning, deterministic .agent/ serialization. Local-first, zero runtime dependencies, no LLM required.",
   "type": "module",
   "license": "MIT",
+  "author": "modeusweb <modeusweb@gmail.com>",
+  "homepage": "https://github.com/modeusweb/ai-agent-context",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/modeusweb/ai-agent-context"
+  },
+  "bugs": {
+    "url": "https://github.com/modeusweb/ai-agent-context/issues"
+  },
   "engines": {
     "node": ">=20.11.0"
   },
@@ -15,7 +24,8 @@
     "repository-analysis",
     "knowledge-graph",
     "git",
-    "llm-context"
+    "llm-context",
+    "code-analysis"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -28,11 +38,14 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "sideEffects": false,
   "scripts": {
     "build": "tsc -b tsconfig.json"
   },
-  "dependencies": {}
-}
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public"
+  }
