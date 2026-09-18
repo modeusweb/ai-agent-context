@@ -8,7 +8,7 @@
   "homepage": "https://github.com/modeusweb/ai-agent-context",
   "repository": {
     "type": "git",
-    "url": "https://github.com/modeusweb/ai-agent-context"
+    "url": "git+https://github.com/modeusweb/ai-agent-context.git"
   },
   "bugs": {
     "url": "https://github.com/modeusweb/ai-agent-context/issues"
@@ -28,7 +28,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "agent-context-mcp": "./dist/bin.js"
+    "agent-context-mcp": "dist/bin.js"
   },
   "exports": {
     ".": {
