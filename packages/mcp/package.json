@@ -1,6 +1,6 @@
 {
   "name": "@ai-agent-context/mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Model Context Protocol adapter for ai-agent-context. Exposes the repository knowledge graph to MCP clients over stdio. Contains no business logic of its own.",
   "type": "module",
   "license": "MIT",
@@ -8,7 +8,8 @@
   "homepage": "https://github.com/modeusweb/ai-agent-context",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/modeusweb/ai-agent-context.git"
+    "url": "git+https://github.com/modeusweb/ai-agent-context.git",
+    "directory": "packages/mcp"
   },
   "bugs": {
     "url": "https://github.com/modeusweb/ai-agent-context/issues"
@@ -43,10 +44,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc -b tsconfig.json"
+    "build": "tsc -b tsconfig.json",
+    "prepublishOnly": "cd ../.. && npm run verify"
   },
   "dependencies": {
-    "@ai-agent-context/core": "^0.1.0"
+    "@ai-agent-context/core": "^0.2.0"
   },
   "publishConfig": {
     "access": "public"

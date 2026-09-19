@@ -16,8 +16,8 @@ const dirsToClean = [
   path.join(root, 'packages', 'cli', 'dist'),
   path.join(root, 'packages', 'mcp', 'dist'),
   path.join(root, '.temp'),
-  path.join(root, 'fixtures'),
 ];
+
 
 let removed = 0;
 

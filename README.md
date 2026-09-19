@@ -212,6 +212,34 @@ Removes generated context:
 agent-context clean
 ```
 
+### `search`
+
+Deterministic, local lexical search (BM25) over the knowledge graph — no embeddings, no LLM, no network:
+
+```bash
+agent-context search "payment idempotency"
+agent-context search "format user name" --json --limit 5
+```
+
+Every result carries `score` and a `reason` explaining why the node matched:
+
+```json
+{
+  "query": "payment idempotency",
+  "backend": "bm25",
+  "results": [
+    {
+      "type": "symbol",
+      "id": "src/payments/payment-service.ts#PaymentService",
+      "score": 9.4,
+      "reason": "matched terms: idempotency, payment; ranked by bm25"
+    }
+  ]
+}
+```
+
+Exit code is `1` when nothing matched, which is convenient in scripts.
+
 ## Programmatic API
 
 ```typescript

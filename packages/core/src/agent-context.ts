@@ -95,6 +95,8 @@ export class AgentContext {
   private resolvedConfig: AgentContextConfig;
   private configSource: string | null = null;
   private pipeline: PipelineResult | null = null;
+  private pipelineMode: 'dry' | 'full' | null = null;
+
   private persisted: PersistedContext | null = null;
 
   private constructor(root: string, options: AgentContextOptions, config: AgentContextConfig) {
@@ -150,53 +152,65 @@ export class AgentContext {
   /** Runs the pipeline; read-only queries use `dryRun` so nothing is written. */
   private async ensurePipeline(scanOptions: ScanOptions = {}): Promise<PipelineResult> {
     const dryRun = scanOptions.dryRun === true;
-    if (this.pipeline !== null && (dryRun || !scanOptions.force)) return this.pipeline;
+    // A cached pipeline may only be reused when the scan mode matches: a dry
+    // run must always observe the *current* on-disk state (local cache plus
+    // working tree), never the frozen result of an earlier `scan()`.
+    if (this.pipeline !== null && this.pipelineMode === (dryRun ? 'dry' : 'full') && scanOptions.force !== true) {
+      return this.pipeline;
+    }
     const result = await runPipeline(this.pipelineOptions(scanOptions));
     this.pipeline = result;
+    this.pipelineMode = dryRun ? 'dry' : 'full';
     return result;
   }
 
+
   /** Scans the repository and persists the context into `.agent/`. */
   async scan(options: ScanOptions = {}): Promise<ScanReport> {
-    const result = await this.ensurePipeline({ ...options, dryRun: options.dryRun === true, force: true });
+    // A scan must always observe the current working tree — it never reuses the
+    // cached pipeline. `force` re-reads every file, ignoring the local state.
+    const pipelineOptions = this.pipelineOptions({ ...options, dryRun: false });
+    const result = await runPipeline(pipelineOptions);
     this.pipeline = result;
+    this.pipelineMode = 'full';
     this.persisted = await readPersistedContext(this.root);
     return result.report;
   }
 
+
   /** Complete repository model, in memory. */
   async getRepository(): Promise<Repository> {
-    return (await this.ensurePipeline()).graph.repository;
+    return (await this.ensurePipeline({ dryRun: true })).graph.repository;
   }
 
   /** Architecture projection. */
   async getArchitecture(): Promise<ArchitectureDocument> {
-    return (await this.ensurePipeline()).documents.architecture;
+    return (await this.ensurePipeline({ dryRun: true })).documents.architecture;
   }
 
   async getDependencies(): Promise<DependenciesDocument> {
-    return (await this.ensurePipeline()).documents.dependencies;
+    return (await this.ensurePipeline({ dryRun: true })).documents.dependencies;
   }
 
   async getConventions(): Promise<Convention[]> {
-    return (await this.ensurePipeline()).documents.conventions.conventions;
+    return (await this.ensurePipeline({ dryRun: true })).documents.conventions.conventions;
   }
 
   async getDecisions(): Promise<Decision[]> {
-    return (await this.ensurePipeline()).documents.decisions.decisions;
+    return (await this.ensurePipeline({ dryRun: true })).documents.decisions.decisions;
   }
 
   async getIndex(): Promise<IndexDocument> {
-    return (await this.ensurePipeline()).documents.index;
+    return (await this.ensurePipeline({ dryRun: true })).documents.index;
   }
 
   async getFiles(): Promise<FileNode[]> {
-    return (await this.ensurePipeline()).graph.repository.files;
+    return (await this.ensurePipeline({ dryRun: true })).graph.repository.files;
   }
 
   /** Modules of the repository, each with heuristic roles and evidence. */
   async getModules(): Promise<ModuleNode[]> {
-    return (await this.ensurePipeline()).graph.repository.modules;
+    return (await this.ensurePipeline({ dryRun: true })).graph.repository.modules;
   }
 
   /** Module ids that depend on the given module (direct dependents). */
@@ -213,36 +227,38 @@ export class AgentContext {
 
   /** Compact, agent oriented repository context. */
   async getRepositoryContext(): Promise<RepositoryContext> {
-    const result = await this.ensurePipeline();
+    const result = await this.ensurePipeline({ dryRun: true });
     return buildRepositoryContext(result.graph, result.parsed);
   }
 
   /** Structured explanation of a module (or of the module owning a file). */
   async explain(target: string): Promise<ModuleExplanation | null> {
-    const result = await this.ensurePipeline();
+    const result = await this.ensurePipeline({ dryRun: true });
     return explainModule({ graph: result.graph, parsed: result.parsed, target });
   }
 
   /** Context changes relative to the persisted context. */
   async diff(): Promise<ContextDiff> {
-    return (await this.ensurePipeline()).diff;
+    return (await this.ensurePipeline({ dryRun: true })).diff;
   }
 
   /** Deterministic lexical search over files, modules, symbols, conventions, decisions. */
   async search(query: string, options: SearchOptions = {}): Promise<SearchResult[]> {
-    const result = await this.ensurePipeline();
+    const result = await this.ensurePipeline({ dryRun: true });
     return SearchService.fromGraph({ graph: result.graph, parsed: result.parsed }).search(query, options);
   }
 
   /** Search with an explicitly provided backend (embeddings, vector database, ...). */
   async searchWith(service: SearchService, query: string, options: SearchOptions = {}): Promise<SearchResult[]> {
-    await this.ensurePipeline();
+    await this.ensurePipeline({ dryRun: true });
+
     return service.search(query, options);
   }
 
   /** Compares the working tree with the persisted context. */
   async status(): Promise<StatusReport> {
-    const result = await this.ensurePipeline();
+    const result = await this.ensurePipeline({ dryRun: true });
+
     const persisted = this.persisted ?? (await readPersistedContext(this.root));
     const state = await new LocalStateStore(this.root).read();
     const configHashMatches = state !== null && state.configHash === result.configHash;

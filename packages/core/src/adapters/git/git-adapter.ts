@@ -48,7 +48,8 @@ export interface GitAdapterOptions {
 
 const RECORD_SEPARATOR = '\u001e';
 const FIELD_SEPARATOR = '\u001f';
-const LOG_FORMAT = `%x1e%H%x1f%an%x1f%aI%x1f%s%x1e`;
+const LOG_FORMAT = `%x1e%H%x1f%an%x1f%aI%x1f%s`;
+
 
 interface RunResult {
   ok: boolean;

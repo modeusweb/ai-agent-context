@@ -1,0 +1,11 @@
+{
+  "name": "@acme/payments",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@acme/users": "^1.0.0",
+    "stripe": "^16.0.0"
+  }
+}

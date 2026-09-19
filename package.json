@@ -32,7 +32,9 @@
     "test:mcp": "npm run build && node --test \"packages/mcp/test/**/*.test.ts\"",
     "fixtures": "node tools/generate-fixtures.mjs",
     "clean": "node tools/clean.mjs",
-    "verify": "npm run typecheck && npm run build && node --test \"packages/core/test/**/*.test.ts\" \"packages/cli/test/**/*.test.ts\" \"packages/mcp/test/**/*.test.ts\"",
+    "verify": "npm run build && npm run typecheck && node --test \"packages/core/test/**/*.test.ts\" \"packages/cli/test/**/*.test.ts\" \"packages/mcp/test/**/*.test.ts\"",
+    "publish:dry": "npm run verify && npm publish --dry-run ./packages/core && npm publish --dry-run ./packages/cli && npm publish --dry-run ./packages/mcp",
+    "publish:all": "npm run verify && npm publish ./packages/core && npm publish ./packages/cli && npm publish ./packages/mcp",
     "pack:all": "npm run build && npm pack ./packages/core && npm pack ./packages/cli && npm pack ./packages/mcp"
   },
   "devDependencies": {
