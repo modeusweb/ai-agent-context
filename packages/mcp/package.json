@@ -1,6 +1,6 @@
 {
   "name": "@ai-agent-context/mcp",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Model Context Protocol adapter for ai-agent-context. Exposes the repository knowledge graph to MCP clients over stdio. Contains no business logic of its own.",
   "type": "module",
   "license": "MIT",

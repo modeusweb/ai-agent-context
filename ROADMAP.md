@@ -26,7 +26,7 @@
 
 ## Текущая база
 
-Текущая версия пакетов: `0.3.2`.
+Текущая версия пакетов: `0.3.3`.
 
 Уже реализованы:
 
@@ -103,7 +103,7 @@
 
 # v0.4 — Structural intelligence (in progress)
 
-**Текущий срез:** добавлены explainable layering diagnostics с confidence и evidence; расширенные import/export/route/call/cycle capabilities уже присутствуют в графе и проходят regression coverage.
+**Текущий срез:** добавлены explainable layering diagnostics с confidence и evidence; расширенные import/export/route/call/cycle capabilities уже присутствуют в графе и проходят regression coverage. Добавлены bounded `getModuleHistory` и `getRevisionDiff`; snapshot/context-at-revision и decision linkage остаются следующим подэтапом v0.5.
 **Цель:** повысить точность структурного анализа TypeScript/JavaScript и добавить ограниченный impact analysis.
 
 ## Возможности

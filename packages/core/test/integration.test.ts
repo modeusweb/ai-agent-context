@@ -57,6 +57,23 @@ describe('lifecycle: init / scan / status / explain / search / diff / clean (sim
     assert.equal(compact.schemaVersion, full.schemaVersion);
   });
 
+  test('module history and revision diff are deterministic and bounded', async () => {
+    const root = createTempRepo('simple-ts', { git: true });
+    tempRoots.push(root);
+    writeRepoFile(root, 'src/models/user.ts', `${readRepoFile(root, 'src/models/user.ts').trimEnd()}\n// history\n`);
+    const { execFileSync } = await import('node:child_process');
+    execFileSync('git', ['add', '-A'], { cwd: root });
+    execFileSync('git', ['commit', '-q', '-m', 'refactor: update user model'], { cwd: root });
+    const context = await AgentContext.load({ root });
+    const history = await context.getModuleHistory('src', { limit: 5 });
+    assert.ok(history.length > 0);
+    assert.ok(history.every((entry) => entry.sha.length === 8));
+    assert.ok(history.some((entry) => entry.files.includes('src/models/user.ts')));
+    const diff = await context.getRevisionDiff('HEAD', 'HEAD');
+    assert.equal(diff.hasChanges, false);
+    assert.equal(diff.files.length, 0);
+  });
+
   test('scan generates every documented context file', async () => {
     const root = createTempRepo('simple-ts');
     tempRoots.push(root);

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-24T10:07:48.950Z",
+  "generatedAt": "2026-09-24T10:23:04.648Z",
   "node": "v24.21.0",
   "rows": [
     {
@@ -7,8 +7,8 @@
       "files": 7,
       "modules": 2,
       "dependencies": 0,
-      "scanMs": 140,
-      "compactMs": 69,
+      "scanMs": 134,
+      "compactMs": 67,
       "compactBytes": 5159,
       "parsed": 7,
       "reused": 0
@@ -18,8 +18,8 @@
       "files": 17,
       "modules": 5,
       "dependencies": 0,
-      "scanMs": 118,
-      "compactMs": 78,
+      "scanMs": 114,
+      "compactMs": 69,
       "compactBytes": 12945,
       "parsed": 17,
       "reused": 0
@@ -29,8 +29,8 @@
       "files": 14,
       "modules": 3,
       "dependencies": 3,
-      "scanMs": 102,
-      "compactMs": 69,
+      "scanMs": 95,
+      "compactMs": 66,
       "compactBytes": 8227,
       "parsed": 14,
       "reused": 0
@@ -40,8 +40,8 @@
       "files": 7,
       "modules": 1,
       "dependencies": 0,
-      "scanMs": 82,
-      "compactMs": 67,
+      "scanMs": 81,
+      "compactMs": 63,
       "compactBytes": 5436,
       "parsed": 7,
       "reused": 0
@@ -51,8 +51,8 @@
       "files": 10,
       "modules": 2,
       "dependencies": 1,
-      "scanMs": 96,
-      "compactMs": 69,
+      "scanMs": 88,
+      "compactMs": 66,
       "compactBytes": 9121,
       "parsed": 10,
       "reused": 0

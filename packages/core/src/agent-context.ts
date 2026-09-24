@@ -22,7 +22,7 @@ import type { LanguageRegistry } from './adapters/language/registry.ts';
 import type { ConfigOverrides, AgentContextConfig } from './config/types.ts';
 import type { ProgressReporter } from './logging/diagnostics.ts';
 import { Logger } from './logging/diagnostics.ts';
-import type { GitAdapter } from './adapters/git/git-adapter.ts';
+import { GitAdapter } from './adapters/git/git-adapter.ts';
 import type {
   ChangeSet,
   ContextDiff,
@@ -31,6 +31,8 @@ import type {
   FileNode,
   ChangeImpact,
   TaskContext,
+  ModuleHistoryEntry,
+  RevisionDiff,
   ModuleExplanation,
   ModuleNode,
   Repository,
@@ -312,6 +314,31 @@ export class AgentContext {
       ],
       truncated: explanation.impact.files.length > files.length,
     };
+  }
+
+  async getModuleHistory(target: string, options: { limit?: number } = {}): Promise<ModuleHistoryEntry[]> {
+    const explanation = await this.explain(target);
+    if (explanation === null) throw new Error(`no module or file matched "${target}"`);
+    const adapter = this.options.gitAdapter ?? new GitAdapter(this.root);
+    const commits = await adapter.log({ windowDays: 3650, maxCommits: Math.max(1, Math.min(options.limit ?? 50, 200)) });
+    const files = new Set(explanation.relatedFiles);
+    return commits
+      .filter((commit) => commit.files.some((file) => files.has(file)))
+      .slice(0, Math.max(1, Math.min(options.limit ?? 50, 200)))
+      .map((commit) => ({
+        sha: commit.sha.slice(0, 8),
+        date: commit.date.slice(0, 10),
+        author: commit.author,
+        subject: commit.subject,
+        files: commit.files.filter((file) => files.has(file)).sort(compareStrings),
+        architectureSignal: /refactor|architecture|adr|breaking|migrat|restructure|rewrite/i.test(commit.subject),
+      }));
+  }
+
+  async getRevisionDiff(revision: string, base = 'HEAD'): Promise<RevisionDiff> {
+    const adapter = this.options.gitAdapter ?? new GitAdapter(this.root);
+    const files = await adapter.diff(revision, base);
+    return { revision, files, hasChanges: files.length > 0 };
   }
 
   /** Context changes relative to the persisted context. */

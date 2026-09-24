@@ -28,6 +28,21 @@ export interface GitLogOptions {
   maxCommits: number;
 }
 
+export interface GitRevision {
+  revision: string;
+  sha: string;
+  author: string;
+  date: string;
+  subject: string;
+  files: string[];
+}
+
+export interface GitDiffFile {
+  path: string;
+  status: 'added' | 'modified' | 'deleted' | 'renamed' | 'copied' | 'untracked';
+  oldPath?: string;
+}
+
 export interface GitAvailability {
   available: boolean;
   /** Reason why git signals are unavailable, when `available === false`. */
@@ -108,15 +123,36 @@ export class GitAdapter {
   }
 
   /** Reads the commit history inside the configured window. */
-  async log(options: GitLogOptions): Promise<GitCommit[]> {
+  async revision(reference: string): Promise<GitRevision | null> {
+    const availability = await this.probe();
+    if (availability.available !== true) return null;
+    const resolved = await this.run(['rev-parse', '--verify', `${reference}^{commit}`]);
+    if (!resolved.ok) return null;
+    const commit = await this.log({ windowDays: 3650, maxCommits: 1, revision: reference });
+    if (commit.length === 0) return null;
+    const entry = commit[0]!;
+    return { revision: reference, sha: entry.sha, author: entry.author, date: entry.date, subject: entry.subject, files: entry.files };
+  }
+
+  async diff(revision: string, base = 'HEAD'): Promise<GitDiffFile[]> {
+    const availability = await this.probe();
+    if (availability.available !== true) return [];
+    const result = await this.run(['diff', '--name-status', '--find-renames', base, revision]);
+    if (!result.ok) return [];
+    return parseGitDiff(result.stdout);
+  }
+
+  /** Reads the commit history inside the configured window. */
+  async log(options: GitLogOptions & { revision?: string }): Promise<GitCommit[]> {
     const availability = await this.probe();
     if (!availability?.available) return [];
     const result = await this.run([
       'log',
-      `--since=${options.windowDays}.days.ago`,
+      ...(options.windowDays > 0 ? [`--since=${options.windowDays}.days.ago`] : []),
       `--max-count=${options.maxCommits}`,
-      '--name-only',
+      ...(options.revision === undefined ? [] : [options.revision]),
       `--format=${LOG_FORMAT}`,
+      '--name-only',
       '--date-order',
     ]);
     if (!result.ok) return [];
@@ -151,6 +187,28 @@ export function parseGitLog(output: string): GitCommit[] {
     });
   }
   return commits;
+}
+
+export function parseGitDiff(output: string): GitDiffFile[] {
+  const result: GitDiffFile[] = [];
+  for (const line of output.split('\n')) {
+    const parts = line.trim().split('\t');
+    if (parts.length < 2 || parts[0] === undefined || parts[1] === undefined) continue;
+    const code = parts[0];
+    const path = parts[1].replace(/\\/g, '/');
+    const status = code.startsWith('A') ? 'added' : code.startsWith('D') ? 'deleted' : code.startsWith('R') ? 'renamed' : code.startsWith('C') ? 'copied' : 'modified';
+    const entry: GitDiffFile = { path, status };
+    if (status === 'renamed' || status === 'copied') {
+      const oldPath = parts[1];
+      const newPath = parts[2];
+      if (oldPath !== undefined && newPath !== undefined) {
+        entry.path = newPath.replace(/\\/g, '/');
+        entry.oldPath = oldPath.replace(/\\/g, '/');
+      }
+    }
+    result.push(entry);
+  }
+  return result;
 }
 
 function subjectPartIsEmpty(parts: string[]): boolean {

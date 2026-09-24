@@ -420,6 +420,21 @@ export interface LayeringViolation {
   evidence: Evidence[];
 }
 
+export interface ModuleHistoryEntry {
+  sha: string;
+  date: string;
+  author: string;
+  subject: string;
+  files: string[];
+  architectureSignal: boolean;
+}
+
+export interface RevisionDiff {
+  revision: string;
+  files: Array<{ path: string; status: string; oldPath?: string }>;
+  hasChanges: boolean;
+}
+
 export interface ModuleExplanation {
   module: {
     id: string;

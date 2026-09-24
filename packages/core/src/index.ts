@@ -63,8 +63,8 @@ export {
   SECRET_VALUE_PATTERNS,
   REDACTED,
 } from './adapters/filesystem/sensitive.ts';
-export { GitAdapter, parseGitLog } from './adapters/git/git-adapter.ts';
-export type { GitCommit, GitAvailability } from './adapters/git/git-adapter.ts';
+export { GitAdapter, parseGitLog, parseGitDiff } from './adapters/git/git-adapter.ts';
+export type { GitCommit, GitAvailability, GitRevision, GitDiffFile, GitLogOptions } from './adapters/git/git-adapter.ts';
 export { LanguageRegistry, createDefaultRegistry } from './adapters/language/registry.ts';
 export { SIGNALS, createParsedFile, normalizeSignals } from './adapters/language/types.ts';
 export type {

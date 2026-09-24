@@ -51,6 +51,8 @@ class AgentContext {
   async getRepositoryContext(options?: RepositoryContextOptions): Promise<RepositoryContext>
   async getTaskContext(task: string, options?: { target?: string; maxModules?: number }): Promise<TaskContext>
   async getChangeImpact(target: string, options?: { maxFiles?: number }): Promise<ChangeImpact>
+  async getModuleHistory(target: string, options?: { limit?: number }): Promise<ModuleHistoryEntry[]>
+  async getRevisionDiff(revision: string, base?: string): Promise<RevisionDiff>
   async explain(target: string): Promise<ModuleExplanation | null>
   async diff(): Promise<ContextDiff>
   async status(): Promise<StatusReport>
@@ -131,7 +133,9 @@ const adr = parseAdrDocument(content, path);
 `getArchitecture()` includes `summary.layeringViolations` and `layeringViolations` with `from`, `to`, `kind`, `confidence` and evidence.
 
 
-Analyzes Git history for change patterns.
+`getModuleHistory(target, { limit })` returns bounded Git history for a module.
+`getRevisionDiff(revision, base)` returns changed paths and statuses, including renames.
+
 
 ```typescript
 import { GitAdapter, computeGitActivity } from '@ai-agent-context/core';
