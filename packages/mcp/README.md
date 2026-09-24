@@ -39,9 +39,25 @@ Get the bounded impact set for a proposed change.
 
 Returns transitive dependent modules, affected files, tests, relevant conventions, decisions and evidence.
 
+### `get_module_history`
+
+Returns bounded local Git history for a module.
+
+```json
+{"target":"src/models","limit":20}
+```
+
+### `get_revision_diff`
+
+Returns changed paths and statuses between two local revisions.
+
+```json
+{"revision":"HEAD~1","base":"HEAD"}
+```
+
 ### `get_repository_context`
 
-Get repository context.
+Get the complete repository context.
 
 ```json
 {

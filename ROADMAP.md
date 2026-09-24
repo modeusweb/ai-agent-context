@@ -137,7 +137,9 @@
 
 ---
 
-# v0.5 — Temporal context
+# v0.5 — Temporal context (in progress)
+
+**Текущий срез:** добавлены bounded `getModuleHistory` и `getRevisionDiff`, `parseGitDiff` и MCP tools `get_module_history`/`get_revision_diff`; обработка invalid revision, shallow history и отсутствия Git остаётся graceful. Следующий подэтап — persisted snapshots/context-at-revision и decision linkage.
 
 **Цель:** превратить Git history из дополнительного сигнала в полноценную функцию продукта.
 

@@ -24,7 +24,7 @@ async function setup() {
 }
 
 describe('mcp tool definitions', () => {
-  test('exposes the ten documented tools', () => {
+  test('exposes the twelve documented tools', () => {
     const names = TOOL_DEFINITIONS.map((tool) => tool.name).sort();
     assert.deepEqual(names, [
       'explain_module',
@@ -35,7 +35,9 @@ describe('mcp tool definitions', () => {
       'get_decisions',
       'get_dependencies',
       'get_dependents',
+      'get_module_history',
       'get_repository_context',
+      'get_revision_diff',
       'search_context',
     ]);
     for (const tool of TOOL_DEFINITIONS) {
@@ -141,6 +143,15 @@ describe('mcp tool handlers', () => {
     const decisions = await callTool('get_decisions', {}, pool, root);
     assert.equal(decisions.isError, false);
     assert.ok(typeof (decisions.payload as { total: number }).total === 'number');
+  });
+
+  test('get_revision_diff returns an empty deterministic diff for identical revisions', async () => {
+    const { root, pool } = await setup();
+    const result = await callTool('get_revision_diff', { revision: 'HEAD', base: 'HEAD' }, pool, root);
+    assert.equal(result.isError, false);
+    const payload = result.payload as { files: unknown[]; hasChanges: boolean };
+    assert.equal(payload.hasChanges, false);
+    assert.equal(payload.files.length, 0);
   });
 
   test('unknown tools and missing arguments produce actionable errors', async () => {

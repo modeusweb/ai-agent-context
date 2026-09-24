@@ -156,6 +156,30 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     outputDescription: 'Ranked search results with deterministic match reasons.',
   },
   {
+    name: 'get_module_history',
+    title: 'Get module history',
+    description: 'Bounded local Git history for a module: commits, authors, dates, touched files and architecture-change signals.',
+    inputSchema: {
+      type: 'object',
+      properties: { target: MODULE_PROPERTY, limit: { type: 'number', description: 'Maximum history entries (1-200).' }, root: ROOT_PROPERTY },
+      required: ['target'],
+      additionalProperties: false,
+    },
+    outputDescription: 'Deterministic module history entries.',
+  },
+  {
+    name: 'get_revision_diff',
+    title: 'Get revision diff',
+    description: 'Changed paths and statuses between two local Git revisions, including additions, deletions, modifications and renames.',
+    inputSchema: {
+      type: 'object',
+      properties: { revision: { type: 'string' }, base: { type: 'string' }, root: ROOT_PROPERTY },
+      required: ['revision'],
+      additionalProperties: false,
+    },
+    outputDescription: 'Revision diff with deterministic ordering.',
+  },
+  {
     name: 'get_architecture',
     title: 'Get architecture',
     description:

@@ -183,6 +183,24 @@ export async function callTool(
       return { isError: false, payload: { query, backend: 'bm25', results } };
     }
 
+    case 'get_module_history': {
+      const target = asString(args['target']);
+      if (target === undefined) return errorPayload('get_module_history requires the "target" argument');
+      const limit = asNumber(args['limit']);
+      try {
+        return { isError: false, payload: await (await pool.get(root)).getModuleHistory(target, limit === undefined ? {} : { limit }) };
+      } catch (error) {
+        return errorPayload(error instanceof Error ? error.message : String(error));
+      }
+    }
+
+    case 'get_revision_diff': {
+      const revision = asString(args['revision']);
+      if (revision === undefined) return errorPayload('get_revision_diff requires the "revision" argument');
+      const base = asString(args['base']);
+      return { isError: false, payload: await (await pool.get(root)).getRevisionDiff(revision, base ?? 'HEAD') };
+    }
+
     case 'get_architecture': {
       const context = await pool.get(root);
       const architecture = await context.getArchitecture();
