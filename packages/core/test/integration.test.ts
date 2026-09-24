@@ -57,6 +57,19 @@ describe('lifecycle: init / scan / status / explain / search / diff / clean (sim
     assert.equal(compact.schemaVersion, full.schemaVersion);
   });
 
+  test('revision snapshot reports metadata and graceful invalid revision handling', async () => {
+    const root = createTempRepo('simple-ts', { git: true });
+    tempRoots.push(root);
+    const context = await AgentContext.load({ root });
+    const snapshot = await context.getRevisionSnapshot('HEAD');
+    assert.equal(snapshot.available, true);
+    assert.ok(snapshot.sha.length === 40);
+    assert.ok(snapshot.files.length > 0);
+    const invalid = await context.getRevisionSnapshot('does-not-exist');
+    assert.equal(invalid.available, false);
+    assert.ok(invalid.reason !== undefined);
+  });
+
   test('module history and revision diff are deterministic and bounded', async () => {
     const root = createTempRepo('simple-ts', { git: true });
     tempRoots.push(root);
