@@ -94,6 +94,21 @@ describe('cli end-to-end', () => {
     assert.ok(diffReport.files.modified.includes('src/models/user.ts'));
   });
 
+  test('verify passes for a fresh context and fails after drift', () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    assert.equal(run(root, ['scan']).status, 0);
+
+    const valid = run(root, ['verify', '--json']);
+    assert.equal(valid.status, 0, valid.stdout);
+    assert.equal((JSON.parse(valid.stdout) as { valid: boolean }).valid, true);
+
+    writeRepoFile(root, 'src/index.ts', '// changed after scan\n');
+    const stale = run(root, ['verify', '--json']);
+    assert.equal(stale.status, 1);
+    assert.equal((JSON.parse(stale.stdout) as { valid: boolean }).valid, false);
+  });
+
   test('status reflects stale context in human readable output', () => {
     const root = createTempRepo('simple-ts');
     tempRoots.push(root);

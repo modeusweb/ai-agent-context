@@ -199,7 +199,9 @@
 
 ---
 
-# v0.7 — Enterprise controls
+# v0.7 — Enterprise controls (in progress)
+
+**Текущий срез:** добавлена read-only CI-команда `verify`, проверка schema mismatch и drift detection. Чувствительные файлы по умолчанию не читаются, symlinks не следуются, секреты редактируются, offline/local-first режим уже является архитектурным свойством. Остаются расширенные security tests и policy documentation.
 
 **Цель:** подготовить продукт к организациям с требованиями к безопасности, контролю и воспроизводимости.
 

@@ -19,6 +19,7 @@ import { runTaskCommand } from './commands/task.ts';
 import { runImpactCommand } from './commands/impact.ts';
 import { runHistoryCommand } from './commands/history.ts';
 import { runRevisionDiffCommand } from './commands/revision-diff.ts';
+import { runVerifyCommand } from './commands/verify.ts';
 
 export const CLI_NAME = 'agent-context';
 export const CLI_VERSION = '0.3.5';
@@ -215,6 +216,7 @@ Commands:
   scan                 Analyze the repository and update .agent/
   diff                 Show repository context changes since the last scan
   status               Show whether the context is up to date
+  verify               CI check: fail when context is missing, invalid, or stale
   explain <path>       Explain a module (or the module owning a file)
   search <query>       Deterministic lexical search over the context
   context              Compact repository context summary
@@ -296,6 +298,8 @@ export async function runCli(argv: readonly string[], ioOverrides: Partial<CliIo
         return await runDiffCommand(commandContext, dependencies);
       case 'status':
         return await runStatusCommand(commandContext, dependencies);
+      case 'verify':
+        return await runVerifyCommand(commandContext, dependencies);
       case 'explain':
         return await runExplainCommand(commandContext, dependencies);
       case 'search':

@@ -229,7 +229,18 @@ Pending changes:
   0
 ```
 
-### `clean`
+### `verify`
+
+CI-friendly context verification. Exits with code `1` when `.agent/` is missing, has unsupported schema, has invalid documents, has a stale config hash, or drifted from the working tree.
+
+```bash
+agent-context verify
+agent-context verify --json
+```
+
+`verify` is read-only and never regenerates context.
+
+
 
 Removes generated context:
 

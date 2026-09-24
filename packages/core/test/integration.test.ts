@@ -4,7 +4,7 @@
  */
 import assert from 'node:assert/strict';
 import { after, describe, test } from 'node:test';
-import { existsSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import {
   AgentContext,
@@ -107,6 +107,20 @@ describe('lifecycle: init / scan / status / explain / search / diff / clean (sim
     const status = await context.status();
     assert.equal(status.status, 'up-to-date');
     assert.equal(status.changes.modified.length + status.changes.added.length + status.changes.deleted.length, 0);
+  });
+
+  test('schema mismatch is reported as invalid context', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    const context = await AgentContext.load({ root });
+    await context.scan();
+    const indexPath = path.join(root, '.agent', 'index.json');
+    const index = JSON.parse(readFileSync(indexPath, 'utf8')) as { schemaVersion: number };
+    index.schemaVersion += 1;
+    writeFileSync(indexPath, JSON.stringify(index));
+    const status = await context.status();
+    assert.equal(status.status, 'missing');
+    assert.ok(status.contextFiles.invalid.some((entry) => entry.file === 'index.json'));
   });
 
   test('explain produces a useful module context', async () => {

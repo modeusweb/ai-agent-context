@@ -407,7 +407,9 @@ export class AgentContext {
   async status(): Promise<StatusReport> {
     const result = await this.ensurePipeline({ dryRun: true });
 
-    const persisted = this.persisted ?? (await readPersistedContext(this.root));
+    // Always re-read persisted documents: callers may have changed `.agent/`
+    // after this facade was loaded (notably the CI verification command).
+    const persisted = await readPersistedContext(this.root);
     const state = await new LocalStateStore(this.root).read();
     const configHashMatches = state !== null && state.configHash === result.configHash;
     const changes = result.report.changes;

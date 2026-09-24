@@ -126,6 +126,14 @@ Show repository context status.
 agent-context status
 ```
 
+### `verify`
+
+Validates persisted context without modifying it. Returns a non-zero exit code for missing, invalid, schema-mismatched, config-stale, or working-tree-drifted context.
+
+```bash
+agent-context verify --json
+```
+
 ### `clean`
 
 Remove generated context.
