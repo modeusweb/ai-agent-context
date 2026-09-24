@@ -356,12 +356,17 @@ export class AgentContext {
         moduleCount: null,
         dependencyCount: null,
         entryPointCount: null,
+        decisionIds: [],
         available: false,
         reason: 'revision is unavailable or repository has no commit',
       };
     }
     const current = await this.getRepository();
     const files = new Set(commit.files);
+    const decisionIds = current.decisions
+      .filter((decision) => decision.evidence.some((evidence) => files.has(evidence.source)))
+      .map((decision) => decision.id)
+      .sort(compareStrings);
     const moduleCount = current.modules.filter((module) => module.files.some((file) => files.has(file))).length;
     const dependencyCount = current.dependencies.filter((edge) => files.has(edge.from) || files.has(edge.to)).length;
     const entryPointCount = current.entryPoints.filter((entry) => files.has(entry.path)).length;
@@ -375,6 +380,7 @@ export class AgentContext {
       moduleCount,
       dependencyCount,
       entryPointCount,
+      decisionIds,
       available: true,
     };
   }

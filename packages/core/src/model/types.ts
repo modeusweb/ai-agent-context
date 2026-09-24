@@ -445,6 +445,7 @@ export interface RevisionSnapshot {
   moduleCount: number | null;
   dependencyCount: number | null;
   entryPointCount: number | null;
+  decisionIds: string[];
   available: boolean;
   reason?: string;
 }
