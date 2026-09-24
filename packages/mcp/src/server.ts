@@ -41,6 +41,28 @@ export interface McpServerOptions {
   log?: (line: string) => void;
 }
 
+interface McpResourceDefinition {
+  uri: string;
+  name: string;
+  description: string;
+  mimeType: string;
+  read: (pool: ContextPool, root: string) => Promise<unknown>;
+}
+
+const MCP_RESOURCES: McpResourceDefinition[] = [
+  { uri: 'agent://repository/context', name: 'Repository context', description: 'Compact repository overview.', mimeType: 'application/json', read: (pool, root) => pool.get(root).then((context) => context.getRepositoryContext()) },
+  { uri: 'agent://repository/architecture', name: 'Repository architecture', description: 'Modules, entry points, roles and dependencies.', mimeType: 'application/json', read: (pool, root) => pool.get(root).then((context) => context.getArchitecture()) },
+  { uri: 'agent://repository/dependencies', name: 'Repository dependencies', description: 'Dependency graph and cycles.', mimeType: 'application/json', read: (pool, root) => pool.get(root).then((context) => context.getDependencies()) },
+  { uri: 'agent://repository/conventions', name: 'Repository conventions', description: 'Observed conventions with evidence.', mimeType: 'application/json', read: (pool, root) => pool.get(root).then((context) => context.getConventions()) },
+  { uri: 'agent://repository/decisions', name: 'Repository decisions', description: 'Architectural decisions and evidence.', mimeType: 'application/json', read: (pool, root) => pool.get(root).then((context) => context.getDecisions()) },
+];
+
+const MCP_PROMPTS = [
+  { name: 'onboard_to_repository', description: 'Prepare a compact repository orientation for a coding agent.', arguments: [] },
+  { name: 'review_change_impact', description: 'Review a proposed change and its affected modules.', arguments: [{ name: 'target', description: 'Module or path under review', required: true }] },
+  { name: 'explain_architecture', description: 'Explain module architecture and conventions.', arguments: [{ name: 'target', description: 'Module or path to explain', required: true }] },
+] as const;
+
 function toMcpTools(): Array<{ name: string; title: string; description: string; inputSchema: unknown }> {
   return TOOL_DEFINITIONS.map((tool) => ({
     name: tool.name,
@@ -101,11 +123,30 @@ export class McpServer {
           this.respond(id, { tools: toMcpTools() });
           return;
         case 'resources/list':
-          this.respond(id, { resources: [] });
+          this.respond(id, { resources: MCP_RESOURCES.map(({ read: _read, ...resource }) => resource) });
           return;
+        case 'resources/read': {
+          const uri = request.params?.['uri'];
+          const resource = typeof uri === 'string' ? MCP_RESOURCES.find((entry) => entry.uri === uri) : undefined;
+          if (resource === undefined) { this.respondError(id, -32602, `unknown resource: ${String(uri)}`); return; }
+          this.respond(id, { contents: [{ uri: resource.uri, mimeType: resource.mimeType, text: JSON.stringify(await resource.read(this.pool, this.options.root), null, 2) }] });
+          return;
+        }
         case 'prompts/list':
-          this.respond(id, { prompts: [] });
+          this.respond(id, { prompts: MCP_PROMPTS });
           return;
+        case 'prompts/get': {
+          const name = request.params?.['name'];
+          const prompt = typeof name === 'string' ? MCP_PROMPTS.find((entry) => entry.name === name) : undefined;
+          if (prompt === undefined) { this.respondError(id, -32602, `unknown prompt: ${String(name)}`); return; }
+          const argumentsValue = request.params?.['arguments'];
+          const args = typeof argumentsValue === 'object' && argumentsValue !== null ? argumentsValue as Record<string, unknown> : {};
+          const text = prompt.name === 'onboard_to_repository'
+            ? 'Read agent://repository/context, then explain the architecture and conventions before editing code.'
+            : `Call get_context_for_task or get_change_impact for ${String(args['target'] ?? 'the requested target')}.`;
+          this.respond(id, { description: prompt.description, messages: [{ role: 'user', content: { type: 'text', text } }] });
+          return;
+        }
         case 'tools/call': {
           const params = request.params ?? {};
           const name = typeof params['name'] === 'string' ? (params['name'] as string) : '';

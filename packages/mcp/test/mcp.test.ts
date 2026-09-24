@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict';
 import { after, describe, test } from 'node:test';
 import { AgentContext } from '../../core/dist/index.js';
-import { TOOL_DEFINITIONS, toolByName, callTool, ContextPool } from '../../mcp/dist/index.js';
+import { TOOL_DEFINITIONS, toolByName, callTool, ContextPool, McpServer, createMemoryTransport } from '../../mcp/dist/index.js';
 import { cleanupTemp, createTempRepo } from '../../core/test/helpers.ts';
 
 
@@ -44,6 +44,34 @@ describe('mcp tool definitions', () => {
     for (const tool of TOOL_DEFINITIONS) {
       assert.ok(toolByName(tool.name), 'every tool must be resolvable by name');
     }
+  });
+});
+
+describe('mcp resources and prompts', () => {
+  test('lists and reads repository resources', async () => {
+    const { root } = await setup();
+    const transport = createMemoryTransport();
+    const server = new McpServer({ root, transport });
+    server.start();
+    await server.handleMessage({ jsonrpc: '2.0', id: 1, method: 'resources/list' });
+    const listed = transport.sent.at(-1) as { result: { resources: Array<{ uri: string }> } };
+    assert.equal(listed.result.resources.length, 5);
+    await server.handleMessage({ jsonrpc: '2.0', id: 2, method: 'resources/read', params: { uri: 'agent://repository/architecture' } });
+    const read = transport.sent.at(-1) as { result: { contents: Array<{ text: string }> } };
+    assert.ok(read.result.contents[0]?.text.includes('modules'));
+  });
+
+  test('lists and gets onboarding prompt', async () => {
+    const { root } = await setup();
+    const transport = createMemoryTransport();
+    const server = new McpServer({ root, transport });
+    server.start();
+    await server.handleMessage({ jsonrpc: '2.0', id: 1, method: 'prompts/list' });
+    const listed = transport.sent.at(-1) as { result: { prompts: Array<{ name: string }> } };
+    assert.ok(listed.result.prompts.some((prompt) => prompt.name === 'onboard_to_repository'));
+    await server.handleMessage({ jsonrpc: '2.0', id: 2, method: 'prompts/get', params: { name: 'onboard_to_repository' } });
+    const got = transport.sent.at(-1) as { result: { messages: unknown[] } };
+    assert.equal(got.result.messages.length, 1);
   });
 });
 

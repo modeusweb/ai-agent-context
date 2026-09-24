@@ -1,6 +1,6 @@
 {
   "name": "@ai-agent-context/core",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Core of ai-agent-context: repository knowledge graph, architecture detection, incremental scanning, deterministic .agent/ serialization. Local-first, zero runtime dependencies, no LLM required.",
   "type": "module",
   "license": "MIT",

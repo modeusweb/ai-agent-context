@@ -10,7 +10,22 @@ This package provides MCP tools that allow AI agents (like Claude, etc.) to quer
 npm install @ai-agent-context/mcp
 ```
 
-## MCP Tools
+## MCP Resources
+
+The server exposes read-only resources:
+
+- `agent://repository/context`
+- `agent://repository/architecture`
+- `agent://repository/dependencies`
+- `agent://repository/conventions`
+- `agent://repository/decisions`
+
+## MCP Prompts
+
+- `onboard_to_repository`
+- `review_change_impact`
+- `explain_architecture`
+
 
 ### `get_context_for_task`
 
