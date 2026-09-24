@@ -127,6 +127,7 @@ export function buildArchitectureDocument(
       entryPoints: repository.entryPoints.length,
       rolesDetected: modules.reduce((sum, module) => sum + module.roles.length, 0),
       cycles: repository.cycles.length,
+      layeringViolations: repository.layeringViolations.length,
     },
     workspace: {
       packageManager: repository.workspace.packageManager,
@@ -145,6 +146,7 @@ export function buildArchitectureDocument(
       a.path === b.path ? compareStrings(a.type, b.type) : compareStrings(a.path, b.path),
     ),
     modules,
+    layeringViolations: [...repository.layeringViolations].sort((a, b) => compareStrings(`${a.from}|${a.to}|${a.kind}`, `${b.from}|${b.to}|${b.kind}`)),
   };
   void config;
   return withTimestamp(document, options);

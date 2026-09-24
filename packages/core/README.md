@@ -126,7 +126,10 @@ const decisions = detectDecisions(input);
 const adr = parseAdrDocument(content, path);
 ```
 
-### Git Integration
+### Architecture Analysis
+
+`getArchitecture()` includes `summary.layeringViolations` and `layeringViolations` with `from`, `to`, `kind`, `confidence` and evidence.
+
 
 Analyzes Git history for change patterns.
 

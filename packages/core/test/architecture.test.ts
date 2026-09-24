@@ -61,6 +61,18 @@ describe('architecture detection (layered-app)', () => {
     }
   });
 
+  test('layering diagnostics are explainable and deterministic', async () => {
+    const architecture = await context.getArchitecture();
+    assert.equal(typeof architecture.summary.layeringViolations, 'number');
+    assert.ok(Array.isArray(architecture.layeringViolations));
+    for (const violation of architecture.layeringViolations) {
+      assert.ok(violation.confidence < 1);
+      assert.ok(violation.evidence.length > 0);
+    }
+    const repository = await context.getRepository();
+    assert.deepEqual(architecture.layeringViolations, repository.layeringViolations);
+  });
+
   test('entry points are detected with types and confidence', async () => {
     const repository = await context.getRepository();
     assert.ok(repository.entryPoints.length > 0);

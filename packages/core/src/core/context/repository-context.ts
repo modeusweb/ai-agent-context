@@ -134,6 +134,7 @@ export function buildRepositoryContext(
       source: decision.source,
     })),
     cycles: repository.cycles.slice(0, maxCycles),
+    layeringViolations: [...repository.layeringViolations].sort((a, b) => compareStrings(`${a.from}|${a.to}|${a.kind}`, `${b.from}|${b.to}|${b.kind}`)),
     diagnostics: {
       parsedFiles: parsed.size,
       sensitiveSkipped: repository.files.filter((file) => file.sensitive).length,

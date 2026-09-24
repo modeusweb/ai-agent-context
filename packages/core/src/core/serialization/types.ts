@@ -74,6 +74,7 @@ export interface ArchitectureDocument {
     entryPoints: number;
     rolesDetected: number;
     cycles: number;
+    layeringViolations: number;
   };
   workspace: {
     packageManager: string;
@@ -84,6 +85,7 @@ export interface ArchitectureDocument {
   };
   entryPoints: EntryPoint[];
   modules: ArchitectureModule[];
+  layeringViolations: import('../../model/types.ts').LayeringViolation[];
 }
 
 export interface ArchitectureModule {

@@ -406,6 +406,8 @@ It detects:
 
 ## Security
 
+Layering diagnostics are heuristic, confidence-bearing and evidence-based; they are advisory, not compiler-enforced rules.
+
 - **Local-first**: 100% local execution, no external API calls
 - **No telemetry**: No data sent to external services
 - **Secret filtering**: Automatically excludes `.env`, credentials, certificates

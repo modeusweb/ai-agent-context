@@ -1,5 +1,5 @@
 /** Payload shapes of the context projections (canonical, serializable). */
-import type { Detection, EntryPoint, GitModuleSignals, ModuleBasis, ModuleRole } from '../../model/types.ts';
+import type { Detection, EntryPoint, GitModuleSignals, LayeringViolation, ModuleBasis, ModuleRole } from '../../model/types.ts';
 
 export interface ContextCommand {
   name: string;
@@ -73,6 +73,7 @@ export interface RepositoryContextPayload {
   conventions: Array<{ id: string; category: string; statement: string; confidence: number }>;
   decisions: Array<{ id: string; title: string; status: string; origin: string; source: string }>;
   cycles: string[][];
+  layeringViolations: LayeringViolation[];
   diagnostics: {
     parsedFiles: number;
     sensitiveSkipped: number;

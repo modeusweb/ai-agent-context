@@ -1,6 +1,9 @@
 # Migration guide
 
-## v0.3.1
+## v0.3.2
+
+Layering diagnostics are exposed by `getArchitecture()` and the persisted `architecture.json` document. Existing `.agent/` files remain readable; rescan to regenerate documents with the new field.
+
 
 The `.agent/` schema remains unchanged. This release adds bounded projections and task-oriented APIs.
 

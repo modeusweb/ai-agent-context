@@ -26,7 +26,7 @@
 
 ## Текущая база
 
-Текущая версия пакетов: `0.3.1`.
+Текущая версия пакетов: `0.3.2`.
 
 Уже реализованы:
 
@@ -101,8 +101,9 @@
 
 ---
 
-# v0.4 — Structural intelligence
+# v0.4 — Structural intelligence (in progress)
 
+**Текущий срез:** добавлены explainable layering diagnostics с confidence и evidence; расширенные import/export/route/call/cycle capabilities уже присутствуют в графе и проходят regression coverage.
 **Цель:** повысить точность структурного анализа TypeScript/JavaScript и добавить ограниченный impact analysis.
 
 ## Возможности
@@ -116,6 +117,7 @@
 - Проверка layering violations.
 - Опциональный tree-sitter/compiler backend без потери lightweight default mode.
 - Расширенный architecture diff с объяснением причин.
+- Layering violations с confidence и evidence для вероятных нарушений направления зависимостей.
 
 ## Качество и совместимость
 

@@ -15,6 +15,41 @@ export interface ArchitectureDetectionSummary {
   entryPoints: number;
   rolesDetected: number;
   modulesWithRoles: number;
+  layeringViolations: number;
+}
+
+const LAYERING_RULES: ReadonlyArray<{ kind: import('../../model/types.ts').LayeringViolationKind; from: import('../../model/types.ts').ModuleRole; to: import('../../model/types.ts').ModuleRole }> = [
+  { kind: 'domain-infrastructure', from: 'domain', to: 'infrastructure' },
+  { kind: 'domain-adapter', from: 'domain', to: 'adapter' },
+  { kind: 'application-ui', from: 'application', to: 'ui' },
+  { kind: 'application-controller', from: 'application', to: 'controller' },
+  { kind: 'infrastructure-ui', from: 'infrastructure', to: 'ui' },
+];
+
+/** Finds likely dependency-direction violations using detected roles and evidence. */
+export function detectLayeringViolations(graph: KnowledgeGraph): import('../../model/types.ts').LayeringViolation[] {
+  const modules = new Map(graph.repository.modules.map((module) => [module.id, module]));
+  const violations: import('../../model/types.ts').LayeringViolation[] = [];
+  for (const module of graph.repository.modules) {
+    for (const dependencyId of module.dependsOn) {
+      const dependency = modules.get(dependencyId);
+      if (dependency === undefined) continue;
+      for (const rule of LAYERING_RULES) {
+        if (!module.roles.some((role) => role.value === rule.from) || !dependency.roles.some((role) => role.value === rule.to)) continue;
+        violations.push({
+          from: module.id,
+          to: dependency.id,
+          kind: rule.kind,
+          confidence: 0.72,
+          evidence: [
+            { source: module.id, detail: `heuristic role ${rule.from} depends on ${rule.to}` },
+            { source: dependency.id, detail: `target module is classified as ${rule.to}` },
+          ],
+        });
+      }
+    }
+  }
+  return violations.sort((a, b) => `${a.from}|${a.to}|${a.kind}`.localeCompare(`${b.from}|${b.to}|${b.kind}`));
 }
 
 /** Applies entry point, role and responsibility detection to the graph. */
@@ -54,5 +89,7 @@ export function applyArchitectureDetection(
     if (module.roles.length > 0) modulesWithRoles += 1;
   }
 
-  return { entryPoints: entryPoints.length, rolesDetected, modulesWithRoles };
+  const violations = detectLayeringViolations(graph);
+  graph.repository.layeringViolations = violations;
+  return { entryPoints: entryPoints.length, rolesDetected, modulesWithRoles, layeringViolations: violations.length };
 }

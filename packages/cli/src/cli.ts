@@ -19,7 +19,7 @@ import { runTaskCommand } from './commands/task.ts';
 import { runImpactCommand } from './commands/impact.ts';
 
 export const CLI_NAME = 'agent-context';
-export const CLI_VERSION = '0.3.1';
+export const CLI_VERSION = '0.3.2';
 
 
 export interface CliIo {

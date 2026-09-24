@@ -537,6 +537,7 @@ export function buildKnowledgeGraph(input: KnowledgeGraphInput): KnowledgeGraph 
     decisions: [],
     externalDependencies,
     cycles,
+    layeringViolations: [],
   };
 
   return {

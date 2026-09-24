@@ -307,6 +307,8 @@ export interface Repository {
   externalDependencies: ExternalDependency[];
   /** Module-level dependency cycles (module ids, deterministic order). */
   cycles: string[][];
+  /** Heuristic dependency direction violations with evidence. */
+  layeringViolations: LayeringViolation[];
 }
 
 export interface ChangeSet {
@@ -406,6 +408,16 @@ export interface ChangeImpact {
   decisions: Decision[];
   evidence: Evidence[];
   truncated: boolean;
+}
+
+export type LayeringViolationKind = 'domain-infrastructure' | 'domain-adapter' | 'application-ui' | 'application-controller' | 'infrastructure-ui';
+
+export interface LayeringViolation {
+  from: string;
+  to: string;
+  kind: LayeringViolationKind;
+  confidence: Confidence;
+  evidence: Evidence[];
 }
 
 export interface ModuleExplanation {
