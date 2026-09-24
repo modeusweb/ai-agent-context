@@ -91,7 +91,7 @@ export class McpServer {
             capabilities: { tools: { listChanged: false }, resources: {}, prompts: {} },
             serverInfo: { name: SERVER_NAME, version: MCP_VERSION },
             instructions:
-              'Repository context layer. Start with get_repository_context, then use explain_module, get_dependencies, get_dependents, search_context, get_architecture, get_conventions and get_decisions. All data is generated locally from the repository; heuristic values carry a confidence and their evidence.',
+              'Repository context layer. Start with get_context_for_task or get_repository_context, then use explain_module, get_change_impact, get_dependencies, get_dependents, search_context, get_architecture, get_conventions and get_decisions. All data is generated locally from the repository; heuristic values carry a confidence and their evidence.',
           });
           return;
         case 'ping':

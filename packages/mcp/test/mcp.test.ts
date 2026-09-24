@@ -24,11 +24,13 @@ async function setup() {
 }
 
 describe('mcp tool definitions', () => {
-  test('exposes the eight documented tools', () => {
+  test('exposes the ten documented tools', () => {
     const names = TOOL_DEFINITIONS.map((tool) => tool.name).sort();
     assert.deepEqual(names, [
       'explain_module',
       'get_architecture',
+      'get_change_impact',
+      'get_context_for_task',
       'get_conventions',
       'get_decisions',
       'get_dependencies',
@@ -78,6 +80,27 @@ describe('mcp tool handlers', () => {
     assert.equal(payload.module, 'src');
     assert.ok(Array.isArray(payload.direct));
 
+  });
+
+  test('task context is bounded and evidence-backed', async () => {
+    const { root } = await setup();
+    const context = await AgentContext.load({ root });
+    const result = await context.getTaskContext('format user name', { target: 'src/models', maxModules: 2 });
+    assert.equal(result.schemaVersion, 1);
+    assert.equal(result.task, 'format user name');
+    assert.equal(result.target, 'src/models');
+    assert.ok(result.modules.length <= 2);
+    assert.ok(result.modules.every((module) => module.id.length > 0));
+  });
+
+  test('change impact returns bounded affected files and evidence', async () => {
+    const { root } = await setup();
+    const context = await AgentContext.load({ root });
+    const result = await context.getChangeImpact('src/models', { maxFiles: 2 });
+    assert.equal(result.target, 'src/models');
+    assert.ok(result.files.length <= 2);
+    assert.ok(result.evidence.length > 0);
+    assert.equal(typeof result.truncated, 'boolean');
   });
 
   test('search_context returns ranked results', async () => {

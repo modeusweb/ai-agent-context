@@ -48,6 +48,24 @@ Options:
 - `--quiet` - Minimal output
 - `--json` - JSON output format
 
+### `task <description>`
+
+Get bounded, task-oriented context for an agent.
+
+```bash
+agent-context task "add idempotent payment retries" --target src/payments --max-modules 5
+agent-context task "add idempotent payment retries" --json
+```
+
+### `impact <target>`
+
+Get the bounded impact set for a proposed change.
+
+```bash
+agent-context impact src/payments --max-files 100
+agent-context impact src/payments --json
+```
+
 ### `explain`
 
 Explain a module or file.

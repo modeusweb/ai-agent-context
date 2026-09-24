@@ -29,13 +29,15 @@ import type {
   Convention,
   Decision,
   FileNode,
+  ChangeImpact,
+  TaskContext,
   ModuleExplanation,
   ModuleNode,
   Repository,
   ScanReport,
   SearchResult,
 } from './model/types.ts';
-import { AGENT_DIR, AGENT_GITIGNORE, CONFIG_FILE } from './model/schema.ts';
+import { AGENT_DIR, AGENT_GITIGNORE, CONFIG_FILE, SCHEMA_VERSION } from './model/schema.ts';
 import { compareStrings } from './model/canonical.ts';
 import { loadConfig, writeConfigFile } from './config/load.ts';
 import { runPipeline, type PipelineResult } from './pipeline/scan-pipeline.ts';
@@ -235,6 +237,81 @@ export class AgentContext {
   async explain(target: string): Promise<ModuleExplanation | null> {
     const result = await this.ensurePipeline({ dryRun: true });
     return explainModule({ graph: result.graph, parsed: result.parsed, target });
+  }
+
+  /** Task-oriented, bounded context for an agent. */
+  async getTaskContext(task: string, options: { target?: string; maxModules?: number } = {}): Promise<TaskContext> {
+    const query = task.trim();
+    if (query.length === 0) throw new Error('task must not be empty');
+    const result = await this.ensurePipeline({ dryRun: true });
+    const maxModules = Math.max(1, Math.min(options.maxModules ?? 5, 12));
+    const target = options.target === undefined ? null : options.target;
+    const explanations: ModuleExplanation[] = [];
+    if (target !== null) {
+      const explanation = explainModule({ graph: result.graph, parsed: result.parsed, target, maxRelatedFiles: 20 });
+      if (explanation !== null) explanations.push(explanation);
+    }
+    const searched = await this.search(query, { limit: maxModules * 2, types: ['module'] });
+    for (const item of searched) {
+      if (explanations.some((entry) => entry.module.id === item.id)) continue;
+      const explanation = await this.explain(item.id);
+      if (explanation !== null) explanations.push(explanation);
+      if (explanations.length >= maxModules) break;
+    }
+    const selected = explanations.slice(0, maxModules);
+    const modules = selected.map((explanation) => ({
+      id: explanation.module.id,
+      summary: explanation.summary,
+      dependsOn: explanation.dependsOn.map((entry) => entry.id),
+      usedBy: explanation.usedBy.map((entry) => entry.id),
+      publicApi: explanation.publicApi.map((entry) => entry.name),
+      tests: explanation.tests.files,
+      evidence: [
+        ...explanation.module.roles.flatMap((entry) => entry.evidence),
+        ...explanation.module.responsibilities.flatMap((entry) => entry.evidence),
+        ...(explanation.module.roles.length === 0 && explanation.module.responsibilities.length === 0
+          ? [{ source: explanation.module.path || '.', detail: `module ${explanation.module.id} selected by the requested task` }]
+          : []),
+      ],
+    }));
+    const files = new Set(selected.flatMap((entry) => entry.relatedFiles));
+    const conventions = result.graph.repository.conventions.filter((entry) => entry.evidence.some((evidence) => files.has(evidence.source))).slice(0, 8);
+    const decisions = result.graph.repository.decisions.filter((entry) => entry.evidence.some((evidence) => files.has(evidence.source))).slice(0, 8);
+    return {
+      schemaVersion: result.documents.index.schemaVersion,
+      task: query,
+      target,
+      modules,
+      conventions,
+      decisions,
+      diagnostics: result.report.warnings,
+      truncated: explanations.length > selected.length || selected.length === maxModules,
+    };
+  }
+
+  /** Bounded impact context for a proposed change. */
+  async getChangeImpact(target: string, options: { maxFiles?: number } = {}): Promise<ChangeImpact> {
+    const explanation = await this.explain(target);
+    if (explanation === null) throw new Error(`no module or file matched "${target}"`);
+    const maxFiles = Math.max(1, Math.min(options.maxFiles ?? 100, 500));
+    const files = explanation.impact.files.slice(0, maxFiles);
+    const filesForEvidence = new Set(files);
+    const conventions = explanation.conventions.filter((entry) => entry.evidence.some((item) => filesForEvidence.has(item.source) || explanation.relatedFiles.includes(item.source))).slice(0, 10);
+    const decisions = explanation.decisions.filter((entry) => entry.evidence.some((item) => filesForEvidence.has(item.source) || explanation.relatedFiles.includes(item.source))).slice(0, 10);
+    return {
+      schemaVersion: SCHEMA_VERSION,
+      target,
+      modules: explanation.impact.modules,
+      files,
+      tests: explanation.tests.files,
+      conventions,
+      decisions,
+      evidence: [
+        { source: explanation.module.path || '.', detail: `change impact derived from ${explanation.module.id} and its transitive dependents` },
+        ...explanation.module.roles.flatMap((entry) => entry.evidence),
+      ],
+      truncated: explanation.impact.files.length > files.length,
+    };
   }
 
   /** Context changes relative to the persisted context. */

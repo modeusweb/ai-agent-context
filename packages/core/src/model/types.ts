@@ -377,6 +377,37 @@ export interface SearchResult {
   snippet?: string;
 }
 
+export interface TaskContext {
+  schemaVersion: number;
+  task: string;
+  target: string | null;
+  modules: Array<{
+    id: string;
+    summary: string;
+    dependsOn: string[];
+    usedBy: string[];
+    publicApi: string[];
+    tests: string[];
+    evidence: Evidence[];
+  }>;
+  conventions: Convention[];
+  decisions: Decision[];
+  diagnostics: DiagnosticPayload[];
+  truncated: boolean;
+}
+
+export interface ChangeImpact {
+  schemaVersion: number;
+  target: string;
+  modules: string[];
+  files: string[];
+  tests: string[];
+  conventions: Convention[];
+  decisions: Decision[];
+  evidence: Evidence[];
+  truncated: boolean;
+}
+
 export interface ModuleExplanation {
   module: {
     id: string;

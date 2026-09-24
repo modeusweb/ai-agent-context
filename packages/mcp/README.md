@@ -12,6 +12,33 @@ npm install @ai-agent-context/mcp
 
 ## MCP Tools
 
+### `get_context_for_task`
+
+Get bounded, task-oriented context for an agent.
+
+```json
+{
+  "task": "add idempotent payment retries",
+  "target": "src/payments",
+  "maxModules": 5
+}
+```
+
+Returns relevant modules, dependencies, public API, tests, conventions, decisions and evidence.
+
+### `get_change_impact`
+
+Get the bounded impact set for a proposed change.
+
+```json
+{
+  "target": "src/payments",
+  "maxFiles": 100
+}
+```
+
+Returns transitive dependent modules, affected files, tests, relevant conventions, decisions and evidence.
+
 ### `get_repository_context`
 
 Get the complete repository context.

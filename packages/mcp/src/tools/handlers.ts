@@ -75,6 +75,33 @@ export async function callTool(
   const root = asString(args['root']) ?? defaultRoot;
 
   switch (name) {
+    case 'get_context_for_task': {
+      const task = asString(args['task']);
+      if (task === undefined) return errorPayload('get_context_for_task requires the "task" argument');
+      const target = asString(args['target']);
+      const maxModules = asNumber(args['maxModules']);
+      const context = await pool.get(root);
+      return {
+        isError: false,
+        payload: await context.getTaskContext(task, {
+          ...(target === undefined ? {} : { target }),
+          ...(maxModules === undefined ? {} : { maxModules }),
+        }),
+      };
+    }
+
+    case 'get_change_impact': {
+      const target = asString(args['target']);
+      if (target === undefined) return errorPayload('get_change_impact requires the "target" argument');
+      const maxFiles = asNumber(args['maxFiles']);
+      const context = await pool.get(root);
+      try {
+        return { isError: false, payload: await context.getChangeImpact(target, maxFiles === undefined ? {} : { maxFiles }) };
+      } catch (error) {
+        return errorPayload(error instanceof Error ? error.message : String(error));
+      }
+    }
+
     case 'get_repository_context': {
       const context = await pool.get(root);
       return { isError: false, payload: await context.getRepositoryContext() };

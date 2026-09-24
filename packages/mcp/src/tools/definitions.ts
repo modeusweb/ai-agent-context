@@ -38,6 +38,41 @@ const MODULE_PROPERTY: JsonSchema = {
 
 export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
+    name: 'get_context_for_task',
+    title: 'Get context for task',
+    description:
+      'Bounded, task-oriented repository context. Searches relevant modules, then returns their summary, dependencies, dependents, public API, tests, conventions, decisions and evidence. Use this before proposing or implementing a change.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        task: { type: 'string', description: 'Task description, for example "add idempotent payment retries".' },
+        target: MODULE_PROPERTY,
+        maxModules: { type: 'number', description: 'Maximum number of modules (1-12, default 5).' },
+        root: ROOT_PROPERTY,
+      },
+      required: ['task'],
+      additionalProperties: false,
+    },
+    outputDescription: 'Task context (schema v1) with bounded modules, evidence and truncation flag.',
+  },
+  {
+    name: 'get_change_impact',
+    title: 'Get change impact',
+    description:
+      'Bounded impact set for a proposed change: transitive dependent modules, affected files, tests, relevant conventions, decisions and evidence.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        target: MODULE_PROPERTY,
+        maxFiles: { type: 'number', description: 'Maximum number of files (1-500, default 100).' },
+        root: ROOT_PROPERTY,
+      },
+      required: ['target'],
+      additionalProperties: false,
+    },
+    outputDescription: 'Change impact (schema v1) with affected modules/files and evidence.',
+  },
+  {
     name: 'get_repository_context',
     title: 'Get repository context',
     description:

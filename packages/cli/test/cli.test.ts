@@ -72,6 +72,18 @@ describe('cli end-to-end', () => {
     const list = Array.isArray(results) ? results : (results.results ?? []);
     assert.ok(Array.isArray(list) && list.length > 0, `unexpected search payload: ${search.stdout.slice(0, 400)}`);
 
+    const task = run(root, ['task', 'format', 'user', 'name', '--target', 'src/models', '--max-modules', '2', '--json']);
+    assert.equal(task.status, 0, task.stdout);
+    const taskPayload = JSON.parse(task.stdout) as { task: string; modules: unknown[] };
+    assert.equal(taskPayload.task, 'format user name');
+    assert.ok(taskPayload.modules.length <= 2);
+
+    const impact = run(root, ['impact', 'src/models', '--max-files', '2', '--json']);
+    assert.equal(impact.status, 0, impact.stdout);
+    const impactPayload = JSON.parse(impact.stdout) as { target: string; files: string[] };
+    assert.equal(impactPayload.target, 'src/models');
+    assert.ok(impactPayload.files.length <= 2);
+
 
     // Modify a file, then diff.
     writeRepoFile(root, 'src/models/user.ts', `${readRepoFile(root, 'src/models/user.ts').trimEnd()}\n// v2\n`);

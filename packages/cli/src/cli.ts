@@ -15,9 +15,11 @@ import { runExplainCommand } from './commands/explain.ts';
 import { runCleanCommand } from './commands/clean.ts';
 import { runSearchCommand } from './commands/search.ts';
 import { runContextCommand } from './commands/context.ts';
+import { runTaskCommand } from './commands/task.ts';
+import { runImpactCommand } from './commands/impact.ts';
 
 export const CLI_NAME = 'agent-context';
-export const CLI_VERSION = '0.2.0';
+export const CLI_VERSION = '0.3.0';
 
 
 export interface CliIo {
@@ -48,6 +50,8 @@ const VALUED_FLAGS = new Set([
   'limit',
   'types',
   'max-files',
+  'max-modules',
+  'target',
 ]);
 
 const KNOWN_FLAGS = new Set([
@@ -71,6 +75,8 @@ const KNOWN_FLAGS = new Set([
   'limit',
   'types',
   'max-files',
+  'max-modules',
+  'target',
 ]);
 
 function appendFlag(flags: Map<string, string | boolean>, name: string, value: string): void {
@@ -194,6 +200,8 @@ Commands:
   explain <path>       Explain a module (or the module owning a file)
   search <query>       Deterministic lexical search over the context
   context              Compact repository context summary
+  task <description>   Bounded task-oriented context for an agent
+  impact <target>      Show bounded change impact for a module
   clean                Remove generated context and caches
 
 Options:
@@ -274,6 +282,10 @@ export async function runCli(argv: readonly string[], ioOverrides: Partial<CliIo
         return await runSearchCommand(commandContext, dependencies);
       case 'context':
         return await runContextCommand(commandContext, dependencies);
+      case 'task':
+        return await runTaskCommand(commandContext, dependencies);
+      case 'impact':
+        return await runImpactCommand(commandContext, dependencies);
       case 'clean':
         return await runCleanCommand(commandContext, dependencies);
       default:

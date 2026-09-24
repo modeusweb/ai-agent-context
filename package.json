@@ -22,6 +22,7 @@
     "packages/cli",
     "packages/mcp"
   ],
+  "packageManager": "npm@11.15.0",
   "scripts": {
     "build": "tsc -b packages/core/tsconfig.json packages/cli/tsconfig.json packages/mcp/tsconfig.json",
     "rebuild": "tsc -b --force packages/core/tsconfig.json packages/cli/tsconfig.json packages/mcp/tsconfig.json",

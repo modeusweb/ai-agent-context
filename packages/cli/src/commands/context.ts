@@ -7,12 +7,10 @@ export async function runContextCommand(context: CliCommandContext, dependencies
   const { output, parsed, io } = context;
   const agentContext = await dependencies.createContext(contextOptions(parsed, io));
   const repositoryContext = await agentContext.getRepositoryContext();
-
   if (context.json) {
     output.print(JSON.stringify(repositoryContext, null, 2));
     return 0;
   }
-
   for (const line of renderRepositoryContext(repositoryContext)) output.print(line);
   return 0;
 }
