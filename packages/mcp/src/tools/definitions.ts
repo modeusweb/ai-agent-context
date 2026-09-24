@@ -235,6 +235,43 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
 ];
 
+export interface ValidationResult {
+  valid: boolean;
+  errors: string[];
+}
+
+/** Dependency-free validator for the JSON Schema subset used by tool definitions. */
+export function validateToolArguments(schema: JsonSchema, value: unknown): ValidationResult {
+  const errors: string[] = [];
+  if (schema.type === 'object') {
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+      return { valid: false, errors: ['argument must be an object'] };
+    }
+    const record = value as Record<string, unknown>;
+    for (const required of schema.required ?? []) {
+      if (record[required] === undefined) errors.push(`missing required property: ${required}`);
+    }
+    if (schema.additionalProperties === false) {
+      for (const key of Object.keys(record)) {
+        if (schema.properties?.[key] === undefined) errors.push(`unknown property: ${key}`);
+      }
+    }
+    for (const [key, property] of Object.entries(schema.properties ?? {})) {
+      const entry = record[key];
+      if (entry === undefined) continue;
+      if (property.type === 'string' && typeof entry !== 'string') errors.push(`${key} must be a string`);
+      if (property.type === 'number' && (typeof entry !== 'number' || !Number.isFinite(entry))) {
+        errors.push(`${key} must be a finite number`);
+      }
+      if (property.type === 'boolean' && typeof entry !== 'boolean') errors.push(`${key} must be a boolean`);
+      if (property.enum !== undefined && (!property.enum.includes(String(entry)))) {
+        errors.push(`${key} must be one of: ${property.enum.join(', ')}`);
+      }
+    }
+  }
+  return { valid: errors.length === 0, errors };
+}
+
 export function toolByName(name: string): ToolDefinition | undefined {
   return TOOL_DEFINITIONS.find((tool) => tool.name === name);
 }

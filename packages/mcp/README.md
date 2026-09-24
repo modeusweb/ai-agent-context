@@ -10,6 +10,10 @@ This package provides MCP tools that allow AI agents (like Claude, etc.) to quer
 npm install @ai-agent-context/mcp
 ```
 
+## Input validation
+
+Tool arguments are validated against the published JSON Schema before dispatch. Missing required fields, wrong primitive types, invalid enums, and unknown properties return JSON-RPC `-32602` without starting repository analysis.
+
 ## MCP Resources
 
 The server exposes read-only resources:

@@ -10,7 +10,7 @@
  * The transport is injectable, so the protocol can be tested without a process.
  */
 import { MCP_VERSION } from './version.ts';
-import { TOOL_DEFINITIONS } from './tools/definitions.ts';
+import { TOOL_DEFINITIONS, toolByName, validateToolArguments } from './tools/definitions.ts';
 import { ContextPool, callTool } from './tools/handlers.ts';
 import type { AgentContextOptions } from '@ai-agent-context/core';
 
@@ -157,6 +157,16 @@ export class McpServer {
               : {};
           if (name.length === 0) {
             this.respondError(id, -32602, 'tools/call requires a tool name');
+            return;
+          }
+          const definition = toolByName(name);
+          if (definition === undefined) {
+            this.respondError(id, -32602, `unknown tool: ${name}`);
+            return;
+          }
+          const validation = validateToolArguments(definition.inputSchema, args);
+          if (!validation.valid) {
+            this.respondError(id, -32602, `invalid arguments for ${name}: ${validation.errors.join('; ')}`);
             return;
           }
           const result = await callTool(name, args, this.pool, this.options.root);

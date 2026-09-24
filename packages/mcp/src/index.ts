@@ -7,8 +7,8 @@
  */
 export { McpServer, createStdioTransport, createMemoryTransport, MCP_PROTOCOL_VERSION, SERVER_NAME } from './server.ts';
 export type { McpServerOptions, McpTransport, JsonRpcRequest, MemoryTransport } from './server.ts';
-export { TOOL_DEFINITIONS, toolByName } from './tools/definitions.ts';
-export type { ToolDefinition, JsonSchema } from './tools/definitions.ts';
+export { TOOL_DEFINITIONS, toolByName, validateToolArguments } from './tools/definitions.ts';
+export type { ToolDefinition, JsonSchema, ValidationResult } from './tools/definitions.ts';
 export { callTool, ContextPool } from './tools/handlers.ts';
 export type { ToolCallResult, ToolHandlerDependencies } from './tools/handlers.ts';
 export { MCP_VERSION } from './version.ts';

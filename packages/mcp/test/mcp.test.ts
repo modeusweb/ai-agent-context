@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict';
 import { after, describe, test } from 'node:test';
 import { AgentContext } from '../../core/dist/index.js';
-import { TOOL_DEFINITIONS, toolByName, callTool, ContextPool, McpServer, createMemoryTransport } from '../../mcp/dist/index.js';
+import { TOOL_DEFINITIONS, toolByName, callTool, ContextPool, McpServer, createMemoryTransport, validateToolArguments } from '../../mcp/dist/index.js';
 import { cleanupTemp, createTempRepo } from '../../core/test/helpers.ts';
 
 
@@ -190,6 +190,28 @@ describe('mcp tool handlers', () => {
     const missing = await callTool('explain_module', {}, pool, root);
     assert.equal(missing.isError, true);
     assert.ok(String((missing.payload as { error: string }).error).includes('path'));
+  });
+
+  test('rejects invalid tool arguments before dispatch', async () => {
+    const { root } = await setup();
+    const definition = toolByName('get_context_for_task');
+    assert.ok(definition);
+    const validation = validateToolArguments(definition.inputSchema, { task: 42, extra: true });
+    assert.equal(validation.valid, false);
+    assert.ok(validation.errors.some((error) => error.includes('task must be a string')));
+    assert.ok(validation.errors.some((error) => error.includes('unknown property: extra')));
+
+    const transport = createMemoryTransport();
+    const server = new McpServer({ root, transport });
+    await server.handleMessage({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'tools/call',
+      params: { name: 'get_context_for_task', arguments: {} },
+    });
+    const response = transport.sent.at(-1) as { error: { code: number; message: string } };
+    assert.equal(response.error.code, -32602);
+    assert.ok(response.error.message.includes('missing required property: task'));
   });
 
   test('context pool caches AgentContext instances per root', async () => {

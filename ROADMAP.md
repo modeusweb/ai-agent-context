@@ -26,7 +26,7 @@
 
 ## Текущая база
 
-Текущая версия пакетов: `0.3.5`.
+Текущая версия пакетов: `0.3.6`.
 
 Уже реализованы:
 
@@ -173,7 +173,7 @@
 
 # v0.6 — MCP production readiness (in progress)
 
-**Текущий срез:** реализованы read-only Resources и onboarding/review/explain Prompts; 88 тестов проходят. Остаются schema validation, cancellation/timeouts и client compatibility matrix.
+**Текущий срез:** реализованы Resources/Prompts, read-only stdio transport и строгая pre-dispatch валидация tool arguments по JSON Schema subset. Остаются cancellation/timeouts и фактическая compatibility matrix с внешними clients.
 
 **Цель:** сделать MCP-пакет надёжным и удобным для реальных клиентов.
 

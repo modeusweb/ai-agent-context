@@ -22,7 +22,7 @@ import { runRevisionDiffCommand } from './commands/revision-diff.ts';
 import { runVerifyCommand } from './commands/verify.ts';
 
 export const CLI_NAME = 'agent-context';
-export const CLI_VERSION = '0.3.5';
+export const CLI_VERSION = '0.3.6';
 
 
 export interface CliIo {
