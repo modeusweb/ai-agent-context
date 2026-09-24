@@ -423,6 +423,9 @@ Layering diagnostics are heuristic, confidence-bearing and evidence-based; they 
 - **No telemetry**: No data sent to external services
 - **Secret filtering**: Automatically excludes `.env`, credentials, certificates
 - **Deterministic**: Same repository state → identical context
+- **Symlink protection**: Symlinks are not followed by default
+- **CI verification**: `agent-context verify --json` detects invalid schema and drift
+- **Policy**: See [SECURITY.md](SECURITY.md) for supported versions and reporting guidance
 
 ## Architecture
 

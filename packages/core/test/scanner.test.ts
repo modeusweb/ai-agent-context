@@ -77,6 +77,26 @@ describe('scanner', () => {
     }
   });
 
+  test('walk does not escape root through symbolic links', async () => {
+    const { symlink } = await import('node:fs/promises');
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    const outside = `${root}-outside`;
+    tempRoots.push(outside);
+    await (await import('node:fs/promises')).mkdir(`${outside}/secret`, { recursive: true });
+    writeRepoFile(outside, 'secret/private.ts', 'export const secret = true;');
+    try {
+      await symlink(`${outside}/secret`, `${root}/linked`, process.platform === 'win32' ? 'junction' : 'dir');
+      const context = await AgentContext.load({ root });
+      await context.scan();
+      const files = await context.getFiles();
+      assert.equal(files.some((file) => file.path.includes('linked') || file.path.includes('private.ts')), false);
+    } finally {
+      const { rmSync } = await import('node:fs');
+      rmSync(`${root}/linked`, { recursive: true, force: true });
+    }
+  });
+
   test('warns but continues on unreadable files', async () => {
     const root = createTempRepo('simple-ts');
     tempRoots.push(root);

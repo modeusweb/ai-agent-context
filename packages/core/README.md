@@ -291,6 +291,10 @@ try {
 }
 ```
 
+## Security
+
+See the repository `SECURITY.md`. The core performs no network calls, excludes sensitive files by default, redacts secret-like excerpts, and does not follow symlinks unless explicitly configured.
+
 ## License
 
 MIT

@@ -367,6 +367,9 @@ The MCP adapter inherits the security properties of the core package:
 - **No telemetry**: No data sent to external services
 - **Secret filtering**: Automatically excludes sensitive files
 - **Repository-scoped**: Only accesses configured repository
+- **Read-only operations**: Tools, resources and prompts do not modify source files
+- **Clean stdio channel**: JSON-RPC uses stdout; diagnostics use stderr
+- **Policy**: See the repository `SECURITY.md`
 
 ## Error Handling
 

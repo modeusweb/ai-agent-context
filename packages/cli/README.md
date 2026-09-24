@@ -325,6 +325,10 @@ Ensure the repository is a Git repository.
 
 The scanner continues even if some files fail to parse. Use `--verbose` for details.
 
+## Security
+
+The CLI is local-only. Sensitive files are excluded, symlinks are not followed by default, and `verify` is read-only. See the repository `SECURITY.md`.
+
 ## License
 
 MIT
