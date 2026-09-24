@@ -1,5 +1,9 @@
 # Migration guide
 
+## v0.3.7
+
+Packaging hotfix: the published MCP package now depends on the current core release instead of an older minimum, preventing mixed-version runtime behavior during staged npm processing.
+
 ## v0.3.6
 
 MCP tool calls now validate required fields, primitive types, enums, and reject unknown properties before dispatch. This release is additive and preserves the v1 context schema.
