@@ -21,7 +21,7 @@ import { runHistoryCommand } from './commands/history.ts';
 import { runRevisionDiffCommand } from './commands/revision-diff.ts';
 
 export const CLI_NAME = 'agent-context';
-export const CLI_VERSION = '0.3.3';
+export const CLI_VERSION = '0.3.4';
 
 
 export interface CliIo {

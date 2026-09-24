@@ -1,6 +1,6 @@
 # Migration guide
 
-## v0.3.3
+## v0.3.4
 
 Temporal context APIs are additive: `getModuleHistory()` and `getRevisionDiff()` use local Git only. Git absence, shallow history and invalid revisions degrade to empty/diagnostic results without changing the repository.
 

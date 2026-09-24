@@ -1,6 +1,6 @@
 {
   "name": "ai-agent-context",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Git-native context layer for AI coding agents: scan a repository into a structured, versionable .agent/ knowledge layer and query it (CLI + programmatic API).",
   "type": "module",
   "license": "MIT",
