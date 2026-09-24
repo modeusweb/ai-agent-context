@@ -26,4 +26,8 @@ export { runStatusCommand } from './commands/status.ts';
 export { runExplainCommand } from './commands/explain.ts';
 export { runSearchCommand } from './commands/search.ts';
 export { runContextCommand } from './commands/context.ts';
+export { runTaskCommand } from './commands/task.ts';
+export { runImpactCommand } from './commands/impact.ts';
+export { runHistoryCommand } from './commands/history.ts';
+export { runRevisionDiffCommand } from './commands/revision-diff.ts';
 export { runCleanCommand } from './commands/clean.ts';

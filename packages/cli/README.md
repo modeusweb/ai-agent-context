@@ -67,6 +67,23 @@ agent-context task "add idempotent payment retries" --json
 
 ### `impact <target>`
 
+Show bounded local Git history for a module:
+
+```bash
+agent-context history src/models --limit-history 20
+agent-context history src/models --json
+```
+
+### `revision-diff`
+
+Show paths changed between local revisions:
+
+```bash
+agent-context revision-diff --revision HEAD~1 --base HEAD
+agent-context revision-diff --revision HEAD~1 --json
+```
+
+
 Get the bounded impact set for a proposed change.
 
 ```bash

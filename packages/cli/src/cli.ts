@@ -17,6 +17,8 @@ import { runSearchCommand } from './commands/search.ts';
 import { runContextCommand } from './commands/context.ts';
 import { runTaskCommand } from './commands/task.ts';
 import { runImpactCommand } from './commands/impact.ts';
+import { runHistoryCommand } from './commands/history.ts';
+import { runRevisionDiffCommand } from './commands/revision-diff.ts';
 
 export const CLI_NAME = 'agent-context';
 export const CLI_VERSION = '0.3.3';
@@ -57,6 +59,9 @@ const VALUED_FLAGS = new Set([
   'max-decisions',
   'max-cycles',
   'target',
+  'base',
+  'revision',
+  'limit-history',
 ]);
 
 const KNOWN_FLAGS = new Set([
@@ -87,6 +92,9 @@ const KNOWN_FLAGS = new Set([
   'max-decisions',
   'max-cycles',
   'target',
+  'base',
+  'revision',
+  'limit-history',
 ]);
 
 function appendFlag(flags: Map<string, string | boolean>, name: string, value: string): void {
@@ -212,6 +220,8 @@ Commands:
   context              Compact repository context summary
   task <description>   Bounded task-oriented context for an agent
   impact <target>      Show bounded change impact for a module
+  history <target>    Show bounded Git history for a module
+  revision-diff       Show local diff for a revision
   clean                Remove generated context and caches
 
 Options:
@@ -296,6 +306,10 @@ export async function runCli(argv: readonly string[], ioOverrides: Partial<CliIo
         return await runTaskCommand(commandContext, dependencies);
       case 'impact':
         return await runImpactCommand(commandContext, dependencies);
+      case 'history':
+        return await runHistoryCommand(commandContext, dependencies);
+      case 'revision-diff':
+        return await runRevisionDiffCommand(commandContext, dependencies);
       case 'clean':
         return await runCleanCommand(commandContext, dependencies);
       default:
