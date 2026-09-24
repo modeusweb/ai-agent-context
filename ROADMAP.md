@@ -66,7 +66,7 @@
 - evidence для выбранных модулей и impact-срезов;
 - regression coverage в CLI/MCP integration tests.
 
-**Статус:** функциональный срез завершён и опубликован как `0.3.1`.
+**Статус:** функциональный срез завершён; релиз `0.3.1` отправлен в npm, публикация ожидает завершения обработки registry.
 
 **Проверено:** compact projections, task context, change impact, benchmark harness, migration notes.
 
