@@ -435,6 +435,20 @@ export interface RevisionDiff {
   hasChanges: boolean;
 }
 
+export interface RevisionSnapshot {
+  revision: string;
+  sha: string;
+  author: string;
+  date: string;
+  subject: string;
+  files: string[];
+  moduleCount: number | null;
+  dependencyCount: number | null;
+  entryPointCount: number | null;
+  available: boolean;
+  reason?: string;
+}
+
 export interface ModuleExplanation {
   module: {
     id: string;

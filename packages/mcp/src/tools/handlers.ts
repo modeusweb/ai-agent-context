@@ -201,6 +201,12 @@ export async function callTool(
       return { isError: false, payload: await (await pool.get(root)).getRevisionDiff(revision, base ?? 'HEAD') };
     }
 
+    case 'get_revision_snapshot': {
+      const revision = asString(args['revision']);
+      if (revision === undefined) return errorPayload('get_revision_snapshot requires the "revision" argument');
+      return { isError: false, payload: await (await pool.get(root)).getRevisionSnapshot(revision) };
+    }
+
     case 'get_architecture': {
       const context = await pool.get(root);
       const architecture = await context.getArchitecture();

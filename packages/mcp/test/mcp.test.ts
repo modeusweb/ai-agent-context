@@ -24,7 +24,7 @@ async function setup() {
 }
 
 describe('mcp tool definitions', () => {
-  test('exposes the twelve documented tools', () => {
+  test('exposes the thirteen documented tools', () => {
     const names = TOOL_DEFINITIONS.map((tool) => tool.name).sort();
     assert.deepEqual(names, [
       'explain_module',
@@ -38,6 +38,7 @@ describe('mcp tool definitions', () => {
       'get_module_history',
       'get_repository_context',
       'get_revision_diff',
+      'get_revision_snapshot',
       'search_context',
     ]);
     for (const tool of TOOL_DEFINITIONS) {

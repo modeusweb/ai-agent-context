@@ -33,6 +33,7 @@ import type {
   TaskContext,
   ModuleHistoryEntry,
   RevisionDiff,
+  RevisionSnapshot,
   ModuleExplanation,
   ModuleNode,
   Repository,
@@ -339,6 +340,43 @@ export class AgentContext {
     const adapter = this.options.gitAdapter ?? new GitAdapter(this.root);
     const files = await adapter.diff(revision, base);
     return { revision, files, hasChanges: files.length > 0 };
+  }
+
+  async getRevisionSnapshot(revision: string): Promise<RevisionSnapshot> {
+    const adapter = this.options.gitAdapter ?? new GitAdapter(this.root);
+    const commit = await adapter.revision(revision);
+    if (commit === null) {
+      return {
+        revision,
+        sha: '',
+        author: '',
+        date: '',
+        subject: '',
+        files: [],
+        moduleCount: null,
+        dependencyCount: null,
+        entryPointCount: null,
+        available: false,
+        reason: 'revision is unavailable or repository has no commit',
+      };
+    }
+    const current = await this.getRepository();
+    const files = new Set(commit.files);
+    const moduleCount = current.modules.filter((module) => module.files.some((file) => files.has(file))).length;
+    const dependencyCount = current.dependencies.filter((edge) => files.has(edge.from) || files.has(edge.to)).length;
+    const entryPointCount = current.entryPoints.filter((entry) => files.has(entry.path)).length;
+    return {
+      revision,
+      sha: commit.sha,
+      author: commit.author,
+      date: commit.date,
+      subject: commit.subject,
+      files: commit.files,
+      moduleCount,
+      dependencyCount,
+      entryPointCount,
+      available: true,
+    };
   }
 
   /** Context changes relative to the persisted context. */

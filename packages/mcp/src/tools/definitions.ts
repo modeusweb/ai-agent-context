@@ -180,6 +180,18 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     outputDescription: 'Revision diff with deterministic ordering.',
   },
   {
+    name: 'get_revision_snapshot',
+    title: 'Get revision snapshot',
+    description: 'Metadata and bounded structural summary for a local Git revision. Does not checkout or modify the working tree.',
+    inputSchema: {
+      type: 'object',
+      properties: { revision: { type: 'string' }, root: ROOT_PROPERTY },
+      required: ['revision'],
+      additionalProperties: false,
+    },
+    outputDescription: 'Revision snapshot metadata and structural counts.',
+  },
+  {
     name: 'get_architecture',
     title: 'Get architecture',
     description:

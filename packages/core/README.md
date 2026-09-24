@@ -53,6 +53,7 @@ class AgentContext {
   async getChangeImpact(target: string, options?: { maxFiles?: number }): Promise<ChangeImpact>
   async getModuleHistory(target: string, options?: { limit?: number }): Promise<ModuleHistoryEntry[]>
   async getRevisionDiff(revision: string, base?: string): Promise<RevisionDiff>
+  async getRevisionSnapshot(revision: string): Promise<RevisionSnapshot>
   async explain(target: string): Promise<ModuleExplanation | null>
   async diff(): Promise<ContextDiff>
   async status(): Promise<StatusReport>

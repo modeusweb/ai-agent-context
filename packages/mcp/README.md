@@ -55,6 +55,14 @@ Returns changed paths and statuses between two local revisions.
 {"revision":"HEAD~1","base":"HEAD"}
 ```
 
+### `get_revision_snapshot`
+
+Returns metadata and structural summary for a local Git revision without checking it out or changing the working tree.
+
+```json
+{"revision":"HEAD~1"}
+```
+
 ### `get_repository_context`
 
 Get the complete repository context.
