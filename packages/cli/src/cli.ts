@@ -19,7 +19,7 @@ import { runTaskCommand } from './commands/task.ts';
 import { runImpactCommand } from './commands/impact.ts';
 
 export const CLI_NAME = 'agent-context';
-export const CLI_VERSION = '0.3.0';
+export const CLI_VERSION = '0.3.1';
 
 
 export interface CliIo {
@@ -51,6 +51,11 @@ const VALUED_FLAGS = new Set([
   'types',
   'max-files',
   'max-modules',
+  'max-entry-points',
+  'max-external-dependencies',
+  'max-conventions',
+  'max-decisions',
+  'max-cycles',
   'target',
 ]);
 
@@ -76,6 +81,11 @@ const KNOWN_FLAGS = new Set([
   'types',
   'max-files',
   'max-modules',
+  'max-entry-points',
+  'max-external-dependencies',
+  'max-conventions',
+  'max-decisions',
+  'max-cycles',
   'target',
 ]);
 

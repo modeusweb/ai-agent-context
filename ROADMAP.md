@@ -26,7 +26,7 @@
 
 ## Текущая база
 
-Текущая версия пакетов: `0.3.0`.
+Текущая версия пакетов: `0.3.1`.
 
 Уже реализованы:
 
@@ -40,7 +40,9 @@
 - детерминированная сериализация в `.agent/`;
 - secret filtering и local-only режим;
 - workspace-поддержка npm-пакетов;
-- 77 тестов, build и typecheck в текущем verify pipeline.
+- 81 tests, build и typecheck в текущем verify pipeline;
+- task-oriented context, change impact и bounded repository projections;
+- local benchmark harness и `benchmark-report.json` для пяти fixture-репозиториев.
 
 ## Приоритеты
 
@@ -51,7 +53,7 @@
 
 ---
 
-# v0.3 — Agent-ready context (in progress)
+# v0.3 — Agent-ready context (completed)
 
 **Цель:** превратить полный repository context в компактный контекст, который AI agent может эффективно использовать для конкретной задачи.
 
@@ -64,12 +66,9 @@
 - evidence для выбранных модулей и impact-срезов;
 - regression coverage в CLI/MCP integration tests.
 
-**Осталось завершить в v0.3:**
+**Статус:** функциональный срез завершён и опубликован как `0.3.1`.
 
-- benchmark на 10+ реальных репозиториях;
-- более точный budget-aware ranking;
-- отдельный compact projection for full repository context;
-- публичный benchmark report и migration notes.
+**Проверено:** compact projections, task context, change impact, benchmark harness, migration notes.
 
 ## Возможности
 

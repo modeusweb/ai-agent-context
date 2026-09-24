@@ -6,7 +6,7 @@
  * matter, what is imported from outside, which commands exist, where documented
  * decisions live. It summarises the graph; `explain` and `search` drill down.
  */
-import type { ContextCommand, RepositoryContextPayload } from './types.ts';
+import type { ContextCommand, RepositoryContextOptions, RepositoryContextPayload } from './types.ts';
 import type { KnowledgeGraph } from '../graph/knowledge-graph.ts';
 import type { ParsedFile } from '../../adapters/language/types.ts';
 import { compareStrings } from '../../model/canonical.ts';
@@ -44,8 +44,15 @@ export function collectCommands(graph: KnowledgeGraph): ContextCommand[] {
 export function buildRepositoryContext(
   graph: KnowledgeGraph,
   parsed: Map<string, ParsedFile>,
+  options: RepositoryContextOptions = {},
 ): RepositoryContextPayload {
   const repository = graph.repository;
+  const maxModules = Math.max(1, Math.min(options.maxModules ?? 25, 100));
+  const maxEntryPoints = Math.max(1, Math.min(options.maxEntryPoints ?? 30, 200));
+  const maxExternalDependencies = Math.max(1, Math.min(options.maxExternalDependencies ?? 25, 200));
+  const maxConventions = Math.max(1, Math.min(options.maxConventions ?? 25, 200));
+  const maxDecisions = Math.max(1, Math.min(options.maxDecisions ?? 25, 200));
+  const maxCycles = Math.max(0, Math.min(options.maxCycles ?? 25, 200));
   const modulesByImportance = [...repository.modules]
     .sort((a, b) => {
       const scoreA = a.usedBy.length * 10 + a.files.length;
@@ -53,11 +60,11 @@ export function buildRepositoryContext(
       if (scoreA !== scoreB) return scoreB - scoreA;
       return compareStrings(a.id, b.id);
     })
-    .slice(0, 25);
+    .slice(0, maxModules);
 
   const entryPoints = [...repository.entryPoints]
     .sort((a, b) => (b.confidence === a.confidence ? compareStrings(a.path, b.path) : b.confidence - a.confidence))
-    .slice(0, 30);
+    .slice(0, maxEntryPoints);
 
   const importanceRank = { infrastructure: 3, framework: 2, tooling: 1, utility: 0 } as const;
   const externalDependencies = [...repository.externalDependencies]
@@ -67,7 +74,7 @@ export function buildRepositoryContext(
       if (rankA !== rankB) return rankB - rankA;
       return compareStrings(a.name, b.name);
     })
-    .slice(0, 25);
+    .slice(0, maxExternalDependencies);
 
   return {
     schemaVersion: SCHEMA_VERSION,
@@ -113,20 +120,20 @@ export function buildRepositoryContext(
     })),
     entryPoints,
     externalDependencies,
-    conventions: repository.conventions.map((convention) => ({
+    conventions: repository.conventions.slice(0, maxConventions).map((convention) => ({
       id: convention.id,
       category: convention.category,
       statement: convention.statement,
       confidence: convention.confidence,
     })),
-    decisions: repository.decisions.map((decision) => ({
+    decisions: repository.decisions.slice(0, maxDecisions).map((decision) => ({
       id: decision.id,
       title: decision.title,
       status: decision.status,
       origin: decision.origin,
       source: decision.source,
     })),
-    cycles: repository.cycles,
+    cycles: repository.cycles.slice(0, maxCycles),
     diagnostics: {
       parsedFiles: parsed.size,
       sensitiveSkipped: repository.files.filter((file) => file.sensitive).length,

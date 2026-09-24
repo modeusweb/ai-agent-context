@@ -48,7 +48,7 @@ Main entry point for repository analysis.
 class AgentContext {
   static async load(options?: AgentContextOptions): Promise<AgentContext>
   async scan(options?: ScanOptions): Promise<ScanReport>
-  async getRepositoryContext(): Promise<RepositoryContext>
+  async getRepositoryContext(options?: RepositoryContextOptions): Promise<RepositoryContext>
   async getTaskContext(task: string, options?: { target?: string; maxModules?: number }): Promise<TaskContext>
   async getChangeImpact(target: string, options?: { maxFiles?: number }): Promise<ChangeImpact>
   async explain(target: string): Promise<ModuleExplanation | null>

@@ -46,7 +46,7 @@ import { LocalStateStore, type LocalState } from './core/scanner/cache.ts';
 import type { ArchitectureDocument, DependenciesDocument, IndexDocument } from './core/serialization/types.ts';
 import { explainModule } from './core/context/explain.ts';
 import { buildRepositoryContext } from './core/context/repository-context.ts';
-import type { RepositoryContext } from './core/context/types.ts';
+import type { RepositoryContext, RepositoryContextOptions } from './core/context/types.ts';
 import { SearchService, type SearchOptions } from './core/search/service.ts';
 import { ContextStateError } from './errors.ts';
 
@@ -228,9 +228,9 @@ export class AgentContext {
   }
 
   /** Compact, agent oriented repository context. */
-  async getRepositoryContext(): Promise<RepositoryContext> {
+  async getRepositoryContext(options: RepositoryContextOptions = {}): Promise<RepositoryContext> {
     const result = await this.ensurePipeline({ dryRun: true });
-    return buildRepositoryContext(result.graph, result.parsed);
+    return buildRepositoryContext(result.graph, result.parsed, options);
   }
 
   /** Structured explanation of a module (or of the module owning a file). */

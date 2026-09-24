@@ -93,6 +93,13 @@ Context updated:
   .agent/decisions.json
 ```
 
+### `context`
+
+Compact repository context summary. Use limits for agent budget control:
+
+```bash
+agent-context context --max-modules 10 --max-entry-points 10 --max-conventions 5 --max-decisions 5
+```
 ### `task <description>`
 
 Get bounded, task-oriented context for an agent.

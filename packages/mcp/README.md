@@ -41,6 +41,21 @@ Returns transitive dependent modules, affected files, tests, relevant convention
 
 ### `get_repository_context`
 
+Get repository context.
+
+```json
+{
+  "root": "/path/to/repository",
+  "maxModules": 10,
+  "maxEntryPoints": 10,
+  "maxExternalDependencies": 10,
+  "maxConventions": 5,
+  "maxDecisions": 5,
+  "maxCycles": 5
+}
+```
+
+
 Get the complete repository context.
 
 **Input:**

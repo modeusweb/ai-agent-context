@@ -41,6 +41,22 @@ describe('lifecycle: init / scan / status / explain / search / diff / clean (sim
     assert.equal(readFileSync(path.join(root, CONFIG_FILE), 'utf8').includes('"prettyJson": false'), false);
   });
 
+  test('repository context supports bounded compact projection', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    const context = await AgentContext.load({ root });
+    await context.scan();
+    const full = await context.getRepositoryContext();
+    const compact = await context.getRepositoryContext({ maxModules: 1, maxEntryPoints: 1, maxExternalDependencies: 1, maxConventions: 1, maxDecisions: 1, maxCycles: 0 });
+    assert.ok(compact.modules.length <= 1);
+    assert.ok(compact.entryPoints.length <= 1);
+    assert.ok(compact.externalDependencies.length <= 1);
+    assert.ok(compact.conventions.length <= 1);
+    assert.ok(compact.decisions.length <= 1);
+    assert.ok(full.modules.length >= compact.modules.length);
+    assert.equal(compact.schemaVersion, full.schemaVersion);
+  });
+
   test('scan generates every documented context file', async () => {
     const root = createTempRepo('simple-ts');
     tempRoots.push(root);

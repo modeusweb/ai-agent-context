@@ -48,6 +48,14 @@ Options:
 - `--quiet` - Minimal output
 - `--json` - JSON output format
 
+### `context`
+
+Compact repository context summary with optional limits.
+
+```bash
+agent-context context --max-modules 10 --max-entry-points 10 --max-conventions 5 --max-decisions 5
+```
+
 ### `task <description>`
 
 Get bounded, task-oriented context for an agent.

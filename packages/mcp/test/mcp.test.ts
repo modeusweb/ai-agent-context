@@ -53,6 +53,21 @@ describe('mcp tool handlers', () => {
     assert.ok(payload.repository !== undefined);
   });
 
+  test('get_repository_context accepts compact limits', async () => {
+    const { root, pool } = await setup();
+    const result = await callTool(
+      'get_repository_context',
+      { maxModules: 1, maxEntryPoints: 1, maxExternalDependencies: 1, maxConventions: 1, maxDecisions: 1, maxCycles: 0 },
+      pool,
+      root,
+    );
+    assert.equal(result.isError, false);
+    const payload = result.payload as { modules: unknown[]; entryPoints: unknown[]; cycles: unknown[] };
+    assert.ok(payload.modules.length <= 1);
+    assert.ok(payload.entryPoints.length <= 1);
+    assert.ok(payload.cycles.length <= 0);
+  });
+
   test('explain_module returns structured module context', async () => {
     const { root, pool } = await setup();
     const result = await callTool('explain_module', { path: 'src/models' }, pool, root);

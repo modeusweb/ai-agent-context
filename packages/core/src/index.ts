@@ -121,7 +121,7 @@ export type { DiffOptions } from './core/diff/differ.ts';
 export { explainModule, resolveTarget, transitiveDependents } from './core/context/explain.ts';
 export type { ExplainInput, ResolvedTarget } from './core/context/explain.ts';
 export { buildRepositoryContext, collectCommands } from './core/context/repository-context.ts';
-export type { RepositoryContext, RepositoryContextPayload, ContextCommand } from './core/context/types.ts';
+export type { RepositoryContext, RepositoryContextOptions, RepositoryContextPayload, ContextCommand } from './core/context/types.ts';
 export { SearchService, toSearchResult } from './core/search/service.ts';
 export type { SearchOptions } from './core/search/service.ts';
 export { Bm25Index } from './core/search/bm25.ts';

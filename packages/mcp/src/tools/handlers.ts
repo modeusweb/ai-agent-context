@@ -104,7 +104,15 @@ export async function callTool(
 
     case 'get_repository_context': {
       const context = await pool.get(root);
-      return { isError: false, payload: await context.getRepositoryContext() };
+      const options = {
+        ...(asNumber(args['maxModules']) === undefined ? {} : { maxModules: asNumber(args['maxModules']) }),
+        ...(asNumber(args['maxEntryPoints']) === undefined ? {} : { maxEntryPoints: asNumber(args['maxEntryPoints']) }),
+        ...(asNumber(args['maxExternalDependencies']) === undefined ? {} : { maxExternalDependencies: asNumber(args['maxExternalDependencies']) }),
+        ...(asNumber(args['maxConventions']) === undefined ? {} : { maxConventions: asNumber(args['maxConventions']) }),
+        ...(asNumber(args['maxDecisions']) === undefined ? {} : { maxDecisions: asNumber(args['maxDecisions']) }),
+        ...(asNumber(args['maxCycles']) === undefined ? {} : { maxCycles: asNumber(args['maxCycles']) }),
+      };
+      return { isError: false, payload: await context.getRepositoryContext(options) };
     }
 
     case 'explain_module': {

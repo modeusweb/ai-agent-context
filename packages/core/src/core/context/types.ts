@@ -11,6 +11,15 @@ export interface ContextCommand {
   scope: string;
 }
 
+export interface RepositoryContextOptions {
+  maxModules?: number;
+  maxEntryPoints?: number;
+  maxExternalDependencies?: number;
+  maxConventions?: number;
+  maxDecisions?: number;
+  maxCycles?: number;
+}
+
 export interface RepositoryContextPayload {
   schemaVersion: number;
   generatedBy: string;

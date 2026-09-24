@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2026-09-24T09:36:30.064Z",
+  "node": "v24.21.0",
+  "rows": [
+    {
+      "repository": "simple-ts",
+      "files": 7,
+      "modules": 2,
+      "dependencies": 0,
+      "scanMs": 135,
+      "compactMs": 69,
+      "compactBytes": 5135,
+      "parsed": 7,
+      "reused": 0
+    },
+    {
+      "repository": "layered-app",
+      "files": 17,
+      "modules": 5,
+      "dependencies": 0,
+      "scanMs": 114,
+      "compactMs": 76,
+      "compactBytes": 12921,
+      "parsed": 17,
+      "reused": 0
+    },
+    {
+      "repository": "monorepo",
+      "files": 14,
+      "modules": 3,
+      "dependencies": 3,
+      "scanMs": 104,
+      "compactMs": 71,
+      "compactBytes": 8203,
+      "parsed": 14,
+      "reused": 0
+    },
+    {
+      "repository": "cli-project",
+      "files": 7,
+      "modules": 1,
+      "dependencies": 0,
+      "scanMs": 84,
+      "compactMs": 66,
+      "compactBytes": 5412,
+      "parsed": 7,
+      "reused": 0
+    },
+    {
+      "repository": "api-project",
+      "files": 10,
+      "modules": 2,
+      "dependencies": 1,
+      "scanMs": 95,
+      "compactMs": 69,
+      "compactBytes": 8828,
+      "parsed": 10,
+      "reused": 0
+    }
+  ]
+}

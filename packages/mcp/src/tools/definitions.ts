@@ -77,8 +77,20 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     title: 'Get repository context',
     description:
       'Compact, structured overview of the repository: languages, file counts, workspace layout, runnable commands, ranked modules with heuristic roles, entry points, external dependencies and documented decisions. Call this first to orient yourself.',
-    inputSchema: { type: 'object', properties: { root: ROOT_PROPERTY }, additionalProperties: false },
-    outputDescription: 'Repository context payload (schema v1).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        root: ROOT_PROPERTY,
+        maxModules: { type: 'number', description: 'Maximum modules (1-100).' },
+        maxEntryPoints: { type: 'number', description: 'Maximum entry points (1-200).' },
+        maxExternalDependencies: { type: 'number', description: 'Maximum external dependencies (1-200).' },
+        maxConventions: { type: 'number', description: 'Maximum conventions (1-200).' },
+        maxDecisions: { type: 'number', description: 'Maximum decisions (1-200).' },
+        maxCycles: { type: 'number', description: 'Maximum dependency cycles (0-200).' },
+      },
+      additionalProperties: false,
+    },
+    outputDescription: 'Repository context payload (schema v1) with optional bounded projections.',
   },
   {
     name: 'explain_module',
