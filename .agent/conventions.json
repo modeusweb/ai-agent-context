@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:1bb85ca9",
+      "id": "imports:e7c4248d",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (59/106 files)."
+      "statement": "Type-only dependencies use `import type` (59/109 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:c14bd6d8",
+      "id": "languages:948ae65a",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (110 files) and JavaScript (6 files)."
+      "statement": "Implementation mixes TypeScript (111 files) and JavaScript (8 files)."
     },
     {
       "category": "Naming",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:4772e515",
+      "id": "naming:ab3066b3",
       "origin": "observed",
-      "statement": "Functions use camelCase (312/315 declarations)."
+      "statement": "Functions use camelCase (314/317 declarations)."
     },
     {
       "category": "Naming",
@@ -145,9 +145,9 @@
           "source": "packages/cli/src/commands/clean.ts"
         }
       ],
-      "id": "naming:7745b219",
+      "id": "naming:e7786469",
       "origin": "observed",
-      "statement": "Source files use camelCase (79/93 files)."
+      "statement": "Source files use camelCase (79/95 files)."
     },
     {
       "category": "Naming",
@@ -201,12 +201,12 @@
         },
         {
           "detail": "test located in a central tests directory",
-          "source": "packages/core/test/architecture.test.ts"
+          "source": "packages/cli/test/public-api.lock.json"
         }
       ],
-      "id": "tests:fbdfa604",
+      "id": "tests:3f3c9ba6",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (21/23 test files)."
+      "statement": "Tests live in a dedicated test directory (25/27 test files)."
     },
     {
       "category": "Toolchain",

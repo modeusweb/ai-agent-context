@@ -4,25 +4,6 @@
       "confidence": 0.45,
       "evidence": [
         {
-          "detail": "section \"architecture.json\" (line 459) matched decision vocabulary",
-          "source": "README.md"
-        },
-        {
-          "detail": "section may describe design context rather than a decision; verify before treating it as an ADR",
-          "source": "README.md"
-        }
-      ],
-      "id": "DOC-08B975",
-      "kind": "documented-section",
-      "origin": "inferred",
-      "source": "README.md#L459",
-      "status": "unknown",
-      "title": "architecture.json"
-    },
-    {
-      "confidence": 0.45,
-      "evidence": [
-        {
           "detail": "section \"Architecture Detection\" (line 92) matched decision vocabulary",
           "source": "packages/core/README.md"
         },

@@ -109,8 +109,20 @@
           "source": "packages/cli/test/cli.test.ts"
         }
       ],
-      "moduleId": "ai-agent-context",
+      "moduleId": "packages/cli/test",
       "path": "packages/cli/test/cli.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/cli/test/public-api.lock.json"
+        }
+      ],
+      "moduleId": "packages/cli/test",
+      "path": "packages/cli/test/public-api.lock.json",
       "type": "test"
     },
     {
@@ -176,6 +188,18 @@
       "moduleId": "packages/core/src",
       "path": "packages/core/src/index.ts",
       "type": "application"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/api-surface.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/api-surface.test.ts",
+      "type": "test"
     },
     {
       "confidence": 0.95,
@@ -362,6 +386,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/public-api.lock.json"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/public-api.lock.json",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/test/resolver.test.ts"
         }
       ],
@@ -523,6 +559,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/mcp/test/public-api.lock.json"
+        }
+      ],
+      "moduleId": "packages/mcp/test",
+      "path": "packages/mcp/test/public-api.lock.json",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "tools/set-version.mjs"
         }
       ],
@@ -563,92 +611,6 @@
     }
   ],
   "modules": [
-    {
-      "basis": "workspace-package",
-      "boundaries": [],
-      "dependsOn": [
-        "packages/core/test"
-      ],
-      "entryPoints": [
-        "packages/cli/test/cli.test.ts"
-      ],
-      "fileList": [
-        "packages/cli/test/cli.test.ts"
-      ],
-      "files": 1,
-      "git": {
-        "architectureChangeSignals": [],
-        "changeFrequency": "low",
-        "contributorCount": 1,
-        "historicalChanges": 5,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 5,
-        "topContributors": [
-          {
-            "commits": 5,
-            "name": "modeusweb"
-          }
-        ]
-      },
-      "id": "ai-agent-context",
-      "isWorkspacePackage": true,
-      "name": "ai-agent-context",
-      "packageName": "ai-agent-context",
-      "path": "packages/cli",
-      "publicExports": [],
-      "responsibilities": [
-        {
-          "confidence": 0.99,
-          "evidence": [
-            {
-              "detail": "module is a workspace package",
-              "source": "package.json"
-            }
-          ],
-          "value": "role: workspace-package (heuristic)"
-        },
-        {
-          "confidence": 0.5,
-          "evidence": [
-            {
-              "detail": "name matches *cli* / *command* (\"/cli/\")",
-              "source": "packages/cli"
-            }
-          ],
-          "value": "role: cli (heuristic)"
-        }
-      ],
-      "roles": [
-        {
-          "confidence": 0.99,
-          "evidence": [
-            {
-              "detail": "module is a workspace package",
-              "source": "package.json"
-            }
-          ],
-          "value": "workspace-package"
-        },
-        {
-          "confidence": 0.5,
-          "evidence": [
-            {
-              "detail": "name matches *cli* / *command* (\"/cli/\")",
-              "source": "packages/cli"
-            }
-          ],
-          "value": "cli"
-        }
-      ],
-      "signals": [
-        "module:esm",
-        "test:suite"
-      ],
-      "testFiles": [
-        "packages/cli/test/cli.test.ts"
-      ],
-      "usedBy": []
-    },
     {
       "basis": "index-file",
       "boundaries": [
@@ -1178,6 +1140,95 @@
       ]
     },
     {
+      "basis": "directory",
+      "boundaries": [],
+      "dependsOn": [
+        "packages/core/test"
+      ],
+      "entryPoints": [
+        "packages/cli/test/cli.test.ts",
+        "packages/cli/test/public-api.lock.json"
+      ],
+      "fileList": [
+        "packages/cli/test/cli.test.ts",
+        "packages/cli/test/public-api.lock.json"
+      ],
+      "files": 2,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "low",
+        "contributorCount": 1,
+        "historicalChanges": 5,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 5,
+        "topContributors": [
+          {
+            "commits": 5,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/cli/test",
+      "isWorkspacePackage": false,
+      "name": "test",
+      "packageName": "ai-agent-context",
+      "path": "packages/cli/test",
+      "publicExports": [],
+      "responsibilities": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli/test"
+            }
+          ],
+          "value": "role: cli (heuristic)"
+        },
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches test vocabulary (\"/test/\")",
+              "source": "packages/cli/test"
+            }
+          ],
+          "value": "role: test-support (heuristic)"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli/test"
+            }
+          ],
+          "value": "cli"
+        },
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches test vocabulary (\"/test/\")",
+              "source": "packages/cli/test"
+            }
+          ],
+          "value": "test-support"
+        }
+      ],
+      "signals": [
+        "module:esm",
+        "test:suite"
+      ],
+      "testFiles": [
+        "packages/cli/test/cli.test.ts",
+        "packages/cli/test/public-api.lock.json"
+      ],
+      "usedBy": []
+    },
+    {
       "basis": "index-file",
       "boundaries": [
         "packages/core/src/adapters/language/registry.ts",
@@ -1246,12 +1297,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 14,
+        "historicalChanges": 15,
         "lastChanged": "2026-10-17",
-        "recentChanges": 14,
+        "recentChanges": 15,
         "topContributors": [
           {
-            "commits": 86,
+            "commits": 87,
             "name": "modeusweb"
           }
         ]
@@ -1788,12 +1839,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 14,
+        "historicalChanges": 15,
         "lastChanged": "2026-10-17",
-        "recentChanges": 14,
+        "recentChanges": 15,
         "topContributors": [
           {
-            "commits": 18,
+            "commits": 19,
             "name": "modeusweb"
           }
         ]
@@ -2362,6 +2413,7 @@
       "boundaries": [],
       "dependsOn": [],
       "entryPoints": [
+        "packages/core/test/api-surface.test.ts",
         "packages/core/test/architecture.test.ts",
         "packages/core/test/canonical.test.ts",
         "packages/core/test/config.test.ts",
@@ -2377,10 +2429,12 @@
         "packages/core/test/integration.test.ts",
         "packages/core/test/language.test.ts",
         "packages/core/test/policy.test.ts",
+        "packages/core/test/public-api.lock.json",
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts"
       ],
       "fileList": [
+        "packages/core/test/api-surface.test.ts",
         "packages/core/test/architecture.test.ts",
         "packages/core/test/canonical.test.ts",
         "packages/core/test/config.test.ts",
@@ -2396,10 +2450,11 @@
         "packages/core/test/integration.test.ts",
         "packages/core/test/language.test.ts",
         "packages/core/test/policy.test.ts",
+        "packages/core/test/public-api.lock.json",
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts"
       ],
-      "files": 17,
+      "files": 19,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
@@ -2523,6 +2578,7 @@
         "test:suite"
       ],
       "testFiles": [
+        "packages/core/test/api-surface.test.ts",
         "packages/core/test/architecture.test.ts",
         "packages/core/test/canonical.test.ts",
         "packages/core/test/config.test.ts",
@@ -2538,11 +2594,12 @@
         "packages/core/test/integration.test.ts",
         "packages/core/test/language.test.ts",
         "packages/core/test/policy.test.ts",
+        "packages/core/test/public-api.lock.json",
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts"
       ],
       "usedBy": [
-        "ai-agent-context",
+        "packages/cli/test",
         "packages/mcp/test"
       ]
     },
@@ -2573,12 +2630,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 12,
+        "historicalChanges": 13,
         "lastChanged": "2026-10-17",
-        "recentChanges": 12,
+        "recentChanges": 13,
         "topContributors": [
           {
-            "commits": 24,
+            "commits": 25,
             "name": "modeusweb"
           }
         ]
@@ -2969,14 +3026,16 @@
       "entryPoints": [
         "packages/mcp/test/mcp.test.ts",
         "packages/mcp/test/presets.test.ts",
-        "packages/mcp/test/protocol.test.ts"
+        "packages/mcp/test/protocol.test.ts",
+        "packages/mcp/test/public-api.lock.json"
       ],
       "fileList": [
         "packages/mcp/test/mcp.test.ts",
         "packages/mcp/test/presets.test.ts",
-        "packages/mcp/test/protocol.test.ts"
+        "packages/mcp/test/protocol.test.ts",
+        "packages/mcp/test/public-api.lock.json"
       ],
-      "files": 3,
+      "files": 4,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
@@ -3028,7 +3087,8 @@
       "testFiles": [
         "packages/mcp/test/mcp.test.ts",
         "packages/mcp/test/presets.test.ts",
-        "packages/mcp/test/protocol.test.ts"
+        "packages/mcp/test/protocol.test.ts",
+        "packages/mcp/test/public-api.lock.json"
       ],
       "usedBy": []
     },
@@ -3041,24 +3101,26 @@
         "tools/smoke.mjs"
       ],
       "fileList": [
+        "tools/api-surface.mjs",
         "tools/benchmark.mjs",
+        "tools/check-stability.mjs",
         "tools/clean.mjs",
         "tools/generate-fixtures.mjs",
         "tools/set-version.mjs",
         "tools/smoke.mjs",
         "tools/trust-metrics.mjs"
       ],
-      "files": 6,
+      "files": 8,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 7,
+        "historicalChanges": 8,
         "lastChanged": "2026-10-17",
-        "recentChanges": 7,
+        "recentChanges": 8,
         "topContributors": [
           {
-            "commits": 9,
+            "commits": 10,
             "name": "modeusweb"
           }
         ]
@@ -3148,7 +3210,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 44,
+    "entryPoints": 48,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3172,21 +3234,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.10.1"
+        "version": "0.11.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.10.1"
+        "version": "0.11.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.10.1"
+        "version": "0.11.0"
       }
     ],
     "workspaceGlobs": [

@@ -1,5 +1,65 @@
 # Migration guide
 
+## v0.11.0
+
+The first v1.0 work: the API stability promise, written down and enforced. No
+behaviour change and no rescan required.
+
+### The public API is now locked
+
+Every symbol each package exports is recorded in
+`packages/core/test/public-api.lock.json`, `packages/cli/test/public-api.lock.json`
+and `packages/mcp/test/public-api.lock.json`. A test in the suite and a dedicated
+CI job (`api surface`) fail when the real exports differ from the lock.
+
+The lock covers all 384 exported symbols across the three packages, including the
+ones that are explicitly *not* promised. That is deliberate: a symbol can only be
+governed once it is known to exist, and an accidental export should show up in a
+diff rather than disappear silently.
+
+```bash
+npm run api:check     # fails when the surface drifted
+npm run api:lock      # rewrite the locks after an intentional change
+```
+
+`npm run verify` now runs `api:check`, so a drift cannot reach master.
+
+### STABILITY.md
+
+States which symbols are a compatibility promise and which are internal. The
+promise is narrow on purpose: `AgentContext`, the configuration and policy
+surface, the error types, the schema constants, the MCP server and protocol
+negotiation helpers, the tool definitions and the client presets. The pipeline,
+the language adapters, the graph internals, the document builders and the
+detectors are exported because they are convenient to test and extend, not
+because they are supported — they may change in a minor release.
+
+It also states the semver rules (a change to what an existing field *means* is a
+major release even when no type moved), the four-step deprecation process with a
+two-minor window, and the `.agent/` schema compatibility policy.
+
+### The document is checked too
+
+`tools/check-stability.mjs` verifies that every symbol `STABILITY.md` names is
+actually exported, and `npm run verify` runs it. It caught a wrong name on its
+first execution — the document had claimed `detectRoles`, which does not exist.
+Documentation that is not compiled drifts; this is the cheapest guard against
+that.
+
+### Node.js compatibility matrix
+
+Written down in the README instead of being implied by CI: the two different
+floors (published packages from 20.11, this repository's test suite from 22.18),
+and why they differ.
+
+### The `publish dry run` CI job passes
+
+It had been failing since before 0.8. `npm pack --pack-destination` does not
+create the directory, and the job wrote to `/tmp/pack` on a fresh runner, so
+every pack failed with ENOENT. The job that exists to prove all three packages
+are packable had never done so.
+
+
 ## v0.10.1
 
 Request timeouts were silently disabled, and a release-order footgun was

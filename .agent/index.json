@@ -17,21 +17,21 @@
         "path": "CONTRIBUTING.md"
       },
       {
-        "hash": "49a662e5116ca8741d0744ca9c71b626fbe2f8d801d1091e27aaf3685019cbd0",
+        "hash": "51b27f30083481b2114f0a94cfab46162f3e3c1e23fcc1000b1d3664dc5d4bd9",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "MIGRATION.md"
       },
       {
-        "hash": "72c0cce5caeae759ae609d1e5d5d9d21a3b254269fb3f4256dfbd3fea626ff6c",
+        "hash": "8dcfd1396e0aa491030024caf3d57afbf7be4e9b8a48302bfafb61771397bcb6",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "README.md"
       },
       {
-        "hash": "818eed3a08c681b4c737419d61f9a511d5f2811a0e07d089f7c0427ceb959765",
+        "hash": "d6233d77d1968c00f95afc0b3a9ad3b951740846c2dcedb16c224363c18ab4dd",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -43,6 +43,13 @@
         "language": "markdown",
         "module": null,
         "path": "SECURITY.md"
+      },
+      {
+        "hash": "321f7c3dc51ff1f624eadf33a2f70a63931eabf0c9009bf255619485aace73d1",
+        "kind": "docs",
+        "language": "markdown",
+        "module": null,
+        "path": "STABILITY.md"
       },
       {
         "hash": "daf9f368dc33fe98d32c7338941bf553809cc44e43803a8eed0281d279b44571",
@@ -59,7 +66,7 @@
         "path": "package-lock.json"
       },
       {
-        "hash": "21347ca4e6cf97a60cd6e700d6fdd7140e0da1011ce6c4917a0492c97fb35a8a",
+        "hash": "4deef9f306efbc825f90ee245ab1c3dfbf25ecdba983936c054efcc95683566c",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -80,7 +87,7 @@
         "path": "packages/cli/README.md"
       },
       {
-        "hash": "2f202d93d0779374158cd082beddeac6aab7e3cd08bb30fbf26720cb861f9c95",
+        "hash": "4a53f267da7769466b092d0339b3e1356b68d735752fa768c2106865bc92f192",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -230,8 +237,15 @@
         "hash": "0b0e5b30b4438a2cda47a010a9ce12606ae153bafa9bef6490180c71533ebec7",
         "kind": "test",
         "language": "typescript",
-        "module": "ai-agent-context",
+        "module": "packages/cli/test",
         "path": "packages/cli/test/cli.test.ts"
+      },
+      {
+        "hash": "170168404191bf7410bf09f7811273f8203c22d4cce488edfe800211cc3cffc2",
+        "kind": "test",
+        "language": "json",
+        "module": "packages/cli/test",
+        "path": "packages/cli/test/public-api.lock.json"
       },
       {
         "hash": "3237dee9e8e4fe205fe84cb6b19936427f4b5a34a7611d066f5f062303f18328",
@@ -255,7 +269,7 @@
         "path": "packages/core/README.md"
       },
       {
-        "hash": "7ce9407bd9d0d7f1b156d04c999f6f13d235c26b555d467c8ac32226cb45b373",
+        "hash": "e99e93f58fd37f9f250c1c9c9d7f494297f0cbdf9dc6a725b5bfc3ecdab1d5c1",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -647,14 +661,14 @@
         "path": "packages/core/src/model/types.ts"
       },
       {
-        "hash": "18599342f2a597b5dc748054895e73bcc5108df372dea761e2c09d36af4ec5ef",
+        "hash": "1d2bfeee24d7d3cea253771acecfad08578577d72d14849af60769671df2317a",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
         "path": "packages/core/src/model/version.ts"
       },
       {
-        "hash": "3291d785c9adf92b7f61748c0d0055ffdca2b807be11c42aad4bc0d9dbe94c24",
+        "hash": "4cf22c9d86d49e2854004787b8acde1df2b01f77a8a0750724b87430f1af3986",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
@@ -687,6 +701,13 @@
         "language": "typescript",
         "module": "packages/core/src/util",
         "path": "packages/core/src/util/text.ts"
+      },
+      {
+        "hash": "4f1b9dac6925b539277f0312ffc08985fe9d380005c02ccee63a59e1ec83bb9f",
+        "kind": "test",
+        "language": "typescript",
+        "module": "packages/core/test",
+        "path": "packages/core/test/api-surface.test.ts"
       },
       {
         "hash": "a331cda92e179ff5af253d7602ee7608630af958dfd9f1dca8eb61cdeae3313b",
@@ -794,6 +815,13 @@
         "path": "packages/core/test/policy.test.ts"
       },
       {
+        "hash": "ccfa5723f92144e630df8020bc3c87025341de1725664d974a939e30a4b68e6d",
+        "kind": "test",
+        "language": "json",
+        "module": "packages/core/test",
+        "path": "packages/core/test/public-api.lock.json"
+      },
+      {
         "hash": "be836d30b5d6259526ad75fdb00d2f4cb9cf2cffcedba956dc248678d0a54b20",
         "kind": "test",
         "language": "typescript",
@@ -829,7 +857,7 @@
         "path": "packages/mcp/README.md"
       },
       {
-        "hash": "1d1c04068a4cfe2a232e9487b6757046e08f522e59efeb13c91a35d51404feba",
+        "hash": "9fbc3ca8d3564d0aef7d2b91a19b8db8376fc6587f5946cf5b394c3ce8af5a0d",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -913,6 +941,13 @@
         "path": "packages/mcp/test/protocol.test.ts"
       },
       {
+        "hash": "8960bfc12ea95d551191945c11b2f3e971da6abd36801befd95293a1b95da803",
+        "kind": "test",
+        "language": "json",
+        "module": "packages/mcp/test",
+        "path": "packages/mcp/test/public-api.lock.json"
+      },
+      {
         "hash": "3237dee9e8e4fe205fe84cb6b19936427f4b5a34a7611d066f5f062303f18328",
         "kind": "config",
         "language": "tsconfig",
@@ -920,11 +955,25 @@
         "path": "packages/mcp/tsconfig.json"
       },
       {
+        "hash": "42e1536a34b8412cfb0d332df85cfe22d9b0f4b95190f13080f06719fc9d5d2a",
+        "kind": "source",
+        "language": "javascript",
+        "module": "tools",
+        "path": "tools/api-surface.mjs"
+      },
+      {
         "hash": "87679306400987a523e93bc643ba692627d6cde7cea5ec4c100ab9221696e99d",
         "kind": "source",
         "language": "javascript",
         "module": "tools",
         "path": "tools/benchmark.mjs"
+      },
+      {
+        "hash": "40f9581f9ea7bd295aa15f496e82e884c80dbad265865fa4e2ee7916db337655",
+        "kind": "source",
+        "language": "javascript",
+        "module": "tools",
+        "path": "tools/check-stability.mjs"
       },
       {
         "hash": "c174220b2a7f1f98b40218d634670842e298df86c7c10247795c1e735aa3392b",
@@ -980,7 +1029,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 32,
+    "commitsAnalyzed": 34,
     "enabled": true,
     "windowDays": 180
   },
@@ -989,16 +1038,16 @@
       "assets": 0,
       "config": 11,
       "conventions": 16,
-      "decisions": 13,
+      "decisions": 12,
       "dependencies": 18,
-      "docs": 8,
-      "entryPoints": 44,
+      "docs": 9,
+      "entryPoints": 48,
       "externalDependencies": 11,
-      "files": 138,
+      "files": 145,
       "modules": 13,
-      "source": 93,
-      "symbols": 741,
-      "tests": 23
+      "source": 95,
+      "symbols": 757,
+      "tests": 27
     },
     "isMonorepo": true,
     "languages": [

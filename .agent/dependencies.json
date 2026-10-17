@@ -364,7 +364,7 @@
       "internalModules": [
         "packages/core/test"
       ],
-      "module": "ai-agent-context"
+      "module": "packages/cli/test"
     },
     {
       "externalPackages": [
@@ -810,6 +810,18 @@
     {
       "externalPackages": [
         "node:assert/strict",
+        "node:fs",
+        "node:path",
+        "node:test",
+        "node:url"
+      ],
+      "file": "packages/core/test/api-surface.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
         "node:test"
       ],
       "file": "packages/core/test/architecture.test.ts",
@@ -1060,12 +1072,32 @@
     {
       "externalPackages": [
         "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/api-surface.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
         "node:os",
         "node:path",
         "node:perf_hooks",
         "node:url"
       ],
       "file": "tools/benchmark.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/check-stability.mjs",
       "internalModules": [],
       "module": "tools"
     },
@@ -1123,22 +1155,6 @@
   ],
   "generatedBy": "ai-agent-context",
   "internal": [
-    {
-      "confidence": 0.99,
-      "evidence": [
-        {
-          "detail": "1 file(s) import packages/core/test",
-          "source": "ai-agent-context"
-        },
-        {
-          "detail": "relative import resolved to packages/core/test/helpers.ts",
-          "source": "packages/cli/test/cli.test.ts"
-        }
-      ],
-      "from": "ai-agent-context",
-      "kind": "internal-module",
-      "to": "packages/core/test"
-    },
     {
       "confidence": 0.99,
       "evidence": [
@@ -1314,6 +1330,22 @@
       "from": "packages/cli/src",
       "kind": "internal-module",
       "to": "packages/cli/src/ui"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "1 file(s) import packages/core/test",
+          "source": "packages/cli/test"
+        },
+        {
+          "detail": "relative import resolved to packages/core/test/helpers.ts",
+          "source": "packages/cli/test/cli.test.ts"
+        }
+      ],
+      "from": "packages/cli/test",
+      "kind": "internal-module",
+      "to": "packages/core/test"
     },
     {
       "confidence": 0.99,
