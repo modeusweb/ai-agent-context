@@ -139,6 +139,23 @@ jobs:
             }
             if (s.imports.pathEscapes > 0) { console.error('path traversal was not rejected'); process.exit(1); }
           "
+      # The project commits .agent/ and diffs it across releases, so a context
+      # that varies without the repository varying is a defect. `determinism`
+      # is measured over two independent scans with the cache bypassed.
+      - name: Fail if any repository produced non-deterministic context
+        run: |
+          node -e "
+            const s = require('/tmp/benchmark.json').summary;
+            console.log('evidence coverage:', s.trust.coveragePercent + '%', 'of', s.trust.judgements, 'judgements');
+            if (s.trust.withoutEvidence > 0) {
+              console.error(s.trust.withoutEvidence + ' judgement(s) carry no evidence');
+              process.exit(1);
+            }
+            if (s.trust.nonDeterministic > 0) {
+              console.error(s.trust.nonDeterministic + ' repository/repositories produced non-deterministic context');
+              process.exit(1);
+            }
+          "
       - uses: actions/upload-artifact@v4
         with:
           name: benchmark-report

@@ -1,5 +1,51 @@
 # Migration guide
 
+## v0.10.0
+
+Trust metrics. No API change, no behaviour change, no rescan required: this
+release measures two things the roadmap had been claiming were measurable and
+were not.
+
+### Evidence coverage
+
+`tools/benchmark.mjs` now walks the documents the analyzer produced and counts
+every object carrying a numeric `confidence` — exactly the shape used for a
+heuristic — then reports how many of them cite at least one piece of evidence.
+
+Structural facts (module ids, paths, import specifiers) carry no `confidence` and
+are deliberately not counted. A repository with no heuristics reports `null`
+rather than `100%`: there was nothing to explain, and a perfect score would
+claim otherwise.
+
+Current measurement across this repository and the five fixtures: **363
+judgements, 363 with evidence, 0 without — 100%**.
+
+### Determinism
+
+The benchmark now scans each tree twice more with the cache bypassed and
+compares a hash of the generated documents byte for byte. Because `force: true`
+re-reads every file, a difference can only come from the analyzer and never from
+what it happened to reuse.
+
+Current measurement: **0 non-deterministic repositories**.
+
+### CI
+
+The `benchmark` job fails when any judgement lacks evidence, or when any
+repository produced non-deterministic context.
+
+### Roadmap
+
+The "Метрики roadmap" section now marks every metric as measured or not
+measured. Two entries — evidence coverage and determinism — became measured in
+this release. One, entry-point and dependency precision/recall, is still not
+measured and is now labelled as such: it needs a labelled corpus that does not
+exist yet.
+
+`benchmark-report.json` gains `summary.trust` and `row.trust`. Nothing reads
+those fields except CI and a human, so a consumer of the report is unaffected.
+
+
 ## v0.9.0
 
 Organization policy, a read-only contract, and schema migration tooling. The

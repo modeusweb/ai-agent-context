@@ -1110,6 +1110,15 @@
       "file": "tools/smoke.mjs",
       "internalModules": [],
       "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:path"
+      ],
+      "file": "tools/trust-metrics.mjs",
+      "internalModules": [],
+      "module": "tools"
     }
   ],
   "generatedBy": "ai-agent-context",

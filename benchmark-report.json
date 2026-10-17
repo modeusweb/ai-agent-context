@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-17T22:34:28.707Z",
+  "generatedAt": "2026-10-17T22:49:14.169Z",
   "node": "v24.21.0",
   "summary": {
     "repositories": 6,
-    "files": 191,
+    "files": 192,
     "imports": {
       "resolved": 32,
       "excludedOutput": 22,
@@ -15,6 +15,13 @@
       "moduleEdges": 32,
       "cycles": 3
     },
+    "trust": {
+      "judgements": 363,
+      "withEvidence": 363,
+      "withoutEvidence": 0,
+      "coveragePercent": 100,
+      "nonDeterministic": 0
+    },
     "tokenBudget": {
       "under8Kb": {
         "modules": 13,
@@ -25,10 +32,10 @@
       },
       "from8To64Kb": {
         "modules": 11,
-        "sourceBytes": 292646,
-        "explainBytes": 91356,
-        "ratio": 0.3122,
-        "savedPercent": 68.8
+        "sourceBytes": 298426,
+        "explainBytes": 91831,
+        "ratio": 0.3077,
+        "savedPercent": 69.2
       },
       "over64Kb": {
         "modules": 2,
@@ -61,7 +68,7 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 136,
+        "coldMs": 135,
         "warmMs": 76,
         "parsed": 7,
         "warmParsed": 0,
@@ -70,6 +77,15 @@
       "compact": {
         "ms": 67,
         "bytes": 4832
+      },
+      "trust": {
+        "judgements": 22,
+        "withEvidence": 22,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "e543b483"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -130,7 +146,7 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 111,
+        "coldMs": 109,
         "warmMs": 80,
         "parsed": 16,
         "warmParsed": 0,
@@ -139,6 +155,15 @@
       "compact": {
         "ms": 71,
         "bytes": 9473
+      },
+      "trust": {
+        "judgements": 75,
+        "withEvidence": 75,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "85923bf2"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -217,15 +242,24 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 99,
-        "warmMs": 77,
+        "coldMs": 98,
+        "warmMs": 79,
         "parsed": 14,
         "warmParsed": 0,
         "warmReused": 14
       },
       "compact": {
-        "ms": 68,
+        "ms": 67,
         "bytes": 8227
+      },
+      "trust": {
+        "judgements": 49,
+        "withEvidence": 49,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "84398162"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -293,14 +327,23 @@
       },
       "scan": {
         "coldMs": 81,
-        "warmMs": 72,
+        "warmMs": 73,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 64,
+        "ms": 62,
         "bytes": 5060
+      },
+      "trust": {
+        "judgements": 22,
+        "withEvidence": 22,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "b0a0517b"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -355,15 +398,24 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 89,
-        "warmMs": 75,
+        "coldMs": 87,
+        "warmMs": 74,
         "parsed": 10,
         "warmParsed": 0,
         "warmReused": 10
       },
       "compact": {
-        "ms": 63,
+        "ms": 69,
         "bytes": 8325
+      },
+      "trust": {
+        "judgements": 50,
+        "withEvidence": 50,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "c0976745"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -405,8 +457,8 @@
     },
     {
       "repository": "ai-agent-context",
-      "files": 137,
-      "sourceFiles": 92,
+      "files": 138,
+      "sourceFiles": 93,
       "modules": 13,
       "imports": {
         "resolved": 18,
@@ -424,15 +476,24 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 475,
-        "warmMs": 157,
-        "parsed": 137,
+        "coldMs": 487,
+        "warmMs": 164,
+        "parsed": 138,
         "warmParsed": 0,
-        "warmReused": 137
+        "warmReused": 138
       },
       "compact": {
-        "ms": 151,
-        "bytes": 20102
+        "ms": 148,
+        "bytes": 20105
+      },
+      "trust": {
+        "judgements": 145,
+        "withEvidence": 145,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "382f6122"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -444,10 +505,10 @@
         },
         "from8To64Kb": {
           "modules": 11,
-          "sourceBytes": 292646,
-          "explainBytes": 91356,
-          "ratio": 0.3122,
-          "savedPercent": 68.8
+          "sourceBytes": 298426,
+          "explainBytes": 91831,
+          "ratio": 0.3077,
+          "savedPercent": 69.2
         },
         "over64Kb": {
           "modules": 2,
@@ -471,9 +532,9 @@
           },
           {
             "module": "tools",
-            "bytes": 54054,
-            "explainBytes": 7943,
-            "ratio": 0.1469
+            "bytes": 59366,
+            "explainBytes": 8418,
+            "ratio": 0.1418
           },
           {
             "module": "packages/mcp/src",

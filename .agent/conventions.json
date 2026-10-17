@@ -43,9 +43,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "exports:af4e82c8",
+      "id": "exports:88d6ecd0",
       "origin": "observed",
-      "statement": "Modules use named exports rather than default exports (426/426 exported symbols are named)."
+      "statement": "Modules use named exports rather than default exports (429/429 exported symbols are named)."
     },
     {
       "category": "Imports",
@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:0be8e1c2",
+      "id": "imports:1bb85ca9",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (59/105 files)."
+      "statement": "Type-only dependencies use `import type` (59/106 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:683694d9",
+      "id": "languages:c14bd6d8",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (110 files) and JavaScript (5 files)."
+      "statement": "Implementation mixes TypeScript (110 files) and JavaScript (6 files)."
     },
     {
       "category": "Naming",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:fc48ac2a",
+      "id": "naming:4772e515",
       "origin": "observed",
-      "statement": "Functions use camelCase (309/312 declarations)."
+      "statement": "Functions use camelCase (312/315 declarations)."
     },
     {
       "category": "Naming",
@@ -145,9 +145,9 @@
           "source": "packages/cli/src/commands/clean.ts"
         }
       ],
-      "id": "naming:0eec3e7a",
+      "id": "naming:7745b219",
       "origin": "observed",
-      "statement": "Source files use camelCase (79/92 files)."
+      "statement": "Source files use camelCase (79/93 files)."
     },
     {
       "category": "Naming",

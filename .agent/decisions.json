@@ -42,6 +42,36 @@
       "confidence": 0.45,
       "evidence": [
         {
+          "detail": "commit message matched an architectural keyword (2026-10-17, 3 file(s) changed)",
+          "source": "git:792c7c6e"
+        }
+      ],
+      "id": "GIT-792c7c6e",
+      "kind": "git-signal",
+      "origin": "inferred",
+      "source": "git:792c7c6e",
+      "status": "unknown",
+      "title": "fix(cli): say what migrate did instead of \"nothing to do\""
+    },
+    {
+      "confidence": 0.45,
+      "evidence": [
+        {
+          "detail": "commit message matched an architectural keyword (2026-10-17, 4 file(s) changed)",
+          "source": "git:9904d772"
+        }
+      ],
+      "id": "GIT-9904d772",
+      "kind": "git-signal",
+      "origin": "inferred",
+      "source": "git:9904d772",
+      "status": "unknown",
+      "title": "chore(release): v0.9.1 - report what migrate actually did"
+    },
+    {
+      "confidence": 0.45,
+      "evidence": [
+        {
           "detail": "commit message matched an architectural keyword (2026-10-17, 9 file(s) changed)",
           "source": "git:e787c1d3"
         }

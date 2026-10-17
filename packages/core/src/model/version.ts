@@ -6,4 +6,4 @@
  * tool invalidates the incremental parse cache. A test keeps it in sync with
  * `packages/core/package.json`.
  */
-export const TOOL_VERSION = '0.9.1';
+export const TOOL_VERSION = '0.10.0';

@@ -36,6 +36,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { AgentContext } from '../packages/core/dist/index.js';
+import { evidenceCoverage, hashDocuments } from './trust-metrics.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -161,8 +162,23 @@ async function measure(source) {
       });
     }
 
-    const sizeBuckets = { under8Kb: [], from8To64Kb: [], over64Kb: [] };
-    for (const entry of perModule) {
+    // Trust metrics, computed from the documents the tool actually produced.
+    //
+    // Determinism is checked against a second, independent scan of the same
+    // tree: the cache is bypassed, so a difference can only come from the
+    // analyzer rather than from what it happened to reuse.
+    const coverage = evidenceCoverage({
+      architecture,
+      dependencies,
+      conventions: await context.getConventions(),
+      decisions: await context.getDecisions(),
+    });
+    await context.scan({ force: true, dryRun: true });
+    const firstHash = hashDocuments(target);
+    await context.scan({ force: true, dryRun: true });
+    const secondHash = hashDocuments(target);
+
+    const sizeBuckets = { under8Kb: [], from8To64Kb: [], over64Kb: [] };    for (const entry of perModule) {
       if (entry.bytes < 8 * 1024) sizeBuckets.under8Kb.push(entry);
       else if (entry.bytes <= 64 * 1024) sizeBuckets.from8To64Kb.push(entry);
       else sizeBuckets.over64Kb.push(entry);
@@ -215,7 +231,7 @@ async function measure(source) {
         ms: Math.round(compactMs),
         bytes: Buffer.byteLength(JSON.stringify(compact)),
       },
-      tokenBudget: {
+      trust: {         judgements: coverage.judgements,         withEvidence: coverage.withEvidence,         withoutEvidence: coverage.withoutEvidence,         coveragePercent: coverage.coverage,         unsupportedEvidence: coverage.samples,         deterministic: firstHash === secondHash,         contextHash: firstHash,       },      tokenBudget: {
         under8Kb: summarize(sizeBuckets.under8Kb),
         from8To64Kb: summarize(sizeBuckets.from8To64Kb),
         over64Kb: summarize(sizeBuckets.over64Kb),
@@ -258,7 +274,7 @@ const totals = rows.reduce(
     acc.imports.pathEscapes += row.imports.pathEscapes;
     acc.graph.moduleEdges += row.graph.moduleEdges;
     acc.graph.cycles += row.graph.cycles;
-    for (const bucket of ['under8Kb', 'from8To64Kb', 'over64Kb']) {
+    acc.trust.judgements += row.trust.judgements;     acc.trust.withEvidence += row.trust.withEvidence;     acc.trust.withoutEvidence += row.trust.withoutEvidence;     if (!row.trust.deterministic) acc.trust.nonDeterministic += 1;    for (const bucket of ['under8Kb', 'from8To64Kb', 'over64Kb']) {
       acc.tokenBudget[bucket].sourceBytes += row.tokenBudget[bucket].sourceBytes;
       acc.tokenBudget[bucket].explainBytes += row.tokenBudget[bucket].explainBytes;
       acc.tokenBudget[bucket].modules += row.tokenBudget[bucket].modules;
@@ -268,6 +284,7 @@ const totals = rows.reduce(
   {
     imports: { resolved: 0, excludedOutput: 0, actionableUnresolved: 0, pathEscapes: 0 },
     graph: { moduleEdges: 0, cycles: 0 },
+    trust: { judgements: 0, withEvidence: 0, withoutEvidence: 0, nonDeterministic: 0 },
     tokenBudget: {
       under8Kb: { modules: 0, sourceBytes: 0, explainBytes: 0 },
       from8To64Kb: { modules: 0, sourceBytes: 0, explainBytes: 0 },
@@ -299,6 +316,16 @@ const report = {
       resolutionRate: ratio(totals.imports.resolved, resolvableTotal),
     },
     graph: totals.graph,
+    trust: {
+      judgements: totals.trust.judgements,
+      withEvidence: totals.trust.withEvidence,
+      withoutEvidence: totals.trust.withoutEvidence,
+      coveragePercent:
+        totals.trust.judgements === 0
+          ? null
+          : Number(((totals.trust.withEvidence / totals.trust.judgements) * 100).toFixed(1)),
+      nonDeterministic: totals.trust.nonDeterministic,
+    },
     tokenBudget: {
       under8Kb: withRatio(totals.tokenBudget.under8Kb),
       from8To64Kb: withRatio(totals.tokenBudget.from8To64Kb),

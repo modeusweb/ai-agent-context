@@ -857,15 +857,21 @@
       ],
       "files": 15,
       "git": {
-        "architectureChangeSignals": [],
+        "architectureChangeSignals": [
+          {
+            "date": "2026-10-17",
+            "sha": "792c7c6e",
+            "subject": "fix(cli): say what migrate did instead of \"nothing to do\""
+          }
+        ],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 9,
+        "historicalChanges": 10,
         "lastChanged": "2026-10-17",
-        "recentChanges": 9,
+        "recentChanges": 10,
         "topContributors": [
           {
-            "commits": 21,
+            "commits": 22,
             "name": "modeusweb"
           }
         ]
@@ -1773,15 +1779,21 @@
       ],
       "files": 4,
       "git": {
-        "architectureChangeSignals": [],
+        "architectureChangeSignals": [
+          {
+            "date": "2026-10-17",
+            "sha": "9904d772",
+            "subject": "chore(release): v0.9.1 - report what migrate actually did"
+          }
+        ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 12,
+        "historicalChanges": 13,
         "lastChanged": "2026-10-17",
-        "recentChanges": 12,
+        "recentChanges": 13,
         "topContributors": [
           {
-            "commits": 16,
+            "commits": 17,
             "name": "modeusweb"
           }
         ]
@@ -3033,9 +3045,10 @@
         "tools/clean.mjs",
         "tools/generate-fixtures.mjs",
         "tools/set-version.mjs",
-        "tools/smoke.mjs"
+        "tools/smoke.mjs",
+        "tools/trust-metrics.mjs"
       ],
-      "files": 5,
+      "files": 6,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
@@ -3057,6 +3070,21 @@
       "path": "tools",
       "publicExports": [
         {
+          "file": "tools/trust-metrics.mjs",
+          "kind": "function",
+          "name": "collectJudgements"
+        },
+        {
+          "file": "tools/trust-metrics.mjs",
+          "kind": "function",
+          "name": "evidenceCoverage"
+        },
+        {
+          "file": "tools/trust-metrics.mjs",
+          "kind": "function",
+          "name": "hashDocuments"
+        },
+        {
           "file": "tools/generate-fixtures.mjs",
           "kind": "function",
           "name": "writeAllFixtures"
@@ -3077,11 +3105,19 @@
           "confidence": 0.9,
           "evidence": [
             {
-              "detail": "exports writeAllFixtures (function)",
-              "source": "tools/generate-fixtures.mjs"
+              "detail": "exports collectJudgements (function)",
+              "source": "tools/trust-metrics.mjs"
+            },
+            {
+              "detail": "exports evidenceCoverage (function)",
+              "source": "tools/trust-metrics.mjs"
+            },
+            {
+              "detail": "exports hashDocuments (function)",
+              "source": "tools/trust-metrics.mjs"
             }
           ],
-          "value": "public API: writeAllFixtures"
+          "value": "public API: collectJudgements, evidenceCoverage, hashDocuments, writeAllFixtures"
         }
       ],
       "roles": [
@@ -3136,21 +3172,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.9.0"
+        "version": "0.10.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.9.0"
+        "version": "0.10.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.9.0"
+        "version": "0.10.0"
       }
     ],
     "workspaceGlobs": [

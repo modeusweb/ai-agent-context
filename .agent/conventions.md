@@ -17,7 +17,7 @@ evidence behind it are listed. Statements marked `config` come from declared con
 
 ## Exports
 
-- Modules use named exports rather than default exports (426/426 exported symbols are named). _(confidence 0.85, observed)_
+- Modules use named exports rather than default exports (429/429 exported symbols are named). _(confidence 0.85, observed)_
   - evidence: `packages/cli/src/cli.ts` — exports CLI_NAME
   - evidence: `packages/cli/src/cli.ts` — exports CLI_VERSION
   - evidence: `packages/cli/src/cli.ts` — exports CliIo
@@ -26,12 +26,12 @@ evidence behind it are listed. Statements marked `config` come from declared con
 
 - External dependencies are imported before internal modules (33/39 files). _(confidence 0.75, observed)_
   - evidence: `<repository>` — import order observed across files that import both kinds of modules
-- Type-only dependencies use `import type` (59/105 files). _(confidence 0.80, observed)_
+- Type-only dependencies use `import type` (59/106 files). _(confidence 0.80, observed)_
   - evidence: `<repository>` — import type / export type statements detected
 
 ## Languages
 
-- Implementation mixes TypeScript (110 files) and JavaScript (5 files). _(confidence 0.90, observed)_
+- Implementation mixes TypeScript (110 files) and JavaScript (6 files). _(confidence 0.90, observed)_
   - evidence: `<repository>` — languages are derived from file extensions, not from content guessing
 
 ## Naming
@@ -40,11 +40,11 @@ evidence behind it are listed. Statements marked `config` come from declared con
   - evidence: `packages/cli/src/ui/console.ts` — class "ConsoleOutput" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/fs-adapter.ts` — class "FileSystemAdapter" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/sensitive.ts` — class "SensitivePathFilter" uses PascalCase
-- Functions use camelCase (309/312 declarations). _(confidence 0.95, observed)_
+- Functions use camelCase (312/315 declarations). _(confidence 0.95, observed)_
   - evidence: `packages/cli/src/cli.ts` — function "appendFlag" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "parseArguments" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "flagString" uses camelCase
-- Source files use camelCase (79/92 files). _(confidence 0.92, observed)_
+- Source files use camelCase (79/93 files). _(confidence 0.92, observed)_
   - evidence: `packages/cli/src/bin.ts` — file name uses camelCase
   - evidence: `packages/cli/src/cli.ts` — file name uses camelCase
   - evidence: `packages/cli/src/commands/clean.ts` — file name uses camelCase
