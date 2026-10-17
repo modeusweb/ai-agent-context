@@ -48,6 +48,7 @@ import { readPersistedContext, type PersistedContext } from './core/serializatio
 import { LocalStateStore, type LocalState } from './core/scanner/cache.ts';
 import type { ArchitectureDocument, DependenciesDocument, IndexDocument } from './core/serialization/types.ts';
 import { explainModule } from './core/context/explain.ts';
+import type { ExplainDetail } from './core/context/explain.ts';
 import { buildRepositoryContext } from './core/context/repository-context.ts';
 import type { RepositoryContext, RepositoryContextOptions } from './core/context/types.ts';
 import { SearchService, type SearchOptions } from './core/search/service.ts';
@@ -242,9 +243,20 @@ export class AgentContext {
   }
 
   /** Structured explanation of a module (or of the module owning a file). */
-  async explain(target: string): Promise<ModuleExplanation | null> {
+  async explain(
+    target: string,
+    options: { detail?: ExplainDetail; compactSourceThresholdBytes?: number } = {},
+  ): Promise<ModuleExplanation | null> {
     const result = await this.ensurePipeline({ dryRun: true });
-    return explainModule({ graph: result.graph, parsed: result.parsed, target });
+    return explainModule({
+      graph: result.graph,
+      parsed: result.parsed,
+      target,
+      ...(options.detail === undefined ? {} : { detail: options.detail }),
+      ...(options.compactSourceThresholdBytes === undefined
+        ? {}
+        : { compactSourceThresholdBytes: options.compactSourceThresholdBytes }),
+    });
   }
 
   /** Task-oriented, bounded context for an agent. */

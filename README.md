@@ -180,6 +180,34 @@ Scope:
 
 The JSON payload carries the same information in a `scope` field.
 
+#### Detail levels
+
+`explain` returns one of two projections, reported in the `detail` field:
+
+| Level | Contents | When `auto` picks it |
+| --- | --- | --- |
+| `compact` | Structure only: dependencies, dependents, tests, impact, file list. Drops the internal symbol dump and the repository-wide conventions/decisions that merely mention the module. | The module's own source is under 8 KB |
+| `full` | Everything: per-symbol detail, entry-point evidence, scoped conventions and decisions. | Otherwise |
+
+```bash
+agent-context explain src/payments                    # auto
+agent-context explain src/payments --detail full      # force the full projection
+agent-context explain src/payments --detail compact   # force the cheap one
+```
+
+**Why the threshold exists.** Describing a module is only worth doing when the
+description is smaller than the module. Measured on this repository: explaining
+the 383 KB `packages/core/src` module costs 16 KB (a 95.8% reduction), while the
+`full` projection of a 300-byte fixture module costs 2–9x the module itself. For
+modules that small the honest answer is "read the two files", which is what
+`compact` leaves the agent free to do — it keeps the structure and drops the
+symbol dump. Measured on the fixtures, `auto` cuts the cost of a small-module
+explanation from 1.84x its source to 0.72x.
+
+Every fact still carries a confidence and evidence in both projections; the
+compact level trims how many evidence entries are listed, not whether they
+exist.
+
 ### `diff`
 
 Shows context changes since last scan:

@@ -119,7 +119,11 @@ export async function callTool(
       const target = asString(args['path']) ?? asString(args['module']);
       if (target === undefined) return errorPayload('explain_module requires the "path" argument');
       const context = await pool.get(root);
-      const explanation = await context.explain(target);
+      const detail = asString(args['detail']);
+      const explanation = await context.explain(
+        target,
+        detail === 'full' || detail === 'compact' ? { detail } : {},
+      );
       if (explanation === null) {
         return errorPayload(`no module or file matched "${target}"`, {
           hint: 'Call get_repository_context to list module ids, or search_context to find the module.',

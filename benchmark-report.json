@@ -1,61 +1,494 @@
 {
-  "generatedAt": "2026-09-24T10:27:15.181Z",
+  "generatedAt": "2026-10-17T07:01:55.439Z",
   "node": "v24.21.0",
+  "summary": {
+    "repositories": 6,
+    "files": 180,
+    "imports": {
+      "resolved": 32,
+      "excludedOutput": 17,
+      "actionableUnresolved": 0,
+      "pathEscapes": 0,
+      "resolutionRate": 1
+    },
+    "graph": {
+      "moduleEdges": 32,
+      "cycles": 3
+    },
+    "tokenBudget": {
+      "under8Kb": {
+        "modules": 13,
+        "sourceBytes": 16677,
+        "explainBytes": 34531,
+        "ratio": 2.0706,
+        "savedPercent": -107.1
+      },
+      "from8To64Kb": {
+        "modules": 12,
+        "sourceBytes": 278196,
+        "explainBytes": 95446,
+        "ratio": 0.3431,
+        "savedPercent": 65.7
+      },
+      "over64Kb": {
+        "modules": 1,
+        "sourceBytes": 382857,
+        "explainBytes": 15925,
+        "ratio": 0.0416,
+        "savedPercent": 95.8
+      }
+    }
+  },
   "rows": [
     {
       "repository": "simple-ts",
       "files": 7,
+      "sourceFiles": 3,
       "modules": 2,
-      "dependencies": 0,
-      "scanMs": 134,
-      "compactMs": 66,
-      "compactBytes": 5159,
-      "parsed": 7,
-      "reused": 0
+      "imports": {
+        "resolved": 1,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 1,
+        "crossPackageEdges": 0,
+        "externalPackages": 2,
+        "cycles": 0,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 132,
+        "warmMs": 72,
+        "parsed": 7,
+        "warmParsed": 0,
+        "warmReused": 7
+      },
+      "compact": {
+        "ms": 62,
+        "bytes": 4832
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 2,
+          "sourceBytes": 1106,
+          "explainBytes": 3535,
+          "ratio": 3.1962,
+          "savedPercent": -219.6
+        },
+        "from8To64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "over64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "largest": [
+          {
+            "module": "src",
+            "bytes": 856,
+            "explainBytes": 2296,
+            "ratio": 2.6822
+          },
+          {
+            "module": "simple-ts",
+            "bytes": 250,
+            "explainBytes": 1239,
+            "ratio": 4.956
+          }
+        ]
+      }
     },
     {
       "repository": "layered-app",
-      "files": 17,
+      "files": 16,
+      "sourceFiles": 10,
       "modules": 5,
-      "dependencies": 0,
-      "scanMs": 111,
-      "compactMs": 71,
-      "compactBytes": 12945,
-      "parsed": 17,
-      "reused": 0
+      "imports": {
+        "resolved": 8,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 8,
+        "crossPackageEdges": 0,
+        "externalPackages": 5,
+        "cycles": 0,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 108,
+        "warmMs": 75,
+        "parsed": 16,
+        "warmParsed": 0,
+        "warmReused": 16
+      },
+      "compact": {
+        "ms": 65,
+        "bytes": 9473
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 5,
+          "sourceBytes": 6412,
+          "explainBytes": 13234,
+          "ratio": 2.0639,
+          "savedPercent": -106.4
+        },
+        "from8To64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "over64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "largest": [
+          {
+            "module": "src/application",
+            "bytes": 1842,
+            "explainBytes": 1978,
+            "ratio": 1.0738
+          },
+          {
+            "module": "src/api",
+            "bytes": 1600,
+            "explainBytes": 2907,
+            "ratio": 1.8169
+          },
+          {
+            "module": "src/infrastructure",
+            "bytes": 1301,
+            "explainBytes": 2472,
+            "ratio": 1.9001
+          },
+          {
+            "module": "layered-app",
+            "bytes": 1131,
+            "explainBytes": 3403,
+            "ratio": 3.0088
+          },
+          {
+            "module": "src/domain",
+            "bytes": 538,
+            "explainBytes": 2474,
+            "ratio": 4.5985
+          }
+        ]
+      }
     },
     {
       "repository": "monorepo",
       "files": 14,
+      "sourceFiles": 9,
       "modules": 3,
-      "dependencies": 3,
-      "scanMs": 97,
-      "compactMs": 65,
-      "compactBytes": 8227,
-      "parsed": 14,
-      "reused": 0
+      "imports": {
+        "resolved": 3,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 3,
+        "crossPackageEdges": 0,
+        "externalPackages": 3,
+        "cycles": 0,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 92,
+        "warmMs": 72,
+        "parsed": 14,
+        "warmParsed": 0,
+        "warmReused": 14
+      },
+      "compact": {
+        "ms": 62,
+        "bytes": 8227
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 3,
+          "sourceBytes": 3018,
+          "explainBytes": 8007,
+          "ratio": 2.6531,
+          "savedPercent": -165.3
+        },
+        "from8To64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "over64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "largest": [
+          {
+            "module": "packages/payments/src",
+            "bytes": 1511,
+            "explainBytes": 2878,
+            "ratio": 1.9047
+          },
+          {
+            "module": "packages/api/src",
+            "bytes": 829,
+            "explainBytes": 2946,
+            "ratio": 3.5537
+          },
+          {
+            "module": "packages/users/src",
+            "bytes": 678,
+            "explainBytes": 2183,
+            "ratio": 3.2198
+          }
+        ]
+      }
     },
     {
       "repository": "cli-project",
       "files": 7,
+      "sourceFiles": 3,
       "modules": 1,
-      "dependencies": 0,
-      "scanMs": 81,
-      "compactMs": 62,
-      "compactBytes": 5436,
-      "parsed": 7,
-      "reused": 0
+      "imports": {
+        "resolved": 0,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 0,
+        "crossPackageEdges": 0,
+        "externalPackages": 4,
+        "cycles": 0,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 78,
+        "warmMs": 67,
+        "parsed": 7,
+        "warmParsed": 0,
+        "warmReused": 7
+      },
+      "compact": {
+        "ms": 57,
+        "bytes": 5060
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 1,
+          "sourceBytes": 1381,
+          "explainBytes": 2422,
+          "ratio": 1.7538,
+          "savedPercent": -75.4
+        },
+        "from8To64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "over64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "largest": [
+          {
+            "module": "cli-project",
+            "bytes": 1381,
+            "explainBytes": 2422,
+            "ratio": 1.7538
+          }
+        ]
+      }
     },
     {
       "repository": "api-project",
       "files": 10,
+      "sourceFiles": 6,
       "modules": 2,
-      "dependencies": 1,
-      "scanMs": 89,
-      "compactMs": 64,
-      "compactBytes": 9121,
-      "parsed": 10,
-      "reused": 0
+      "imports": {
+        "resolved": 2,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 2,
+        "crossPackageEdges": 0,
+        "externalPackages": 6,
+        "cycles": 1,
+        "layeringViolations": 1
+      },
+      "scan": {
+        "coldMs": 84,
+        "warmMs": 70,
+        "parsed": 10,
+        "warmParsed": 0,
+        "warmReused": 10
+      },
+      "compact": {
+        "ms": 59,
+        "bytes": 8325
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 2,
+          "sourceBytes": 4760,
+          "explainBytes": 7333,
+          "ratio": 1.5405,
+          "savedPercent": -54.1
+        },
+        "from8To64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "over64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "largest": [
+          {
+            "module": "api-project",
+            "bytes": 3198,
+            "explainBytes": 4511,
+            "ratio": 1.4106
+          },
+          {
+            "module": "src/services",
+            "bytes": 1562,
+            "explainBytes": 2822,
+            "ratio": 1.8067
+          }
+        ]
+      }
+    },
+    {
+      "repository": "ai-agent-context",
+      "files": 126,
+      "sourceFiles": 86,
+      "modules": 13,
+      "imports": {
+        "resolved": 18,
+        "excludedOutput": 17,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 18,
+        "crossPackageEdges": 0,
+        "externalPackages": 11,
+        "cycles": 2,
+        "layeringViolations": 1
+      },
+      "scan": {
+        "coldMs": 459,
+        "warmMs": 143,
+        "parsed": 126,
+        "warmParsed": 0,
+        "warmReused": 126
+      },
+      "compact": {
+        "ms": 131,
+        "bytes": 19471
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "from8To64Kb": {
+          "modules": 12,
+          "sourceBytes": 278196,
+          "explainBytes": 95446,
+          "ratio": 0.3431,
+          "savedPercent": 65.7
+        },
+        "over64Kb": {
+          "modules": 1,
+          "sourceBytes": 382857,
+          "explainBytes": 15925,
+          "ratio": 0.0416,
+          "savedPercent": 95.8
+        },
+        "largest": [
+          {
+            "module": "packages/core/src",
+            "bytes": 382857,
+            "explainBytes": 15925,
+            "ratio": 0.0416
+          },
+          {
+            "module": "packages/core/test",
+            "bytes": 65238,
+            "explainBytes": 12737,
+            "ratio": 0.1952
+          },
+          {
+            "module": "tools",
+            "bytes": 42556,
+            "explainBytes": 6714,
+            "ratio": 0.1578
+          },
+          {
+            "module": "packages/mcp/src/tools",
+            "bytes": 24261,
+            "explainBytes": 5816,
+            "ratio": 0.2397
+          },
+          {
+            "module": "packages/core/src/model",
+            "bytes": 20618,
+            "explainBytes": 12340,
+            "ratio": 0.5985
+          }
+        ]
+      }
     }
   ]
 }

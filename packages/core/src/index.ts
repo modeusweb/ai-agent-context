@@ -119,8 +119,13 @@ export { computeGitActivity, applyGitSignals, bucket } from './core/git-analysis
 export type { GitActivityInput, GitActivityResult } from './core/git-analysis/activity.ts';
 export { diffContext, hashDocuments } from './core/diff/differ.ts';
 export type { DiffOptions } from './core/diff/differ.ts';
-export { explainModule, resolveTarget, transitiveDependents } from './core/context/explain.ts';
-export type { ExplainInput, ResolvedTarget } from './core/context/explain.ts';
+export {
+  explainModule,
+  resolveTarget,
+  transitiveDependents,
+  COMPACT_SOURCE_THRESHOLD_BYTES,
+} from './core/context/explain.ts';
+export type { ExplainInput, ExplainDetail, ResolvedTarget } from './core/context/explain.ts';
 export { buildRepositoryContext, collectCommands } from './core/context/repository-context.ts';
 export type { RepositoryContext, RepositoryContextOptions, RepositoryContextPayload, ContextCommand } from './core/context/types.ts';
 export { SearchService, toSearchResult } from './core/search/service.ts';

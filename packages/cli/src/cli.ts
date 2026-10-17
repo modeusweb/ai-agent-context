@@ -64,6 +64,7 @@ const VALUED_FLAGS = new Set([
   'base',
   'revision',
   'limit-history',
+  'detail',
 ]);
 
 const KNOWN_FLAGS = new Set([
@@ -98,6 +99,7 @@ const KNOWN_FLAGS = new Set([
   'base',
   'revision',
   'limit-history',
+  'detail',
 ]);
 
 function appendFlag(flags: Map<string, string | boolean>, name: string, value: string): void {

@@ -27,15 +27,42 @@ function run(root: string, args: string[]): { stdout: string; status: number } {
       cwd: root,
       encoding: 'utf8',
       env: { ...process.env, NO_COLOR: '1' },
+      stdio: ['ignore', 'pipe', 'pipe'],
     });
     return { stdout, status: 0 };
   } catch (error) {
-    const failure = error as { status?: number; stdout?: string };
-    return { stdout: failure.stdout ?? String(error), status: failure.status ?? 1 };
+    // Diagnostics and usage errors go to stderr; fold it in so assertions can
+    // check the message regardless of which stream the CLI chose.
+    const failure = error as { status?: number; stdout?: string; stderr?: string };
+    return {
+      stdout: `${failure.stdout ?? ''}${failure.stderr ?? ''}` || String(error),
+      status: failure.status ?? 1,
+    };
   }
 }
 
 describe('cli end-to-end', () => {
+  test('explain rejects an unknown --detail value instead of ignoring it', () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    run(root, ['init']);
+    run(root, ['scan']);
+
+    // A valued flag that is not registered as valued parses as a bare boolean,
+    // the value leaks into the positional arguments and the option is silently
+    // dropped. The command must fail loudly instead.
+    const bad = run(root, ['explain', 'src', '--detail', 'bogus']);
+    assert.equal(bad.status, 2, bad.stdout);
+    assert.match(bad.stdout, /--detail must be one of/);
+
+    const good = run(root, ['explain', 'src', '--detail', 'compact']);
+    assert.equal(good.status, 0, good.stdout);
+    const payload = JSON.parse(run(root, ['explain', 'src', '--detail', 'compact', '--json']).stdout) as {
+      detail?: string;
+    };
+    assert.equal(payload.detail, 'compact');
+  });
+
   test('init / scan / status / explain / search / diff lifecycle', () => {
     const root = createTempRepo('simple-ts');
     tempRoots.push(root);

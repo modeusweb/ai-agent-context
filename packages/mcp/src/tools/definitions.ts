@@ -99,11 +99,21 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       'Structured explanation of one module (or of the module owning a file path): entry points, internal dependencies, dependents, external packages, public API, relevant conventions and decisions, tests, neutral git activity and the transitive change impact set.',
     inputSchema: {
       type: 'object',
-      properties: { path: MODULE_PROPERTY, root: ROOT_PROPERTY },
+      properties: {
+        path: MODULE_PROPERTY,
+        root: ROOT_PROPERTY,
+        detail: {
+          type: 'string',
+          enum: ['auto', 'full', 'compact'],
+          description:
+            'Level of detail. "compact" keeps structure only and is cheaper for small modules; "full" adds per-symbol detail and evidence. Defaults to "auto", which picks compact for modules small enough that reading the source is cheaper.',
+        },
+      },
       required: ['path'],
       additionalProperties: false,
     },
-    outputDescription: 'Module explanation with confidence-carrying heuristics and their evidence.',
+    outputDescription:
+      'Module explanation with confidence-carrying heuristics and their evidence. A narrow directory is answered with a "scope" field instead of widening to the whole module.',
   },
   {
     name: 'get_dependencies',

@@ -826,6 +826,15 @@
         "node:assert/strict",
         "node:test"
       ],
+      "file": "packages/core/test/explain-detail.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
       "file": "packages/core/test/explain.test.ts",
       "internalModules": [],
       "module": "packages/core/test"
@@ -1428,7 +1437,7 @@
     "cycles": 2,
     "externalPackages": 11,
     "internalModuleEdges": 18,
-    "unresolvedImports": 16
+    "unresolvedImports": 17
   },
   "unresolved": [
     {
@@ -1464,6 +1473,13 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/determinism.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/explain-detail.test.ts",
       "specifier": "../dist/index.js"
     },
     {

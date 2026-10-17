@@ -480,5 +480,7 @@ export interface ModuleExplanation {
    * whole module would understate the real change surface.
    */
   scope?: { moduleId: string; directory: string; fileCount: number };
+  /** Which projection produced this answer: `compact` or `full`. */
+  detail: 'compact' | 'full';
   warnings: DiagnosticPayload[];
 }

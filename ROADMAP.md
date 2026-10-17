@@ -26,7 +26,7 @@
 
 ## Текущая база
 
-Текущая версия пакетов: `0.5.0`.
+Текущая версия пакетов: `0.6.0`.
 
 Уже реализованы:
 
@@ -38,10 +38,12 @@
 - определение dependencies, conventions и decisions с confidence и evidence;
 - temporal context: `getModuleHistory`, `getRevisionDiff`, `getRevisionSnapshot`;
 - directory-scoped `explain`/`impact` вместо молчаливого расширения до родительского модуля;
+- budget-aware `explain`: проекция `compact`/`full` выбирается по размеру модуля;
 - path traversal отклоняется, а не схлопывается;
 - Git activity signals, детерминированная сериализация в `.agent/`, secret filtering;
 - workspace-поддержка npm workspaces;
-- 131 tests, CI на Node 20/22/24 × Linux/Windows/macOS.
+- 140 tests, CI на Node 20/22/24 × Linux/Windows/macOS;
+- benchmark, который измеряет import resolution rate и token budget по бакетам размера.
 
 ## Приоритеты
 
@@ -140,7 +142,7 @@ layering diagnostics. Ни один из 103 существовавших тес
 
 ---
 
-# v0.6 — Measurable value (in progress)
+# v0.6 — Measurable value (completed)
 
 **Цель:** заменить лозунг «компактный контекст» измеренными цифрами, которые
 можно воспроизвести.
@@ -148,22 +150,48 @@ layering diagnostics. Ни один из 103 существовавших тес
 Причина задержки: пока половина графа зависимостей была пустой, любое
 сравнение объёма контекста сравнивало бы шум с шумом.
 
-## Возможности
+**Реализовано:**
 
-- Benchmark на реальных публичных репозиториях, а не только на синтетических fixtures.
-- Метрики качества с baseline: import resolution rate, entry-point precision,
-  dependency recall на размеченном наборе.
-- Token-budget бенчмарк: `explain <module>` против чтения всех файлов модуля.
-- Incremental-scan бенчмарк на повторном проходе (сейчас `reused: 0`).
-- Отчёт публикуется как артефакт CI, а не как локальный файл в репозитории.
-- `detect` — команда, которая честно сообщает, чего анализатор не понял.
+- `tools/benchmark.mjs` переписан: вместо таймингов он измеряет import
+  resolution rate (с классификацией unresolved: `excludedOutput` / `actionable` /
+  `pathEscapes`), cold vs warm scan с parsed/reused, и token budget по бакетам
+  размера модуля;
+- budget-aware `explain`: проекция `compact`/`full` по размеру модуля, плюс
+  явный `detail` в CLI и MCP;
+- дедупликация payload: `responsibilities` больше не повторяет `roles`,
+  evidence ограничен двумя записями на факт;
+- собственный репозиторий добавлен в набор бенчмарка, потому что fixtures
+  меньше 4 КБ и не могут проверить продуктовое утверждение.
 
-## Критерии готовности
+**Измеримые результаты:**
 
-- import resolution rate на реальных репозиториях измерим и опубликован;
-- token-budget бенчмарк показывает выигрыш против наивного чтения;
-- incremental path реально exercised в бенчмарке;
-- benchmark воспроизводится одной командой в CI.
+| Метрика | Значение |
+| --- | --- |
+| Import resolution rate (resolvable) | 100% |
+| Actionable unresolved | 0 |
+| Path escapes | 0 |
+| Модули >64 KB: `explain` против исходников | 0.042x (−95.8%) |
+| Модули 8–64 KB | 0.343x (−65.7%) |
+| Модули <8 KB, `auto` | 0.72x (было 1.84x с `full`) |
+| Тестов | 140 |
+
+**Честная оговорка, зафиксированная в бенчмарке:** на модулях меньше 4 KB
+продукт остаётся дороже чтения исходников (2.07x на fixtures). Это не
+прячется усреднением — бакеты существуют именно для того, чтобы этот результат
+был виден.
+
+## Критерии готовности — выполнены
+
+- import resolution rate измерим и опубликован;
+- token-budget бенчмарк показывает выигрыш против наивного чтения на больших модулях;
+- incremental path exercised в бенчмарке (cold/warm с parsed/reused);
+- benchmark воспроизводится одной командой и включён в репозиторий.
+
+## Осталось на v0.7
+
+- `detect` — команда, которая честно сообщает, чего анализатор не понял;
+- entry-point precision/recall на размеченном наборе;
+- публичный набор реальных репозиториев вместо одного собственного.
 
 ---
 

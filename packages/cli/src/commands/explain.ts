@@ -1,6 +1,6 @@
 /** `agent-context explain <path>` — structured module context. */
 import type { CliCommandContext, CliDependencies } from '../cli.ts';
-import { contextOptions } from '../cli.ts';
+import { contextOptions, flagString } from '../cli.ts';
 import { renderExplain, renderRepositoryContext } from '../ui/format.ts';
 
 export async function runExplainCommand(context: CliCommandContext, dependencies: CliDependencies): Promise<number> {
@@ -18,7 +18,13 @@ export async function runExplainCommand(context: CliCommandContext, dependencies
     return 0;
   }
 
-  const explanation = await agentContext.explain(target);
+  const detailFlag = flagString(parsed, 'detail');
+  if (detailFlag !== undefined && !['auto', 'full', 'compact'].includes(detailFlag)) {
+    output.error(`--detail must be one of: auto, full, compact (received "${detailFlag}")`);
+    return 2;
+  }
+  const detail = detailFlag as 'auto' | 'full' | 'compact' | undefined;
+  const explanation = await agentContext.explain(target, detail === undefined ? {} : { detail });
   if (explanation === null) {
     output.error(`cannot explain "${target}": no module or file matched.`);
     const modules = await agentContext.getModules();

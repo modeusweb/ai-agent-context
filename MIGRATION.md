@@ -1,5 +1,71 @@
 # Migration guide
 
+## v0.6.0
+
+Payload size and measurable metrics. The `.agent/` v1 schema is unchanged and no
+rescan is required — this release changes what `explain` returns, not what is
+persisted.
+
+### Behavior changes
+
+- **`explain` picks a projection based on module size.** The payload now carries
+  a `detail` field (`compact` or `full`). By default, modules whose own source
+  is under 8 KB get the compact projection: structure only, without the internal
+  symbol dump and without the repository-wide conventions and decisions that
+  merely mention them. Larger modules are unchanged. Rationale and measurements
+  are in README under "Detail levels"; the short version is that a full
+  explanation of a 300-byte module cost 2–9x the module, and `auto` reduces
+  small-module explanations from 1.84x their source to 0.72x.
+- **Pass `detail: 'full'` if you relied on `internalSymbols` for small
+  modules.** It is an empty array in the compact projection. Nothing else in the
+  payload is reduced: dependencies, dependents, tests, impact, public API and
+  the file list are present at both levels.
+- **Evidence lists are trimmed to two entries per fact** in `explain`. Every
+  fact still carries evidence — it is the count that is bounded, because
+  conventions and decisions are repository-wide and repeating all of them for
+  every file they cite made the explanation larger than its subject. The full
+  lists remain available from `get_conventions` and `get_decisions`.
+- **`responsibilities` no longer restates `roles`.** `detectResponsibilities`
+  emits a `role: <value> (heuristic)` line for every detected role, so the
+  `module` block carried each role twice. `roles` is authoritative;
+  `responsibilities` now contains only entries that add something.
+- **Entry points lose their evidence in the compact projection.** They keep
+  `path`, `type` and `confidence`.
+
+### New API
+
+```ts
+await context.explain('src/payments');                            // auto
+await context.explain('src/payments', { detail: 'full' });       // force full
+await context.explain('src/payments', { detail: 'compact' });    // force compact
+await context.explain('src/payments', { compactSourceThresholdBytes: 32_768 });
+```
+
+New exports: `ExplainDetail`, `COMPACT_SOURCE_THRESHOLD_BYTES`.
+The `explain_module` MCP tool accepts a `detail` argument; the CLI accepts
+`--detail auto|full|compact` and exits `2` on an unknown value.
+
+### Benchmark
+
+`tools/benchmark.mjs` was rewritten. It previously reported only timings and a
+`compactBytes` number, which could not falsify any claim. It now reports:
+
+- import resolution rate, with unresolved imports classified into
+  `excludedOutput` (build output the config excludes — not a defect),
+  `actionableUnresolved` (a real defect) and `pathEscapes` (must be zero). The
+  rate is computed over resolvable imports only, so excluding `dist/` no longer
+  makes a healthy repository look broken;
+- cold vs warm scan with parsed/reused counts, so the incremental path is
+  actually exercised;
+- the token budget bucketed by module size (`under8Kb`, `from8To64Kb`,
+  `over64Kb`) instead of one averaged ratio, because describing a 383 KB module
+  in 16 KB and describing a 300 byte module in 1 KB are opposite results that a
+  single average hides.
+
+The default source list now includes this repository alongside the fixtures. The
+fixtures are all under 4 KB and cannot demonstrate the product claim; they remain
+because they are useful as regression inputs.
+
 ## v0.5.0
 
 Correctness release for the dependency graph. The `.agent/` v1 schema is

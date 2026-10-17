@@ -14,12 +14,39 @@ import { compareStrings, uniqueSorted } from '../../model/canonical.ts';
 import { isInside, normalizeRelative, basename } from '../../util/paths.ts';
 import { isNodeBuiltin } from '../graph/resolver.ts';
 
+/**
+ * How much of a module to describe.
+ *
+ * - `compact` — structure only: dependencies, dependents, tests, impact and a
+ *   short role list. Chosen automatically for small modules.
+ * - `full` — everything, including per-symbol detail, entry-point evidence and
+ *   the repository-wide conventions and decisions that mention the module.
+ * - `auto` — `compact` when the module's own source is small enough that an
+ *   agent is better off reading it than reading a description of it, `full`
+ *   otherwise.
+ */
+export type ExplainDetail = 'auto' | 'full' | 'compact';
+
+/**
+ * Source size below which `detail: 'auto'` returns the compact projection.
+ *
+ * A structured explanation of a tiny module is larger than the module itself —
+ * measured on the fixture repositories, `full` costs 2-9x the bytes of the
+ * source it describes for modules under 4 KB. Below this threshold the honest
+ * answer is "read these two files", not a JSON envelope around them.
+ */
+export const COMPACT_SOURCE_THRESHOLD_BYTES = 8_192;
+
 export interface ExplainInput {
   graph: KnowledgeGraph;
   parsed: Map<string, ParsedFile>;
   /** Module id, module directory, file path or workspace package name. */
   target: string;
   maxRelatedFiles?: number;
+  /** Defaults to `auto`. */
+  detail?: ExplainDetail;
+  /** Overrides the auto threshold; used by tests and by callers with a budget. */
+  compactSourceThresholdBytes?: number;
 }
 
 export interface ResolvedTarget {
@@ -179,6 +206,23 @@ export function transitiveDependents(
   return [...visited].sort(compareStrings);
 }
 
+/** Evidence entries kept per fact inside a module explanation. */
+const MAX_EVIDENCE_PER_FACT = 2;
+
+/**
+ * Trims the evidence of a fact for a module-scoped projection.
+ *
+ * Evidence is what makes a heuristic trustworthy, but a full evidence list is
+ * also the bulk of the payload: conventions and decisions are repository-wide,
+ * so repeating all of them for every file they cite made `explain` larger than
+ * the source it described. Two citations are enough to let a caller check the
+ * claim and open the full list via `get_conventions` / `get_decisions`.
+ */
+function trimFact<T extends { evidence: readonly unknown[] }>(fact: T): T {
+  if (fact.evidence.length <= MAX_EVIDENCE_PER_FACT) return fact;
+  return { ...fact, evidence: fact.evidence.slice(0, MAX_EVIDENCE_PER_FACT) };
+}
+
 function relevantConventions(moduleFiles: readonly string[], conventions: readonly Convention[]): Convention[] {
   const files = new Set(moduleFiles);
   const scoped = conventions.filter((convention) =>
@@ -188,7 +232,7 @@ function relevantConventions(moduleFiles: readonly string[], conventions: readon
     (convention) =>
       (convention.category === 'Toolchain' || convention.category === 'Imports') && !scoped.includes(convention),
   );
-  return [...scoped, ...repositoryWide].slice(0, 6);
+  return [...scoped, ...repositoryWide].slice(0, 6).map(trimFact);
 }
 
 function relevantDecisions(moduleFiles: readonly string[], decisions: readonly Decision[]): Decision[] {
@@ -201,7 +245,7 @@ function relevantDecisions(moduleFiles: readonly string[], decisions: readonly D
     }),
   );
   const global = decisions.filter((decision) => decision.kind === 'config-signal' && !scoped.includes(decision));
-  return [...scoped, ...global].slice(0, 5);
+  return [...scoped, ...global].slice(0, 5).map(trimFact);
 }
 
 function buildSummary(graph: KnowledgeGraph, moduleId: string, fileCount?: number): string {
@@ -260,6 +304,20 @@ export function explainModule(input: ExplainInput): ModuleExplanation | null {
   const scopeFiles = isScoped ? filesUnderDirectory(graph, resolved.scopeDirectory!) : module.files;
   const moduleFileSet = new Set(scopeFiles);
 
+  const sourceBytes = scopeFiles.reduce(
+    (sum, file) => sum + (graph.filesByPath.get(file)?.size ?? 0),
+    0,
+  );
+  const requested = input.detail ?? 'auto';
+  const threshold = input.compactSourceThresholdBytes ?? COMPACT_SOURCE_THRESHOLD_BYTES;
+  const isCompact =
+    requested === 'compact' || (requested === 'auto' && sourceBytes < threshold);
+  const evidenceBudget = isCompact ? 1 : MAX_EVIDENCE_PER_FACT;
+  const trim = <T extends { evidence: readonly unknown[] }>(fact: T): T => {
+    if (fact.evidence.length <= evidenceBudget) return fact;
+    return { ...fact, evidence: fact.evidence.slice(0, evidenceBudget) };
+  };
+
   const scopeDependsOn = isScoped ? dependenciesOfScope(graph, moduleFileSet, 'outgoing') : null;
   const scopeUsedBy = isScoped ? dependenciesOfScope(graph, moduleFileSet, 'incoming') : null;
 
@@ -301,20 +359,32 @@ export function explainModule(input: ExplainInput): ModuleExplanation | null {
     if (!moduleFileSet.has(edge.from)) continue;
     externalCounts.set(edge.to, (externalCounts.get(edge.to) ?? 0) + 1);
   }
+  // Roles and responsibilities overlap by construction: `detectResponsibilities`
+  // restates every role as a "role: <value> (heuristic)" line. Carrying both in
+  // one payload doubled the largest section of the explanation, so the
+  // projection keeps the authoritative `roles` list and only the responsibilities
+  // that add something.
+  const roleValues = new Set<string>(module.roles.map((role) => String(role.value)));
+  const responsibilities = module.responsibilities.filter((entry) => {
+    if (typeof entry.value !== 'string' || !entry.value.startsWith('role: ')) return true;
+    return !roleValues.has(entry.value.slice('role: '.length).replace(/\s*\(heuristic\)$/, ''));
+  });
+
   const externalDependencies = [...externalCounts.entries()]
     .map(([name, count]) => {
       const entry = graph.repository.externalDependencies.find((candidate) => candidate.name === name);
+      const importance =
+        entry?.importance ??
+        ({
+          value: 'utility' as const,
+          confidence: 0.3,
+          evidence: [{ source: '<graph>', detail: `imported from ${count} file(s) of this module` }],
+        });
       return {
         name,
         count,
         scope: entry?.scope ?? ('runtime' as const),
-        importance:
-          entry?.importance ??
-          ({
-            value: 'utility' as const,
-            confidence: 0.3,
-            evidence: [{ source: '<graph>', detail: `imported from ${count} file(s) of this module` }],
-          }),
+        importance: trim(importance),
       };
     })
     // Platform built-ins rank below declared packages; see buildRepositoryContext.
@@ -334,10 +404,15 @@ export function explainModule(input: ExplainInput): ModuleExplanation | null {
     .filter((entry) => !isScoped || moduleFileSet.has(entry.file))
     .sort((a, b) => compareStrings(a.name, b.name));
   const publicKeys = new Set(publicApi.map((entry) => `${entry.file}#${entry.name}`));
-  const internalSymbols = graph.repository.symbols
-    .filter((symbol) => moduleFileSet.has(symbol.file) && !publicKeys.has(symbol.id))
-    .slice(0, 40)
-    .map((symbol) => ({ name: symbol.name, kind: symbol.kind as SymbolKind, file: symbol.file }));
+  // Internal symbols are a symbol dump. They are useful when the module is too
+  // large to read, and noise when it is not, so the compact projection drops
+  // them and an agent reads the two files listed in `relatedFiles` instead.
+  const internalSymbols = isCompact
+    ? []
+    : graph.repository.symbols
+        .filter((symbol) => moduleFileSet.has(symbol.file) && !publicKeys.has(symbol.id))
+        .slice(0, 40)
+        .map((symbol) => ({ name: symbol.name, kind: symbol.kind as SymbolKind, file: symbol.file }));
 
   const impactModules = transitiveDependents(graph, module.id, 3, isScoped ? moduleFileSet : null);
   // For a scoped directory the directly importing files are the actionable
@@ -368,24 +443,44 @@ export function explainModule(input: ExplainInput): ModuleExplanation | null {
         ? ` Scope "${resolved.scopeDirectory}" is narrower than module "${module.id}"; this answer covers only the ${scopeFiles.length} file(s) inside it.`
         : '';
 
+  // In the compact projection, entry points keep their identity but drop the
+  // evidence trail, and the repository-wide conventions and decisions that
+  // merely mention the module are dropped: they are identical for every module
+  // and are retrieved once via `get_repository_context`.
+  const projectedEntryPoints = isCompact
+    ? entryPoints.map((entry) => ({
+        path: entry.path,
+        moduleId: entry.moduleId,
+        type: entry.type,
+        confidence: entry.confidence,
+        evidence: [],
+      }))
+    : entryPoints;
+
+  const conventions = relevantConventions(scopeFiles, graph.repository.conventions);
+  const decisions = relevantDecisions(scopeFiles, graph.repository.decisions);
+  const scopedFileSet = new Set(scopeFiles);
+  const isScopedFact = <T extends { evidence: readonly { source: string }[] }>(fact: T): boolean =>
+    fact.evidence.some((item) => scopedFileSet.has(item.source.split('#')[0] ?? item.source));
+
   return {
     module: {
       id: module.id,
       path: isScoped ? resolved.scopeDirectory! : module.path,
       name: isScoped ? basename(resolved.scopeDirectory!) || module.name : module.name,
       basis: module.basis,
-      roles: module.roles,
-      responsibilities: module.responsibilities,
+      roles: module.roles.map(trim),
+      responsibilities,
     },
     summary: `${buildSummary(graph, module.id, scopeFiles.length)}${targetNote}`,
-    entryPoints,
+    entryPoints: projectedEntryPoints,
     dependsOn,
     usedBy,
     externalDependencies,
     publicApi,
     internalSymbols,
-    conventions: relevantConventions(scopeFiles, graph.repository.conventions),
-    decisions: relevantDecisions(scopeFiles, graph.repository.decisions),
+    conventions: (isCompact ? conventions.filter(isScopedFact) : conventions).map(trim),
+    decisions: (isCompact ? decisions.filter(isScopedFact) : decisions).map(trim),
     tests: { files: scopedTestFiles, testCount: scopedTestFiles.length },
     git: module.git,
     impact: { modules: impactModules, files: impactFiles.slice(0, 100) },
@@ -393,6 +488,7 @@ export function explainModule(input: ExplainInput): ModuleExplanation | null {
     ...(isScoped
       ? { scope: { moduleId: module.id, directory: resolved.scopeDirectory!, fileCount: scopeFiles.length } }
       : {}),
+    detail: isCompact ? 'compact' : 'full',
     warnings: parsed.size === 0 ? [{ code: 'WARN_NO_PARSED_FILES', severity: 'info', message: 'no parsed files available' }] : [],
   };
 }
