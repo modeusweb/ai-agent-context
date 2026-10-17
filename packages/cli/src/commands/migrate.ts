@@ -71,18 +71,22 @@ export async function runMigrateCommand(context: CliCommandContext, dependencies
   const agentContext = await dependencies.createContext(contextOptions(parsed, io));
   const report: MigrationReport = { ...(await assess(agentContext)), checkOnly };
 
-  const upToDate = report.state === 'current';
+  const wasUpToDate = report.state === 'current';
+  let regenerated = false;
 
-  if (!checkOnly && !upToDate) {
+  if (!checkOnly && !wasUpToDate) {
     // Regenerate. A read-only repository throws here, and the CLI prints the
     // ReadOnlyError hint: the fix is configuration, not a flag.
     await agentContext.scan();
+    regenerated = true;
     report.state = 'current';
     report.changed = [];
     report.pendingChanges = 0;
     report.missing = [];
     report.invalid = [];
   }
+
+  const upToDate = report.state === 'current';
 
   if (context.json) {
     output.print(JSON.stringify(report, null, 2));
@@ -93,7 +97,12 @@ export async function runMigrateCommand(context: CliCommandContext, dependencies
   output.blank();
   output.print(STATE_HEADLINE[report.state]);
 
-  if (report.state === 'invalid') {
+  if (regenerated) {
+    // Say what happened. Printing "nothing to do" after a successful rescan
+    // would describe the state before the command ran.
+    output.blank();
+    output.print('Context regenerated from the current working tree.');
+  } else if (report.state === 'invalid') {
     output.blank();
     for (const entry of report.invalid) output.print(`  ${entry.file}: ${entry.reason}`);
     output.blank();
@@ -111,7 +120,9 @@ export async function runMigrateCommand(context: CliCommandContext, dependencies
       if (report.changed.length > 10) output.print(`    ... and ${report.changed.length - 10} more`);
     }
     output.blank();
-    output.note(checkOnly ? 'Context drifted. Run: agent-context migrate' : 'Regenerating context.');
+    // `stale` is only reachable here with `--check`: without it the command
+    // rescans first and `report.state` has already become `current`.
+    output.note('Context drifted. Run: agent-context migrate');
   } else if (!checkOnly) {
     output.blank();
     output.print('Nothing to do.');

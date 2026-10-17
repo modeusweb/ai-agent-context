@@ -674,12 +674,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 15,
+        "historicalChanges": 16,
         "lastChanged": "2026-10-17",
-        "recentChanges": 15,
+        "recentChanges": 16,
         "topContributors": [
           {
-            "commits": 18,
+            "commits": 19,
             "name": "modeusweb"
           }
         ]
@@ -860,12 +860,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 8,
+        "historicalChanges": 9,
         "lastChanged": "2026-10-17",
-        "recentChanges": 8,
+        "recentChanges": 9,
         "topContributors": [
           {
-            "commits": 20,
+            "commits": 21,
             "name": "modeusweb"
           }
         ]
@@ -1240,12 +1240,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 13,
+        "historicalChanges": 14,
         "lastChanged": "2026-10-17",
-        "recentChanges": 13,
+        "recentChanges": 14,
         "topContributors": [
           {
-            "commits": 83,
+            "commits": 86,
             "name": "modeusweb"
           }
         ]
@@ -1548,12 +1548,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "low",
         "contributorCount": 1,
-        "historicalChanges": 2,
+        "historicalChanges": 3,
         "lastChanged": "2026-10-17",
-        "recentChanges": 2,
+        "recentChanges": 3,
         "topContributors": [
           {
-            "commits": 5,
+            "commits": 10,
             "name": "modeusweb"
           }
         ]
@@ -1776,12 +1776,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 11,
+        "historicalChanges": 12,
         "lastChanged": "2026-10-17",
-        "recentChanges": 11,
+        "recentChanges": 12,
         "topContributors": [
           {
-            "commits": 15,
+            "commits": 16,
             "name": "modeusweb"
           }
         ]
@@ -2392,12 +2392,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 12,
+        "historicalChanges": 13,
         "lastChanged": "2026-10-17",
-        "recentChanges": 12,
+        "recentChanges": 13,
         "topContributors": [
           {
-            "commits": 27,
+            "commits": 28,
             "name": "modeusweb"
           }
         ]

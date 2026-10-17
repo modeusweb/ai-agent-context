@@ -45,7 +45,7 @@
         "path": "SECURITY.md"
       },
       {
-        "hash": "9ed011786b45e6f701c41d82a1fd2a68975e2665f9064903ef1e698c956d3f90",
+        "hash": "d3bc6e47732b241d92ab4bf73b48b0564d1e3eaa06c29f83ae17dbd5a635022e",
         "kind": "config",
         "language": "json",
         "module": null,
@@ -157,7 +157,7 @@
         "path": "packages/cli/src/commands/init.ts"
       },
       {
-        "hash": "b10d5a4d233dcf2b8dda5da2d705d54168335a0ca64fd324b652ae63243ffb53",
+        "hash": "090a395f6930a009fc245e79e078a4d60819d581fffa52eef28c7661804cc97b",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
@@ -973,7 +973,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 28,
+    "commitsAnalyzed": 29,
     "enabled": true,
     "windowDays": 180
   },
