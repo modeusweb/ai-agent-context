@@ -42,20 +42,16 @@
       "confidence": 0.45,
       "evidence": [
         {
-          "detail": "section \"Architecture\" (line 336) matched decision vocabulary",
-          "source": "packages/mcp/README.md"
-        },
-        {
-          "detail": "section may describe design context rather than a decision; verify before treating it as an ADR",
-          "source": "packages/mcp/README.md"
+          "detail": "commit message matched an architectural keyword (2026-10-17, 9 file(s) changed)",
+          "source": "git:e787c1d3"
         }
       ],
-      "id": "DOC-D9077A",
-      "kind": "documented-section",
+      "id": "GIT-e787c1d3",
+      "kind": "git-signal",
       "origin": "inferred",
-      "source": "packages/mcp/README.md#L336",
+      "source": "git:e787c1d3",
       "status": "unknown",
-      "title": "Architecture"
+      "title": "docs: restore the v0.6.0 section in MIGRATION.md and drop a duplicated security note"
     },
     {
       "confidence": 0.7,
@@ -84,7 +80,7 @@
           "source": "package.json"
         },
         {
-          "detail": "imported by 4 module(s)",
+          "detail": "imported by 5 module(s)",
           "source": "<graph>"
         }
       ],

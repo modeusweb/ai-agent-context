@@ -1,4 +1,83 @@
-﻿# Migration guide
+# Migration guide
+
+## v0.8.0
+
+MCP protocol support. The `.agent/` v1 schema is unchanged and no rescan is
+required — nothing about the analysis or the persisted context changed. Every
+change below is in the MCP adapter's wire behaviour.
+
+The headline fix: the server used to pin protocol version `2024-11-05` and answer
+every `initialize` with it. A client asking for `2025-06-18` was told to
+downgrade to a revision it did not request, which the specification requires it
+to answer by disconnecting. The server now implements five revisions and
+negotiates.
+
+### Protocol support
+
+| Era | Revisions | How the client opens |
+| --- | --- | --- |
+| Legacy | `2024-11-05`, `2025-03-26`, `2025-06-18`, `2025-11-25` | `initialize` handshake |
+| Modern | `2026-07-28` | per-request `_meta`, no handshake |
+
+- **`initialize` echoes the requested revision** when it is supported. Unknown,
+  missing, malformed and modern revisions are answered with `2025-11-25`, the
+  newest legacy revision implemented.
+- **`server/discover` is implemented** and reports `supportedVersions`,
+  capabilities and server identity. The specification requires it from a modern
+  server.
+- **Modern requests are validated per request.** A revision naming an unsupported
+  value is refused with `-32022` and `data.supported`; there is no downgrade,
+  because a modern request is stateless.
+- **A modern request without `io.modelcontextprotocol/clientCapabilities` is
+  refused with `-32602`.** The specification marks that field required.
+- **Modern results carry `resultType: "complete"`.** Clients of older revisions
+  ignore the extra key.
+
+### Cancellation and timeouts
+
+- **`notifications/cancelled` is honoured.** A cancelled request is never
+  answered, and the timeout that would otherwise follow it is not sent either.
+- **Every request is bounded** by `requestTimeoutMs` (default `120000`, `0`
+  disables). An expired request is answered with `-32603` and `data.timeoutMs`,
+  and any late result is discarded.
+
+### Error taxonomy
+
+- A message without a `method` now reports `-32600` (Invalid Request) instead of
+  `-32601` (Method not found). They are different failures and a client may act
+  on them differently.
+- The reserved code list is documented in `ErrorCode`. `-32002` (resource not
+  found, older revisions) is never emitted; unknown resources report `-32602`.
+
+### Client configuration presets
+
+`agent-context-mcp config <client>` prints a ready-to-merge snippet for Claude
+Code, Cursor, Cline and Continue. `config --list` and `config --all` are also
+available. The command writes nothing.
+
+### New API
+
+```ts
+import {
+  SUPPORTED_PROTOCOL_VERSIONS,   // ['2024-11-05', ..., '2026-07-28']
+  LATEST_PROTOCOL_VERSION,       // '2026-07-28'
+  LATEST_LEGACY_VERSION,         // '2025-11-25'
+  ErrorCode,                     // -32600 / -32601 / -32602 / -32603 / -32021 / -32022
+  isSupportedVersion,
+  isModernVersion,
+  negotiateLegacyVersion,
+  unsupportedProtocolVersion,
+  CLIENT_PRESETS, presetById, renderPreset, renderAllPresets, serverArgv,
+} from '@ai-agent-context/mcp';
+
+const server = new McpServer({ root, transport, requestTimeoutMs: 30_000 });
+```
+
+`MCP_PROTOCOL_VERSION` still exists and is now `2025-11-25`; it is deprecated in
+favour of `SUPPORTED_PROTOCOL_VERSIONS`. If you asserted its value, update the
+assertion — that is the intended signal that negotiation is working.
+
+No code changes are required for consumers that only read `.agent/` documents.
 
 ## v0.7.0
 

@@ -478,8 +478,32 @@
           "source": "packages/mcp/test/mcp.test.ts"
         }
       ],
-      "moduleId": "@ai-agent-context/mcp",
+      "moduleId": "packages/mcp/test",
       "path": "packages/mcp/test/mcp.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/mcp/test/presets.test.ts"
+        }
+      ],
+      "moduleId": "packages/mcp/test",
+      "path": "packages/mcp/test/presets.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/mcp/test/protocol.test.ts"
+        }
+      ],
+      "moduleId": "packages/mcp/test",
+      "path": "packages/mcp/test/protocol.test.ts",
       "type": "test"
     },
     {
@@ -527,72 +551,6 @@
     }
   ],
   "modules": [
-    {
-      "basis": "workspace-package",
-      "boundaries": [],
-      "dependsOn": [
-        "packages/core/test"
-      ],
-      "entryPoints": [
-        "packages/mcp/test/mcp.test.ts"
-      ],
-      "fileList": [
-        "packages/mcp/test/mcp.test.ts"
-      ],
-      "files": 1,
-      "git": {
-        "architectureChangeSignals": [],
-        "changeFrequency": "medium",
-        "contributorCount": 1,
-        "historicalChanges": 9,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 9,
-        "topContributors": [
-          {
-            "commits": 9,
-            "name": "modeusweb"
-          }
-        ]
-      },
-      "id": "@ai-agent-context/mcp",
-      "isWorkspacePackage": true,
-      "name": "@ai-agent-context/mcp",
-      "packageName": "@ai-agent-context/mcp",
-      "path": "packages/mcp",
-      "publicExports": [],
-      "responsibilities": [
-        {
-          "confidence": 0.99,
-          "evidence": [
-            {
-              "detail": "module is a workspace package",
-              "source": "package.json"
-            }
-          ],
-          "value": "role: workspace-package (heuristic)"
-        }
-      ],
-      "roles": [
-        {
-          "confidence": 0.99,
-          "evidence": [
-            {
-              "detail": "module is a workspace package",
-              "source": "package.json"
-            }
-          ],
-          "value": "workspace-package"
-        }
-      ],
-      "signals": [
-        "module:esm",
-        "test:suite"
-      ],
-      "testFiles": [
-        "packages/mcp/test/mcp.test.ts"
-      ],
-      "usedBy": []
-    },
     {
       "basis": "workspace-package",
       "boundaries": [],
@@ -2490,8 +2448,8 @@
         "packages/core/test/scanner.test.ts"
       ],
       "usedBy": [
-        "@ai-agent-context/mcp",
-        "ai-agent-context"
+        "ai-agent-context",
+        "packages/mcp/test"
       ]
     },
     {
@@ -2511,10 +2469,12 @@
       "fileList": [
         "packages/mcp/src/bin.ts",
         "packages/mcp/src/index.ts",
+        "packages/mcp/src/presets.ts",
+        "packages/mcp/src/protocol.ts",
         "packages/mcp/src/server.ts",
         "packages/mcp/src/version.ts"
       ],
-      "files": 4,
+      "files": 6,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
@@ -2536,9 +2496,49 @@
       "path": "packages/mcp/src",
       "publicExports": [
         {
+          "file": "packages/mcp/src/presets.ts",
+          "kind": "const",
+          "name": "CLIENT_PRESETS"
+        },
+        {
+          "file": "packages/mcp/src/presets.ts",
+          "kind": "interface",
+          "name": "ClientPreset"
+        },
+        {
+          "file": "packages/mcp/src/presets.ts",
+          "kind": "type",
+          "name": "ClientPresetId"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "ErrorCode"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "FIRST_MODERN_VERSION"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "interface",
+          "name": "JsonRpcErrorObject"
+        },
+        {
           "file": "packages/mcp/src/server.ts",
           "kind": "interface",
           "name": "JsonRpcRequest"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "LATEST_LEGACY_VERSION"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "LATEST_PROTOCOL_VERSION"
         },
         {
           "file": "packages/mcp/src/server.ts",
@@ -2549,6 +2549,31 @@
           "file": "packages/mcp/src/version.ts",
           "kind": "const",
           "name": "MCP_VERSION"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "META_CLIENT_CAPABILITIES"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "META_CLIENT_INFO"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "META_LOG_LEVEL"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "META_PROTOCOL_VERSION"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "META_SERVER_INFO"
         },
         {
           "file": "packages/mcp/src/server.ts",
@@ -2571,9 +2596,34 @@
           "name": "MemoryTransport"
         },
         {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "interface",
+          "name": "ProtocolEra"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "type",
+          "name": "ProtocolVersion"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "RESULT_TYPE_COMPLETE"
+        },
+        {
+          "file": "packages/mcp/src/presets.ts",
+          "kind": "interface",
+          "name": "RenderOptions"
+        },
+        {
           "file": "packages/mcp/src/server.ts",
           "kind": "const",
           "name": "SERVER_NAME"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "const",
+          "name": "SUPPORTED_PROTOCOL_VERSIONS"
         },
         {
           "file": "packages/mcp/src/server.ts",
@@ -2584,6 +2634,56 @@
           "file": "packages/mcp/src/server.ts",
           "kind": "function",
           "name": "createStdioTransport"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "function",
+          "name": "isModernVersion"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "function",
+          "name": "isSupportedVersion"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "function",
+          "name": "missingRequiredClientCapability"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "function",
+          "name": "negotiateLegacyVersion"
+        },
+        {
+          "file": "packages/mcp/src/presets.ts",
+          "kind": "function",
+          "name": "presetById"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "function",
+          "name": "readMeta"
+        },
+        {
+          "file": "packages/mcp/src/presets.ts",
+          "kind": "function",
+          "name": "renderAllPresets"
+        },
+        {
+          "file": "packages/mcp/src/presets.ts",
+          "kind": "function",
+          "name": "renderPreset"
+        },
+        {
+          "file": "packages/mcp/src/presets.ts",
+          "kind": "function",
+          "name": "serverArgv"
+        },
+        {
+          "file": "packages/mcp/src/protocol.ts",
+          "kind": "function",
+          "name": "unsupportedProtocolVersion"
         }
       ],
       "responsibilities": [
@@ -2611,19 +2711,19 @@
           "confidence": 0.9,
           "evidence": [
             {
-              "detail": "exports JsonRpcRequest (interface)",
-              "source": "packages/mcp/src/server.ts"
+              "detail": "exports CLIENT_PRESETS (const)",
+              "source": "packages/mcp/src/presets.ts"
             },
             {
-              "detail": "exports MCP_PROTOCOL_VERSION (const)",
-              "source": "packages/mcp/src/server.ts"
+              "detail": "exports ClientPreset (interface)",
+              "source": "packages/mcp/src/presets.ts"
             },
             {
-              "detail": "exports MCP_VERSION (const)",
-              "source": "packages/mcp/src/version.ts"
+              "detail": "exports ClientPresetId (type)",
+              "source": "packages/mcp/src/presets.ts"
             }
           ],
-          "value": "public API: JsonRpcRequest, MCP_PROTOCOL_VERSION, MCP_VERSION, McpServer, McpServerOptions, McpTransport, MemoryTransport, SERVER_NAME"
+          "value": "public API: CLIENT_PRESETS, ClientPreset, ClientPresetId, ErrorCode, FIRST_MODERN_VERSION, JsonRpcErrorObject, JsonRpcRequest, LATEST_LEGACY_VERSION"
         }
       ],
       "roles": [
@@ -2769,6 +2869,78 @@
     {
       "basis": "directory",
       "boundaries": [],
+      "dependsOn": [
+        "packages/core/test"
+      ],
+      "entryPoints": [
+        "packages/mcp/test/mcp.test.ts",
+        "packages/mcp/test/presets.test.ts",
+        "packages/mcp/test/protocol.test.ts"
+      ],
+      "fileList": [
+        "packages/mcp/test/mcp.test.ts",
+        "packages/mcp/test/presets.test.ts",
+        "packages/mcp/test/protocol.test.ts"
+      ],
+      "files": 3,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "medium",
+        "contributorCount": 1,
+        "historicalChanges": 9,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 9,
+        "topContributors": [
+          {
+            "commits": 9,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/mcp/test",
+      "isWorkspacePackage": false,
+      "name": "test",
+      "packageName": "@ai-agent-context/mcp",
+      "path": "packages/mcp/test",
+      "publicExports": [],
+      "responsibilities": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches test vocabulary (\"/test/\")",
+              "source": "packages/mcp/test"
+            }
+          ],
+          "value": "role: test-support (heuristic)"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches test vocabulary (\"/test/\")",
+              "source": "packages/mcp/test"
+            }
+          ],
+          "value": "test-support"
+        }
+      ],
+      "signals": [
+        "module:esm",
+        "test:suite"
+      ],
+      "testFiles": [
+        "packages/mcp/test/mcp.test.ts",
+        "packages/mcp/test/presets.test.ts",
+        "packages/mcp/test/protocol.test.ts"
+      ],
+      "usedBy": []
+    },
+    {
+      "basis": "directory",
+      "boundaries": [],
       "dependsOn": [],
       "entryPoints": [
         "tools/set-version.mjs",
@@ -2858,7 +3030,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 41,
+    "entryPoints": 43,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -2882,21 +3054,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.7.0"
+        "version": "0.8.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.7.0"
+        "version": "0.8.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.7.0"
+        "version": "0.8.0"
       }
     ],
     "workspaceGlobs": [

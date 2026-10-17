@@ -2,7 +2,7 @@
 
 MCP (Model Context Protocol) adapter for `ai-agent-context`.
 
-This package provides MCP tools that allow AI agents (like Claude, etc.) to query repository context directly.
+The adapter exposes the repository knowledge graph built by `@ai-agent-context/core` to MCP clients over stdio. It contains no analysis logic: every tool delegates to the core API, so the same guarantees (deterministic, local-only, evidence-backed) apply unchanged.
 
 ## Installation
 
@@ -10,13 +10,102 @@ This package provides MCP tools that allow AI agents (like Claude, etc.) to quer
 npm install @ai-agent-context/mcp
 ```
 
-## Input validation
+## Running the server
 
-Tool arguments are validated against the published JSON Schema before dispatch. Missing required fields, wrong primitive types, invalid enums, and unknown properties return JSON-RPC `-32602` without starting repository analysis.
+```bash
+agent-context-mcp --root /path/to/repository
+```
 
-## MCP Resources
+The repository root defaults to `AGENT_CONTEXT_ROOT`, then to the current working directory. stdout carries JSON-RPC only; all diagnostics go to stderr.
 
-The server exposes read-only resources:
+## Client configuration
+
+Print the snippet for a supported client:
+
+```bash
+agent-context-mcp config claude-code
+agent-context-mcp config cursor
+agent-context-mcp config cline
+agent-context-mcp config continue
+agent-context-mcp config --list     # supported clients
+agent-context-mcp config --all      # every client at once
+```
+
+Each snippet prints the value of the client's `mcpServers` field. Merge it into the existing file — the config file also carries unrelated settings, so replacing the file would destroy them.
+
+| Client | File | Shape |
+| --- | --- | --- |
+| Claude Code | `.mcp.json` | object keyed by server name |
+| Cursor | `.cursor/mcp.json` | object keyed by server name |
+| Cline (VS Code) | `cline_mcp_settings.json` | object keyed by server name |
+| Continue | `~/.continue/config.json` | array |
+
+Running a local checkout instead of the published package:
+
+```bash
+agent-context-mcp config cursor --command node --command-arg /path/to/packages/mcp/dist/bin.js
+```
+
+## Protocol support
+
+The server is **dual-era**: it selects its behaviour from how the client opens.
+
+| Era | Revisions | How the client opens |
+| --- | --- | --- |
+| Legacy | `2024-11-05`, `2025-03-26`, `2025-06-18`, `2025-11-25` | `initialize` handshake |
+| Modern | `2026-07-28` | per-request `_meta`, no handshake |
+
+**Legacy negotiation.** `initialize` is answered with the version the client asked for. When the client asks for a revision this server does not implement, it answers with the newest legacy revision it does — as the specification requires — so a client is never told to downgrade to a revision it did not request.
+
+**Modern negotiation.** Every request carries `io.modelcontextprotocol/protocolVersion` in `_meta`. There is no handshake and no downgrade: a request naming an unsupported revision is refused with `-32022` and a list of versions to retry with. A modern request that omits the required `io.modelcontextprotocol/clientCapabilities` is refused with `-32602`. Modern results carry `resultType: "complete"`.
+
+`server/discover` is implemented and reports `supportedVersions`, capabilities and server identity.
+
+```bash
+# what the server supports
+{"jsonrpc":"2.0","id":"d1","method":"server/discover","params":{"_meta":{
+  "io.modelcontextprotocol/protocolVersion":"2026-07-28",
+  "io.modelcontextprotocol/clientCapabilities":{}}}}
+```
+
+### Compatibility matrix
+
+| Client era | Server | Outcome |
+| --- | --- | --- |
+| Legacy (`initialize`) | this server | Works; answered with the requested or the newest legacy revision |
+| Modern (`_meta`, `server/discover`) | this server | Works for `2026-07-28`; other revisions get `-32022` with a retry list |
+| Legacy | modern-only server | Would fail; not applicable here, this server is dual-era |
+
+Verified here: legacy and modern sessions over a real stdio process, malformed input, cancellation and timeouts. **Not** verified here: integration against the shipping desktop clients listed above. Those presets encode the documented configuration format of each client; confirm against your own installation before relying on them.
+
+## Cancellation and timeouts
+
+`notifications/cancelled` stops a request: the response is suppressed, and a cancelled request is never answered — including by the timeout that follows it.
+
+Every request is bounded by `requestTimeoutMs` (default 120000, `0` disables). An expired request is answered with `-32603` and `data.timeoutMs`, and any late result is discarded.
+
+## Error handling
+
+Errors use the JSON-RPC codes and the MCP-specific codes in the specification's reserved range:
+
+| Code | Meaning |
+| --- | --- |
+| `-32600` | Invalid Request — message without a `method` |
+| `-32601` | Method not found |
+| `-32602` | Invalid params — unknown resource or prompt, failed argument validation, missing required `_meta` field |
+| `-32603` | Internal error, including a request that exceeded its timeout |
+| `-32021` | `MissingRequiredClientCapabilityError` |
+| `-32022` | `UnsupportedProtocolVersionError`, with `data.supported` |
+
+`-32002` (resource not found, reserved by older revisions) is never emitted; unknown resources report `-32602`.
+
+A tool that runs but fails is **not** a protocol error: the response carries `isError: true` with a human-readable payload, so the agent can read and act on the message.
+
+Arguments are validated against the published JSON Schema before dispatch. Missing required fields, wrong primitive types, invalid enums and unknown properties are rejected with `-32602` without starting repository analysis.
+
+## Resources
+
+Read-only, exposed as MCP resources:
 
 - `agent://repository/context`
 - `agent://repository/architecture`
@@ -24,372 +113,63 @@ The server exposes read-only resources:
 - `agent://repository/conventions`
 - `agent://repository/decisions`
 
-## MCP Prompts
+## Prompts
 
 - `onboard_to_repository`
 - `review_change_impact`
 - `explain_architecture`
 
+## Tools
 
-### `get_context_for_task`
+| Tool | Required arguments |
+| --- | --- |
+| `get_repository_context` | — |
+| `get_context_for_task` | `task` |
+| `get_change_impact` | `target` |
+| `explain_module` | `path` |
+| `get_dependencies` | — |
+| `get_dependents` | `module` |
+| `search_context` | `query` |
+| `get_architecture` | — |
+| `get_conventions` | — |
+| `get_decisions` | — |
+| `get_module_history` | `target` |
+| `get_revision_diff` | `revision` |
+| `get_revision_snapshot` | `revision` |
+| `detect_coverage_gaps` | — |
 
-Get bounded, task-oriented context for an agent.
+Every tool accepts an optional `root`. All tools are bounded and carry a confidence and evidence for heuristic values; see the repository `README.md` for what each returns.
 
-```json
-{
-  "task": "add idempotent payment retries",
-  "target": "src/payments",
-  "maxModules": 5
-}
+## Programmatic use
+
+```ts
+import { McpServer, createMemoryTransport, SUPPORTED_PROTOCOL_VERSIONS } from '@ai-agent-context/mcp';
+
+const transport = createMemoryTransport();
+const server = new McpServer({ root: process.cwd(), transport, requestTimeoutMs: 30_000 });
+server.start();
+transport.push({ jsonrpc: '2.0', id: 1, method: 'server/discover', params: { _meta: {
+  'io.modelcontextprotocol/protocolVersion': '2026-07-28',
+  'io.modelcontextprotocol/clientCapabilities': {},
+} } });
+console.log(transport.sent);
 ```
 
-Returns relevant modules, dependencies, public API, tests, conventions, decisions and evidence.
+Exported for embedders: `McpServer`, `createStdioTransport`, `createMemoryTransport`, the `CLIENT_PRESETS` set with `presetById`/`renderPreset`/`renderAllPresets`/`serverArgv`, the protocol helpers (`SUPPORTED_PROTOCOL_VERSIONS`, `ErrorCode`, `negotiateLegacyVersion`, `isSupportedVersion`, …), `TOOL_DEFINITIONS`, `callTool` and `ContextPool`.
 
-### `get_change_impact`
-
-Get the bounded impact set for a proposed change.
-
-```json
-{
-  "target": "src/payments",
-  "maxFiles": 100
-}
-```
-
-Returns transitive dependent modules, affected files, tests, relevant conventions, decisions and evidence.
-
-### `get_module_history`
-
-Returns bounded local Git history for a module.
-
-```json
-{"target":"src/models","limit":20}
-```
-
-### `get_revision_diff`
-
-Returns changed paths and statuses between two local revisions.
-
-```json
-{"revision":"HEAD~1","base":"HEAD"}
-```
-
-### `get_revision_snapshot`
-
-Returns metadata and structural summary for a local Git revision without checking it out or changing the working tree.
-
-```json
-{"revision":"HEAD~1"}
-```
-
-### `get_repository_context`
-
-Get the complete repository context.
-
-```json
-{
-  "root": "/path/to/repository",
-  "maxModules": 10,
-  "maxEntryPoints": 10,
-  "maxExternalDependencies": 10,
-  "maxConventions": 5,
-  "maxDecisions": 5,
-  "maxCycles": 5
-}
-```
-
-
-Get the complete repository context.
-
-**Input:**
-```json
-{
-  "root": "/path/to/repository"
-}
-```
-
-**Output:**
-```json
-{
-  "repository": {
-    "name": "my-project",
-    "root": "/path/to/repository",
-    "files": 1284,
-    "modules": 42
-  },
-  "architecture": { ... },
-  "dependencies": { ... },
-  "conventions": [ ... ],
-  "decisions": [ ... ]
-}
-```
-
-### `explain_module`
-
-Explain a specific module.
-
-**Input:**
-```json
-{
-  "root": "/path/to/repository",
-  "target": "src/payments"
-}
-```
-
-**Output:**
-```json
-{
-  "path": "src/payments",
-  "entryPoints": ["src/payments/index.ts"],
-  "responsibilities": ["payment processing", "refunds"],
-  "dependsOn": ["users", "events"],
-  "usedBy": ["checkout"],
-  "publicAPI": [ ... ],
-  "conventions": [ ... ],
-  "decisions": [ ... ]
-}
-```
-
-### `get_dependencies`
-
-Get dependency information.
-
-**Input:**
-```json
-{
-  "root": "/path/to/repository"
-}
-```
-
-**Output:**
-```json
-{
-  "internal": [ ... ],
-  "external": [ ... ],
-  "workspaceDependencies": [ ... ]
-}
-```
-
-### `get_dependents`
-
-Get modules that depend on a given module.
-
-**Input:**
-```json
-{
-  "root": "/path/to/repository",
-  "moduleId": "payments"
-}
-```
-
-**Output:**
-```json
-{
-  "moduleId": "payments",
-  "dependents": ["checkout", "subscription"]
-}
-```
-
-### `search_context`
-
-Search repository context.
-
-**Input:**
-```json
-{
-  "root": "/path/to/repository",
-  "query": "payment idempotency"
-}
-```
-
-**Output:**
-```json
-{
-  "query": "payment idempotency",
-  "results": [
-    {
-      "type": "module",
-      "id": "payments",
-      "score": 0.95,
-      "reason": "module name and responsibilities match query"
-    }
-  ]
-}
-```
-
-### `get_architecture`
-
-Get architecture information.
-
-**Input:**
-```json
-{
-  "root": "/path/to/repository"
-}
-```
-
-**Output:**
-```json
-{
-  "modules": [ ... ],
-  "layers": [ ... ],
-  "boundaries": [ ... ]
-}
-```
-
-### `get_conventions`
-
-Get detected conventions.
-
-**Input:**
-```json
-{
-  "root": "/path/to/repository"
-}
-```
-
-**Output:**
-```json
-{
-  "conventions": [
-    {
-      "category": "Naming",
-      "statement": "Files use kebab-case",
-      "confidence": 0.9,
-      "evidence": [ ... ]
-    }
-  ]
-}
-```
-
-### `get_decisions`
-
-Get architectural decisions.
-
-**Input:**
-```json
-{
-  "root": "/path/to/repository"
-}
-```
-
-**Output:**
-```json
-{
-  "decisions": [
-    {
-      "id": "ADR-001",
-      "title": "Use PostgreSQL for transactional data",
-      "status": "accepted",
-      "source": "docs/adr/001-postgresql.md"
-    }
-  ]
-}
-```
-
-## Usage
-
-### Standalone MCP Server
-
-```typescript
-import { createMcpServer } from '@ai-agent-context/mcp';
-
-const server = createMcpServer({
-  root: process.cwd()
-});
-
-// Start the server
-await server.start();
-```
-
-### With Claude Desktop
-
-Add to your Claude Desktop configuration:
-
-```json
-{
-  "mcpServers": {
-    "agent-context": {
-      "command": "node",
-      "args": ["path/to/@ai-agent-context/mcp/dist/server.js"],
-      "env": {
-        "AGENT_CONTEXT_ROOT": "/path/to/repository"
-      }
-    }
-  }
-}
-```
-
-### Programmatic Usage
-
-```typescript
-import { AgentContext } from '@ai-agent-context/core';
-import { createMcpTools } from '@ai-agent-context/mcp';
-
-const context = await AgentContext.load({ root: process.cwd() });
-const tools = createMcpTools(context);
-
-// Use tools with MCP server
-// ...
-```
-
-## Architecture
-
-The MCP adapter is a thin wrapper around the core API:
-
-```
-AI Agent
-   ↓
-MCP
-   ↓
-@ai-agent-context/mcp
-   ↓
-@ai-agent-context/core
-   ↓
-Repository Knowledge Graph
-```
-
-The MCP adapter:
-- Does not contain business logic
-- Only calls core API methods
-- Transforms results to MCP-compatible format
-- Handles MCP-specific error handling
-
-## Configuration
-
-The MCP adapter respects the same configuration as the core package:
-
-- `.agent/config.json` - Repository configuration
-- `.agent/index.json` - Cached context
-- Environment variables - Override configuration
+`MCP_PROTOCOL_VERSION` is the legacy handshake default and is deprecated in favour of `SUPPORTED_PROTOCOL_VERSIONS`.
 
 ## Security
 
-The MCP adapter inherits the security properties of the core package:
+The adapter inherits the core package's properties:
 
-- **Local-only**: No external API calls
-- **No telemetry**: No data sent to external services
-- **Secret filtering**: Automatically excludes sensitive files
-- **Repository-scoped**: Only accesses configured repository
-- **Read-only operations**: Tools, resources and prompts do not modify source files
-- **Clean stdio channel**: JSON-RPC uses stdout; diagnostics use stderr
-- **Policy**: See the repository `SECURITY.md`
+- **Local-only**: no external API calls, no telemetry
+- **Repository-scoped**: tools accept a `root`, and the core rejects paths outside it
+- **Read-only**: tools, resources and prompts never modify the repository
+- **Clean stdio channel**: JSON-RPC on stdout, diagnostics on stderr
+- **Secret filtering**: sensitive files are skipped by the core, not by the adapter
 
-## Error Handling
-
-The MCP adapter returns structured errors:
-
-```json
-{
-  "error": {
-    "code": "CONTEXT_NOT_FOUND",
-    "message": "No usable .agent/ context found",
-    "suggestions": [
-      "Run: agent-context init && agent-context scan"
-    ]
-  }
-}
-```
+See the repository `SECURITY.md`.
 
 ## License
 

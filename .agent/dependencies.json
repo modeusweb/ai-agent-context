@@ -38,7 +38,7 @@
         ],
         "value": "infrastructure"
       },
-      "importedByModules": 4,
+      "importedByModules": 5,
       "name": "node:child_process",
       "scope": "runtime"
     },
@@ -134,7 +134,7 @@
         ],
         "value": "infrastructure"
       },
-      "importedByModules": 7,
+      "importedByModules": 8,
       "name": "node:path",
       "scope": "runtime"
     },
@@ -182,7 +182,7 @@
         ],
         "value": "infrastructure"
       },
-      "importedByModules": 3,
+      "importedByModules": 4,
       "name": "node:url",
       "scope": "runtime"
     }
@@ -997,7 +997,32 @@
       "internalModules": [
         "packages/core/test"
       ],
-      "module": "@ai-agent-context/mcp"
+      "module": "packages/mcp/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:child_process",
+        "node:path",
+        "node:test",
+        "node:url"
+      ],
+      "file": "packages/mcp/test/presets.test.ts",
+      "internalModules": [
+        "packages/core/test"
+      ],
+      "module": "packages/mcp/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/mcp/test/protocol.test.ts",
+      "internalModules": [
+        "packages/core/test"
+      ],
+      "module": "packages/mcp/test"
     },
     {
       "externalPackages": [
@@ -1056,22 +1081,6 @@
   ],
   "generatedBy": "ai-agent-context",
   "internal": [
-    {
-      "confidence": 0.99,
-      "evidence": [
-        {
-          "detail": "1 file(s) import packages/core/test",
-          "source": "@ai-agent-context/mcp"
-        },
-        {
-          "detail": "relative import resolved to packages/core/test/helpers.ts",
-          "source": "packages/mcp/test/mcp.test.ts"
-        }
-      ],
-      "from": "@ai-agent-context/mcp",
-      "kind": "internal-module",
-      "to": "packages/core/test"
-    },
     {
       "confidence": 0.99,
       "evidence": [
@@ -1471,6 +1480,30 @@
       "from": "packages/mcp/src",
       "kind": "internal-module",
       "to": "packages/mcp/src/tools"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "3 file(s) import packages/core/test",
+          "source": "packages/mcp/test"
+        },
+        {
+          "detail": "relative import resolved to packages/core/test/helpers.ts",
+          "source": "packages/mcp/test/mcp.test.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/test/helpers.ts",
+          "source": "packages/mcp/test/presets.test.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/test/helpers.ts",
+          "source": "packages/mcp/test/protocol.test.ts"
+        }
+      ],
+      "from": "packages/mcp/test",
+      "kind": "internal-module",
+      "to": "packages/core/test"
     }
   ],
   "schemaVersion": 1,
@@ -1479,7 +1512,7 @@
     "cycles": 2,
     "externalPackages": 11,
     "internalModuleEdges": 18,
-    "unresolvedImports": 18
+    "unresolvedImports": 21
   },
   "unresolved": [
     {
@@ -1599,6 +1632,27 @@
         "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/mcp/test/mcp.test.ts",
+      "specifier": "../../mcp/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/mcp/test/presets.test.ts",
+      "specifier": "../../mcp/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/mcp/test/protocol.test.ts",
+      "specifier": "../../core/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/mcp/test/protocol.test.ts",
       "specifier": "../../mcp/dist/index.js"
     },
     {

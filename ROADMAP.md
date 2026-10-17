@@ -26,13 +26,15 @@
 
 ## Текущая база
 
-Текущая версия пакетов: `0.7.0`.
+Текущая версия пакетов: `0.8.0`.
 
 Уже реализованы:
 
 - ядро анализатора без runtime-зависимостей;
 - CLI: `init`, `scan`, `status`, `explain`, `context`, `task`, `impact`, `search`, `diff`, `detect`, `history`, `revision-diff`, `verify`, `clean`;
 - MCP stdio-сервер: 14 tools, Resources, Prompts, строгая валидация аргументов;
+- dual-era MCP: пять ревизий протокола, negotiation, `server/discover`, cancellation,
+  timeouts, error taxonomy и пресеты конфигурации для четырёх клиентов;
 - incremental scanning и content-addressed parse cache;
 - knowledge graph, определение модулей, entry points, cycles, layering diagnostics;
 - определение dependencies, conventions и decisions с confidence и evidence;
@@ -45,6 +47,9 @@
 - `agent-context detect` и MCP tool `detect_coverage_gaps`: что именно анализатор
   не смог определить;
 - benchmark, который измеряет import resolution rate и token budget по бакетам размера.
+
+Не закрыто и требует внешних данных: подтверждение интеграции с тремя реальными
+MCP-клиентами и opt-in опрос реальных пользователей.
 
 ## Приоритеты
 
@@ -201,29 +206,57 @@ layering diagnostics. Ни один из 103 существовавших тес
 
 ---
 
-# v0.7 — MCP production readiness (in progress)
+# v0.7 — MCP production readiness (completed)
 
 **Цель:** сделать MCP-пакет надёжным и удобным для реальных клиентов.
 
-**Текущий срез:** реализованы Resources/Prompts, read-only stdio transport,
-строгая pre-dispatch валидация по JSON Schema subset. Сервер пиннит
-`2024-11-05`; поддержка negotiation актуальных версий протокола не сделана.
+**Проблема, которую решил релиз.** Сервер пинил одну ревизию протокола —
+`2024-11-05` — и отвечал ею на любой `initialize`. Клиент, запрашивавший
+`2025-06-18`, получал инструкцию перейти на ревизию, которую сам не запрашивал,
+а по спецификации обязан был после этого отключиться. Совместимость с реальными
+клиентами определялась не кодом сервера, а датой его последнего обновления.
 
-## Возможности
+## Реализовано
 
-- Поддержка актуальных версий MCP protocol и совместимых clients.
-- Request cancellation, timeouts и error taxonomy.
-- Protocol diagnostics только через stderr (уже соблюдается).
-- MCP Inspector smoke tests и compatibility tests с реальными клиентами.
-- Конфигурационные пресеты для Claude Code, Cursor, Cline и Continue.
-- Опциональный remote transport — только после подтверждения спроса.
+- **Dual-era сервер.** Реализованы пять ревизий: legacy (`2024-11-05`,
+  `2025-03-26`, `2025-06-18`, `2025-11-25`) и modern (`2026-07-28`). Эпо
+  выбирается по тому, как открылся клиент: запрос с `_meta` обслуживается
+  stateless, `initialize` переключает на legacy-семантику.
+- **Legacy negotiation.** `initialize` отвечает запрошенной ревизией; при
+  неизвестной, отсутствующей или modern отвечает newest legacy (`2025-11-25`).
+- **`server/discover`** — обязательный для modern-сервера метод; сообщает
+  `supportedVersions`, capabilities и идентичность сервера.
+- **Modern-валидация на каждый запрос.** Неподдерживаемая ревизия отклоняется с
+  `-32022` и списком для retry; отсутствие обязательного
+  `io.modelcontextprotocol/clientCapabilities` — с `-32602`; modern-результаты
+  несут `resultType`.
+- **Cancellation.** `notifications/cancelled` гасит ответ, в том числе ответ по
+  таймауту, который иначе пришёл бы следом.
+- **Timeouts.** `requestTimeoutMs` (по умолчанию 120000, `0` отключает); истёкший
+  запрос отвечает `-32603` с `data.timeoutMs`, поздний результат отбрасывается.
+- **Error taxonomy.** Сообщение без `method` отвечает `-32600`, а не `-32601`.
+  Зарезервированный `-32002` не используется.
+- **Пресеты конфигурации** для Claude Code, Cursor, Cline и Continue:
+  `agent-context-mcp config <client>`, плюс `--list` и `--all`.
+- **Тесты реального процесса.** Сессии обеих эр, мусорный ввод, cancellation и
+  timeout проверяются через настоящий stdio-процесс, а не через in-memory
+  транспорт: «диагностика не попадает в stdout» иначе недоказуемо.
 
 ## Критерии готовности
 
-- успешная интеграция минимум с тремя реальными MCP clients;
-- malformed requests не приводят к повреждению протокола;
-- stdout/stdin transport остаётся чистым;
-- опубликована матрица поддерживаемых clients и protocol versions.
+- **закрыт:** malformed requests не приводят к повреждению протокола — покрыто
+  тестом на мусорный ввод, который проверяет, что канал stdout остаётся
+  разбираемым;
+- **закрыт:** stdout/stdin transport остаётся чистым — покрыто тестом на
+  реальном процессе;
+- **закрыт:** опубликована матрица поддерживаемых clients и protocol versions —
+  в `packages/mcp/README.md`;
+- **не закрыт:** успешная интеграция минимум с тремя реальными MCP clients.
+  Пресеты кодируют задокументированный формат конфигурации каждого клиента, но
+  ни один из них не запускался в этой среде. Критерий остаётся открытым сознательно:
+  подтвердить его может только установленный клиент.
+
+Опциональный remote transport отложен до подтверждения спроса, как и планировалось.
 
 ---
 

@@ -17,21 +17,21 @@
         "path": "CONTRIBUTING.md"
       },
       {
-        "hash": "c0fe450c311f38cc1750bf93a65a17f0b914f12088b9ba22ca28c93492e2a2a2",
+        "hash": "7b6efdac40c6d3e0a461f52229acf85adf7a2c19afb3ffb332dbd17433616ef5",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "MIGRATION.md"
       },
       {
-        "hash": "63123524f79be9492da6c40a368b90cdea243530a8d000710411435fe860b4c0",
+        "hash": "c5b4b0496273bb0f504f81faf06365c84d20b72ce687cdd653d72bfb5c69dda1",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "README.md"
       },
       {
-        "hash": "8450536acccc34465a7347448ee162adb551871f83027e8dc0de1eb474c92f48",
+        "hash": "a18d4a287ee452e7cadf3cb5dd10bdb5d4e6aa399d7db6194a508ff763f1066b",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -45,7 +45,7 @@
         "path": "SECURITY.md"
       },
       {
-        "hash": "6d81430b9ecd4ae003284b1769838e1891e0dc07e1c3695d808a6507c12a7c30",
+        "hash": "fe7722561bf4a7fc623c854a9afad041d68cb754803101a15e9765def664384b",
         "kind": "config",
         "language": "json",
         "module": null,
@@ -80,7 +80,7 @@
         "path": "packages/cli/README.md"
       },
       {
-        "hash": "7584332bf9611f6807e9ab7d7bd5caefd295dbd93007c56728ed3403ea96cf47",
+        "hash": "88f4d8435012ecee66d45ffe5f1d6a00015c66fa18c4ddf423ca1e69e20ed04a",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -248,7 +248,7 @@
         "path": "packages/core/README.md"
       },
       {
-        "hash": "d8063542432601c1125c475012bbdf2a404e7a024116b0bf2bdd3aface979bd5",
+        "hash": "44d39cf1209d4906b317dc85b84de4c63345ac0d007627714bc0de365e12e337",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -633,7 +633,7 @@
         "path": "packages/core/src/model/types.ts"
       },
       {
-        "hash": "c2199e304f0f19d443de4147f4f9d811e229f8e62b8a03617dc9c316470c8c71",
+        "hash": "974182d60eda365f9a96b0fb8e609a644b9feba657e538de13082a8bfbc2e399",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
@@ -801,35 +801,49 @@
         "path": "packages/mcp/LICENSE"
       },
       {
-        "hash": "9588f9854e09c7c3723af84c51688fd2d58341a900e2a1301994e10195e5f3e2",
+        "hash": "7d1a36fcced74edaf399f31f4c4e0ef3bc82d1ada1b069637899e9054afe7a12",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "packages/mcp/README.md"
       },
       {
-        "hash": "173697afc3186026adb9e0b49ab25ddb9bd3461e9c92d0b9b4fdb893339dd063",
+        "hash": "5e42947c00a13011840c54cd709fd81bbf2fd4657974a89e4dfb0a6d21a9e488",
         "kind": "config",
         "language": "package-json",
         "module": null,
         "path": "packages/mcp/package.json"
       },
       {
-        "hash": "b81925e3576cf856f2988831b215058c68985a7601332f6f2bfc48cf38f3ab6a",
+        "hash": "d0c0db79d19687d0d06746ce570154e1df897cfdbe0361cb517c5883c522c738",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src",
         "path": "packages/mcp/src/bin.ts"
       },
       {
-        "hash": "ddb96dfa7669395577112b9ac0f00bd62ef994d084d0348f4393dd2d4e077024",
+        "hash": "e9ced1575504f9bbb4c76db3cb275e02469ca1f02303749f53395ee96cbea662",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src",
         "path": "packages/mcp/src/index.ts"
       },
       {
-        "hash": "20721088bc98e2f4611a80a04ae2b98e26639ef7fd4e57cb31161301dcd3667b",
+        "hash": "c234a1db377d57ab5119f61dde2f258a4d515a94f66c9c529a7313212fbc5a2f",
+        "kind": "source",
+        "language": "typescript",
+        "module": "packages/mcp/src",
+        "path": "packages/mcp/src/presets.ts"
+      },
+      {
+        "hash": "4d411f617b17e97a1d2794ee43f80eab1ea10a24528365d7b86b88c276fdf598",
+        "kind": "source",
+        "language": "typescript",
+        "module": "packages/mcp/src",
+        "path": "packages/mcp/src/protocol.ts"
+      },
+      {
+        "hash": "d3008eb99f495b058eb8ed2db87d389b72320f4d4e4906dccd007f6b53e3fd7c",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src",
@@ -860,8 +874,22 @@
         "hash": "6cf2344f5dbac918cb4f2b9dca9576cf8444e34b52721316da44eef493bbdc39",
         "kind": "test",
         "language": "typescript",
-        "module": "@ai-agent-context/mcp",
+        "module": "packages/mcp/test",
         "path": "packages/mcp/test/mcp.test.ts"
+      },
+      {
+        "hash": "e0f2c4d6821189c44df9fd8bc8857b1857ff388760334066bcb066da59dca162",
+        "kind": "test",
+        "language": "typescript",
+        "module": "packages/mcp/test",
+        "path": "packages/mcp/test/presets.test.ts"
+      },
+      {
+        "hash": "d690181f1c09a13a16660ee07506c4a2489005e884c08edbd861b0b3a3edf8ea",
+        "kind": "test",
+        "language": "typescript",
+        "module": "packages/mcp/test",
+        "path": "packages/mcp/test/protocol.test.ts"
       },
       {
         "hash": "3237dee9e8e4fe205fe84cb6b19936427f4b5a34a7611d066f5f062303f18328",
@@ -924,7 +952,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 26,
+    "commitsAnalyzed": 27,
     "enabled": true,
     "windowDays": 180
   },
@@ -936,13 +964,13 @@
       "decisions": 11,
       "dependencies": 18,
       "docs": 8,
-      "entryPoints": 41,
+      "entryPoints": 43,
       "externalDependencies": 11,
-      "files": 130,
+      "files": 134,
       "modules": 13,
-      "source": 88,
-      "symbols": 667,
-      "tests": 20
+      "source": 90,
+      "symbols": 713,
+      "tests": 22
     },
     "isMonorepo": true,
     "languages": [

@@ -566,7 +566,7 @@ The package is organized as a monorepo:
 packages/
   core/     # Core analysis engine
   cli/      # Command-line interface
-  mcp/      # MCP adapter (for Claude, etc.)
+  mcp/      # MCP adapter (dual-era: legacy + modern protocol revisions)
 ```
 
 ### Core API
@@ -595,10 +595,19 @@ The CLI package (`ai-agent-context`) provides:
 
 The MCP adapter (`@ai-agent-context/mcp`) provides:
 
-- MCP tools for AI agents
-- Structured context queries
-- Module explanations
-- Dependency analysis
+- 14 MCP tools: structured context queries, module explanations, dependency
+  analysis, change impact and coverage diagnostics
+- Read-only Resources and Prompts
+- **Dual-era protocol support**: legacy revisions `2024-11-05`, `2025-03-26`,
+  `2025-06-18`, `2025-11-25` negotiated through the `initialize` handshake, and
+  modern `2026-07-28` negotiated per request, plus `server/discover`
+- Request cancellation and per-request timeouts
+- Configuration presets for Claude Code, Cursor, Cline and Continue:
+
+```bash
+agent-context-mcp config claude-code   # or cursor, cline, continue
+agent-context-mcp config --list
+```
 
 ## Example Workflow with AI Agent
 

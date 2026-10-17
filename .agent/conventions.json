@@ -43,9 +43,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "exports:61e921a2",
+      "id": "exports:6caea35c",
       "origin": "observed",
-      "statement": "Modules use named exports rather than default exports (384/384 exported symbols are named)."
+      "statement": "Modules use named exports rather than default exports (412/412 exported symbols are named)."
     },
     {
       "category": "Imports",
@@ -56,9 +56,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:8c37ddaa",
+      "id": "imports:4bb62aad",
       "origin": "observed",
-      "statement": "External dependencies are imported before internal modules (28/34 files)."
+      "statement": "External dependencies are imported before internal modules (30/36 files)."
     },
     {
       "category": "Imports",
@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:d8650e8f",
+      "id": "imports:84ee5a1c",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (57/100 files)."
+      "statement": "Type-only dependencies use `import type` (57/102 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:eab5d7db",
+      "id": "languages:bbb45603",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (103 files) and JavaScript (5 files)."
+      "statement": "Implementation mixes TypeScript (107 files) and JavaScript (5 files)."
     },
     {
       "category": "Naming",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:81be3e00",
+      "id": "naming:e9fdf0d3",
       "origin": "observed",
-      "statement": "Functions use camelCase (279/282 declarations)."
+      "statement": "Functions use camelCase (296/299 declarations)."
     },
     {
       "category": "Naming",
@@ -145,9 +145,9 @@
           "source": "packages/cli/src/commands/clean.ts"
         }
       ],
-      "id": "naming:b9c70254",
+      "id": "naming:83362552",
       "origin": "observed",
-      "statement": "Source files use camelCase (75/88 files)."
+      "statement": "Source files use camelCase (77/90 files)."
     },
     {
       "category": "Naming",
@@ -166,9 +166,9 @@
           "source": "packages/core/src/config/validate.ts"
         }
       ],
-      "id": "naming:5b662f2f",
+      "id": "naming:f3d36869",
       "origin": "observed",
-      "statement": "Type aliases use PascalCase (30/30 declarations)."
+      "statement": "Type aliases use PascalCase (32/32 declarations)."
     },
     {
       "category": "Naming",
@@ -187,9 +187,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:d7fe1915",
+      "id": "naming:57a8ca6d",
       "origin": "observed",
-      "statement": "TypeScript interfaces use PascalCase (152/152 declarations)."
+      "statement": "TypeScript interfaces use PascalCase (158/158 declarations)."
     },
     {
       "category": "Tests",
@@ -204,9 +204,9 @@
           "source": "packages/core/test/architecture.test.ts"
         }
       ],
-      "id": "tests:80ebc61f",
+      "id": "tests:f7dd999f",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (18/20 test files)."
+      "statement": "Tests live in a dedicated test directory (20/22 test files)."
     },
     {
       "category": "Toolchain",
