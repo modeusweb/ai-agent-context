@@ -218,8 +218,11 @@ export class McpServer {
       let timer: ReturnType<typeof setTimeout> | undefined;
       const timedOut = new Promise<'timeout'>((resolve) => {
         timer = setTimeout(() => resolve('timeout'), this.timeoutMs);
-        // Never hold the event loop open on the timeout alone.
-        (timer as { unref?: () => void }).unref?.();
+        // Deliberately NOT unref'd. The timer is the only thing holding the
+        // event loop while a slow request is outstanding, and unref'ing it lets
+        // Node exit with the request still pending, which silently disables the
+        // timeout. It is cleared below as soon as the request settles, so a
+        // completed request leaves nothing behind.
       });
       // Cancellation releases the waiter too: a cancelled request must stop
       // being awaited immediately, or the timeout would answer it later.

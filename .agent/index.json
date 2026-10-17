@@ -10,14 +10,14 @@
   "files": {
     "entries": [
       {
-        "hash": "05f398e64f14ae55757a7230f53217360141873bd53fa12a7e9823c23c70a8ab",
+        "hash": "c0d33ba414f10c8158865fe7cc2f7f7cd26846db531605d1f27941dfed0613b8",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "CONTRIBUTING.md"
       },
       {
-        "hash": "6af2b4e4a88ee8d0a64650a854ba5b00931126277bd5bbffb69e76cb5c946ecc",
+        "hash": "49a662e5116ca8741d0744ca9c71b626fbe2f8d801d1091e27aaf3685019cbd0",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -45,7 +45,7 @@
         "path": "SECURITY.md"
       },
       {
-        "hash": "b73cc8088f256a759aa2b3ef731b24ff316c2b9b2131f49b069ea95c2539298a",
+        "hash": "daf9f368dc33fe98d32c7338941bf553809cc44e43803a8eed0281d279b44571",
         "kind": "config",
         "language": "json",
         "module": null,
@@ -80,7 +80,7 @@
         "path": "packages/cli/README.md"
       },
       {
-        "hash": "7ecf34daf9a8a8a5a2b12dfa9dacaa4ed1a42175469da103538de2661472cae9",
+        "hash": "2f202d93d0779374158cd082beddeac6aab7e3cd08bb30fbf26720cb861f9c95",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -255,7 +255,7 @@
         "path": "packages/core/README.md"
       },
       {
-        "hash": "d8eeb0350aead17cc13617da36713370a0ced077186505c570602b439a488446",
+        "hash": "7ce9407bd9d0d7f1b156d04c999f6f13d235c26b555d467c8ac32226cb45b373",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -647,7 +647,7 @@
         "path": "packages/core/src/model/types.ts"
       },
       {
-        "hash": "d462869e6a72a1d53a1a35a6a4dc6e5c1a15362b6ab9c480239f7885748b176b",
+        "hash": "18599342f2a597b5dc748054895e73bcc5108df372dea761e2c09d36af4ec5ef",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
@@ -829,7 +829,7 @@
         "path": "packages/mcp/README.md"
       },
       {
-        "hash": "464ed45a0d48ee91b47eea6829e0801e0f1e81f89a001ecd107c24add7a84fd4",
+        "hash": "1d1c04068a4cfe2a232e9487b6757046e08f522e59efeb13c91a35d51404feba",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -864,7 +864,7 @@
         "path": "packages/mcp/src/protocol.ts"
       },
       {
-        "hash": "d3008eb99f495b058eb8ed2db87d389b72320f4d4e4906dccd007f6b53e3fd7c",
+        "hash": "e8d7fc71ce6162372da8d143ecefff67994db07a8ea6c8a4741e7a0ad5fc81ac",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src",
@@ -948,7 +948,7 @@
         "path": "tools/set-version.mjs"
       },
       {
-        "hash": "ce0edd91593aaf80a6eb32ad8cce5094def13a2148805b42fa11986923ddb803",
+        "hash": "2e78b1c1daba5194ef6746939300a06237fe912d55154363ec252424703da2fd",
         "kind": "test",
         "language": "javascript",
         "module": "tools",
@@ -980,7 +980,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 31,
+    "commitsAnalyzed": 32,
     "enabled": true,
     "windowDays": 180
   },

@@ -103,13 +103,21 @@ All three packages share one version, held in
 ```bash
 node tools/set-version.mjs 0.6.0
 npm run verify
-npm run smoke
-git commit -am "chore(release): v0.6.0"
 npm run publish:all
+git add -A && git commit -m "chore(release): v0.6.0"
+git push
 ```
 
 `publish:all` publishes core first — cli and mcp depend on it, so publishing in
 the other order would stage a release that cannot resolve its own core.
+
+**Publish before you push.** This is not a style preference. The packed CLI
+tarball declares `@ai-agent-context/core@^<version>`, and `npm run smoke`
+installs that tarball into a clean project — which resolves the dependency from
+the registry, not from the workspace. Pushing a version bump before that version
+exists on npm therefore fails the `packaged-smoke` CI job on every Node version,
+regardless of whether the code is correct. If you see that failure, the fix is
+the order of operations, not the packages.
 
 Set `NPM_TOKEN` in the environment before publishing; the token is read from
 there and never written to a file.

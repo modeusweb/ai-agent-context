@@ -1788,12 +1788,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 13,
+        "historicalChanges": 14,
         "lastChanged": "2026-10-17",
-        "recentChanges": 13,
+        "recentChanges": 14,
         "topContributors": [
           {
-            "commits": 17,
+            "commits": 18,
             "name": "modeusweb"
           }
         ]
@@ -3053,12 +3053,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 6,
+        "historicalChanges": 7,
         "lastChanged": "2026-10-17",
-        "recentChanges": 6,
+        "recentChanges": 7,
         "topContributors": [
           {
-            "commits": 7,
+            "commits": 9,
             "name": "modeusweb"
           }
         ]
@@ -3172,21 +3172,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.10.0"
+        "version": "0.10.1"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.10.0"
+        "version": "0.10.1"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.10.0"
+        "version": "0.10.1"
       }
     ],
     "workspaceGlobs": [

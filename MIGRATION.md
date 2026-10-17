@@ -1,5 +1,45 @@
 # Migration guide
 
+## v0.10.1
+
+Request timeouts were silently disabled, and a release-order footgun was
+removed. No schema change and no rescan required.
+
+### Fixed: the request timeout never fired
+
+The timeout timer was created with `unref()`. That timer is the only thing
+holding the Node event loop while a request is outstanding, so unref'ing it let
+the process exit with the request still pending — which means the timeout could
+never fire in exactly the situation it exists for: a handler that never settles.
+
+Observed on Node 22.18 as `Promise resolution is still pending but the event
+loop has already resolved`. Node 24 happened to keep the loop alive through the
+test runner, so the defect was invisible there; CI caught it on the 22.18 matrix
+entries only.
+
+`notifications/cancelled` is unaffected — it releases the waiter through a
+promise, not a timer — so a cancelled request still receives no response.
+
+### Fixed: `npm run smoke` reported one root cause as eighteen failures
+
+When the packed CLI tarball could not be installed, the script recorded the
+failure and kept going. Every remaining check runs a binary out of
+`node_modules`, so the rest failed with identical `MODULE_NOT_FOUND` errors that
+said nothing about the real problem.
+
+It now stops at the failed install and distinguishes the common case — the
+`@ai-agent-context/core` version in the workspace has not been published yet —
+from a genuine packaging defect, and prints the fix.
+
+### Fixed: the documented release order
+
+`CONTRIBUTING.md` told you to commit before publishing. Because `smoke` installs
+the packed tarball into a clean project, which resolves the core dependency from
+the registry, pushing a version bump before that version exists on npm fails the
+`packaged-smoke` CI job on every supported Node. The order is now publish, then
+commit, then push, with the reason stated.
+
+
 ## v0.10.0
 
 Trust metrics. No API change, no behaviour change, no rescan required: this

@@ -21,7 +21,7 @@
  * Usage: node tools/smoke.mjs [--keep]
  */
 import { execFileSync, spawn } from 'node:child_process';
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync, readdirSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync, readdirSync, readFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -115,7 +115,39 @@ try {
     throw new Error('cannot continue without both packed tarballs');
   }
   const installed = npm(['install', path.join(tarballs, cliTarball), path.join(tarballs, mcpTarball)], consumer);
-  check('install packed tarballs', installed.status === 0, installed.stdout.slice(-200));
+  const installOk = installed.status === 0;
+  check('install packed tarballs', installOk, installed.stdout.slice(-200));
+
+  if (!installOk) {
+    // Stop here. Every check below runs a binary out of node_modules, so a
+    // failed install otherwise turns one root cause into a dozen identical
+    // MODULE_NOT_FOUND failures that say nothing about the real problem.
+    // `run` folds stderr into `stdout` when a command fails.
+    const output = installed.stdout;
+    const unpublished = /is not in this registry|No matching version found|404 Not Found/i.test(output);
+    const version = JSON.parse(readFileSync(path.join(root, 'packages/core/package.json'), 'utf8')).version;
+    console.error('');
+    if (unpublished) {
+      console.error('smoke cannot continue: @ai-agent-context/core is not on the registry yet.');
+      console.error('');
+      console.error(`  The packed CLI depends on @ai-agent-context/core@^${version}, and ${version}`);
+      console.error('  has not been published. npm resolves that dependency from the registry');
+      console.error('  even though a local tarball was packed, so the install fails.');
+      console.error('');
+      console.error('  This is the expected order of operations, not a defect. Publish first,');
+      console.error('  then push:');
+      console.error('');
+      console.error('    npm run publish:all     # core, then cli, then mcp');
+      console.error('    git push');
+      console.error('');
+      console.error('  After publishing, re-run: npm run smoke');
+    } else {
+      console.error('smoke cannot continue: installing the packed tarballs failed.');
+      console.error(output.slice(-2000));
+    }
+    console.error('');
+    throw new Error('packed tarballs are not installable');
+  }
 
   console.log('building the fixture');
   mkdirSync(path.join(consumer, 'src/deep/nested'), { recursive: true });
