@@ -12,12 +12,51 @@ export function toPosix(path: string): string {
 }
 
 export function normalizeRelative(path: string): string {
+  return collapse(path).path;
+}
+
+export interface CollapsedPath {
+  /** Normalized repository-relative POSIX path. */
+  path: string;
+  /** `true` when a `..` segment tried to climb above the repository root. */
+  escaped: boolean;
+  /** `true` when the input was absolute (leading slash or Windows drive). */
+  absolute: boolean;
+}
+
+/**
+ * Collapses `.`/`..` segments and duplicate separators in a path.
+ *
+ * `..` that would climb above the repository root is dropped and reported
+ * through {@link CollapsedPath.escaped} rather than silently clamped, so a
+ * traversal attempt stays visible instead of degrading into a plausible
+ * in-repo path that later matches an analyzed file.
+ */
+function collapse(path: string): CollapsedPath {
   const posix = toPosix(path);
-  const collapsed = posix
-    .split('/')
-    .filter((segment) => segment.length > 0 && segment !== '.')
-    .join('/');
-  return collapsed.replace(/^\/+/, '');
+  const absolute = posix.startsWith('/') || /^[A-Za-z]:\//.test(posix);
+  const segments: string[] = [];
+  let escaped = false;
+  for (const segment of posix.split('/')) {
+    if (segment.length === 0 || segment === '.') continue;
+    if (segment === '..') {
+      if (segments.length === 0) escaped = true;
+      else segments.pop();
+      continue;
+    }
+    segments.push(segment);
+  }
+  return { path: segments.join('/'), escaped, absolute };
+}
+
+/**
+ * `true` when `path` is absolute or contains a `..` segment that escapes the
+ * repository root. Used by the resolver to reject traversal attempts instead
+ * of resolving them to an in-repo fallback.
+ */
+export function escapesRoot(path: string): boolean {
+  const { escaped, absolute } = collapse(path);
+  return escaped || absolute;
 }
 
 export function dirname(path: string): string {
@@ -46,8 +85,32 @@ export function stem(path: string): string {
 }
 
 export function join(...parts: string[]): string {
-  const filtered = parts.filter((part) => part !== undefined && part !== null && part.length > 0);
-  return normalizeRelative(filtered.map((part) => toPosix(part)).join('/'));
+  return joinStrict(...parts).path;
+}
+
+/**
+ * {@link join} that also reports whether the joined path tried to climb above
+ * the repository root or was absolute.
+ *
+ * `join` collapses `..` eagerly, so a traversal attempt is indistinguishable
+ * from a legitimate path by the time {@link escapesRoot} runs. Callers that turn
+ * untrusted specifiers into file targets (the import resolver) must use this
+ * variant so the escape is visible instead of silently clamped.
+ */
+export function joinStrict(...parts: Array<string | undefined | null>): CollapsedPath {
+  const filtered = parts.filter(
+    (part): part is string => part !== undefined && part !== null && part.length > 0,
+  );
+  const joined = filtered.map((part) => toPosix(part)).join('/');
+  const leading = parts.find(
+    (part) => typeof part === 'string' && (part.startsWith('/') || /^[A-Za-z]:[\\/]/.test(part)),
+  );
+  const collapsed = collapse(joined);
+  return {
+    path: collapsed.path,
+    escaped: collapsed.escaped,
+    absolute: leading !== undefined || collapsed.absolute,
+  };
 }
 
 export function segments(path: string): string[] {

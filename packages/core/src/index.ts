@@ -164,15 +164,18 @@ export { PatternSet, compileGlob, compileRule } from './util/glob.ts';
 export {
   toPosix,
   normalizeRelative,
+  escapesRoot,
   dirname,
   basename,
   extname,
   stem as pathStem,
   join,
+  joinStrict,
   isInside,
   ancestors,
   relativeTo,
 } from './util/paths.ts';
+export type { CollapsedPath } from './util/paths.ts';
 export { mapWithConcurrency, runWithConcurrency, defaultConcurrency } from './util/concurrency.ts';
 export { Logger, DiagnosticsCollector, silentLogger } from './logging/diagnostics.ts';
 export type { LogLevel, ProgressEvent, ProgressReporter } from './logging/diagnostics.ts';

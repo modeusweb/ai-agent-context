@@ -1,0 +1,2835 @@
+{
+  "entryPoints": [
+    {
+      "confidence": 0.6,
+      "details": "declared by ai-agent-context",
+      "evidence": [
+        {
+          "detail": "package.json \"bin\" points here (dist/bin.js), but the file is not in the analyzed tree",
+          "source": "packages/cli/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/cli/dist/bin.js",
+      "type": "package-bin"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by ai-agent-context",
+      "evidence": [
+        {
+          "detail": "package.json \"exports\" points here (./dist/index.d.ts), but the file is not in the analyzed tree",
+          "source": "packages/cli/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/cli/dist/index.d.ts",
+      "type": "package-export"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by ai-agent-context",
+      "evidence": [
+        {
+          "detail": "package.json \"exports\" points here (./dist/index.js), but the file is not in the analyzed tree",
+          "source": "packages/cli/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/cli/dist/index.js",
+      "type": "package-export"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by ai-agent-context",
+      "evidence": [
+        {
+          "detail": "package.json \"main\" points here (./dist/index.js), but the file is not in the analyzed tree",
+          "source": "packages/cli/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/cli/dist/index.js",
+      "type": "package-main"
+    },
+    {
+      "confidence": 0.99,
+      "details": "declared by ai-agent-context",
+      "evidence": [
+        {
+          "detail": "package.json \"exports\" points here (./package.json)",
+          "source": "packages/cli/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/cli/package.json",
+      "type": "package-export"
+    },
+    {
+      "confidence": 0.8,
+      "evidence": [
+        {
+          "detail": "entry naming matches CLI conventions (\"bin.ts\")",
+          "source": "packages/cli/src/bin.ts"
+        }
+      ],
+      "moduleId": "packages/cli/src",
+      "path": "packages/cli/src/bin.ts",
+      "type": "cli"
+    },
+    {
+      "confidence": 0.8,
+      "evidence": [
+        {
+          "detail": "entry naming matches CLI conventions (\"cli.ts\")",
+          "source": "packages/cli/src/cli.ts"
+        }
+      ],
+      "moduleId": "packages/cli/src",
+      "path": "packages/cli/src/cli.ts",
+      "type": "cli"
+    },
+    {
+      "confidence": 0.7,
+      "evidence": [
+        {
+          "detail": "entry naming convention at the source root (\"index.ts\")",
+          "source": "packages/cli/src/index.ts"
+        }
+      ],
+      "moduleId": "packages/cli/src",
+      "path": "packages/cli/src/index.ts",
+      "type": "application"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/cli/test/cli.test.ts"
+        }
+      ],
+      "moduleId": "ai-agent-context",
+      "path": "packages/cli/test/cli.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by @ai-agent-context/core",
+      "evidence": [
+        {
+          "detail": "package.json \"exports\" points here (./dist/index.d.ts), but the file is not in the analyzed tree",
+          "source": "packages/core/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/core/dist/index.d.ts",
+      "type": "package-export"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by @ai-agent-context/core",
+      "evidence": [
+        {
+          "detail": "package.json \"exports\" points here (./dist/index.js), but the file is not in the analyzed tree",
+          "source": "packages/core/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/core/dist/index.js",
+      "type": "package-export"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by @ai-agent-context/core",
+      "evidence": [
+        {
+          "detail": "package.json \"main\" points here (./dist/index.js), but the file is not in the analyzed tree",
+          "source": "packages/core/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/core/dist/index.js",
+      "type": "package-main"
+    },
+    {
+      "confidence": 0.99,
+      "details": "declared by @ai-agent-context/core",
+      "evidence": [
+        {
+          "detail": "package.json \"exports\" points here (./package.json)",
+          "source": "packages/core/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/core/package.json",
+      "type": "package-export"
+    },
+    {
+      "confidence": 0.7,
+      "evidence": [
+        {
+          "detail": "entry naming convention at the source root (\"index.ts\")",
+          "source": "packages/core/src/index.ts"
+        }
+      ],
+      "moduleId": "packages/core/src",
+      "path": "packages/core/src/index.ts",
+      "type": "application"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/architecture.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/architecture.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/canonical.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/canonical.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/config.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/config.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/conventions.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/conventions.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/determinism.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/determinism.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/explain.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/explain.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/filesystem.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/filesystem.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/git.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/git.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/helpers.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/helpers.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/incremental.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/incremental.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/integration.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/integration.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/language.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/language.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/resolver.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/resolver.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/scanner.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/scanner.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by @ai-agent-context/mcp",
+      "evidence": [
+        {
+          "detail": "package.json \"bin\" points here (dist/bin.js), but the file is not in the analyzed tree",
+          "source": "packages/mcp/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/mcp/dist/bin.js",
+      "type": "package-bin"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by @ai-agent-context/mcp",
+      "evidence": [
+        {
+          "detail": "package.json \"exports\" points here (./dist/index.d.ts), but the file is not in the analyzed tree",
+          "source": "packages/mcp/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/mcp/dist/index.d.ts",
+      "type": "package-export"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by @ai-agent-context/mcp",
+      "evidence": [
+        {
+          "detail": "package.json \"exports\" points here (./dist/index.js), but the file is not in the analyzed tree",
+          "source": "packages/mcp/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/mcp/dist/index.js",
+      "type": "package-export"
+    },
+    {
+      "confidence": 0.6,
+      "details": "declared by @ai-agent-context/mcp",
+      "evidence": [
+        {
+          "detail": "package.json \"main\" points here (./dist/index.js), but the file is not in the analyzed tree",
+          "source": "packages/mcp/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/mcp/dist/index.js",
+      "type": "package-main"
+    },
+    {
+      "confidence": 0.99,
+      "details": "declared by @ai-agent-context/mcp",
+      "evidence": [
+        {
+          "detail": "package.json \"exports\" points here (./package.json)",
+          "source": "packages/mcp/package.json"
+        }
+      ],
+      "moduleId": null,
+      "path": "packages/mcp/package.json",
+      "type": "package-export"
+    },
+    {
+      "confidence": 0.8,
+      "evidence": [
+        {
+          "detail": "entry naming matches CLI conventions (\"bin.ts\")",
+          "source": "packages/mcp/src/bin.ts"
+        }
+      ],
+      "moduleId": "packages/mcp/src",
+      "path": "packages/mcp/src/bin.ts",
+      "type": "cli"
+    },
+    {
+      "confidence": 0.7,
+      "evidence": [
+        {
+          "detail": "entry naming convention at the source root (\"index.ts\")",
+          "source": "packages/mcp/src/index.ts"
+        }
+      ],
+      "moduleId": "packages/mcp/src",
+      "path": "packages/mcp/src/index.ts",
+      "type": "application"
+    },
+    {
+      "confidence": 0.85,
+      "evidence": [
+        {
+          "detail": "entry naming convention at the source root (\"server.ts\")",
+          "source": "packages/mcp/src/server.ts"
+        }
+      ],
+      "moduleId": "packages/mcp/src",
+      "path": "packages/mcp/src/server.ts",
+      "type": "application"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/mcp/test/mcp.test.ts"
+        }
+      ],
+      "moduleId": "@ai-agent-context/mcp",
+      "path": "packages/mcp/test/mcp.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "tools/set-version.mjs"
+        }
+      ],
+      "moduleId": "tools",
+      "path": "tools/set-version.mjs",
+      "type": "test"
+    }
+  ],
+  "generatedBy": "ai-agent-context",
+  "layeringViolations": [
+    {
+      "confidence": 0.72,
+      "evidence": [
+        {
+          "detail": "heuristic role application depends on ui",
+          "source": "packages/cli/src"
+        },
+        {
+          "detail": "target module is classified as ui",
+          "source": "packages/cli/src/ui"
+        }
+      ],
+      "from": "packages/cli/src",
+      "kind": "application-ui",
+      "to": "packages/cli/src/ui"
+    }
+  ],
+  "modules": [
+    {
+      "basis": "workspace-package",
+      "boundaries": [],
+      "dependsOn": [
+        "packages/core/test"
+      ],
+      "entryPoints": [
+        "packages/mcp/test/mcp.test.ts"
+      ],
+      "fileList": [
+        "packages/mcp/test/mcp.test.ts"
+      ],
+      "files": 1,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "high",
+        "contributorCount": 1,
+        "historicalChanges": 8,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 8,
+        "topContributors": [
+          {
+            "commits": 8,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "@ai-agent-context/mcp",
+      "isWorkspacePackage": true,
+      "name": "@ai-agent-context/mcp",
+      "packageName": "@ai-agent-context/mcp",
+      "path": "packages/mcp",
+      "publicExports": [],
+      "responsibilities": [
+        {
+          "confidence": 0.99,
+          "evidence": [
+            {
+              "detail": "module is a workspace package",
+              "source": "package.json"
+            }
+          ],
+          "value": "role: workspace-package (heuristic)"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.99,
+          "evidence": [
+            {
+              "detail": "module is a workspace package",
+              "source": "package.json"
+            }
+          ],
+          "value": "workspace-package"
+        }
+      ],
+      "signals": [
+        "module:esm",
+        "test:suite"
+      ],
+      "testFiles": [
+        "packages/mcp/test/mcp.test.ts"
+      ],
+      "usedBy": []
+    },
+    {
+      "basis": "workspace-package",
+      "boundaries": [],
+      "dependsOn": [
+        "packages/core/test"
+      ],
+      "entryPoints": [
+        "packages/cli/test/cli.test.ts"
+      ],
+      "fileList": [
+        "packages/cli/test/cli.test.ts"
+      ],
+      "files": 1,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "medium",
+        "contributorCount": 1,
+        "historicalChanges": 4,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 4,
+        "topContributors": [
+          {
+            "commits": 4,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "ai-agent-context",
+      "isWorkspacePackage": true,
+      "name": "ai-agent-context",
+      "packageName": "ai-agent-context",
+      "path": "packages/cli",
+      "publicExports": [],
+      "responsibilities": [
+        {
+          "confidence": 0.99,
+          "evidence": [
+            {
+              "detail": "module is a workspace package",
+              "source": "package.json"
+            }
+          ],
+          "value": "role: workspace-package (heuristic)"
+        },
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli"
+            }
+          ],
+          "value": "role: cli (heuristic)"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.99,
+          "evidence": [
+            {
+              "detail": "module is a workspace package",
+              "source": "package.json"
+            }
+          ],
+          "value": "workspace-package"
+        },
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli"
+            }
+          ],
+          "value": "cli"
+        }
+      ],
+      "signals": [
+        "module:esm",
+        "test:suite"
+      ],
+      "testFiles": [
+        "packages/cli/test/cli.test.ts"
+      ],
+      "usedBy": []
+    },
+    {
+      "basis": "index-file",
+      "boundaries": [
+        "packages/cli/src/index.ts"
+      ],
+      "dependsOn": [
+        "@ai-agent-context/core",
+        "packages/cli/src/commands",
+        "packages/cli/src/ui"
+      ],
+      "entryPoints": [
+        "packages/cli/src/bin.ts",
+        "packages/cli/src/cli.ts",
+        "packages/cli/src/index.ts"
+      ],
+      "fileList": [
+        "packages/cli/src/bin.ts",
+        "packages/cli/src/cli.ts",
+        "packages/cli/src/index.ts"
+      ],
+      "files": 3,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "high",
+        "contributorCount": 1,
+        "historicalChanges": 13,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 13,
+        "topContributors": [
+          {
+            "commits": 16,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/cli/src",
+      "isWorkspacePackage": false,
+      "name": "src",
+      "packageName": "ai-agent-context",
+      "path": "packages/cli/src",
+      "publicExports": [
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "const",
+          "name": "CLI_NAME"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "const",
+          "name": "CLI_VERSION"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "interface",
+          "name": "CliCommandContext"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "interface",
+          "name": "CliDependencies"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "interface",
+          "name": "CliIo"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "interface",
+          "name": "ParsedArguments"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "function",
+          "name": "contextOptions"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "function",
+          "name": "flagBoolean"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "function",
+          "name": "flagList"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "function",
+          "name": "flagString"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "function",
+          "name": "parseArguments"
+        },
+        {
+          "file": "packages/cli/src/cli.ts",
+          "kind": "function",
+          "name": "runCli"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.81,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli/src"
+            },
+            {
+              "detail": "module exposes a command line entry point",
+              "source": "packages/cli/src/bin.ts"
+            }
+          ],
+          "value": "role: cli (heuristic)"
+        },
+        {
+          "confidence": 0.6,
+          "evidence": [
+            {
+              "detail": "module exposes an application entry point",
+              "source": "packages/cli/src/index.ts"
+            }
+          ],
+          "value": "role: application (heuristic)"
+        },
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports CLI_NAME (const)",
+              "source": "packages/cli/src/cli.ts"
+            },
+            {
+              "detail": "exports CLI_VERSION (const)",
+              "source": "packages/cli/src/cli.ts"
+            },
+            {
+              "detail": "exports CliCommandContext (interface)",
+              "source": "packages/cli/src/cli.ts"
+            }
+          ],
+          "value": "public API: CLI_NAME, CLI_VERSION, CliCommandContext, CliDependencies, CliIo, ParsedArguments, contextOptions, flagBoolean"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.81,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli/src"
+            },
+            {
+              "detail": "module exposes a command line entry point",
+              "source": "packages/cli/src/bin.ts"
+            }
+          ],
+          "value": "cli"
+        },
+        {
+          "confidence": 0.6,
+          "evidence": [
+            {
+              "detail": "module exposes an application entry point",
+              "source": "packages/cli/src/index.ts"
+            }
+          ],
+          "value": "application"
+        }
+      ],
+      "signals": [
+        "module:esm"
+      ],
+      "testFiles": [],
+      "usedBy": [
+        "packages/cli/src/commands"
+      ]
+    },
+    {
+      "basis": "directory",
+      "boundaries": [],
+      "dependsOn": [
+        "@ai-agent-context/core",
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "entryPoints": [],
+      "fileList": [
+        "packages/cli/src/commands/clean.ts",
+        "packages/cli/src/commands/context.ts",
+        "packages/cli/src/commands/diff.ts",
+        "packages/cli/src/commands/explain.ts",
+        "packages/cli/src/commands/history.ts",
+        "packages/cli/src/commands/impact.ts",
+        "packages/cli/src/commands/init.ts",
+        "packages/cli/src/commands/revision-diff.ts",
+        "packages/cli/src/commands/scan.ts",
+        "packages/cli/src/commands/search.ts",
+        "packages/cli/src/commands/status.ts",
+        "packages/cli/src/commands/task.ts",
+        "packages/cli/src/commands/verify.ts"
+      ],
+      "files": 13,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "medium",
+        "contributorCount": 1,
+        "historicalChanges": 6,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 6,
+        "topContributors": [
+          {
+            "commits": 18,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/cli/src/commands",
+      "isWorkspacePackage": false,
+      "name": "commands",
+      "packageName": "ai-agent-context",
+      "path": "packages/cli/src/commands",
+      "publicExports": [
+        {
+          "file": "packages/cli/src/commands/clean.ts",
+          "kind": "function",
+          "name": "runCleanCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/context.ts",
+          "kind": "function",
+          "name": "runContextCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/diff.ts",
+          "kind": "function",
+          "name": "runDiffCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/explain.ts",
+          "kind": "function",
+          "name": "runExplainCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/history.ts",
+          "kind": "function",
+          "name": "runHistoryCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/impact.ts",
+          "kind": "function",
+          "name": "runImpactCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/init.ts",
+          "kind": "function",
+          "name": "runInitCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/revision-diff.ts",
+          "kind": "function",
+          "name": "runRevisionDiffCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/scan.ts",
+          "kind": "function",
+          "name": "runScanCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/search.ts",
+          "kind": "function",
+          "name": "runSearchCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/status.ts",
+          "kind": "function",
+          "name": "runStatusCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/task.ts",
+          "kind": "function",
+          "name": "runTaskCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/verify.ts",
+          "kind": "function",
+          "name": "runVerifyCommand"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli/src/commands"
+            }
+          ],
+          "value": "role: cli (heuristic)"
+        },
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports runCleanCommand (function)",
+              "source": "packages/cli/src/commands/clean.ts"
+            },
+            {
+              "detail": "exports runContextCommand (function)",
+              "source": "packages/cli/src/commands/context.ts"
+            },
+            {
+              "detail": "exports runDiffCommand (function)",
+              "source": "packages/cli/src/commands/diff.ts"
+            }
+          ],
+          "value": "public API: runCleanCommand, runContextCommand, runDiffCommand, runExplainCommand, runHistoryCommand, runImpactCommand, runInitCommand, runRevisionDiffCommand"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli/src/commands"
+            }
+          ],
+          "value": "cli"
+        }
+      ],
+      "signals": [
+        "module:esm"
+      ],
+      "testFiles": [],
+      "usedBy": [
+        "packages/cli/src"
+      ]
+    },
+    {
+      "basis": "directory",
+      "boundaries": [],
+      "dependsOn": [
+        "@ai-agent-context/core"
+      ],
+      "entryPoints": [],
+      "fileList": [
+        "packages/cli/src/ui/console.ts",
+        "packages/cli/src/ui/format.ts"
+      ],
+      "files": 2,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "low",
+        "contributorCount": 1,
+        "historicalChanges": 2,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 2,
+        "topContributors": [
+          {
+            "commits": 3,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/cli/src/ui",
+      "isWorkspacePackage": false,
+      "name": "ui",
+      "packageName": "ai-agent-context",
+      "path": "packages/cli/src/ui",
+      "publicExports": [
+        {
+          "file": "packages/cli/src/ui/console.ts",
+          "kind": "interface",
+          "name": "ConsoleOptions"
+        },
+        {
+          "file": "packages/cli/src/ui/console.ts",
+          "kind": "class",
+          "name": "ConsoleOutput"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
+          "name": "compactStatusPayload"
+        },
+        {
+          "file": "packages/cli/src/ui/console.ts",
+          "kind": "function",
+          "name": "formatDuration"
+        },
+        {
+          "file": "packages/cli/src/ui/console.ts",
+          "kind": "function",
+          "name": "formatNumber"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
+          "name": "renderDiff"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
+          "name": "renderExplain"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
+          "name": "renderRepositoryContext"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
+          "name": "renderScanSummary"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
+          "name": "renderSearchResults"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
+          "name": "renderStatus"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli/src/ui"
+            }
+          ],
+          "value": "role: cli (heuristic)"
+        },
+        {
+          "confidence": 0.4,
+          "evidence": [
+            {
+              "detail": "name matches UI vocabulary (\"/ui/\")",
+              "source": "packages/cli/src/ui"
+            }
+          ],
+          "value": "role: ui (heuristic)"
+        },
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports ConsoleOptions (interface)",
+              "source": "packages/cli/src/ui/console.ts"
+            },
+            {
+              "detail": "exports ConsoleOutput (class)",
+              "source": "packages/cli/src/ui/console.ts"
+            },
+            {
+              "detail": "exports compactStatusPayload (function)",
+              "source": "packages/cli/src/ui/format.ts"
+            }
+          ],
+          "value": "public API: ConsoleOptions, ConsoleOutput, compactStatusPayload, formatDuration, formatNumber, renderDiff, renderExplain, renderRepositoryContext"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches *cli* / *command* (\"/cli/\")",
+              "source": "packages/cli/src/ui"
+            }
+          ],
+          "value": "cli"
+        },
+        {
+          "confidence": 0.4,
+          "evidence": [
+            {
+              "detail": "name matches UI vocabulary (\"/ui/\")",
+              "source": "packages/cli/src/ui"
+            }
+          ],
+          "value": "ui"
+        }
+      ],
+      "signals": [
+        "module:esm"
+      ],
+      "testFiles": [],
+      "usedBy": [
+        "packages/cli/src",
+        "packages/cli/src/commands"
+      ]
+    },
+    {
+      "basis": "index-file",
+      "boundaries": [
+        "packages/core/src/adapters/language/registry.ts",
+        "packages/core/src/index.ts"
+      ],
+      "dependsOn": [
+        "packages/core/src/config",
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "entryPoints": [
+        "packages/core/src/index.ts"
+      ],
+      "fileList": [
+        "packages/core/src/adapters/filesystem/fs-adapter.ts",
+        "packages/core/src/adapters/filesystem/sensitive.ts",
+        "packages/core/src/adapters/git/git-adapter.ts",
+        "packages/core/src/adapters/language/json/adapter.ts",
+        "packages/core/src/adapters/language/markdown/adapter.ts",
+        "packages/core/src/adapters/language/package-json/adapter.ts",
+        "packages/core/src/adapters/language/registry.ts",
+        "packages/core/src/adapters/language/ts-js/adapter.ts",
+        "packages/core/src/adapters/language/ts-js/extractor.ts",
+        "packages/core/src/adapters/language/ts-js/lexer.ts",
+        "packages/core/src/adapters/language/ts-js/package-signals.ts",
+        "packages/core/src/adapters/language/tsconfig/adapter.ts",
+        "packages/core/src/adapters/language/types.ts",
+        "packages/core/src/agent-context.ts",
+        "packages/core/src/core/architecture/detector.ts",
+        "packages/core/src/core/architecture/entry-points.ts",
+        "packages/core/src/core/architecture/role-detector.ts",
+        "packages/core/src/core/context/explain.ts",
+        "packages/core/src/core/context/repository-context.ts",
+        "packages/core/src/core/context/types.ts",
+        "packages/core/src/core/conventions/detector.ts",
+        "packages/core/src/core/conventions/renderer.ts",
+        "packages/core/src/core/decisions/detector.ts",
+        "packages/core/src/core/diff/differ.ts",
+        "packages/core/src/core/git-analysis/activity.ts",
+        "packages/core/src/core/graph/aliases.ts",
+        "packages/core/src/core/graph/knowledge-graph.ts",
+        "packages/core/src/core/graph/modules.ts",
+        "packages/core/src/core/graph/resolver.ts",
+        "packages/core/src/core/scanner/cache.ts",
+        "packages/core/src/core/scanner/scanner.ts",
+        "packages/core/src/core/scanner/types.ts",
+        "packages/core/src/core/search/analyzer.ts",
+        "packages/core/src/core/search/bm25.ts",
+        "packages/core/src/core/search/documents.ts",
+        "packages/core/src/core/search/service.ts",
+        "packages/core/src/core/search/types.ts",
+        "packages/core/src/core/serialization/documents.ts",
+        "packages/core/src/core/serialization/reader.ts",
+        "packages/core/src/core/serialization/types.ts",
+        "packages/core/src/core/serialization/writer.ts",
+        "packages/core/src/core/workspace/package-facts.ts",
+        "packages/core/src/core/workspace/workspace.ts",
+        "packages/core/src/errors.ts",
+        "packages/core/src/index.ts",
+        "packages/core/src/logging/diagnostics.ts",
+        "packages/core/src/pipeline/scan-pipeline.ts"
+      ],
+      "files": 47,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "high",
+        "contributorCount": 1,
+        "historicalChanges": 10,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 10,
+        "topContributors": [
+          {
+            "commits": 72,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/core/src",
+      "isWorkspacePackage": false,
+      "name": "src",
+      "packageName": "@ai-agent-context/core",
+      "path": "packages/core/src",
+      "publicExports": [
+        {
+          "file": "packages/core/src/adapters/language/ts-js/extractor.ts",
+          "kind": "interface",
+          "name": "ExtractionResult"
+        },
+        {
+          "file": "packages/core/src/adapters/filesystem/fs-adapter.ts",
+          "kind": "class",
+          "name": "FileSystemAdapter"
+        },
+        {
+          "file": "packages/core/src/adapters/git/git-adapter.ts",
+          "kind": "class",
+          "name": "GitAdapter"
+        },
+        {
+          "file": "packages/core/src/adapters/git/git-adapter.ts",
+          "kind": "interface",
+          "name": "GitAdapterOptions"
+        },
+        {
+          "file": "packages/core/src/adapters/git/git-adapter.ts",
+          "kind": "interface",
+          "name": "GitAvailability"
+        },
+        {
+          "file": "packages/core/src/adapters/git/git-adapter.ts",
+          "kind": "interface",
+          "name": "GitCommit"
+        },
+        {
+          "file": "packages/core/src/adapters/git/git-adapter.ts",
+          "kind": "interface",
+          "name": "GitDiffFile"
+        },
+        {
+          "file": "packages/core/src/adapters/git/git-adapter.ts",
+          "kind": "interface",
+          "name": "GitLogOptions"
+        },
+        {
+          "file": "packages/core/src/adapters/git/git-adapter.ts",
+          "kind": "interface",
+          "name": "GitRevision"
+        },
+        {
+          "file": "packages/core/src/adapters/language/json/adapter.ts",
+          "kind": "class",
+          "name": "JsonAdapter"
+        },
+        {
+          "file": "packages/core/src/adapters/language/registry.ts",
+          "kind": "class",
+          "name": "LanguageRegistry"
+        },
+        {
+          "file": "packages/core/src/adapters/language/markdown/adapter.ts",
+          "kind": "class",
+          "name": "MarkdownAdapter"
+        },
+        {
+          "file": "packages/core/src/adapters/language/markdown/adapter.ts",
+          "kind": "interface",
+          "name": "MarkdownHeading"
+        },
+        {
+          "file": "packages/core/src/adapters/language/markdown/adapter.ts",
+          "kind": "interface",
+          "name": "MarkdownLink"
+        },
+        {
+          "file": "packages/core/src/adapters/language/package-json/adapter.ts",
+          "kind": "interface",
+          "name": "PackageEntryField"
+        },
+        {
+          "file": "packages/core/src/adapters/language/package-json/adapter.ts",
+          "kind": "interface",
+          "name": "PackageFacts"
+        },
+        {
+          "file": "packages/core/src/adapters/language/package-json/adapter.ts",
+          "kind": "class",
+          "name": "PackageJsonAdapter"
+        },
+        {
+          "file": "packages/core/src/adapters/filesystem/sensitive.ts",
+          "kind": "const",
+          "name": "REDACTED"
+        },
+        {
+          "file": "packages/core/src/adapters/filesystem/sensitive.ts",
+          "kind": "const",
+          "name": "SECRET_VALUE_PATTERNS"
+        },
+        {
+          "file": "packages/core/src/adapters/filesystem/sensitive.ts",
+          "kind": "interface",
+          "name": "SensitiveFilterOptions"
+        },
+        {
+          "file": "packages/core/src/adapters/filesystem/sensitive.ts",
+          "kind": "class",
+          "name": "SensitivePathFilter"
+        },
+        {
+          "file": "packages/core/src/adapters/language/ts-js/lexer.ts",
+          "kind": "const",
+          "name": "TS_KEYWORDS"
+        },
+        {
+          "file": "packages/core/src/adapters/language/ts-js/lexer.ts",
+          "kind": "interface",
+          "name": "Token"
+        },
+        {
+          "file": "packages/core/src/adapters/language/ts-js/lexer.ts",
+          "kind": "type",
+          "name": "TokenType"
+        },
+        {
+          "file": "packages/core/src/adapters/language/ts-js/adapter.ts",
+          "kind": "class",
+          "name": "TsJsAdapter"
+        },
+        {
+          "file": "packages/core/src/adapters/filesystem/fs-adapter.ts",
+          "kind": "interface",
+          "name": "WalkOptions"
+        },
+        {
+          "file": "packages/core/src/adapters/filesystem/fs-adapter.ts",
+          "kind": "interface",
+          "name": "WalkedFile"
+        },
+        {
+          "file": "packages/core/src/adapters/filesystem/sensitive.ts",
+          "kind": "function",
+          "name": "containsSecret"
+        },
+        {
+          "file": "packages/core/src/adapters/language/registry.ts",
+          "kind": "function",
+          "name": "createDefaultRegistry"
+        },
+        {
+          "file": "packages/core/src/adapters/language/markdown/adapter.ts",
+          "kind": "function",
+          "name": "extractFrontMatter"
+        },
+        {
+          "file": "packages/core/src/adapters/language/markdown/adapter.ts",
+          "kind": "function",
+          "name": "extractHeadings"
+        },
+        {
+          "file": "packages/core/src/adapters/language/package-json/adapter.ts",
+          "kind": "function",
+          "name": "flattenExports"
+        },
+        {
+          "file": "packages/core/src/adapters/language/json/adapter.ts",
+          "kind": "function",
+          "name": "isPlainObject"
+        },
+        {
+          "file": "packages/core/src/adapters/language/ts-js/package-signals.ts",
+          "kind": "function",
+          "name": "packageNameFromSpecifier"
+        },
+        {
+          "file": "packages/core/src/adapters/git/git-adapter.ts",
+          "kind": "function",
+          "name": "parseGitDiff"
+        },
+        {
+          "file": "packages/core/src/adapters/git/git-adapter.ts",
+          "kind": "function",
+          "name": "parseGitLog"
+        },
+        {
+          "file": "packages/core/src/adapters/language/package-json/adapter.ts",
+          "kind": "function",
+          "name": "readPackageFacts"
+        },
+        {
+          "file": "packages/core/src/adapters/filesystem/sensitive.ts",
+          "kind": "function",
+          "name": "redactSecrets"
+        },
+        {
+          "file": "packages/core/src/adapters/language/markdown/adapter.ts",
+          "kind": "function",
+          "name": "stripFrontMatter"
+        },
+        {
+          "file": "packages/core/src/adapters/language/json/adapter.ts",
+          "kind": "function",
+          "name": "stripJsonPreamble"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.6,
+          "evidence": [
+            {
+              "detail": "module exposes an application entry point",
+              "source": "packages/core/src/index.ts"
+            }
+          ],
+          "value": "role: application (heuristic)"
+        },
+        {
+          "confidence": 0.35,
+          "evidence": [
+            {
+              "detail": "declares domain specific error classes (signal: error:custom-class)",
+              "source": "packages/core/src/errors.ts"
+            }
+          ],
+          "value": "role: domain (heuristic)"
+        },
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports ExtractionResult (interface)",
+              "source": "packages/core/src/adapters/language/ts-js/extractor.ts"
+            },
+            {
+              "detail": "exports FileSystemAdapter (class)",
+              "source": "packages/core/src/adapters/filesystem/fs-adapter.ts"
+            },
+            {
+              "detail": "exports GitAdapter (class)",
+              "source": "packages/core/src/adapters/git/git-adapter.ts"
+            }
+          ],
+          "value": "public API: ExtractionResult, FileSystemAdapter, GitAdapter, GitAdapterOptions, GitAvailability, GitCommit, GitDiffFile, GitLogOptions"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.6,
+          "evidence": [
+            {
+              "detail": "module exposes an application entry point",
+              "source": "packages/core/src/index.ts"
+            }
+          ],
+          "value": "application"
+        },
+        {
+          "confidence": 0.35,
+          "evidence": [
+            {
+              "detail": "declares domain specific error classes (signal: error:custom-class)",
+              "source": "packages/core/src/errors.ts"
+            }
+          ],
+          "value": "domain"
+        }
+      ],
+      "signals": [
+        "error:custom-class",
+        "module:esm"
+      ],
+      "testFiles": [],
+      "usedBy": [
+        "packages/core/src/config"
+      ]
+    },
+    {
+      "basis": "directory",
+      "boundaries": [],
+      "dependsOn": [
+        "packages/core/src",
+        "packages/core/src/model"
+      ],
+      "entryPoints": [],
+      "fileList": [
+        "packages/core/src/config/defaults.ts",
+        "packages/core/src/config/load.ts",
+        "packages/core/src/config/types.ts",
+        "packages/core/src/config/validate.ts"
+      ],
+      "files": 4,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "low",
+        "contributorCount": 1,
+        "historicalChanges": 2,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 2,
+        "topContributors": [
+          {
+            "commits": 5,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/core/src/config",
+      "isWorkspacePackage": false,
+      "name": "config",
+      "packageName": "@ai-agent-context/core",
+      "path": "packages/core/src/config",
+      "publicExports": [
+        {
+          "file": "packages/core/src/config/types.ts",
+          "kind": "interface",
+          "name": "AgentContextConfig"
+        },
+        {
+          "file": "packages/core/src/config/types.ts",
+          "kind": "interface",
+          "name": "AnalysisConfig"
+        },
+        {
+          "file": "packages/core/src/config/types.ts",
+          "kind": "interface",
+          "name": "ConfigOverrides"
+        },
+        {
+          "file": "packages/core/src/config/defaults.ts",
+          "kind": "const",
+          "name": "DECISION_SOURCES"
+        },
+        {
+          "file": "packages/core/src/config/defaults.ts",
+          "kind": "const",
+          "name": "DEFAULT_CONFIG"
+        },
+        {
+          "file": "packages/core/src/config/defaults.ts",
+          "kind": "const",
+          "name": "DEFAULT_EXCLUDE"
+        },
+        {
+          "file": "packages/core/src/config/defaults.ts",
+          "kind": "const",
+          "name": "DEFAULT_INCLUDE"
+        },
+        {
+          "file": "packages/core/src/config/defaults.ts",
+          "kind": "const",
+          "name": "DEFAULT_SENSITIVE_PATTERNS"
+        },
+        {
+          "file": "packages/core/src/config/types.ts",
+          "kind": "interface",
+          "name": "FeaturesConfig"
+        },
+        {
+          "file": "packages/core/src/config/types.ts",
+          "kind": "interface",
+          "name": "GitAnalysisConfig"
+        },
+        {
+          "file": "packages/core/src/config/types.ts",
+          "kind": "interface",
+          "name": "LoadedConfig"
+        },
+        {
+          "file": "packages/core/src/config/types.ts",
+          "kind": "interface",
+          "name": "OutputConfig"
+        },
+        {
+          "file": "packages/core/src/config/defaults.ts",
+          "kind": "const",
+          "name": "PACKAGE_ENTRY_FIELDS"
+        },
+        {
+          "file": "packages/core/src/config/types.ts",
+          "kind": "interface",
+          "name": "SecurityConfig"
+        },
+        {
+          "file": "packages/core/src/config/validate.ts",
+          "kind": "interface",
+          "name": "ValidatedConfig"
+        },
+        {
+          "file": "packages/core/src/config/load.ts",
+          "kind": "function",
+          "name": "applyOverrides"
+        },
+        {
+          "file": "packages/core/src/config/validate.ts",
+          "kind": "function",
+          "name": "parseConfigText"
+        },
+        {
+          "file": "packages/core/src/config/validate.ts",
+          "kind": "function",
+          "name": "validateConfig"
+        },
+        {
+          "file": "packages/core/src/config/load.ts",
+          "kind": "function",
+          "name": "validateMerged"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.4,
+          "evidence": [
+            {
+              "detail": "name matches *config* (\"/config/\")",
+              "source": "packages/core/src/config"
+            }
+          ],
+          "value": "role: configuration (heuristic)"
+        },
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports AgentContextConfig (interface)",
+              "source": "packages/core/src/config/types.ts"
+            },
+            {
+              "detail": "exports AnalysisConfig (interface)",
+              "source": "packages/core/src/config/types.ts"
+            },
+            {
+              "detail": "exports ConfigOverrides (interface)",
+              "source": "packages/core/src/config/types.ts"
+            }
+          ],
+          "value": "public API: AgentContextConfig, AnalysisConfig, ConfigOverrides, DECISION_SOURCES, DEFAULT_CONFIG, DEFAULT_EXCLUDE, DEFAULT_INCLUDE, DEFAULT_SENSITIVE_PATTERNS"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.4,
+          "evidence": [
+            {
+              "detail": "name matches *config* (\"/config/\")",
+              "source": "packages/core/src/config"
+            }
+          ],
+          "value": "configuration"
+        }
+      ],
+      "signals": [
+        "module:esm"
+      ],
+      "testFiles": [],
+      "usedBy": [
+        "packages/core/src"
+      ]
+    },
+    {
+      "basis": "directory",
+      "boundaries": [],
+      "dependsOn": [],
+      "entryPoints": [],
+      "fileList": [
+        "packages/core/src/model/canonical.ts",
+        "packages/core/src/model/schema.ts",
+        "packages/core/src/model/types.ts",
+        "packages/core/src/model/version.ts"
+      ],
+      "files": 4,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "medium",
+        "contributorCount": 1,
+        "historicalChanges": 7,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 7,
+        "topContributors": [
+          {
+            "commits": 9,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/core/src/model",
+      "isWorkspacePackage": false,
+      "name": "model",
+      "packageName": "@ai-agent-context/core",
+      "path": "packages/core/src/model",
+      "publicExports": [
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "AGENT_DIR"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "AGENT_GITIGNORE"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "CACHE_DIR"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "CONFIDENCE"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "CONFIG_FILE"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "CONTEXT_FILES"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "ChangeFrequency"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "ChangeImpact"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "ChangeSet"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "Confidence"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "type",
+          "name": "ConfidenceLevel"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "ContextDiff"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "type",
+          "name": "ContextFile"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "Convention"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "Decision"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "DecisionStatus"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "DependencyEdge"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "DependencyKind"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "Detection"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "DiagnosticPayload"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "EntryPoint"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "EntryPointType"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "Evidence"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "ExternalDependency"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "FileKind"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "FileNode"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "GENERATOR_NAME"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "GitFileSignals"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "GitModuleSignals"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "ImportSyntax"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "LOCAL_DIR"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "LayeringViolation"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "LayeringViolationKind"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "ModuleBasis"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "ModuleExplanation"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "ModuleHistoryEntry"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "ModuleNode"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "ModuleRole"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "NodeKind"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "ParseStatus"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "Relationship"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "Repository"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "RevisionDiff"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "RevisionSnapshot"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "SCHEMA_VERSION"
+        },
+        {
+          "file": "packages/core/src/model/schema.ts",
+          "kind": "const",
+          "name": "STATE_FILE"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "ScanReport"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "SearchResult"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "SymbolKind"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "SymbolNode"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "TaskContext"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "WorkspaceInfo"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "interface",
+          "name": "WorkspacePackage"
+        },
+        {
+          "file": "packages/core/src/model/canonical.ts",
+          "kind": "function",
+          "name": "canonicalize"
+        },
+        {
+          "file": "packages/core/src/model/canonical.ts",
+          "kind": "function",
+          "name": "compareStrings"
+        },
+        {
+          "file": "packages/core/src/model/canonical.ts",
+          "kind": "function",
+          "name": "sha256"
+        },
+        {
+          "file": "packages/core/src/model/canonical.ts",
+          "kind": "function",
+          "name": "shortHash"
+        },
+        {
+          "file": "packages/core/src/model/canonical.ts",
+          "kind": "function",
+          "name": "stringifyCanonical"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.4,
+          "evidence": [
+            {
+              "detail": "name matches *domain* / *entity* / *model* (\"/model/\")",
+              "source": "packages/core/src/model"
+            }
+          ],
+          "value": "role: domain (heuristic)"
+        },
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports AGENT_DIR (const)",
+              "source": "packages/core/src/model/schema.ts"
+            },
+            {
+              "detail": "exports AGENT_GITIGNORE (const)",
+              "source": "packages/core/src/model/schema.ts"
+            },
+            {
+              "detail": "exports CACHE_DIR (const)",
+              "source": "packages/core/src/model/schema.ts"
+            }
+          ],
+          "value": "public API: AGENT_DIR, AGENT_GITIGNORE, CACHE_DIR, CONFIDENCE, CONFIG_FILE, CONTEXT_FILES, ChangeFrequency, ChangeImpact"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.4,
+          "evidence": [
+            {
+              "detail": "name matches *domain* / *entity* / *model* (\"/model/\")",
+              "source": "packages/core/src/model"
+            }
+          ],
+          "value": "domain"
+        }
+      ],
+      "signals": [
+        "module:esm"
+      ],
+      "testFiles": [],
+      "usedBy": [
+        "packages/core/src",
+        "packages/core/src/config",
+        "packages/core/src/util"
+      ]
+    },
+    {
+      "basis": "directory",
+      "boundaries": [],
+      "dependsOn": [
+        "packages/core/src/model"
+      ],
+      "entryPoints": [],
+      "fileList": [
+        "packages/core/src/util/concurrency.ts",
+        "packages/core/src/util/glob.ts",
+        "packages/core/src/util/paths.ts",
+        "packages/core/src/util/text.ts"
+      ],
+      "files": 4,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "low",
+        "contributorCount": 1,
+        "historicalChanges": 1,
+        "lastChanged": "2026-09-18",
+        "recentChanges": 1,
+        "topContributors": [
+          {
+            "commits": 4,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/core/src/util",
+      "isWorkspacePackage": false,
+      "name": "util",
+      "packageName": "@ai-agent-context/core",
+      "path": "packages/core/src/util",
+      "publicExports": [
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "interface",
+          "name": "CollapsedPath"
+        },
+        {
+          "file": "packages/core/src/util/concurrency.ts",
+          "kind": "interface",
+          "name": "ConcurrencyResult"
+        },
+        {
+          "file": "packages/core/src/util/text.ts",
+          "kind": "type",
+          "name": "IdentifierCase"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "ancestors"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "basename"
+        },
+        {
+          "file": "packages/core/src/util/text.ts",
+          "kind": "function",
+          "name": "classifyIdentifierCase"
+        },
+        {
+          "file": "packages/core/src/util/text.ts",
+          "kind": "function",
+          "name": "countBy"
+        },
+        {
+          "file": "packages/core/src/util/concurrency.ts",
+          "kind": "function",
+          "name": "defaultConcurrency"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "depth"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "dirname"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "escapesRoot"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "extname"
+        },
+        {
+          "file": "packages/core/src/util/text.ts",
+          "kind": "function",
+          "name": "formatDate"
+        },
+        {
+          "file": "packages/core/src/util/text.ts",
+          "kind": "function",
+          "name": "formatTimestamp"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "isInside"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "join"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "joinStrict"
+        },
+        {
+          "file": "packages/core/src/util/concurrency.ts",
+          "kind": "function",
+          "name": "mapWithConcurrency"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "normalizeRelative"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "relativeTo"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "segments"
+        },
+        {
+          "file": "packages/core/src/util/text.ts",
+          "kind": "function",
+          "name": "splitIdentifier"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "stem"
+        },
+        {
+          "file": "packages/core/src/util/paths.ts",
+          "kind": "function",
+          "name": "toPosix"
+        },
+        {
+          "file": "packages/core/src/util/text.ts",
+          "kind": "function",
+          "name": "truncate"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.35,
+          "evidence": [
+            {
+              "detail": "name matches *utils* / *shared* (\"/util/\")",
+              "source": "packages/core/src/util"
+            }
+          ],
+          "value": "role: shared (heuristic)"
+        },
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports CollapsedPath (interface)",
+              "source": "packages/core/src/util/paths.ts"
+            },
+            {
+              "detail": "exports ConcurrencyResult (interface)",
+              "source": "packages/core/src/util/concurrency.ts"
+            },
+            {
+              "detail": "exports IdentifierCase (type)",
+              "source": "packages/core/src/util/text.ts"
+            }
+          ],
+          "value": "public API: CollapsedPath, ConcurrencyResult, IdentifierCase, ancestors, basename, classifyIdentifierCase, countBy, defaultConcurrency"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.35,
+          "evidence": [
+            {
+              "detail": "name matches *utils* / *shared* (\"/util/\")",
+              "source": "packages/core/src/util"
+            }
+          ],
+          "value": "shared"
+        }
+      ],
+      "signals": [
+        "module:esm"
+      ],
+      "testFiles": [],
+      "usedBy": [
+        "packages/core/src"
+      ]
+    },
+    {
+      "basis": "directory",
+      "boundaries": [],
+      "dependsOn": [],
+      "entryPoints": [
+        "packages/core/test/architecture.test.ts",
+        "packages/core/test/canonical.test.ts",
+        "packages/core/test/config.test.ts",
+        "packages/core/test/conventions.test.ts",
+        "packages/core/test/determinism.test.ts",
+        "packages/core/test/explain.test.ts",
+        "packages/core/test/filesystem.test.ts",
+        "packages/core/test/git.test.ts",
+        "packages/core/test/helpers.ts",
+        "packages/core/test/incremental.test.ts",
+        "packages/core/test/integration.test.ts",
+        "packages/core/test/language.test.ts",
+        "packages/core/test/resolver.test.ts",
+        "packages/core/test/scanner.test.ts"
+      ],
+      "fileList": [
+        "packages/core/test/architecture.test.ts",
+        "packages/core/test/canonical.test.ts",
+        "packages/core/test/config.test.ts",
+        "packages/core/test/conventions.test.ts",
+        "packages/core/test/determinism.test.ts",
+        "packages/core/test/explain.test.ts",
+        "packages/core/test/filesystem.test.ts",
+        "packages/core/test/git.test.ts",
+        "packages/core/test/helpers.ts",
+        "packages/core/test/incremental.test.ts",
+        "packages/core/test/integration.test.ts",
+        "packages/core/test/language.test.ts",
+        "packages/core/test/resolver.test.ts",
+        "packages/core/test/scanner.test.ts"
+      ],
+      "files": 14,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "high",
+        "contributorCount": 1,
+        "historicalChanges": 9,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 9,
+        "topContributors": [
+          {
+            "commits": 22,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/core/test",
+      "isWorkspacePackage": false,
+      "name": "test",
+      "packageName": "@ai-agent-context/core",
+      "path": "packages/core/test",
+      "publicExports": [
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "const",
+          "name": "FIXTURES_ROOT"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "const",
+          "name": "FIXTURE_NAMES"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "const",
+          "name": "REPO_ROOT"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "const",
+          "name": "TEMP_BASE"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "function",
+          "name": "cleanupTemp"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "function",
+          "name": "createTempRepo"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "function",
+          "name": "deleteRepoFile"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "function",
+          "name": "git"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "function",
+          "name": "initGit"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "function",
+          "name": "readRepoFile"
+        },
+        {
+          "file": "packages/core/test/helpers.ts",
+          "kind": "function",
+          "name": "writeRepoFile"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches test vocabulary (\"/test/\")",
+              "source": "packages/core/test"
+            }
+          ],
+          "value": "role: test-support (heuristic)"
+        },
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports FIXTURES_ROOT (const)",
+              "source": "packages/core/test/helpers.ts"
+            },
+            {
+              "detail": "exports FIXTURE_NAMES (const)",
+              "source": "packages/core/test/helpers.ts"
+            },
+            {
+              "detail": "exports REPO_ROOT (const)",
+              "source": "packages/core/test/helpers.ts"
+            }
+          ],
+          "value": "public API: FIXTURES_ROOT, FIXTURE_NAMES, REPO_ROOT, TEMP_BASE, cleanupTemp, createTempRepo, deleteRepoFile, git"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.5,
+          "evidence": [
+            {
+              "detail": "name matches test vocabulary (\"/test/\")",
+              "source": "packages/core/test"
+            }
+          ],
+          "value": "test-support"
+        }
+      ],
+      "signals": [
+        "module:esm",
+        "test:suite"
+      ],
+      "testFiles": [
+        "packages/core/test/architecture.test.ts",
+        "packages/core/test/canonical.test.ts",
+        "packages/core/test/config.test.ts",
+        "packages/core/test/conventions.test.ts",
+        "packages/core/test/determinism.test.ts",
+        "packages/core/test/explain.test.ts",
+        "packages/core/test/filesystem.test.ts",
+        "packages/core/test/git.test.ts",
+        "packages/core/test/helpers.ts",
+        "packages/core/test/incremental.test.ts",
+        "packages/core/test/integration.test.ts",
+        "packages/core/test/language.test.ts",
+        "packages/core/test/resolver.test.ts",
+        "packages/core/test/scanner.test.ts"
+      ],
+      "usedBy": [
+        "@ai-agent-context/mcp",
+        "ai-agent-context"
+      ]
+    },
+    {
+      "basis": "index-file",
+      "boundaries": [
+        "packages/mcp/src/index.ts"
+      ],
+      "dependsOn": [
+        "@ai-agent-context/core",
+        "packages/mcp/src/tools"
+      ],
+      "entryPoints": [
+        "packages/mcp/src/bin.ts",
+        "packages/mcp/src/index.ts",
+        "packages/mcp/src/server.ts"
+      ],
+      "fileList": [
+        "packages/mcp/src/bin.ts",
+        "packages/mcp/src/index.ts",
+        "packages/mcp/src/server.ts",
+        "packages/mcp/src/version.ts"
+      ],
+      "files": 4,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "high",
+        "contributorCount": 1,
+        "historicalChanges": 11,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 11,
+        "topContributors": [
+          {
+            "commits": 19,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/mcp/src",
+      "isWorkspacePackage": false,
+      "name": "src",
+      "packageName": "@ai-agent-context/mcp",
+      "path": "packages/mcp/src",
+      "publicExports": [
+        {
+          "file": "packages/mcp/src/server.ts",
+          "kind": "interface",
+          "name": "JsonRpcRequest"
+        },
+        {
+          "file": "packages/mcp/src/server.ts",
+          "kind": "const",
+          "name": "MCP_PROTOCOL_VERSION"
+        },
+        {
+          "file": "packages/mcp/src/version.ts",
+          "kind": "const",
+          "name": "MCP_VERSION"
+        },
+        {
+          "file": "packages/mcp/src/server.ts",
+          "kind": "class",
+          "name": "McpServer"
+        },
+        {
+          "file": "packages/mcp/src/server.ts",
+          "kind": "interface",
+          "name": "McpServerOptions"
+        },
+        {
+          "file": "packages/mcp/src/server.ts",
+          "kind": "interface",
+          "name": "McpTransport"
+        },
+        {
+          "file": "packages/mcp/src/server.ts",
+          "kind": "interface",
+          "name": "MemoryTransport"
+        },
+        {
+          "file": "packages/mcp/src/server.ts",
+          "kind": "const",
+          "name": "SERVER_NAME"
+        },
+        {
+          "file": "packages/mcp/src/server.ts",
+          "kind": "function",
+          "name": "createMemoryTransport"
+        },
+        {
+          "file": "packages/mcp/src/server.ts",
+          "kind": "function",
+          "name": "createStdioTransport"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.62,
+          "evidence": [
+            {
+              "detail": "module exposes a command line entry point",
+              "source": "packages/mcp/src/bin.ts"
+            }
+          ],
+          "value": "role: cli (heuristic)"
+        },
+        {
+          "confidence": 0.6,
+          "evidence": [
+            {
+              "detail": "module exposes an application entry point",
+              "source": "packages/mcp/src/index.ts"
+            }
+          ],
+          "value": "role: application (heuristic)"
+        },
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports JsonRpcRequest (interface)",
+              "source": "packages/mcp/src/server.ts"
+            },
+            {
+              "detail": "exports MCP_PROTOCOL_VERSION (const)",
+              "source": "packages/mcp/src/server.ts"
+            },
+            {
+              "detail": "exports MCP_VERSION (const)",
+              "source": "packages/mcp/src/version.ts"
+            }
+          ],
+          "value": "public API: JsonRpcRequest, MCP_PROTOCOL_VERSION, MCP_VERSION, McpServer, McpServerOptions, McpTransport, MemoryTransport, SERVER_NAME"
+        }
+      ],
+      "roles": [
+        {
+          "confidence": 0.62,
+          "evidence": [
+            {
+              "detail": "module exposes a command line entry point",
+              "source": "packages/mcp/src/bin.ts"
+            }
+          ],
+          "value": "cli"
+        },
+        {
+          "confidence": 0.6,
+          "evidence": [
+            {
+              "detail": "module exposes an application entry point",
+              "source": "packages/mcp/src/index.ts"
+            }
+          ],
+          "value": "application"
+        }
+      ],
+      "signals": [
+        "module:esm"
+      ],
+      "testFiles": [],
+      "usedBy": []
+    },
+    {
+      "basis": "directory",
+      "boundaries": [],
+      "dependsOn": [
+        "@ai-agent-context/core"
+      ],
+      "entryPoints": [],
+      "fileList": [
+        "packages/mcp/src/tools/definitions.ts",
+        "packages/mcp/src/tools/handlers.ts"
+      ],
+      "files": 2,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "medium",
+        "contributorCount": 1,
+        "historicalChanges": 7,
+        "lastChanged": "2026-10-17",
+        "recentChanges": 7,
+        "topContributors": [
+          {
+            "commits": 12,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "packages/mcp/src/tools",
+      "isWorkspacePackage": false,
+      "name": "tools",
+      "packageName": "@ai-agent-context/mcp",
+      "path": "packages/mcp/src/tools",
+      "publicExports": [
+        {
+          "file": "packages/mcp/src/tools/handlers.ts",
+          "kind": "class",
+          "name": "ContextPool"
+        },
+        {
+          "file": "packages/mcp/src/tools/definitions.ts",
+          "kind": "interface",
+          "name": "JsonSchema"
+        },
+        {
+          "file": "packages/mcp/src/tools/definitions.ts",
+          "kind": "const",
+          "name": "TOOL_DEFINITIONS"
+        },
+        {
+          "file": "packages/mcp/src/tools/handlers.ts",
+          "kind": "interface",
+          "name": "ToolCallResult"
+        },
+        {
+          "file": "packages/mcp/src/tools/definitions.ts",
+          "kind": "interface",
+          "name": "ToolDefinition"
+        },
+        {
+          "file": "packages/mcp/src/tools/handlers.ts",
+          "kind": "interface",
+          "name": "ToolHandlerDependencies"
+        },
+        {
+          "file": "packages/mcp/src/tools/definitions.ts",
+          "kind": "interface",
+          "name": "ValidationResult"
+        },
+        {
+          "file": "packages/mcp/src/tools/handlers.ts",
+          "kind": "function",
+          "name": "callTool"
+        },
+        {
+          "file": "packages/mcp/src/tools/definitions.ts",
+          "kind": "function",
+          "name": "toolByName"
+        },
+        {
+          "file": "packages/mcp/src/tools/definitions.ts",
+          "kind": "function",
+          "name": "validateToolArguments"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports ContextPool (class)",
+              "source": "packages/mcp/src/tools/handlers.ts"
+            },
+            {
+              "detail": "exports JsonSchema (interface)",
+              "source": "packages/mcp/src/tools/definitions.ts"
+            },
+            {
+              "detail": "exports TOOL_DEFINITIONS (const)",
+              "source": "packages/mcp/src/tools/definitions.ts"
+            }
+          ],
+          "value": "public API: ContextPool, JsonSchema, TOOL_DEFINITIONS, ToolCallResult, ToolDefinition, ToolHandlerDependencies, ValidationResult, callTool"
+        }
+      ],
+      "roles": [],
+      "signals": [
+        "module:esm"
+      ],
+      "testFiles": [],
+      "usedBy": [
+        "packages/mcp/src"
+      ]
+    },
+    {
+      "basis": "directory",
+      "boundaries": [],
+      "dependsOn": [],
+      "entryPoints": [
+        "tools/set-version.mjs"
+      ],
+      "fileList": [
+        "tools/benchmark.mjs",
+        "tools/clean.mjs",
+        "tools/generate-fixtures.mjs",
+        "tools/set-version.mjs"
+      ],
+      "files": 4,
+      "git": {
+        "architectureChangeSignals": [],
+        "changeFrequency": "low",
+        "contributorCount": 1,
+        "historicalChanges": 3,
+        "lastChanged": "2026-09-24",
+        "recentChanges": 3,
+        "topContributors": [
+          {
+            "commits": 4,
+            "name": "modeusweb"
+          }
+        ]
+      },
+      "id": "tools",
+      "isWorkspacePackage": false,
+      "name": "tools",
+      "packageName": null,
+      "path": "tools",
+      "publicExports": [
+        {
+          "file": "tools/generate-fixtures.mjs",
+          "kind": "function",
+          "name": "writeAllFixtures"
+        }
+      ],
+      "responsibilities": [
+        {
+          "confidence": 0.9,
+          "evidence": [
+            {
+              "detail": "exports writeAllFixtures (function)",
+              "source": "tools/generate-fixtures.mjs"
+            }
+          ],
+          "value": "public API: writeAllFixtures"
+        }
+      ],
+      "roles": [],
+      "signals": [
+        "console:usage",
+        "module:esm",
+        "test:suite"
+      ],
+      "testFiles": [
+        "tools/set-version.mjs"
+      ],
+      "usedBy": []
+    }
+  ],
+  "schemaVersion": 1,
+  "summary": {
+    "cycles": 2,
+    "entryPoints": 38,
+    "layeringViolations": 1,
+    "modules": 13,
+    "rolesDetected": 16,
+    "workspacePackages": 3
+  },
+  "workspace": {
+    "packageManager": "npm",
+    "packageManagerEvidence": [
+      {
+        "detail": "lockfile present (repository signal only, not proof of runtime usage)",
+        "source": "package-lock.json"
+      },
+      {
+        "detail": "package.json declares packageManager \"npm@11.15.0\"",
+        "source": "package.json"
+      }
+    ],
+    "packages": [
+      {
+        "entries": 6,
+        "name": "ai-agent-context",
+        "path": "packages/cli",
+        "private": false,
+        "version": "0.5.0"
+      },
+      {
+        "entries": 5,
+        "name": "@ai-agent-context/core",
+        "path": "packages/core",
+        "private": false,
+        "version": "0.5.0"
+      },
+      {
+        "entries": 6,
+        "name": "@ai-agent-context/mcp",
+        "path": "packages/mcp",
+        "private": false,
+        "version": "0.5.0"
+      }
+    ],
+    "workspaceGlobs": [
+      "packages/cli",
+      "packages/core",
+      "packages/mcp"
+    ],
+    "workspaceModel": "npm-workspaces"
+  }
+}

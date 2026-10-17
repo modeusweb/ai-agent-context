@@ -1,0 +1,1547 @@
+{
+  "cycles": [
+    [
+      "packages/cli/src",
+      "packages/cli/src/commands"
+    ],
+    [
+      "packages/core/src",
+      "packages/core/src/config"
+    ]
+  ],
+  "external": [
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 3,
+      "name": "node:assert/strict",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 3,
+      "name": "node:child_process",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 1,
+      "name": "node:crypto",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 6,
+      "name": "node:fs",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 3,
+      "name": "node:fs/promises",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 1,
+      "name": "node:module",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 3,
+      "name": "node:os",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 7,
+      "name": "node:path",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 1,
+      "name": "node:perf_hooks",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 3,
+      "name": "node:test",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.99,
+        "evidence": [
+          {
+            "detail": "Node.js built-in module",
+            "source": "<node>"
+          }
+        ],
+        "value": "infrastructure"
+      },
+      "importedByModules": 3,
+      "name": "node:url",
+      "scope": "runtime"
+    }
+  ],
+  "fileImports": [
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/cli.ts",
+      "internalModules": [
+        "@ai-agent-context/core",
+        "packages/cli/src/commands",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:path"
+      ],
+      "file": "packages/cli/src/commands/clean.ts",
+      "internalModules": [
+        "@ai-agent-context/core",
+        "packages/cli/src"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/context.ts",
+      "internalModules": [
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/diff.ts",
+      "internalModules": [
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/explain.ts",
+      "internalModules": [
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/history.ts",
+      "internalModules": [
+        "packages/cli/src"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/impact.ts",
+      "internalModules": [
+        "packages/cli/src"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/init.ts",
+      "internalModules": [
+        "packages/cli/src"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/revision-diff.ts",
+      "internalModules": [
+        "packages/cli/src"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/scan.ts",
+      "internalModules": [
+        "@ai-agent-context/core",
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/search.ts",
+      "internalModules": [
+        "@ai-agent-context/core",
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/status.ts",
+      "internalModules": [
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/task.ts",
+      "internalModules": [
+        "packages/cli/src"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/verify.ts",
+      "internalModules": [
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/index.ts",
+      "internalModules": [
+        "@ai-agent-context/core",
+        "packages/cli/src/commands",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/ui/format.ts",
+      "internalModules": [
+        "@ai-agent-context/core"
+      ],
+      "module": "packages/cli/src/ui"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:child_process",
+        "node:fs",
+        "node:path",
+        "node:test",
+        "node:url"
+      ],
+      "file": "packages/cli/test/cli.test.ts",
+      "internalModules": [
+        "packages/core/test"
+      ],
+      "module": "ai-agent-context"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:fs/promises",
+        "node:path"
+      ],
+      "file": "packages/core/src/adapters/filesystem/fs-adapter.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/adapters/filesystem/sensitive.ts",
+      "internalModules": [
+        "packages/core/src/config",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [
+        "node:child_process"
+      ],
+      "file": "packages/core/src/adapters/git/git-adapter.ts",
+      "internalModules": [],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/adapters/language/package-json/adapter.ts",
+      "internalModules": [
+        "packages/core/src/config"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/adapters/language/registry.ts",
+      "internalModules": [
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/adapters/language/ts-js/adapter.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/adapters/language/ts-js/extractor.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/adapters/language/types.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:fs/promises",
+        "node:path"
+      ],
+      "file": "packages/core/src/agent-context.ts",
+      "internalModules": [
+        "packages/core/src/config",
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:fs/promises",
+        "node:path"
+      ],
+      "file": "packages/core/src/config/load.ts",
+      "internalModules": [
+        "packages/core/src",
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src/config"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/config/validate.ts",
+      "internalModules": [
+        "packages/core/src"
+      ],
+      "module": "packages/core/src/config"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/architecture/detector.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/architecture/entry-points.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/architecture/role-detector.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/context/explain.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/context/repository-context.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/context/types.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/conventions/detector.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/conventions/renderer.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/decisions/detector.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/diff/differ.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/git-analysis/activity.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/graph/aliases.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/graph/knowledge-graph.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/graph/modules.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [
+        "node:module"
+      ],
+      "file": "packages/core/src/core/graph/resolver.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [
+        "node:fs/promises",
+        "node:path"
+      ],
+      "file": "packages/core/src/core/scanner/cache.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/scanner/scanner.ts",
+      "internalModules": [
+        "packages/core/src/config",
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/scanner/types.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/search/analyzer.ts",
+      "internalModules": [
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/search/bm25.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/search/documents.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/search/service.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/search/types.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/serialization/documents.ts",
+      "internalModules": [
+        "packages/core/src/config",
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [
+        "node:fs/promises",
+        "node:path"
+      ],
+      "file": "packages/core/src/core/serialization/reader.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/serialization/types.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [
+        "node:fs/promises",
+        "node:path"
+      ],
+      "file": "packages/core/src/core/serialization/writer.ts",
+      "internalModules": [
+        "packages/core/src/config",
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/workspace/workspace.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/errors.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/index.ts",
+      "internalModules": [
+        "packages/core/src/config",
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/logging/diagnostics.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [
+        "node:crypto"
+      ],
+      "file": "packages/core/src/model/canonical.ts",
+      "internalModules": [],
+      "module": "packages/core/src/model"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/pipeline/scan-pipeline.ts",
+      "internalModules": [
+        "packages/core/src/config",
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [
+        "node:os"
+      ],
+      "file": "packages/core/src/util/concurrency.ts",
+      "internalModules": [],
+      "module": "packages/core/src/util"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/util/glob.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src/util"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/util/paths.ts",
+      "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src/util"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/architecture.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/canonical.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:fs",
+        "node:path",
+        "node:test",
+        "node:url"
+      ],
+      "file": "packages/core/test/config.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:fs",
+        "node:path",
+        "node:test"
+      ],
+      "file": "packages/core/test/conventions.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:fs",
+        "node:path",
+        "node:test"
+      ],
+      "file": "packages/core/test/determinism.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/explain.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/filesystem.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/git.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:child_process",
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:url"
+      ],
+      "file": "packages/core/test/helpers.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:fs",
+        "node:path",
+        "node:test"
+      ],
+      "file": "packages/core/test/incremental.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:child_process",
+        "node:fs",
+        "node:path",
+        "node:test"
+      ],
+      "file": "packages/core/test/integration.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/language.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/resolver.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:fs",
+        "node:fs/promises",
+        "node:test"
+      ],
+      "file": "packages/core/test/scanner.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:path"
+      ],
+      "file": "packages/mcp/src/bin.ts",
+      "internalModules": [],
+      "module": "packages/mcp/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/mcp/src/index.ts",
+      "internalModules": [
+        "packages/mcp/src/tools"
+      ],
+      "module": "packages/mcp/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/mcp/src/server.ts",
+      "internalModules": [
+        "@ai-agent-context/core",
+        "packages/mcp/src/tools"
+      ],
+      "module": "packages/mcp/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/mcp/src/tools/handlers.ts",
+      "internalModules": [
+        "@ai-agent-context/core"
+      ],
+      "module": "packages/mcp/src/tools"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/mcp/src/version.ts",
+      "internalModules": [
+        "@ai-agent-context/core"
+      ],
+      "module": "packages/mcp/src"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/mcp/test/mcp.test.ts",
+      "internalModules": [
+        "packages/core/test"
+      ],
+      "module": "@ai-agent-context/mcp"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:perf_hooks",
+        "node:url"
+      ],
+      "file": "tools/benchmark.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/clean.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/generate-fixtures.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/set-version.mjs",
+      "internalModules": [],
+      "module": "tools"
+    }
+  ],
+  "generatedBy": "ai-agent-context",
+  "internal": [
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "1 file(s) import packages/core/test",
+          "source": "@ai-agent-context/mcp"
+        },
+        {
+          "detail": "relative import resolved to packages/core/test/helpers.ts",
+          "source": "packages/mcp/test/mcp.test.ts"
+        }
+      ],
+      "from": "@ai-agent-context/mcp",
+      "kind": "internal-module",
+      "to": "packages/core/test"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "1 file(s) import packages/core/test",
+          "source": "ai-agent-context"
+        },
+        {
+          "detail": "relative import resolved to packages/core/test/helpers.ts",
+          "source": "packages/cli/test/cli.test.ts"
+        }
+      ],
+      "from": "ai-agent-context",
+      "kind": "internal-module",
+      "to": "packages/core/test"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "3 file(s) import @ai-agent-context/core",
+          "source": "packages/cli/src/commands"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/cli/src/commands/clean.ts"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/cli/src/commands/scan.ts"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/cli/src/commands/search.ts"
+        }
+      ],
+      "from": "packages/cli/src/commands",
+      "kind": "internal-module",
+      "to": "@ai-agent-context/core"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "13 file(s) import packages/cli/src",
+          "source": "packages/cli/src/commands"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/cli.ts",
+          "source": "packages/cli/src/commands/clean.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/cli.ts",
+          "source": "packages/cli/src/commands/clean.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/cli.ts",
+          "source": "packages/cli/src/commands/context.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/cli.ts",
+          "source": "packages/cli/src/commands/context.ts"
+        }
+      ],
+      "from": "packages/cli/src/commands",
+      "kind": "internal-module",
+      "to": "packages/cli/src"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "7 file(s) import packages/cli/src/ui",
+          "source": "packages/cli/src/commands"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/ui/format.ts",
+          "source": "packages/cli/src/commands/context.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/ui/format.ts",
+          "source": "packages/cli/src/commands/diff.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/ui/format.ts",
+          "source": "packages/cli/src/commands/explain.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/ui/format.ts",
+          "source": "packages/cli/src/commands/scan.ts"
+        }
+      ],
+      "from": "packages/cli/src/commands",
+      "kind": "internal-module",
+      "to": "packages/cli/src/ui"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "1 file(s) import @ai-agent-context/core",
+          "source": "packages/cli/src/ui"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/cli/src/ui/format.ts"
+        }
+      ],
+      "from": "packages/cli/src/ui",
+      "kind": "internal-module",
+      "to": "@ai-agent-context/core"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "2 file(s) import @ai-agent-context/core",
+          "source": "packages/cli/src"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/cli/src/index.ts"
+        }
+      ],
+      "from": "packages/cli/src",
+      "kind": "internal-module",
+      "to": "@ai-agent-context/core"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "2 file(s) import packages/cli/src/commands",
+          "source": "packages/cli/src"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/commands/init.ts",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/commands/scan.ts",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/commands/diff.ts",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/commands/status.ts",
+          "source": "packages/cli/src/cli.ts"
+        }
+      ],
+      "from": "packages/cli/src",
+      "kind": "internal-module",
+      "to": "packages/cli/src/commands"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "2 file(s) import packages/cli/src/ui",
+          "source": "packages/cli/src"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/ui/console.ts",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/ui/console.ts",
+          "source": "packages/cli/src/index.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/ui/console.ts",
+          "source": "packages/cli/src/index.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/cli/src/ui/format.ts",
+          "source": "packages/cli/src/index.ts"
+        }
+      ],
+      "from": "packages/cli/src",
+      "kind": "internal-module",
+      "to": "packages/cli/src/ui"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "2 file(s) import packages/core/src",
+          "source": "packages/core/src/config"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/errors.ts",
+          "source": "packages/core/src/config/load.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/errors.ts",
+          "source": "packages/core/src/config/validate.ts"
+        }
+      ],
+      "from": "packages/core/src/config",
+      "kind": "internal-module",
+      "to": "packages/core/src"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "1 file(s) import packages/core/src/model",
+          "source": "packages/core/src/config"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/model/canonical.ts",
+          "source": "packages/core/src/config/load.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/model/schema.ts",
+          "source": "packages/core/src/config/load.ts"
+        }
+      ],
+      "from": "packages/core/src/config",
+      "kind": "internal-module",
+      "to": "packages/core/src/model"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "2 file(s) import packages/core/src/model",
+          "source": "packages/core/src/util"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/model/canonical.ts",
+          "source": "packages/core/src/util/glob.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/model/canonical.ts",
+          "source": "packages/core/src/util/paths.ts"
+        }
+      ],
+      "from": "packages/core/src/util",
+      "kind": "internal-module",
+      "to": "packages/core/src/model"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "8 file(s) import packages/core/src/config",
+          "source": "packages/core/src"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/config/defaults.ts",
+          "source": "packages/core/src/adapters/filesystem/sensitive.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/config/defaults.ts",
+          "source": "packages/core/src/adapters/language/package-json/adapter.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/config/types.ts",
+          "source": "packages/core/src/agent-context.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/config/load.ts",
+          "source": "packages/core/src/agent-context.ts"
+        }
+      ],
+      "from": "packages/core/src",
+      "kind": "internal-module",
+      "to": "packages/core/src/config"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "36 file(s) import packages/core/src/model",
+          "source": "packages/core/src"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/model/canonical.ts",
+          "source": "packages/core/src/adapters/filesystem/fs-adapter.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/model/types.ts",
+          "source": "packages/core/src/adapters/language/ts-js/adapter.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/model/types.ts",
+          "source": "packages/core/src/adapters/language/ts-js/extractor.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/model/types.ts",
+          "source": "packages/core/src/adapters/language/types.ts"
+        }
+      ],
+      "from": "packages/core/src",
+      "kind": "internal-module",
+      "to": "packages/core/src/model"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "17 file(s) import packages/core/src/util",
+          "source": "packages/core/src"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/util/paths.ts",
+          "source": "packages/core/src/adapters/filesystem/fs-adapter.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/util/glob.ts",
+          "source": "packages/core/src/adapters/filesystem/fs-adapter.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/util/glob.ts",
+          "source": "packages/core/src/adapters/filesystem/sensitive.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/util/paths.ts",
+          "source": "packages/core/src/adapters/language/registry.ts"
+        }
+      ],
+      "from": "packages/core/src",
+      "kind": "internal-module",
+      "to": "packages/core/src/util"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "1 file(s) import @ai-agent-context/core",
+          "source": "packages/mcp/src/tools"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/mcp/src/tools/handlers.ts"
+        }
+      ],
+      "from": "packages/mcp/src/tools",
+      "kind": "internal-module",
+      "to": "@ai-agent-context/core"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "2 file(s) import @ai-agent-context/core",
+          "source": "packages/mcp/src"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/mcp/src/server.ts"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/mcp/src/version.ts"
+        }
+      ],
+      "from": "packages/mcp/src",
+      "kind": "internal-module",
+      "to": "@ai-agent-context/core"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "2 file(s) import packages/mcp/src/tools",
+          "source": "packages/mcp/src"
+        },
+        {
+          "detail": "relative import resolved to packages/mcp/src/tools/definitions.ts",
+          "source": "packages/mcp/src/index.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/mcp/src/tools/definitions.ts",
+          "source": "packages/mcp/src/index.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/mcp/src/tools/handlers.ts",
+          "source": "packages/mcp/src/index.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/mcp/src/tools/handlers.ts",
+          "source": "packages/mcp/src/index.ts"
+        }
+      ],
+      "from": "packages/mcp/src",
+      "kind": "internal-module",
+      "to": "packages/mcp/src/tools"
+    }
+  ],
+  "schemaVersion": 1,
+  "summary": {
+    "crossPackageEdges": 0,
+    "cycles": 2,
+    "externalPackages": 11,
+    "internalModuleEdges": 18,
+    "unresolvedImports": 16
+  },
+  "unresolved": [
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/architecture.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/canonical.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/config.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/conventions.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/determinism.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/explain.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/filesystem.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/git.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/incremental.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/integration.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/language.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/resolver.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/scanner.test.ts",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/mcp/test/mcp.test.ts",
+      "specifier": "../../core/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/mcp/test/mcp.test.ts",
+      "specifier": "../../mcp/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "tools/benchmark.mjs",
+      "specifier": "../packages/core/dist/index.js"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "decisions": [
+    {
+      "confidence": 0.45,
+      "evidence": [
+        {
+          "detail": "section \"architecture.json\" (line 367) matched decision vocabulary",
+          "source": "README.md"
+        },
+        {
+          "detail": "section may describe design context rather than a decision; verify before treating it as an ADR",
+          "source": "README.md"
+        }
+      ],
+      "id": "DOC-3D80F9",
+      "kind": "documented-section",
+      "origin": "inferred",
+      "source": "README.md#L367",
+      "status": "unknown",
+      "title": "architecture.json"
+    },
+    {
+      "confidence": 0.45,
+      "evidence": [
+        {
+          "detail": "section \"Architecture Detection\" (line 92) matched decision vocabulary",
+          "source": "packages/core/README.md"
+        },
+        {
+          "detail": "section may describe design context rather than a decision; verify before treating it as an ADR",
+          "source": "packages/core/README.md"
+        }
+      ],
+      "id": "DOC-94D84C",
+      "kind": "documented-section",
+      "origin": "inferred",
+      "source": "packages/core/README.md#L92",
+      "status": "unknown",
+      "title": "Architecture Detection"
+    },
+    {
+      "confidence": 0.45,
+      "evidence": [
+        {
+          "detail": "section \"Architecture\" (line 336) matched decision vocabulary",
+          "source": "packages/mcp/README.md"
+        },
+        {
+          "detail": "section may describe design context rather than a decision; verify before treating it as an ADR",
+          "source": "packages/mcp/README.md"
+        }
+      ],
+      "id": "DOC-D9077A",
+      "kind": "documented-section",
+      "origin": "inferred",
+      "source": "packages/mcp/README.md#L336",
+      "status": "unknown",
+      "title": "Architecture"
+    },
+    {
+      "confidence": 0.7,
+      "evidence": [
+        {
+          "detail": "declared by the source code",
+          "source": "package.json"
+        },
+        {
+          "detail": "imported by 3 module(s)",
+          "source": "<graph>"
+        }
+      ],
+      "id": "INF-DEP-NODE-ASSERT-STRICT",
+      "kind": "dependency-signal",
+      "origin": "inferred",
+      "source": "package.json",
+      "status": "accepted",
+      "title": "The repository builds on node:assert/strict (heuristic: infrastructure)"
+    },
+    {
+      "confidence": 0.7,
+      "evidence": [
+        {
+          "detail": "declared by the source code",
+          "source": "package.json"
+        },
+        {
+          "detail": "imported by 3 module(s)",
+          "source": "<graph>"
+        }
+      ],
+      "id": "INF-DEP-NODE-CHILD-PROCESS",
+      "kind": "dependency-signal",
+      "origin": "inferred",
+      "source": "package.json",
+      "status": "accepted",
+      "title": "The repository builds on node:child_process (heuristic: infrastructure)"
+    },
+    {
+      "confidence": 0.7,
+      "evidence": [
+        {
+          "detail": "declared by the source code",
+          "source": "package.json"
+        },
+        {
+          "detail": "imported by 1 module(s)",
+          "source": "<graph>"
+        }
+      ],
+      "id": "INF-DEP-NODE-CRYPTO",
+      "kind": "dependency-signal",
+      "origin": "inferred",
+      "source": "package.json",
+      "status": "accepted",
+      "title": "The repository builds on node:crypto (heuristic: infrastructure)"
+    },
+    {
+      "confidence": 0.7,
+      "evidence": [
+        {
+          "detail": "declared by the source code",
+          "source": "package.json"
+        },
+        {
+          "detail": "imported by 6 module(s)",
+          "source": "<graph>"
+        }
+      ],
+      "id": "INF-DEP-NODE-FS",
+      "kind": "dependency-signal",
+      "origin": "inferred",
+      "source": "package.json",
+      "status": "accepted",
+      "title": "The repository builds on node:fs (heuristic: infrastructure)"
+    },
+    {
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "detail": "\"type\": \"module\"",
+          "source": "package.json"
+        }
+      ],
+      "id": "INF-MODULE-FORMAT",
+      "kind": "config-signal",
+      "origin": "inferred",
+      "source": "package.json",
+      "status": "accepted",
+      "title": "Packages use ES modules (\"type\": \"module\")"
+    },
+    {
+      "confidence": 0.8,
+      "evidence": [
+        {
+          "detail": "lockfile present (repository signal only, not proof of runtime usage)",
+          "source": "package-lock.json"
+        },
+        {
+          "detail": "package.json declares packageManager \"npm@11.15.0\"",
+          "source": "package.json"
+        }
+      ],
+      "id": "INF-PACKAGE-MANAGER",
+      "kind": "config-signal",
+      "origin": "inferred",
+      "source": "package-lock.json",
+      "status": "accepted",
+      "title": "Repository is maintained with npm"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "\"strict\": true",
+          "source": "tsconfig.base.json"
+        }
+      ],
+      "id": "INF-STRICT-TS",
+      "kind": "config-signal",
+      "origin": "inferred",
+      "source": "tsconfig.base.json",
+      "status": "accepted",
+      "title": "TypeScript strict mode is mandatory"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "workspaces: packages/cli, packages/core, packages/mcp",
+          "source": "package.json"
+        }
+      ],
+      "id": "INF-WORKSPACES",
+      "kind": "config-signal",
+      "origin": "inferred",
+      "source": "package.json",
+      "status": "accepted",
+      "title": "Repository is organised as a workspace monorepo (packages/cli, packages/core, packages/mcp)"
+    }
+  ],
+  "generatedBy": "ai-agent-context",
+  "schemaVersion": 1
+}

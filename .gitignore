@@ -1,6 +1,8 @@
 # Dependencies
 node_modules/
-package-lock.json
+# Lockfiles are committed on purpose: the CLI and MCP packages resolve
+# @ai-agent-context/core through the workspace, and a reproducible install needs
+# the exact tree npm resolved.
 pnpm-lock.yaml
 yarn.lock
 bun.lock
@@ -39,3 +41,6 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+
+# Local npm auth (never commit a token)
+.npmrc.local

@@ -473,5 +473,12 @@ export interface ModuleExplanation {
   /** Modules and files that would be affected by a change in this module. */
   impact: { modules: string[]; files: string[] };
   relatedFiles: string[];
+  /**
+   * Set when the request was answered for a directory narrower than the module
+   * that owns it. Consumers must surface it: the result intentionally omits the
+   * rest of that module, so presenting a scoped answer as if it covered the
+   * whole module would understate the real change surface.
+   */
+  scope?: { moduleId: string; directory: string; fileCount: number };
   warnings: DiagnosticPayload[];
 }

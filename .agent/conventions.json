@@ -1,0 +1,270 @@
+{
+  "conventions": [
+    {
+      "category": "Documentation",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "detail": "top level README present",
+          "source": "README.md"
+        }
+      ],
+      "id": "documentation:102d5dbf",
+      "origin": "observed",
+      "statement": "Repository documentation starts at `README.md`."
+    },
+    {
+      "category": "Error handling",
+      "confidence": 0.85,
+      "evidence": [
+        {
+          "detail": "class AgentContextError extends Error (line 26)",
+          "source": "packages/core/src/errors.ts"
+        }
+      ],
+      "id": "error handling:217bd085",
+      "origin": "observed",
+      "statement": "Domain errors are declared as classes extending the built-in `Error` (1 classes)."
+    },
+    {
+      "category": "Exports",
+      "confidence": 0.85,
+      "evidence": [
+        {
+          "detail": "exports CLI_NAME",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "exports CLI_VERSION",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "exports CliIo",
+          "source": "packages/cli/src/cli.ts"
+        }
+      ],
+      "id": "exports:e2939418",
+      "origin": "observed",
+      "statement": "Modules use named exports rather than default exports (376/376 exported symbols are named)."
+    },
+    {
+      "category": "Imports",
+      "confidence": 0.75,
+      "evidence": [
+        {
+          "detail": "import order observed across files that import both kinds of modules",
+          "source": "<repository>"
+        }
+      ],
+      "id": "imports:5512fdad",
+      "origin": "observed",
+      "statement": "External dependencies are imported before internal modules (26/31 files)."
+    },
+    {
+      "category": "Imports",
+      "confidence": 0.8,
+      "evidence": [
+        {
+          "detail": "import type / export type statements detected",
+          "source": "<repository>"
+        }
+      ],
+      "id": "imports:7aca6290",
+      "origin": "observed",
+      "statement": "Type-only dependencies use `import type` (55/95 files)."
+    },
+    {
+      "category": "Languages",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "detail": "languages are derived from file extensions, not from content guessing",
+          "source": "<repository>"
+        }
+      ],
+      "id": "languages:075daae4",
+      "origin": "observed",
+      "statement": "Implementation mixes TypeScript (99 files) and JavaScript (4 files)."
+    },
+    {
+      "category": "Naming",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "class \"ConsoleOutput\" uses PascalCase",
+          "source": "packages/cli/src/ui/console.ts"
+        },
+        {
+          "detail": "class \"FileSystemAdapter\" uses PascalCase",
+          "source": "packages/core/src/adapters/filesystem/fs-adapter.ts"
+        },
+        {
+          "detail": "class \"SensitivePathFilter\" uses PascalCase",
+          "source": "packages/core/src/adapters/filesystem/sensitive.ts"
+        }
+      ],
+      "id": "naming:f127fb68",
+      "origin": "observed",
+      "statement": "Classes use PascalCase (26/26 declarations)."
+    },
+    {
+      "category": "Naming",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "function \"appendFlag\" uses camelCase",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "function \"parseArguments\" uses camelCase",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "function \"flagString\" uses camelCase",
+          "source": "packages/cli/src/cli.ts"
+        }
+      ],
+      "id": "naming:e1ddb71b",
+      "origin": "observed",
+      "statement": "Functions use camelCase (262/264 declarations)."
+    },
+    {
+      "category": "Naming",
+      "confidence": 0.92,
+      "evidence": [
+        {
+          "detail": "file name uses camelCase",
+          "source": "packages/cli/src/bin.ts"
+        },
+        {
+          "detail": "file name uses camelCase",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "file name uses camelCase",
+          "source": "packages/cli/src/commands/clean.ts"
+        }
+      ],
+      "id": "naming:e7affa17",
+      "origin": "observed",
+      "statement": "Source files use camelCase (72/85 files)."
+    },
+    {
+      "category": "Naming",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "type \"TokenType\" uses PascalCase",
+          "source": "packages/core/src/adapters/language/ts-js/lexer.ts"
+        },
+        {
+          "detail": "type \"Signal\" uses PascalCase",
+          "source": "packages/core/src/adapters/language/types.ts"
+        },
+        {
+          "detail": "type \"Raw\" uses PascalCase",
+          "source": "packages/core/src/config/validate.ts"
+        }
+      ],
+      "id": "naming:b61ba975",
+      "origin": "observed",
+      "statement": "Type aliases use PascalCase (27/27 declarations)."
+    },
+    {
+      "category": "Naming",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "interface \"CliIo\" uses PascalCase",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "interface \"ParsedArguments\" uses PascalCase",
+          "source": "packages/cli/src/cli.ts"
+        },
+        {
+          "detail": "interface \"CliCommandContext\" uses PascalCase",
+          "source": "packages/cli/src/cli.ts"
+        }
+      ],
+      "id": "naming:09c7a12a",
+      "origin": "observed",
+      "statement": "TypeScript interfaces use PascalCase (150/150 declarations)."
+    },
+    {
+      "category": "Tests",
+      "confidence": 0.8,
+      "evidence": [
+        {
+          "detail": "test located in a central tests directory",
+          "source": "packages/cli/test/cli.test.ts"
+        },
+        {
+          "detail": "test located in a central tests directory",
+          "source": "packages/core/test/architecture.test.ts"
+        }
+      ],
+      "id": "tests:bf3de80f",
+      "origin": "observed",
+      "statement": "Tests live in a dedicated test directory (16/17 test files)."
+    },
+    {
+      "category": "Toolchain",
+      "confidence": 0.8,
+      "evidence": [
+        {
+          "detail": "lockfile present (repository signal only, not proof of runtime usage)",
+          "source": "package-lock.json"
+        },
+        {
+          "detail": "package.json declares packageManager \"npm@11.15.0\"",
+          "source": "package.json"
+        }
+      ],
+      "id": "toolchain:c773405f",
+      "origin": "config",
+      "statement": "Dependencies are managed with npm (repository signal)."
+    },
+    {
+      "category": "Toolchain",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "workspaces: packages/cli, packages/core, packages/mcp",
+          "source": "package.json"
+        }
+      ],
+      "id": "toolchain:ae5f9747",
+      "origin": "config",
+      "statement": "The repository is a npm workspace monorepo (packages/cli, packages/core, packages/mcp)."
+    },
+    {
+      "category": "Toolchain",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "detail": "\"type\": \"module\"",
+          "source": "package.json"
+        }
+      ],
+      "id": "toolchain:3bc993ca",
+      "origin": "config",
+      "statement": "The repository is configured as ESM (`\"type\": \"module\"` in package.json)."
+    },
+    {
+      "category": "Toolchain",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "\"strict\": true",
+          "source": "tsconfig.base.json"
+        }
+      ],
+      "id": "toolchain:ac14006c",
+      "origin": "config",
+      "statement": "TypeScript strict mode is enabled (1 tsconfig file(s))."
+    }
+  ],
+  "generatedBy": "ai-agent-context",
+  "schemaVersion": 1
+}

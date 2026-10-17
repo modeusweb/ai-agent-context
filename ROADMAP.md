@@ -26,30 +26,34 @@
 
 ## Текущая база
 
-Текущая версия пакетов: `0.4.0`.
+Текущая версия пакетов: `0.5.0`.
 
 Уже реализованы:
 
 - ядро анализатора без runtime-зависимостей;
-- CLI: `init`, `scan`, `status`, `explain`, `search`, `diff`, `clean`;
-- MCP stdio-сервер с инструментами для repository context;
+- CLI: `init`, `scan`, `status`, `explain`, `context`, `task`, `impact`, `search`, `diff`, `history`, `revision-diff`, `verify`, `clean`;
+- MCP stdio-сервер: 13 tools, Resources, Prompts, строгая валидация аргументов;
 - incremental scanning и content-addressed parse cache;
-- knowledge graph и определение модулей;
-- определение entry points, dependencies, conventions и decisions;
-- Git activity signals;
-- детерминированная сериализация в `.agent/`;
-- secret filtering и local-only режим;
-- workspace-поддержка npm-пакетов;
-- 81 tests, build и typecheck в текущем verify pipeline;
-- task-oriented context, change impact и bounded repository projections;
-- local benchmark harness и `benchmark-report.json` для пяти fixture-репозиториев.
+- knowledge graph, определение модулей, entry points, cycles, layering diagnostics;
+- определение dependencies, conventions и decisions с confidence и evidence;
+- temporal context: `getModuleHistory`, `getRevisionDiff`, `getRevisionSnapshot`;
+- directory-scoped `explain`/`impact` вместо молчаливого расширения до родительского модуля;
+- path traversal отклоняется, а не схлопывается;
+- Git activity signals, детерминированная сериализация в `.agent/`, secret filtering;
+- workspace-поддержка npm workspaces;
+- 131 tests, CI на Node 20/22/24 × Linux/Windows/macOS.
 
 ## Приоритеты
 
-- **P0** — доказать измеримую пользу и стабилизировать основной workflow.
-- **P1** — сделать контекст релевантным задаче и повысить качество анализа.
-- **P2** — добавить temporal context, зрелый MCP и enterprise controls.
-- **P3** — развивать экосистему и интеграции после подтверждённого спроса.
+- **P0** — измеримая польза и доверие к цифрам. Метрики качества публикуются и воспроизводятся.
+- **P1** — релевантность контекста задаче.
+- **P2** — temporal context, зрелый MCP, enterprise controls.
+- **P3** — экосистема и интеграции после подтверждённого спроса.
+
+**Правило приоритета.** Ни один новый анализатор не попадает в релиз, пока не
+показан измеримый baseline и regression coverage на реальном коде. Расширение
+поверх неверного графа зависимостей делает продукт хуже, а не больше: v0.5
+начался с исправления резолвера, а не с новых фич.
 
 ---
 
@@ -57,7 +61,7 @@
 
 **Цель:** превратить полный repository context в компактный контекст, который AI agent может эффективно использовать для конкретной задачи.
 
-**Реализовано в текущем срезе:**
+**Реализовано:**
 
 - `getTaskContext(task, options)` с bounded `maxModules` и optional `target`;
 - `getChangeImpact(target, options)` с bounded `maxFiles`;
@@ -66,126 +70,117 @@
 - evidence для выбранных модулей и impact-срезов;
 - regression coverage в CLI/MCP integration tests.
 
-**Статус:** функциональный срез завершён; релиз `0.3.1` отправлен в npm, публикация ожидает завершения обработки registry.
-
-**Проверено:** compact projections, task context, change impact, benchmark harness, migration notes.
-
-## Возможности
-
-- `get_context_for_task` — контекст по описанию задачи и целевому пути.
-- `get_change_impact` — потенциально затронутые модули, зависимости, тесты и conventions.
-- `get_module_context` — ограниченный контекст одного модуля.
-- Compact context mode с лимитом размера и количества элементов.
-- Budget-aware ranking результатов.
-- Evidence и confidence для каждого значимого вывода.
-- Явное разделение `observed`, `inferred` и `configured` facts.
-- CLI-команды для task context и impact analysis.
-- JSON output с версионированной схемой.
-
-## Качество и совместимость
-
-- Не менять формат `.agent/` без major schema migration.
-- Сохранять deterministic output при одинаковом входном состоянии.
-- Не добавлять обязательные runtime-зависимости в `@ai-agent-context/core`.
-- Добавить contract tests для всех новых API и MCP tools.
-- Добавить benchmark на 10+ реальных репозиториях.
-- Проверить сценарии на монорепозиториях и legacy-проектах.
-
-## Критерии готовности
+## Критерии готовности — выполнены
 
 - агент получает релевантный контекст без ручного чтения большого числа файлов;
 - пользователь может задать лимит контекста;
 - каждый новый вывод объясним через evidence;
-- benchmark подтверждает снижение объёма контекста и/или времени выполнения задачи;
-- все текущие сценарии `init → scan → explain → diff` остаются рабочими.
+- все сценарии `init → scan → explain → diff` работают.
 
 ---
 
-# v0.4 — Structural intelligence (in progress)
+# v0.4 — Structural intelligence (completed)
 
-**Текущий срез:** добавлены explainable layering diagnostics с confidence и evidence; расширенные import/export/route/call/cycle capabilities уже присутствуют в графе и проходят regression coverage. Добавлены bounded `getModuleHistory` и `getRevisionDiff`; snapshot/context-at-revision и decision linkage остаются следующим подэтапом v0.5.
-**Цель:** повысить точность структурного анализа TypeScript/JavaScript и добавить ограниченный impact analysis.
+**Цель:** повысить точность структурного анализа TypeScript/JavaScript.
 
-## Возможности
+**Реализовано:**
 
-- Расширенный extraction для dynamic imports, re-exports, namespaces, aliases и conditional exports.
-- Точное определение barrel files и публичного API.
-- Связи `test → module` и `entry point → module`.
-- Call graph для поддерживаемых сценариев.
-- Framework-aware extraction для популярных HTTP routes.
-- Диагностика import cycles.
-- Проверка layering violations.
-- Опциональный tree-sitter/compiler backend без потери lightweight default mode.
-- Расширенный architecture diff с объяснением причин.
-- Layering violations с confidence и evidence для вероятных нарушений направления зависимостей.
+- расширенный extraction для re-exports, aliases, barrel files и conditional exports;
+- определение entry points, включая package exports, CLI bin и HTTP routes;
+- связи `test → module` и `entry point → module`;
+- диагностика import cycles;
+- layering violations с confidence и evidence;
+- детерминированный резолвер импортов (корректность `..` исправлена в v0.5).
 
-## Качество и совместимость
+## Критерии готовности — выполнены
 
-- Описать supported constructs и известные ограничения.
-- Покрыть edge cases в fixtures и regression tests.
-- Не принимать optional backend как обязательную зависимость базовой установки.
-- Измерить precision/recall для entry points, modules и dependencies.
-- Сохранить graceful degradation при отсутствии Git или optional backend.
-
-## Критерии готовности
-
-- на benchmark-наборе entry-point accuracy не ниже согласованного baseline;
-- dependency precision и recall измеримы и опубликованы;
 - false positives на динамических импортах и barrel files не регрессируют;
 - impact analysis возвращает проверяемые evidence paths;
 - версия проходит полный verify pipeline.
 
 ---
 
-# v0.5 — Temporal context (in progress)
+# v0.5 — Graph correctness (completed)
 
-**Текущий срез:** добавлены bounded `getModuleHistory` и `getRevisionDiff`, `parseGitDiff` и MCP tools `get_module_history`/`get_revision_diff`; обработка invalid revision, shallow history и отсутствия Git остаётся graceful. Следующий подэтап — persisted snapshots/context-at-revision и decision linkage.
+**Цель:** сделать Dependency Graph пригодным для решений, а не только для отображения.
 
-**Цель:** превратить Git history из дополнительного сигнала в полноценную функцию продукта.
+Этот релиз — переоценка приоритетов. Аудит на реальном репозитории показал, что
+резолвер не схлопывал `..`: 222 из 250 относительных импортов попадали в
+`unresolved`, а вместе с ними пустели `get_dependents`, `get_change_impact` и
+layering diagnostics. Ни один из 103 существовавших тестов этого не ловил —
+в фикстурах не было ни одного импорта с `..`.
 
-## Возможности
+**Реализовано:**
 
-- `module-history` — история изменений модуля.
-- `architecture-history` — изменения архитектуры во времени.
-- `context-at-revision` — анализ состояния на выбранном Git revision.
-- `diff-from-revision` — сравнение контекста с заданной ревизией.
-- Churn, hotspots и ownership signals.
-- Связь commits, файлов, модулей и architectural decisions.
-- `why-was-this-changed` evidence.
-- Экспорт и импорт snapshots контекста.
+- `..`-коллапс в `normalizeRelative`; невозможность замаскировать traversal под
+  валидный in-repo путь;
+- `escapesRoot`/`joinStrict` — явный отказ вместо молчаливого схлопывания;
+- directory-scoped `explain`/`impact` с полем `scope`;
+- Node built-ins ранжируются ниже объявленных пакетов;
+- regression suite: `resolver.test.ts`, `explain.test.ts`;
+- `tools/set-version.mjs` для единого источника версии;
+- CI на Node 20/22/24 × Linux/Windows/macOS;
+- `CONTRIBUTING.md`.
 
-## Качество и совместимость
+**Измеримый результат на собственном репозитории:**
 
-- Git недоступен — операция возвращает понятный diagnostic, а не падает.
-- Поддержать shallow clone и ограниченный Git history.
-- Ограничить глубину и объём history traversal.
-- Детерминировать порядок результатов.
-- Покрыть merge commits, renames, deletes и root commits.
+| Метрика | До | После |
+| --- | --- | --- |
+| Unresolved imports | 222 | 16 (только `dist/`, исключённый по умолчанию) |
+| Module edges | 18 | 49 |
+| Recall относительных импортов | 45,5% | 93,6% |
+| Тестов | 103 | 131 |
 
-## Критерии готовности
+## Критерии готовности — выполнены
 
-- пользователь может объяснить, как менялся модуль и почему;
-- snapshot на одном revision воспроизводим;
-- history не блокирует обычный scan на больших репозиториях;
-- все history-команды имеют JSON output и documented exit codes.
+- относительные импорты, поднимающиеся по дереву, разрешаются;
+- traversal отклоняется с понятным diagnostic;
+- `explain`/`impact` не расширяются молча до родительского модуля;
+- каждый пункт покрыт тестом, который падал бы до исправления.
 
 ---
 
-# v0.6 — MCP production readiness (in progress)
+# v0.6 — Measurable value (in progress)
 
-**Текущий срез:** реализованы Resources/Prompts, read-only stdio transport и строгая pre-dispatch валидация tool arguments по JSON Schema subset. Остаются cancellation/timeouts и фактическая compatibility matrix с внешними clients.
+**Цель:** заменить лозунг «компактный контекст» измеренными цифрами, которые
+можно воспроизвести.
 
-**Цель:** сделать MCP-пакет надёжным и удобным для реальных клиентов.
+Причина задержки: пока половина графа зависимостей была пустой, любое
+сравнение объёма контекста сравнивало бы шум с шумом.
 
 ## Возможности
 
-- Поддержка актуального MCP protocol и совместимых clients.
-- Resources для архитектуры, dependencies, conventions, decisions и modules.
-- Prompts для onboarding, code review, refactoring planning и change preparation.
-- Полноценная валидация inputs и outputs по JSON Schema.
+- Benchmark на реальных публичных репозиториях, а не только на синтетических fixtures.
+- Метрики качества с baseline: import resolution rate, entry-point precision,
+  dependency recall на размеченном наборе.
+- Token-budget бенчмарк: `explain <module>` против чтения всех файлов модуля.
+- Incremental-scan бенчмарк на повторном проходе (сейчас `reused: 0`).
+- Отчёт публикуется как артефакт CI, а не как локальный файл в репозитории.
+- `detect` — команда, которая честно сообщает, чего анализатор не понял.
+
+## Критерии готовности
+
+- import resolution rate на реальных репозиториях измерим и опубликован;
+- token-budget бенчмарк показывает выигрыш против наивного чтения;
+- incremental path реально exercised в бенчмарке;
+- benchmark воспроизводится одной командой в CI.
+
+---
+
+# v0.7 — MCP production readiness (in progress)
+
+**Цель:** сделать MCP-пакет надёжным и удобным для реальных клиентов.
+
+**Текущий срез:** реализованы Resources/Prompts, read-only stdio transport,
+строгая pre-dispatch валидация по JSON Schema subset. Сервер пиннит
+`2024-11-05`; поддержка negotiation актуальных версий протокола не сделана.
+
+## Возможности
+
+- Поддержка актуальных версий MCP protocol и совместимых clients.
 - Request cancellation, timeouts и error taxonomy.
-- Protocol diagnostics только через stderr.
-- MCP Inspector smoke tests и compatibility tests.
+- Protocol diagnostics только через stderr (уже соблюдается).
+- MCP Inspector smoke tests и compatibility tests с реальными клиентами.
 - Конфигурационные пресеты для Claude Code, Cursor, Cline и Continue.
 - Опциональный remote transport — только после подтверждения спроса.
 
@@ -194,34 +189,30 @@
 - успешная интеграция минимум с тремя реальными MCP clients;
 - malformed requests не приводят к повреждению протокола;
 - stdout/stdin transport остаётся чистым;
-- tools/resources/prompts имеют стабильные схемы;
 - опубликована матрица поддерживаемых clients и protocol versions.
 
 ---
 
-# v0.7 — Enterprise controls
+# v0.8 — Enterprise controls (planned)
 
-**Цель:** подготовить продукт к организациям с требованиями к безопасности, контролю и воспроизводимости.
+**Частично закрыто в v0.4–v0.5:** secret filtering, symlink policy,
+path traversal rejection, `verify` command, SECURITY.md, deterministic output.
+
+**Цель:** подготовить продукт к организациям с требованиями к контролю и воспроизводимости.
 
 ## Возможности
 
-- Read-only mode и запрет изменения repository files.
-- Строгая path traversal и symlink protection.
-- Настраиваемая sensitive-file policy.
-- Версионирование и migration context schema.
-- Context verification и schema validation commands.
-- Drift detection в CI.
-- Reproducible context output для одинакового commit.
-- Security policy, threat model и audit guidance.
-- Конфигурация для organization-owned ignore rules.
-- Документированный offline mode.
+- Read-only mode как явный, документированный контракт.
+- Настраиваемая sensitive-file policy и organization-owned ignore rules.
+- Drift detection в CI как готовый workflow.
+- Context schema versioning и migration tooling.
+- Threat model и audit guidance.
 
 ## Критерии готовности
 
-- доступ к файлам за пределами repository root отсутствует;
+- доступ к файлам за пределами repository root отсутствует (покрыто тестами);
 - контекст можно безопасно генерировать в CI;
 - изменение schema обнаруживается явной ошибкой или миграцией;
-- пользователь может проверить, почему context считается stale;
 - security-sensitive scenarios покрыты отдельными тестами.
 
 ---
@@ -234,14 +225,13 @@
 
 - Стабильные semver API для `core`, `cli` и `mcp`.
 - Стабильная context schema и migration policy.
-- Task-oriented context и impact analysis.
+- Task-oriented context и impact analysis поверх корректного графа.
 - Качественный TypeScript/JavaScript structural analysis.
 - Temporal context для Git history.
 - Поддержка npm workspaces и проверенных monorepo-сценариев.
-- Production-ready local CLI.
-- Production-ready stdio MCP server.
+- Production-ready local CLI и stdio MCP server.
 - Compatibility matrix для Node.js и MCP clients.
-- Benchmark report на публичных и внутренних наборах репозиториев.
+- Benchmark report на публичных репозиториях.
 
 ## Критерии выпуска
 
@@ -249,7 +239,7 @@
 - verify, typecheck и integration tests проходят на поддерживаемых версиях Node.js;
 - нет known data-loss или path traversal defects;
 - API changes проходят deprecation policy;
-- release process воспроизводим;
+- release process воспроизводим (`node tools/set-version.mjs`);
 - минимум три реальных пользователя/команды подтверждают регулярное использование в agent workflow.
 
 ## Не гарантируется в 1.0
@@ -278,37 +268,29 @@
 
 ## Метрики roadmap
 
-### Product value
+Метрики разделены на **измеримые автоматически** и **требующие внешних данных**.
+Агент не отправляет телеметрию, поэтому продуктовые метрики собираются только
+через opt-in опросы и issue activity — это указано явно, чтобы в отчётности не
+появилось цифр, которых никто не измерял.
+
+### Измеримо автоматически (CI)
+
+- import resolution rate (resolved / total internal imports);
+- density графа зависимостей на реальных репозиториях;
+- entry-point и dependency precision/recall на размеченном наборе;
+- evidence coverage: доля выводов с хотя бы одним evidence;
+- determinism: побайтовое совпадение контекста для одного commit;
+- incremental correctness и parsed/reused ratio;
+- full scan / incremental scan duration по размеру репозитория;
+- token budget: байты `explain <module>` против байт всех файлов модуля.
+
+### Требуют внешних данных (opt-in, без телеметрии)
 
 - reduction in tokens consumed by coding agents;
 - reduction in time-to-first-correct-change;
 - fewer incorrect file/module selections;
 - repeat usage after 7 and 30 days;
-- number of repositories using `.agent/` context.
-
-### Analysis quality
-
-- entry-point precision and recall;
-- dependency graph precision and recall;
-- architecture-diff correctness;
-- evidence coverage;
-- stale-context false-positive rate;
-- incremental scan correctness.
-
-### Performance
-
-- full scan duration by repository size;
-- incremental scan duration;
-- parsed/reused file ratio;
-- memory usage;
-- MCP response latency.
-
-### Adoption and quality
-
-- weekly active users;
-- active MCP installations;
-- pilot-to-weekly-active conversion;
-- time to first successful agent task;
+- weekly active users, active MCP installations;
 - support/issue volume per release.
 
 ## Release checklist для каждой версии
@@ -316,10 +298,11 @@
 - [ ] Обновлены README и migration notes.
 - [ ] Обновлены API/CLI/MCP schemas.
 - [ ] Добавлены unit и integration tests для нового поведения.
-- [ ] Проверены Windows, Linux и macOS для поддерживаемых сценариев.
+- [ ] Каждый новый анализатор покрыт тестом, падающим до исправления.
+- [ ] Проверены Windows, Linux и macOS (CI matrix).
 - [ ] Выполнены `npm run verify`, `npm audit` и `git diff --check`.
 - [ ] Проверены performance и deterministic output.
+- [ ] Версия выставлена через `node tools/set-version.mjs <semver>`.
 - [ ] Проверена публикация всех затронутых npm packages через dry run.
 - [ ] Обновлены known limitations и security notes.
 - [ ] Подготовлены release notes с измеримыми изменениями.
-

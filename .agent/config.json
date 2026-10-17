@@ -1,0 +1,84 @@
+{
+  "analysis": {
+    "concurrency": 0,
+    "followSymlinks": false,
+    "git": {
+      "architectureSignalPatterns": [
+        "refactor",
+        "architecture",
+        "adr",
+        "breaking",
+        "migrat",
+        "restructure",
+        "rewrite"
+      ],
+      "maxCommits": 5000,
+      "recentDays": 30,
+      "windowDays": 180
+    },
+    "maxFileSizeBytes": 1048576,
+    "moduleDepth": 2,
+    "sourceRoots": [
+      "src",
+      "lib",
+      "app",
+      "apps",
+      "packages",
+      "services"
+    ]
+  },
+  "exclude": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    "out/**",
+    "coverage/**",
+    "vendor/**",
+    "target/**",
+    ".git/**",
+    ".agent/**",
+    ".cache/**",
+    ".next/**",
+    ".turbo/**",
+    ".venv/**",
+    "__pycache__/**",
+    "fixtures/**",
+    ".kilo/**"
+  ],
+  "features": {
+    "architecture": true,
+    "conventions": true,
+    "decisions": true,
+    "dependencies": true,
+    "git": true,
+    "search": true
+  },
+  "ignore": [],
+  "include": [
+    "src/**",
+    "packages/**",
+    "apps/**",
+    "lib/**",
+    "test/**",
+    "tests/**",
+    "**/*.md",
+    "*.json",
+    "*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,vue,svelte}"
+  ],
+  "languages": [
+    "typescript",
+    "javascript"
+  ],
+  "output": {
+    "conventionsMarkdown": true,
+    "includeTimestamp": false,
+    "prettyJson": true
+  },
+  "root": ".",
+  "security": {
+    "allowSensitiveFiles": false,
+    "extraSensitivePatterns": [],
+    "redactSecrets": true
+  },
+  "version": 1
+}

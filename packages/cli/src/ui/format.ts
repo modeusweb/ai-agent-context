@@ -109,6 +109,12 @@ export function renderExplain(explanation: ModuleExplanation): string[] {
   lines.push('Path:');
   lines.push(`  ${explanation.module.path === '' ? '<repository root>' : explanation.module.path}`);
   lines.push('');
+  if (explanation.scope !== undefined) {
+    lines.push('Scope:');
+    lines.push(`  directory only — ${explanation.scope.fileCount} file(s) under ${explanation.scope.directory}`);
+    lines.push(`  owning module: ${explanation.scope.moduleId} (this answer does not cover the rest of it)`);
+    lines.push('');
+  }
   if (explanation.module.roles.length > 0) {
     lines.push('Detected roles (heuristic, with confidence):');
     for (const role of explanation.module.roles) {

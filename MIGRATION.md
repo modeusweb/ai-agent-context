@@ -1,5 +1,69 @@
 # Migration guide
 
+## v0.5.0
+
+Correctness release for the dependency graph. The `.agent/` v1 schema is
+unchanged, so existing context stays readable — but **a rescan is required** to
+get the corrected graph, and `explain`/`impact` answers change shape.
+
+### Behavior changes
+
+- **Imports that climb directories now resolve.** This is the significant fix.
+  Path normalization previously collapsed `.` and duplicate separators but not
+  `..`, so a specifier like `../util/paths.ts` was joined into
+  `src/core/graph/../util/paths.ts` and matched no analyzed file. Every
+  relative import containing `..` was reported as `unresolved`, which emptied
+  the dependency graph and, with it, `get_dependents`, `get_change_impact` and
+  the layering diagnostics. Measured on this repository before the fix: 222 of
+  250 relative imports unresolved, 18 module edges; after it, 16 unresolved
+  (all of them imports of `dist/`, which is excluded by design) and 49 module
+  edges. Rescan to regenerate the graph.
+- **`explain` and `impact` scope to a directory instead of widening.** Asking
+  about a directory that module detection did not promote (it sits deeper than
+  `analysis.moduleDepth`, or holds a single direct file) used to answer with the
+  enclosing module — e.g. `explain packages/core/src/core/graph` returned all 47
+  files of `packages/core/src`. It now answers for the requested directory only
+  and says so. Consumers that assume `explain <dir>` describes the whole owning
+  module must check the new `scope` field.
+- **New `scope` field on `ModuleExplanation`.** Present only for scoped
+  answers: `{ moduleId, directory, fileCount }`. It is omitted otherwise.
+  Surface it — a scoped result deliberately omits the rest of its module, and
+  presenting it as a whole-module answer understates the change surface.
+- **Scoped change impact is honest about the owning module.** For a scoped
+  directory the impact set is the files and modules that actually import it.
+  The owning module is no longer reported as broken by a change inside one of
+  its own subdirectories.
+- **Node built-ins rank below declared packages.** `node:fs` and `node:path`
+  were classified as `infrastructure` at high confidence, so bounded
+  projections filled their budget with them ahead of the packages that actually
+  describe the project. `get_repository_context` and `explain_module` now rank
+  platform built-ins last. Classification values are unchanged.
+
+### Security
+
+- **Path traversal is rejected, not clamped.** A relative specifier that climbs
+  above the repository root (`../../../etc/passwd`) used to be silently
+  collapsed onto an in-repo path, which could resolve to a legitimate analyzed
+  file. It is now reported as `unresolved` with an explicit
+  `resolves outside the repository root` diagnostic. Absolute specifiers are
+  rejected on the same grounds. New exports: `escapesRoot`, `joinStrict`.
+
+### New API
+
+```ts
+import { escapesRoot, joinStrict, isNodeBuiltin } from '@ai-agent-context/core';
+
+escapesRoot('a/../../../etc/passwd'); // true
+joinStrict('src/core/graph', '../util/paths.ts');
+// { path: 'src/core/util/paths.ts', escaped: false, absolute: false }
+```
+
+`explainModule()` gained an optional `scope` in its resolved target, and
+`transitiveDependents()` accepts an optional `scopeFiles` set.
+
+No code changes are required from consumers that only read `.agent/` documents,
+but a rescan is needed for the corrected dependency graph.
+
 ## v0.4.0
 
 Reliability and ergonomics release. The `.agent/` v1 schema is unchanged, so an

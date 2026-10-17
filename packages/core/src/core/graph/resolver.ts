@@ -11,11 +11,23 @@
  */
 import { builtinModules } from 'node:module';
 import type { DependencyKind } from '../../model/types.ts';
-import { extname, dirname, join, normalizeRelative } from '../../util/paths.ts';
+import { escapesRoot, extname, dirname, join, joinStrict, normalizeRelative } from '../../util/paths.ts';
 import { compareStrings } from '../../model/canonical.ts';
 import { packageNameFromSpecifier } from '../../adapters/language/ts-js/package-signals.ts';
 
 const BUILTINS = new Set([...builtinModules, ...builtinModules.map((name) => `node:${name}`)]);
+
+/**
+ * `true` when a specifier is provided by Node.js itself.
+ *
+ * Built-ins are platform capabilities, not architectural choices, so the
+ * bounded projections rank them below real dependencies instead of letting
+ * `node:fs` and `node:path` crowd out the packages that actually say something
+ * about the project.
+ */
+export function isNodeBuiltin(name: string): boolean {
+  return BUILTINS.has(name);
+}
 
 /** Extensions tried when a specifier has no extension, in deterministic order. */
 export const RESOLUTION_EXTENSIONS = ['.ts', '.tsx', '.mts', '.cts', '.d.ts', '.js', '.jsx', '.mjs', '.cjs', '.json'];
@@ -115,7 +127,15 @@ export class ImportResolver {
     if (normalizedSpecifier.length === 0) return unresolved(specifier, ['empty specifier']);
 
     if (normalizedSpecifier.startsWith('.') || normalizedSpecifier.startsWith('/')) {
-      const base = join(dirname(fromFile), normalizedSpecifier);
+      // `join` collapses `..` eagerly, which would hide a traversal attempt, so
+      // the join is computed in strict mode and the escape checked explicitly.
+      const joined = joinStrict(dirname(fromFile), normalizedSpecifier);
+      if (joined.escaped || joined.absolute) {
+        return unresolved(specifier, [
+          `relative specifier "${specifier}" resolves outside the repository root`,
+        ]);
+      }
+      const base = joined.path;
       const resolved = withExtensions(base, this.filePaths);
       if (resolved !== null) {
         const sameDirectory = dirname(fromFile) === dirname(resolved);
@@ -192,6 +212,7 @@ export class ImportResolver {
       for (const target of alias.targets) {
         const substituted = wildcard ? target.replace('*', rest) : target;
         const base = normalizeRelative(join(alias.base, substituted));
+        if (escapesRoot(base)) continue;
         const resolved = withExtensions(base, this.filePaths);
         if (resolved !== null) {
           return {

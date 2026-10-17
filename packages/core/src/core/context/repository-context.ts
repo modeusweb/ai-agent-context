@@ -9,8 +9,10 @@
 import type { ContextCommand, RepositoryContextOptions, RepositoryContextPayload } from './types.ts';
 import type { KnowledgeGraph } from '../graph/knowledge-graph.ts';
 import type { ParsedFile } from '../../adapters/language/types.ts';
+import type { ExternalDependency } from '../../model/types.ts';
 import { compareStrings } from '../../model/canonical.ts';
 import { GENERATOR_NAME, SCHEMA_VERSION } from '../../model/schema.ts';
+import { isNodeBuiltin } from '../graph/resolver.ts';
 
 const COMMAND_PATTERN = /^(start|dev|serve|build|test|lint|typecheck|check|format|migrate|seed|generate|clean)$/;
 const COMMAND_ORDER = ['start', 'dev', 'build', 'test', 'lint', 'typecheck', 'format'];
@@ -66,11 +68,18 @@ export function buildRepositoryContext(
     .sort((a, b) => (b.confidence === a.confidence ? compareStrings(a.path, b.path) : b.confidence - a.confidence))
     .slice(0, maxEntryPoints);
 
+  // Node built-ins are platform capabilities, so they are ranked strictly below
+  // declared packages: listing `node:fs` ahead of `express` wastes the budget an
+  // agent gave this projection without telling it anything about the project.
   const importanceRank = { infrastructure: 3, framework: 2, tooling: 1, utility: 0 } as const;
+  const externalRank = (dependency: ExternalDependency): number => {
+    const platform = isNodeBuiltin(dependency.name) ? -10_000 : 0;
+    return platform + importanceRank[dependency.importance.value] * 1000 + dependency.importedByModules;
+  };
   const externalDependencies = [...repository.externalDependencies]
     .sort((a, b) => {
-      const rankA = importanceRank[a.importance.value] * 1000 + a.importedByModules;
-      const rankB = importanceRank[b.importance.value] * 1000 + b.importedByModules;
+      const rankA = externalRank(a);
+      const rankB = externalRank(b);
       if (rankA !== rankB) return rankB - rankA;
       return compareStrings(a.name, b.name);
     })

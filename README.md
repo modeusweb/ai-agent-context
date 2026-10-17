@@ -120,10 +120,11 @@ agent-context impact src/payments --json
 
 ### `explain`
 
-Explains a module or file:
+Explains a module, a directory or a file:
 
 ```bash
 agent-context explain src/payments
+agent-context explain src/payments/gateways
 ```
 
 Output:
@@ -167,6 +168,17 @@ Important conventions:
 Git activity:
   high recent activity
 ```
+
+When you point `explain` at a directory that is narrower than the module owning
+it, the answer is scoped to that directory and says so:
+
+```
+Scope:
+  directory only — 4 file(s) under src/core/graph
+  owning module: packages/core/src (this answer does not cover the rest of it)
+```
+
+The JSON payload carries the same information in a `scope` field.
 
 ### `diff`
 
@@ -447,8 +459,27 @@ Layering diagnostics are heuristic, confidence-bearing and evidence-based; they 
 - **Secret filtering**: Automatically excludes `.env`, credentials, certificates
 - **Deterministic**: Same repository state → identical context
 - **Symlink protection**: Symlinks are not followed by default
+- **Path traversal rejected**: An import specifier that climbs above the repository root is reported as unresolved with an explicit diagnostic, never silently collapsed onto an in-repo path
 - **CI verification**: `agent-context verify --json` detects invalid schema and drift
 - **Policy**: See [SECURITY.md](SECURITY.md) for supported versions and reporting guidance
+
+## Accuracy notes
+
+The analyzer is deterministic and evidence-based, not omniscient. Two behaviours
+are worth knowing before you rely on it:
+
+- **`explain` and `impact` scope to what you asked for.** If the path you pass is
+  a directory narrower than the module that owns it, the answer covers only that
+  directory and says so in a `Scope:` block (and in the `scope` field of the JSON
+  payload). It never silently widens to the whole module.
+- **Unresolved imports are reported, not guessed.** Imports of build output
+  (`dist/`), undeclared packages and aliases that point nowhere appear in
+  `dependencies.json` under `unresolved` with the reason. A non-empty
+  `unresolved` list is a signal about repository layout, not necessarily a bug.
+
+Platform built-ins (`node:fs`, `node:path`, …) rank below declared packages in
+bounded projections: they are capabilities of the runtime, not facts about the
+project.
 
 ## Architecture
 
@@ -531,4 +562,4 @@ MIT
 
 ## Contributing
 
-Contributions are welcome! Please read the contributing guidelines before submitting PRs.
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow, the analysis-code rules (determinism, evidence, confidence) and the release process.
