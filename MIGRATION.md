@@ -76,7 +76,7 @@ repository produced non-deterministic context.
 
 ### Roadmap
 
-The "Метрики roadmap" section now marks every metric as measured or not
+The "Roadmap metrics" section now marks every metric as measured or not
 measured. Two entries — evidence coverage and determinism — became measured in
 this release. One, entry-point and dependency precision/recall, is still not
 measured and is now labelled as such: it needs a labelled corpus that does not

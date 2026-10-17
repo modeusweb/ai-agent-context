@@ -1,387 +1,519 @@
 # Roadmap
 
-## Назначение документа
+## Purpose of this document
 
-Документ описывает целевую эволюцию `ai-agent-context` — локального Git-native context layer для AI coding agents. Roadmap не является жёстким обещанием дат: приоритеты могут меняться по результатам пользовательских исследований, benchmark и обратной связи.
+This document describes the intended evolution of `ai-agent-context` — a local,
+Git-native context layer for AI coding agents. It is not a binding schedule:
+priorities may change in response to user research, benchmark results and
+feedback.
 
-## Продуктовая цель
+## Product goal
 
-Дать coding agent перед изменением кода компактную, проверяемую и версионируемую карту репозитория:
+Give a coding agent, before it changes any code, a compact, checkable and
+versionable map of the repository:
 
-- архитектура и ответственность модулей;
-- внутренние и внешние зависимости;
-- entry points и публичный API;
-- conventions и архитектурные решения;
-- история изменений и потенциальное влияние изменений.
+- module architecture and responsibilities;
+- internal and external dependencies;
+- entry points and public API;
+- conventions and architectural decisions;
+- change history and the potential impact of a change.
 
-Основные принципы развития:
+The principles the product is built on:
 
-- **Local-first** — исходный код не покидает машину без явного действия пользователя.
-- **Deterministic** — одинаковое состояние репозитория даёт воспроизводимый результат.
-- **Evidence-based** — выводы сопровождаются источниками и уровнем уверенности.
-- **Agent-oriented** — контекст выбирается под конкретную задачу и бюджет токенов.
-- **Git-native** — учитываются текущее состояние и история изменений.
-- **Incremental** — повторный анализ не перечитывает неизменившиеся файлы.
-- **Safe by default** — path traversal, symlink policy и sensitive files обрабатываются явно.
+- **Local-first** — source code does not leave the machine without an explicit
+  user action.
+- **Deterministic** — the same repository state produces the same context.
+- **Evidence-based** — conclusions carry their source and a confidence level.
+- **Agent-oriented** — context is selected for a task and a token budget.
+- **Git-native** — both the current state and the history are taken into account.
+- **Incremental** — a re-analysis does not re-read unchanged files.
+- **Safe by default** — path traversal, symlinks and sensitive files are handled
+  explicitly.
 
-## Текущая база
+## Current baseline
 
-Текущая версия пакетов: `0.9.0`.
+Current package version: `0.10.1`.
 
-Уже реализованы:
+Implemented:
 
-- ядро анализатора без runtime-зависимостей;
-- CLI: `init`, `scan`, `status`, `explain`, `context`, `task`, `impact`, `search`, `diff`, `detect`, `history`, `revision-diff`, `verify`, `clean`;
-- MCP stdio-сервер: 14 tools, Resources, Prompts, строгая валидация аргументов;
-- dual-era MCP: пять ревизий протокола, negotiation, `server/discover`, cancellation,
-  timeouts, error taxonomy и пресеты конфигурации для четырёх клиентов;
-- incremental scanning и content-addressed parse cache;
-- knowledge graph, определение модулей, entry points, cycles, layering diagnostics;
-- определение dependencies, conventions и decisions с confidence и evidence;
+- a scanner core with no runtime dependencies;
+- CLI: `init`, `scan`, `status`, `explain`, `context`, `task`, `impact`,
+  `search`, `diff`, `detect`, `history`, `revision-diff`, `verify`, `migrate`,
+  `clean`;
+- MCP stdio server: 14 tools, Resources, Prompts, strict argument validation;
+- dual-era MCP: five protocol revisions, negotiation, `server/discover`,
+  cancellation, timeouts, an error taxonomy, and configuration presets for four
+  clients;
+- incremental scanning and a content-addressed parse cache;
+- a knowledge graph with module detection, entry points, cycles and layering
+  diagnostics;
+- dependency, convention and decision detection with confidence and evidence;
 - temporal context: `getModuleHistory`, `getRevisionDiff`, `getRevisionSnapshot`;
-- directory-scoped `explain`/`impact` вместо молчаливого расширения до родительского модуля;
-- budget-aware `explain`: проекция `compact`/`full` выбирается по размеру модуля;
-- path traversal отклоняется, а не схлопывается, и всегда попадает в отчёт;
-- Git activity signals, детерминированная сериализация в `.agent/`, secret filtering;
-- workspace-поддержка npm workspaces;
-- `agent-context detect` и MCP tool `detect_coverage_gaps`: что именно анализатор
-  не смог определить;
-- benchmark, который измеряет import resolution rate и token budget по бакетам размера;
-- organization-owned policy (`.agent-policy.json`), которая может только ужесточать настройки репозитория;
-- read-only контракт: `security.readOnly` и `--read-only`, проверка в фасаде `AgentContext`;
-- `agent-context migrate` и переиспользуемый CI workflow для drift-детекции.
+- directory-scoped `explain`/`impact` instead of a silent widening to the parent
+  module;
+- budget-aware `explain`: the `compact`/`full` projection is chosen by module size;
+- path traversal rejected rather than collapsed, and always reported;
+- git activity signals, deterministic `.agent/` serialization, secret filtering;
+- npm workspaces support;
+- `agent-context detect` and the `detect_coverage_gaps` MCP tool: what the
+  analysis could **not** determine;
+- a benchmark that measures import resolution rate and token budget per size
+  bucket;
+- evidence coverage and determinism, both measured and gated in CI;
+- an organization-owned policy (`.agent-policy.json`) that can only tighten a
+  repository's own settings;
+- a read-only contract: `security.readOnly` and `--read-only`, enforced in the
+  `AgentContext` facade;
+- `agent-context migrate` and a reusable CI workflow for drift detection.
 
-Не закрыто и требует внешних данных: подтверждение интеграции с тремя реальными
-MCP-клиентами и opt-in опрос реальных пользователей.
+Still open, and not closable by code:
 
-## Приоритеты
+- a verified integration with three real MCP clients;
+- an opt-in survey of real users.
 
-- **P0** — измеримая польза и доверие к цифрам. Метрики качества публикуются и воспроизводятся.
-- **P1** — релевантность контекста задаче.
-- **P2** — temporal context, зрелый MCP, enterprise controls.
-- **P3** — экосистема и интеграции после подтверждённого спроса.
+## Priorities
 
-**Правило приоритета.** Ни один новый анализатор не попадает в релиз, пока не
-показан измеримый baseline и regression coverage на реальном коде. Расширение
-поверх неверного графа зависимостей делает продукт хуже, а не больше: v0.5
-начался с исправления резолвера, а не с новых фич.
+- **P0** — measurable value and trust in the numbers. Quality metrics are
+  published and reproducible.
+- **P1** — relevance of context to the task at hand.
+- **P2** — temporal context, mature MCP, enterprise controls.
+- **P3** — ecosystem and integrations, after confirmed demand.
 
----
-
-# v0.3 — Agent-ready context (completed)
-
-**Цель:** превратить полный repository context в компактный контекст, который AI agent может эффективно использовать для конкретной задачи.
-
-**Реализовано:**
-
-- `getTaskContext(task, options)` с bounded `maxModules` и optional `target`;
-- `getChangeImpact(target, options)` с bounded `maxFiles`;
-- CLI-команды `task` и `impact`;
-- MCP tools `get_context_for_task` и `get_change_impact`;
-- evidence для выбранных модулей и impact-срезов;
-- regression coverage в CLI/MCP integration tests.
-
-## Критерии готовности — выполнены
-
-- агент получает релевантный контекст без ручного чтения большого числа файлов;
-- пользователь может задать лимит контекста;
-- каждый новый вывод объясним через evidence;
-- все сценарии `init → scan → explain → diff` работают.
+**Priority rule.** No new analyzer ships until it has a measurable baseline and
+regression coverage on real code. Extending a broken dependency graph makes the
+product worse rather than bigger: v0.5 started by fixing the resolver, not by
+adding features.
 
 ---
 
-# v0.4 — Structural intelligence (completed)
+## v0.3 — Agent-ready context (completed)
 
-**Цель:** повысить точность структурного анализа TypeScript/JavaScript.
+**Goal:** turn the full repository context into a compact one an AI agent can
+use effectively for a specific task.
 
-**Реализовано:**
+**Implemented:**
 
-- расширенный extraction для re-exports, aliases, barrel files и conditional exports;
-- определение entry points, включая package exports, CLI bin и HTTP routes;
-- связи `test → module` и `entry point → module`;
-- диагностика import cycles;
-- layering violations с confidence и evidence;
-- детерминированный резолвер импортов (корректность `..` исправлена в v0.5).
+- `getTaskContext(task, options)` with a bounded `maxModules` and optional
+  `target`;
+- `getChangeImpact(target, options)` with a bounded `maxFiles`;
+- the CLI commands `task` and `impact`;
+- the MCP tools `get_context_for_task` and `get_change_impact`;
+- evidence for the selected modules and impact slices;
+- regression coverage in the CLI/MCP integration tests.
 
-## Критерии готовности — выполнены
+**Done criteria:**
 
-- false positives на динамических импортах и barrel files не регрессируют;
-- impact analysis возвращает проверяемые evidence paths;
-- версия проходит полный verify pipeline.
+- an agent gets relevant context without manually reading a large number of
+  files;
+- the user can bound how much context is returned;
+- every new conclusion is explainable through evidence;
+- the `init → scan → explain → diff` flow works end to end.
 
 ---
 
-# v0.5 — Graph correctness (completed)
+## v0.4 — Structural intelligence (completed)
 
-**Цель:** сделать Dependency Graph пригодным для решений, а не только для отображения.
+**Goal:** improve the accuracy of TypeScript/JavaScript structural analysis.
 
-Этот релиз — переоценка приоритетов. Аудит на реальном репозитории показал, что
-резолвер не схлопывал `..`: 222 из 250 относительных импортов попадали в
-`unresolved`, а вместе с ними пустели `get_dependents`, `get_change_impact` и
-layering diagnostics. Ни один из 103 существовавших тестов этого не ловил —
-в фикстурах не было ни одного импорта с `..`.
+**Implemented:**
 
-**Реализовано:**
+- extended extraction for re-exports, aliases, barrel files and conditional
+  exports;
+- entry-point detection including package exports, CLI bin and HTTP routes;
+- `test → module` and `entry point → module` relations;
+- import cycle diagnostics;
+- layering violations with confidence and evidence;
+- a deterministic import resolver (`..` correctness was fixed in v0.5).
 
-- `..`-коллапс в `normalizeRelative`; невозможность замаскировать traversal под
-  валидный in-repo путь;
-- `escapesRoot`/`joinStrict` — явный отказ вместо молчаливого схлопывания;
-- directory-scoped `explain`/`impact` с полем `scope`;
-- Node built-ins ранжируются ниже объявленных пакетов;
+**Done criteria:**
+
+- false positives on dynamic imports and barrel files do not regress;
+- impact analysis returns verifiable evidence paths;
+- the release passes the full verify pipeline.
+
+---
+
+## v0.5 — Graph correctness (completed)
+
+**Goal:** make the dependency graph usable for decisions rather than for display.
+
+This release re-prioritized. An audit on a real repository showed the resolver
+did not collapse `..`: 222 of 250 relative imports landed in `unresolved`, and
+with them `get_dependents`, `get_change_impact` and the layering diagnostics
+emptied out. None of the 103 existing tests caught it — the fixtures contained
+not a single import with `..`.
+
+**Implemented:**
+
+- `..` collapsing in `normalizeRelative`, making it impossible to mask a
+  traversal as a valid in-repo path;
+- `escapesRoot`/`joinStrict` — an explicit refusal instead of silent collapsing;
+- directory-scoped `explain`/`impact` with a `scope` field;
+- Node built-ins ranked below declared packages;
 - regression suite: `resolver.test.ts`, `explain.test.ts`;
-- `tools/set-version.mjs` для единого источника версии;
-- CI на Node 20/22/24 × Linux/Windows/macOS;
+- `tools/set-version.mjs` as the single source of version;
+- CI on Node 20/22/24 across Linux, Windows and macOS;
 - `CONTRIBUTING.md`.
 
-**Измеримый результат на собственном репозитории:**
+**Measured on this repository:**
 
-| Метрика | До | После |
+| Metric | Before | After |
 | --- | --- | --- |
-| Unresolved imports | 222 | 16 (только `dist/`, исключённый по умолчанию) |
+| Unresolved imports | 222 | 16 (all `dist/`, excluded by default) |
 | Module edges | 18 | 49 |
-| Recall относительных импортов | 45,5% | 93,6% |
-| Тестов | 103 | 131 |
+| Relative-import recall | 45.5% | 93.6% |
+| Tests | 103 | 131 |
 
-## Критерии готовности — выполнены
+**Done criteria:**
 
-- относительные импорты, поднимающиеся по дереву, разрешаются;
-- traversal отклоняется с понятным diagnostic;
-- `explain`/`impact` не расширяются молча до родительского модуля;
-- каждый пункт покрыт тестом, который падал бы до исправления.
+- relative imports that climb the tree resolve;
+- traversal is refused with a comprehensible diagnostic;
+- `explain`/`impact` never widen silently to the parent module;
+- every item is covered by a test that would have failed before the fix.
 
 ---
 
-# v0.6 — Measurable value (completed)
+## v0.6 — Measurable value (completed)
 
-**Цель:** заменить лозунг «компактный контекст» измеренными цифрами, которые
-можно воспроизвести.
+**Goal:** replace the "compact context" slogan with reproducible numbers.
 
-Причина задержки: пока половина графа зависимостей была пустой, любое
-сравнение объёма контекста сравнивало бы шум с шумом.
+Reason for the delay: while half the dependency graph was empty, any comparison
+of context volume would have been noise against noise.
 
-**Реализовано:**
+**Implemented:**
 
-- `tools/benchmark.mjs` переписан: вместо таймингов он измеряет import
-  resolution rate (с классификацией unresolved: `excludedOutput` / `actionable` /
-  `pathEscapes`), cold vs warm scan с parsed/reused, и token budget по бакетам
-  размера модуля;
-- budget-aware `explain`: проекция `compact`/`full` по размеру модуля, плюс
-  явный `detail` в CLI и MCP;
-- дедупликация payload: `responsibilities` больше не повторяет `roles`,
-  evidence ограничен двумя записями на факт;
-- `agent-context detect` и MCP `detect_coverage_gaps` — что анализатор не
-  определил, с ранжированием по severity;
-- исправлен баг безопасности: отклонённый path traversal исчезал из
-  `dependencies.json` из-за классификации неразрешённых импортов по всему
-  спецификатору, а не по последнему сегменту пути;
-- собственный репозиторий добавлен в набор бенчмарка, потому что fixtures
-  меньше 4 КБ и не могут проверить продуктовое утверждение.
+- `tools/benchmark.mjs` rewritten: instead of timings it measures import
+  resolution rate (classifying unresolved imports as `excludedOutput` /
+  `actionable` / `pathEscapes`), cold vs warm scan with parsed/reused counts, and
+  token budget per module-size bucket;
+- budget-aware `explain`: the `compact`/`full` projection by module size, plus an
+  explicit `detail` in the CLI and over MCP;
+- payload deduplication: `responsibilities` no longer restates `roles`, and
+  evidence is capped at two entries per fact;
+- `agent-context detect` and the MCP `detect_coverage_gaps` — what the analyzer
+  did not determine, ranked by severity;
+- a security bug fixed: a rejected path traversal disappeared from
+  `dependencies.json` because unresolved imports were classified by the whole
+  specifier rather than by the last path segment;
+- this repository added to the benchmark set, because the fixtures are under
+  4 KB and cannot test the product claim.
 
-**Измеримые результаты:**
+**Measured results:**
 
-| Метрика | Значение |
+| Metric | Value |
 | --- | --- |
 | Import resolution rate (resolvable) | 100% |
 | Actionable unresolved | 0 |
 | Path escapes | 0 |
-| Модули >64 KB: `explain` против исходников | 0.042x (−95.8%) |
-| Модули 8–64 KB | 0.343x (−65.7%) |
-| Модули <8 KB, `auto` | 0.72x (было 1.84x с `full`) |
-| Тестов | 150 |
+| Modules >64 KB: `explain` against source | 0.042x (−95.8%) |
+| Modules 8–64 KB | 0.343x (−65.7%) |
+| Modules <8 KB, `auto` | 0.72x (was 1.84x with `full`) |
+| Tests | 150 |
 
-**Честная оговорка, зафиксированная в бенчмарке:** на модулях меньше 4 KB
-продукт остаётся дороже чтения исходников (2.07x на fixtures). Это не
-прячется усреднением — бакеты существуют именно для того, чтобы этот результат
-был виден.
+**Honest caveat, recorded in the benchmark:** on modules under 4 KB the product
+is still more expensive than reading the source (2.07x on the fixtures). This is
+not hidden by averaging — the buckets exist precisely so the result is visible.
 
-## Критерии готовности — выполнены
+**Done criteria:**
 
-- import resolution rate измерим и опубликован;
-- token-budget бенчмарк показывает выигрыш против наивного чтения на больших модулях;
-- incremental path exercised в бенчмарке (cold/warm с parsed/reused);
-- benchmark воспроизводится одной командой, запускается в CI и публикуется как артефакт;
-- пользователь может узнать, где именно анализ неполон.
+- import resolution rate is measurable and published;
+- the token-budget benchmark shows a win over naive reading on large modules;
+- the incremental path is exercised in the benchmark (cold/warm with
+  parsed/reused);
+- the benchmark is reproducible with one command, runs in CI and is published as
+  an artifact;
+- a user can find out where the analysis is incomplete.
 
-## Осталось дальше
+**Left for later:**
 
-- entry-point precision/recall на размеченном наборе;
-- публичный набор реальных репозиториев вместо одного собственного.
-
----
-
-# v0.8 — MCP production readiness (completed, shipped as 0.8.0)
-
-**Цель:** сделать MCP-пакет надёжным и удобным для реальных клиентов.
-
-**Проблема, которую решил релиз.** Сервер пинил одну ревизию протокола —
-`2024-11-05` — и отвечал ею на любой `initialize`. Клиент, запрашивавший
-`2025-06-18`, получал инструкцию перейти на ревизию, которую сам не запрашивал,
-а по спецификации обязан был после этого отключиться. Совместимость с реальными
-клиентами определялась не кодом сервера, а датой его последнего обновления.
-
-## Реализовано
-
-- **Dual-era сервер.** Реализованы пять ревизий: legacy (`2024-11-05`,
-  `2025-03-26`, `2025-06-18`, `2025-11-25`) и modern (`2026-07-28`). Эпо
-  выбирается по тому, как открылся клиент: запрос с `_meta` обслуживается
-  stateless, `initialize` переключает на legacy-семантику.
-- **Legacy negotiation.** `initialize` отвечает запрошенной ревизией; при
-  неизвестной, отсутствующей или modern отвечает newest legacy (`2025-11-25`).
-- **`server/discover`** — обязательный для modern-сервера метод; сообщает
-  `supportedVersions`, capabilities и идентичность сервера.
-- **Modern-валидация на каждый запрос.** Неподдерживаемая ревизия отклоняется с
-  `-32022` и списком для retry; отсутствие обязательного
-  `io.modelcontextprotocol/clientCapabilities` — с `-32602`; modern-результаты
-  несут `resultType`.
-- **Cancellation.** `notifications/cancelled` гасит ответ, в том числе ответ по
-  таймауту, который иначе пришёл бы следом.
-- **Timeouts.** `requestTimeoutMs` (по умолчанию 120000, `0` отключает); истёкший
-  запрос отвечает `-32603` с `data.timeoutMs`, поздний результат отбрасывается.
-- **Error taxonomy.** Сообщение без `method` отвечает `-32600`, а не `-32601`.
-  Зарезервированный `-32002` не используется.
-- **Пресеты конфигурации** для Claude Code, Cursor, Cline и Continue:
-  `agent-context-mcp config <client>`, плюс `--list` и `--all`.
-- **Тесты реального процесса.** Сессии обеих эр, мусорный ввод, cancellation и
-  timeout проверяются через настоящий stdio-процесс, а не через in-memory
-  транспорт: «диагностика не попадает в stdout» иначе недоказуемо.
-
-## Критерии готовности
-
-- **закрыт:** malformed requests не приводят к повреждению протокола — покрыто
-  тестом на мусорный ввод, который проверяет, что канал stdout остаётся
-  разбираемым;
-- **закрыт:** stdout/stdin transport остаётся чистым — покрыто тестом на
-  реальном процессе;
-- **закрыт:** опубликована матрица поддерживаемых clients и protocol versions —
-  в `packages/mcp/README.md`;
-- **не закрыт:** успешная интеграция минимум с тремя реальными MCP clients.
-  Пресеты кодируют задокументированный формат конфигурации каждого клиента, но
-  ни один из них не запускался в этой среде. Критерий остаётся открытым сознательно:
-  подтвердить его может только установленный клиент.
-
-Опциональный remote transport отложен до подтверждения спроса, как и планировалось.
+- entry-point precision/recall on a labelled set;
+- a public set of real repositories instead of only our own.
 
 ---
 
-# v0.9 — Enterprise controls (completed, shipped as 0.9.0)
+## v0.8 — MCP production readiness (completed, shipped as 0.8.0)
 
-**Цель:** подготовить продукт к организациям с требованиями к контролю и воспроизводимости.
+**Goal:** make the MCP package reliable and usable with real clients.
 
-**Проблема, которую решил релиз.** Репозиторий настраивается файлом, который пишут контрибьюторы. Ничто не мешало контрибьютору выставить `security.allowSensitiveFiles: true` или убрать каталог из `exclude` — и тем самым ослабить правила, которые организация считает обязательными. Набор гарантий (secret filtering, symlink policy, path traversal rejection, `verify`, детерминированный вывод) существовал, но был без принуждения: он описывал поведение инструмента, а не правило, которое нельзя обойти.
+**The problem this release solved.** The server pinned one protocol revision —
+`2024-11-05` — and answered every `initialize` with it. A client asking for
+`2025-06-18` was told to move to a revision it had not requested, which the
+specification requires it to answer by disconnecting. Compatibility with real
+clients was decided by the age of the file rather than by the code.
 
-## Реализовано
+**Implemented**
 
-- **Organization-owned policy.** `.agent-policy.json` ищется в корне репозитория и в любом родительском каталоге, так что один файл на уровне монорепозитория или организации применяется ко всему вложенному; `AGENT_CONTEXT_POLICY` переопределяет поиск. Policy — это **пол**, а не замена: паттерны объединяются с репозиторными, а не подменяют их.
-- **Policy может только ужесточать.** `allowSensitiveFiles: false` принудительно выключает escape hatch, `redactSecrets: true` — принудительно включает редактирование, `readOnly: true` — принудительно включает read-only. Ни один из этих режимов репозиторий не может отменить настройкой или флагом.
-- **Два документа отклоняются, а не игнорируются:** неизвестная `version` и `redactSecrets: false`. Политика, которая молча не применилась, неотличима от её отсутствия; а отключение редактирования копирует секреты в файл, который коммитят и показывают.
-- **Read-only контракт.** `security.readOnly` и флаг `--read-only` запрещают любую запись и оставляют рабочими все запросы. Проверка живёт в фасаде `AgentContext`, а не в отдельных командах, поэтому её не обойти ни MCP-обработчику инструментов, ни встраиваемому сценарию, вызывающему `scan()` напрямую. Пишут только `scan()` и `init()`.
-- **Изменение policy инвалидирует кэш**, поэтому контекст, построенный под более слабыми правилами, никогда не переиспользуется после их ужесточения.
-- **`agent-context migrate`** приводит закоммиченный `.agent/` к текущей схеме; `--check` ничего не пишет и возвращает `1`, что делает его CI-воротами. Состояния: `current`, `stale`, `missing`, `invalid`.
-- **Готовый workflow для CI:** `.github/workflows/reusable-verify-context.yml`, вызывается из другого репозитория через `uses:`.
-- **Threat model расширен** на конфигурацию самого репозитория и дополнен audit guidance из пяти шагов в `SECURITY.md`.
+- **Dual-era server.** Five revisions: legacy (`2024-11-05`, `2025-03-26`,
+  `2025-06-18`, `2025-11-25`) and modern (`2026-07-28`). The era is chosen by how
+  the client opens: a request carrying `_meta` is served statelessly, while
+  `initialize` selects legacy semantics.
+- **Legacy negotiation.** `initialize` answers with the requested revision; an
+  unknown, absent or modern value is answered with the newest legacy revision
+  (`2025-11-25`).
+- **`server/discover`**, which the specification requires of a modern server;
+  it reports `supportedVersions`, capabilities and server identity.
+- **Per-request modern validation.** An unsupported revision is refused with
+  `-32022` and the list to retry with; a missing required
+  `io.modelcontextprotocol/clientCapabilities` with `-32602`; modern results
+  carry `resultType`.
+- **Cancellation.** `notifications/cancelled` suppresses the response, including
+  the timeout response that would otherwise have followed it.
+- **Timeouts.** `requestTimeoutMs` (default 120000, `0` disables it); an expired
+  request answers `-32603` with `data.timeoutMs`, and the late result is
+  discarded.
+- **Error taxonomy.** A message without a `method` answers `-32600` rather than
+  `-32601`. The reserved `-32002` is never emitted.
+- **Configuration presets** for Claude Code, Cursor, Cline and Continue:
+  `agent-context-mcp config <client>`, plus `--list` and `--all`.
+- **Real-process tests.** Sessions of both eras, garbage input, cancellation and
+  timeouts are exercised through an actual stdio process rather than an in-memory
+  transport, because "diagnostics stay off stdout" is otherwise not provable.
 
-## Критерии готовности
+**Done criteria**
 
-- **закрыт:** доступ к файлам за пределами repository root отсутствует — покрыто тестами;
-- **закрыт:** контекст можно безопасно генерировать в CI — read-only режим делает невозможной запись из процесса, который только читает;
-- **закрыт:** изменение schema обнаруживается явной ошибкой или миграцией — `migrate --check` плюс явный отказ читать документ неизвестной версии;
-- **закрыт:** security-sensitive scenarios покрыты отдельными тестами — 27 тестов на policy и read-only, включая попытку репозитория отключить read-only и попытку отключить редактирование через policy.
+- **met:** malformed requests do not corrupt the protocol — covered by a garbage
+  input test asserting the stdout channel stays parseable;
+- **met:** the stdout/stdin transport stays clean — covered by a test against a
+  real process;
+- **met:** a compatibility matrix of clients and protocol revisions is published
+  in `packages/mcp/README.md`;
+- **not met:** a verified integration with at least three real MCP clients. The
+  presets encode each client's documented configuration format, but none was
+  launched in this environment. The criterion stays open deliberately: only an
+  installed client can confirm it.
 
----
-
-# v1.0 — Stable repository intelligence
-
-**Цель:** стабильная версия с проверенным API, зрелыми integrations и измеримой ценностью для команд.
-
-## Обязательные компоненты
-
-- Стабильные semver API для `core`, `cli` и `mcp`.
-- Стабильная context schema и migration policy.
-- Task-oriented context и impact analysis поверх корректного графа.
-- Качественный TypeScript/JavaScript structural analysis.
-- Temporal context для Git history.
-- Поддержка npm workspaces и проверенных monorepo-сценариев.
-- Production-ready local CLI и stdio MCP server.
-- Compatibility matrix для Node.js и MCP clients.
-- Benchmark report на публичных репозиториях.
-
-## Критерии выпуска
-
-- zero known critical/high vulnerabilities in supported dependency graph;
-- verify, typecheck и integration tests проходят на поддерживаемых версиях Node.js;
-- нет known data-loss или path traversal defects;
-- API changes проходят deprecation policy;
-- release process воспроизводим (`node tools/set-version.mjs`);
-- минимум три реальных пользователя/команды подтверждают регулярное использование в agent workflow.
-
-## Не гарантируется в 1.0
-
-- полноценный compiler-grade analyzer для всех языков;
-- универсальная замена tree-sitter, Sourcegraph или встроенному repository indexing;
-- автоматическое понимание бизнес-логики без evidence;
-- отправка исходного кода во внешние сервисы.
+The optional remote transport is deferred until demand is confirmed, as planned.
 
 ---
 
-# После 1.0
+## v0.9 — Enterprise controls (completed, shipped as 0.9.0)
 
-Приоритетные направления определяются данными использования:
+**Goal:** prepare the product for organizations that require controls and
+reproducibility.
 
-- semantic search и embeddings как optional backend;
-- дополнительные языки через pluggable adapters;
-- call graph и impact analysis для enterprise use cases;
-- VS Code extension и Git hooks;
-- GitHub Actions и GitLab CI integrations;
-- team/shared context registry;
-- web dashboard для context health и architecture drift;
+**The problem this release solved.** A repository is configured by a file its
+contributors write. Nothing stopped a contributor from setting
+`security.allowSensitiveFiles: true` or dropping a directory from `exclude`, and
+thereby weakening rules the organization treats as mandatory. The set of
+guarantees (secret filtering, symlink policy, path traversal rejection,
+`verify`, deterministic output) existed, but without enforcement: it described
+how the tool behaves, not a rule that could not be worked around.
+
+**Implemented**
+
+- **Organization-owned policy.** `.agent-policy.json` is looked up in the
+  repository root and in any parent directory, so one file at a monorepo or
+  organization checkout applies to everything beneath it;
+  `AGENT_CONTEXT_POLICY` overrides the search. The policy is a **floor**, not a
+  replacement: patterns are unioned with the repository's rather than replacing
+  them.
+- **A policy can only tighten.** `allowSensitiveFiles: false` forces the escape
+  hatch off, `redactSecrets: true` forces redaction on, `readOnly: true` forces
+  read-only on. No repository setting or CLI flag can undo any of them.
+- **Two documents are refused rather than ignored:** an unknown `version`, and
+  `redactSecrets: false`. A policy that silently failed to apply is
+  indistinguishable from no policy at all; and disabling redaction copies secret
+  material into a file people commit and share.
+- **Read-only contract.** `security.readOnly` and the `--read-only` flag refuse
+  every write and leave every query working. The guard lives in the
+  `AgentContext` facade rather than in individual commands, so neither an MCP
+  tool handler nor an embedder calling `scan()` directly can get around it. Only
+  `scan()` and `init()` write.
+- **A policy change invalidates the cache**, so context built under weaker rules
+  is never reused after the rules tighten.
+- **`agent-context migrate`** brings a committed `.agent/` up to the current
+  schema; `--check` writes nothing and exits `1`, which makes it a CI gate.
+  States: `current`, `stale`, `missing`, `invalid`.
+- **A ready CI workflow:** `.github/workflows/reusable-verify-context.yml`,
+  callable from another repository through `uses:`.
+- **The threat model is extended** to cover the repository's own configuration,
+  and `SECURITY.md` gains five audit steps.
+
+**Done criteria**
+
+- **met:** no access to files outside the repository root — covered by tests;
+- **met:** context can be generated safely in CI — read-only mode makes a write
+  impossible from a process that only intends to read;
+- **met:** a schema change is detected by an explicit error or a migration —
+  `migrate --check` plus an explicit refusal to read a document of an unknown
+  version;
+- **met:** security-sensitive scenarios have dedicated tests — 27 tests covering
+  policy and read-only, including a repository attempting to disable read-only
+  and an attempt to disable redaction through a policy.
+
+---
+
+## v0.10 — Trust metrics (completed, shipped as 0.10.0)
+
+**Goal:** measure what the roadmap claimed was measurable and was not.
+
+**The problem this release solved.** The metrics section listed evidence
+coverage and determinism as CI-measurable. Neither was measured: the benchmark
+reported resolution rate, timings and token budget, and the metrics section read
+like a report of work already done.
+
+**Implemented**
+
+- **Evidence coverage.** The benchmark walks the documents the analyzer produced
+  and counts objects carrying a numeric `confidence` — exactly the shape used
+  for a heuristic — then reports how many cite at least one source. Structural
+  facts (module ids, paths, import specifiers) carry no confidence and are
+  deliberately excluded. A repository with no heuristics reports `null` rather
+  than `100%`, because a perfect score would claim something was explained when
+  there was nothing to explain.
+- **Determinism.** Each tree is scanned twice more with the cache bypassed and a
+  hash of the generated documents is compared byte for byte. Because `force:
+  true` re-reads every file, a difference can only come from the analyzer rather
+  than from what it happened to reuse.
+- **CI gates** on both: a judgement without evidence, or a non-deterministic
+  repository, fails the build.
+
+**Measured:** across this repository and the five fixtures, 363 judgements, 363
+with evidence, 0 without; 0 non-deterministic repositories.
+
+The metrics section now marks every entry as measured or not measured, and
+entry-point and dependency precision/recall is labelled as **not measured**: it
+needs a labelled corpus that does not exist yet. Claiming it in a metrics table
+is how a roadmap starts lying to its readers.
+
+---
+
+## v0.10.1 — Timeout correctness and release order (completed, shipped as 0.10.1)
+
+**The problem this release solved.** The request timeout timer was created with
+`unref()`. That timer is the only thing holding the Node event loop while a
+request is outstanding, so unref'ing it let the process exit with the request
+still pending — which means the timeout could never fire in exactly the situation
+it exists for: a handler that never settles. Node 22.18 reports it as `Promise
+resolution is still pending but the event loop has already resolved`; Node 24
+happens to keep the loop alive through the test runner, so the defect was
+invisible there. Only the 22.18 matrix entries caught it, which is the argument
+for running the matrix instead of the newest Node alone.
+
+Two related problems were fixed at the same time:
+
+- `npm run smoke` recorded a failed tarball install and carried on, so one root
+  cause produced eighteen `MODULE_NOT_FOUND` failures that said nothing about the
+  real problem. It now stops at the install and separates "core is not published
+  yet" from a genuine packaging defect.
+- `CONTRIBUTING.md` documented committing before publishing. Because `smoke`
+  installs the packed tarball into a clean project, which resolves the core
+  dependency from the registry, pushing a version bump before that version exists
+  on npm fails the `packaged-smoke` job on every supported Node. The order is now
+  publish, commit, push, with the reason stated.
+
+---
+
+## v1.0 — Stable repository intelligence (in progress)
+
+**Goal:** a stable release with a proven API, mature integrations and
+measurable value for teams.
+
+### Progress so far
+
+| Component | Status |
+| --- | --- |
+| Stable semver API for `core`, `cli` and `mcp` | in progress — no public API has changed incompatibly since 0.4, but no deprecation policy is published yet |
+| Stable context schema and migration policy | in progress — schema v1 unchanged since 0.3; `migrate` exists, the compatibility policy does not |
+| Task-oriented context and impact analysis over a correct graph | done |
+| Quality TypeScript/JavaScript structural analysis | done for the supported subset |
+| Temporal context for git history | done |
+| npm workspaces and verified monorepo scenarios | done |
+| Production-ready local CLI and stdio MCP server | done |
+| Compatibility matrix for Node.js and MCP clients | MCP matrix published in `packages/mcp/README.md`; the Node matrix is asserted by CI but not yet written down in the README |
+| Benchmark report on public repositories | not done — the set is this repository plus five synthetic fixtures |
+
+### Remaining work
+
+1. **Publish a deprecation policy** for the public API: what constitutes a
+   breaking change, how long a deprecation lasts, what is removed in a major.
+2. **Publish a context schema compatibility policy**: which schema changes are
+   additive, which require `agent-context migrate`, and how a consumer detects
+   an incompatible document.
+3. **Write the Node.js compatibility matrix** into the README as a table rather
+   than leaving it implied by CI.
+4. **Close the precision/recall gap** with a labelled corpus, or state it as a
+   permanent limitation.
+5. **Add public repositories to the benchmark**, pinned by commit SHA.
+
+### Release criteria
+
+- zero known critical/high vulnerabilities in the supported dependency graph;
+- verify, typecheck and the integration tests pass on every supported Node.js
+  version;
+- no known data-loss or path traversal defects;
+- API changes follow the published deprecation policy;
+- the release process is reproducible (`node tools/set-version.mjs`);
+- at least three real users or teams confirm regular use in an agent workflow.
+
+### Not promised in 1.0
+
+- a compiler-grade analyzer for every language;
+- a drop-in replacement for tree-sitter, Sourcegraph or built-in repository
+  indexing;
+- automatic understanding of business logic without evidence;
+- sending source code to external services.
+
+---
+
+## After 1.0
+
+Priority directions are decided by usage data:
+
+- semantic search and embeddings as an optional backend;
+- additional languages through pluggable adapters;
+- call graph and impact analysis for enterprise use cases;
+- a VS Code extension and git hooks;
+- GitHub Actions and GitLab CI integrations;
+- a team/shared context registry;
+- a web dashboard for context health and architecture drift;
 - remote MCP deployment;
-- import/export из других code graph formats;
-- платные Pro/Team/Enterprise возможности.
+- import/export from other code graph formats;
+- paid Pro/Team/Enterprise tiers.
 
-## Метрики roadmap
+## Roadmap metrics
 
-Метрики разделены на **измеримые автоматически** и **требующие внешних данных**.
-Агент не отправляет телеметрию, поэтому продуктовые метрики собираются только
-через opt-in опросы и issue activity — это указано явно, чтобы в отчётности не
-появилось цифр, которых никто не измерял.
+Metrics are split into **measurable automatically** and **requiring external
+data**. The agent sends no telemetry, so product metrics are collected only
+through opt-in surveys and issue activity — stated explicitly so that no number
+nobody measured ends up in a report.
 
-Каждая метрика помечена статусом, чтобы список нельзя было прочитать как
-отчёт о выполненной работе: **измеряется** — есть код и CI-ворота; **не
-измеряется** — только заявлено.
+Every metric is marked, so the list cannot be read as a report of finished work:
+**measured** means there is code and a CI gate behind it; **not measured** means
+it is only claimed.
 
-### Измеримо автоматически (CI)
+### Measurable automatically (CI)
 
-| Метрика | Статус | Где |
+| Metric | Status | Where |
 | --- | --- | --- |
-| import resolution rate (resolved / total internal imports) | измеряется | `summary.imports.resolutionRate`, CI-ворота |
-| density графа зависимостей | измеряется | `summary.graph` |
-| token budget по бакетам размера модуля | измеряется | `summary.tokenBudget` |
-| cold/warm scan, parsed/reused | измеряется | `row.scan` |
-| evidence coverage: доля выводов с хотя бы одним evidence | измеряется с 0.10.0 | `summary.trust.coveragePercent`, CI-ворота |
-| determinism: побайтовое совпадение контекста для одного commit | измеряется с 0.10.0 | `summary.trust.nonDeterministic`, CI-ворота |
-| entry-point и dependency precision/recall на размеченном наборе | **не измеряется** | нужен размеченный корпус; нет и набора, и кода под него |
+| import resolution rate (resolved / total internal imports) | measured | `summary.imports.resolutionRate`, CI gate |
+| dependency graph density | measured | `summary.graph` |
+| token budget per module-size bucket | measured | `summary.tokenBudget` |
+| cold/warm scan, parsed/reused | measured | `row.scan` |
+| evidence coverage: share of judgements citing at least one source | measured since 0.10.0 | `summary.trust.coveragePercent`, CI gate |
+| determinism: byte-identical context for one commit | measured since 0.10.0 | `summary.trust.nonDeterministic`, CI gate |
+| entry-point and dependency precision/recall on a labelled set | **not measured** | needs a labelled corpus; neither the corpus nor the code exists |
 
-До 0.10.0 последние две строки были перечислены как измеримые, но в бенчмарке их
-не было. Теперь они либо измерены, либо помечены как невыполненные — именно это
-различие и делает раздел пригодным для чтения.
+Before 0.10.0 the last two rows were listed as measurable while the benchmark
+measured neither. They are now either measured or marked unfinished — that
+difference is what makes the section readable.
 
-**Как считаются новые метрики.** Evidence coverage обходит сгенерированные
-документы и считает объекты, несущие числовой `confidence`: это ровно те
-утверждения, которые анализатор делает как эвристику. Структурные факты
-(идентификаторы модулей, пути, спецификаторы импортов) `confidence` не несут и
-намеренно не учитываются. Репозиторий, в котором нет ни одной эвристики,
-показывает `null`, а не 100%: объяснять было нечего. Детерминизм сравнивает
-побайтовый хэш документов после двух независимых сканов с отключённым кэшем,
-поэтому различие может прийти только от анализатора, а не от того, что он
-случайно переиспользовал.
+**How the newer metrics are computed.** Evidence coverage walks the generated
+documents and counts objects carrying a numeric `confidence`: exactly the
+assertions the analyzer makes as heuristics. Structural facts (module ids, paths,
+import specifiers) carry no confidence and are deliberately not counted. A
+repository with no heuristics shows `null`, not 100%: there was nothing to
+explain. Determinism compares a byte-level hash of the documents after two
+independent scans with the cache bypassed, so a difference can only come from
+the analyzer rather than from what it happened to reuse.
 
-**Текущие значения на этом репозитории и пяти фикстурах:** evidence coverage
-100% (363 вывода, 0 без источника), non-deterministic репозиториев 0.
+**Current values on this repository and the five fixtures:** evidence coverage
+100% (363 judgements, 0 without a source), 0 non-deterministic repositories.
 
-### Требуют внешних данных (opt-in, без телеметрии)
+### Requiring external data (opt-in, no telemetry)
 
-Ни одна из этих метрик не может быть получена кодом: продукт не наблюдает
-себя, а агент не отправляет телеметрию.
+None of these can be obtained from code: the product does not observe itself,
+and the agent sends no telemetry.
 
 - reduction in tokens consumed by coding agents;
 - reduction in time-to-first-correct-change;
@@ -390,22 +522,28 @@ layering diagnostics. Ни один из 103 существовавших тес
 - weekly active users, active MCP installations;
 - support/issue volume per release.
 
-Отдельно: **успешная интеграция минимум с тремя реальными MCP clients** —
-критерий v0.8, который остаётся открытым. Пресеты конфигурации кодируют
-задокументированный формат каждого клиента, но ни один из них не был запущен в
-среде разработки.
+Separately: **a verified integration with at least three real MCP clients** is a
+v0.8 criterion that stays open. The configuration presets encode each client's
+documented format, but none of them was launched in the development
+environment.
 
-## Release checklist для каждой версии
+## Release checklist for every version
 
-- [ ] Обновлены README и migration notes.
-- [ ] Обновлены API/CLI/MCP schemas.
-- [ ] Добавлены unit и integration tests для нового поведения.
-- [ ] Каждый новый анализатор покрыт тестом, падающим до исправления.
-- [ ] Проверены Windows, Linux и macOS (CI matrix).
-- [ ] Выполнены `npm run verify`, `npm audit` и `git diff --check`.
-- [ ] Проверены performance и deterministic output.
-- [ ] Собственный репозиторий пересканирован, а обновлённый `.agent/` закоммичен (`node packages/cli/dist/bin.js scan && git add .agent`). Пункт обязателен: CI job `self-scan` выполняет `init && scan` **перед** `verify`, поэтому проверяет сгенерированный контекст и не замечает протухание закоммиченного.
-- [ ] Версия выставлена через `node tools/set-version.mjs <semver>`.
-- [ ] Проверена публикация всех затронутых npm packages через dry run.
-- [ ] Обновлены known limitations и security notes.
-- [ ] Подготовлены release notes с измеримыми изменениями.
+- [ ] README and migration notes updated.
+- [ ] API/CLI/MCP schemas updated.
+- [ ] Unit and integration tests added for the new behaviour.
+- [ ] Every new analyzer is covered by a test that fails before the fix.
+- [ ] Windows, Linux and macOS verified (CI matrix).
+- [ ] `npm run verify`, `npm audit` and `git diff --check` run.
+- [ ] Performance and deterministic output checked.
+- [ ] This repository is re-scanned and the updated `.agent/` is committed
+      (`node packages/cli/dist/bin.js scan && git add .agent`). Mandatory: the
+      CI job `self-scan` runs `init && scan` **before** `verify`, so it validates
+      freshly generated context and cannot notice a stale committed one.
+- [ ] Version set through `node tools/set-version.mjs <semver>`.
+- [ ] Every affected npm package confirmed packable with a dry run.
+- [ ] Known limitations and security notes updated.
+- [ ] Release notes prepared with the measurable changes.
+- [ ] Published **before** pushing, in the order core → cli → mcp. Pushing a
+      version bump first fails `packaged-smoke` on every supported Node, because
+      the packed CLI resolves its core dependency from the registry.

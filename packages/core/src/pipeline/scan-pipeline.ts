@@ -5,9 +5,9 @@
  * Order matters and is explicit:
  *
  * ```text
- * config в†’ local state в†’ scanner (incremental) в†’ workspace в†’ knowledge graph
- *        в†’ architecture roles / entry points в†’ git signals в†’ conventions
- *        в†’ decisions в†’ canonical documents в†’ diff в†’ persist в†’ local state
+ * config -> local state -> scanner (incremental) -> workspace -> knowledge graph
+ *        -> architecture roles / entry points -> git signals -> conventions
+ *        -> decisions -> canonical documents -> diff -> persist -> local state
  * ```
  *
  * Nothing here writes to `.agent/` when `dryRun` is set, which is how `status`

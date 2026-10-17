@@ -175,6 +175,9 @@ jobs:
       - run: npm run build
       - name: Confirm every package can be packed
         run: |
+          # `npm pack --pack-destination` does not create the directory, and a
+          # fresh runner has no /tmp/pack, so every pack failed with ENOENT.
+          mkdir -p /tmp/pack
           npm pack ./packages/core --pack-destination /tmp/pack
           npm pack ./packages/cli  --pack-destination /tmp/pack
           npm pack ./packages/mcp  --pack-destination /tmp/pack
