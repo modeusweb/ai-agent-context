@@ -214,6 +214,25 @@ describe('mcp tool handlers', () => {
     assert.ok(response.error.message.includes('missing required property: task'));
   });
 
+  test('rejects array arguments whose elements have the wrong shape', () => {
+    const definition = toolByName('search_context');
+    assert.ok(definition);
+
+    const notAnArray = validateToolArguments(definition.inputSchema, { query: 'x', types: 'module' });
+    assert.equal(notAnArray.valid, false);
+    assert.ok(notAnArray.errors.some((error) => error.includes('types must be an array')));
+
+    const wrongElement = validateToolArguments(definition.inputSchema, { query: 'x', types: [1] });
+    assert.equal(wrongElement.valid, false);
+    assert.ok(wrongElement.errors.some((error) => error.includes('types[0] must be a string')));
+
+    const unknownEnum = validateToolArguments(definition.inputSchema, { query: 'x', types: ['nope'] });
+    assert.equal(unknownEnum.valid, false);
+    assert.ok(unknownEnum.errors.some((error) => error.includes('types[0] must be one of')));
+
+    assert.equal(validateToolArguments(definition.inputSchema, { query: 'x', types: ['module'] }).valid, true);
+  });
+
   test('context pool caches AgentContext instances per root', async () => {
     const { root, context, pool } = await setup();
     const first = await pool.get(root);

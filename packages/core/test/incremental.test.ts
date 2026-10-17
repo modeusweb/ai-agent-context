@@ -4,7 +4,9 @@
  */
 import assert from 'node:assert/strict';
 import { after, describe, test } from 'node:test';
-import { AgentContext } from '../dist/index.js';
+import { readFileSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { AgentContext, STATE_FILE, TOOL_VERSION } from '../dist/index.js';
 import { cleanupTemp, createTempRepo, deleteRepoFile, readRepoFile, writeRepoFile } from './helpers.ts';
 
 
@@ -83,6 +85,21 @@ describe('incremental scanning (simple-ts)', () => {
     const status = await staleContext.status();
     assert.equal(status.status, 'stale');
     assert.deepEqual(status.changes.modified, [modifiedPath]);
+  });
+
+  test('a tool version change invalidates the incremental cache', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    await fresh(root);
+
+    const statePath = path.join(root, STATE_FILE);
+    const state = JSON.parse(readFileSync(statePath, 'utf8')) as { toolVersion: string };
+    assert.equal(state.toolVersion, TOOL_VERSION, 'the tool version must be persisted');
+    state.toolVersion = '0.0.0';
+    writeFileSync(statePath, JSON.stringify(state));
+
+    const report = await fresh(root);
+    assert.equal(report.changes.incremental, false, 'an upgrade must force a full rescan');
   });
 });
 

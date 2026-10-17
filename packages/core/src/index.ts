@@ -14,6 +14,7 @@ export type { PipelineOptions, PipelineResult } from './pipeline/scan-pipeline.t
 
 /* Model */
 export * from './model/types.ts';
+export { TOOL_VERSION } from './model/version.ts';
 export {
   SCHEMA_VERSION,
   GENERATOR_NAME,

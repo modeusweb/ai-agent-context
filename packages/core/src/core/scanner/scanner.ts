@@ -16,6 +16,7 @@ import type { ParsedFile } from '../../adapters/language/types.ts';
 import type { AgentContextConfig } from '../../config/types.ts';
 import { PatternSet } from '../../util/glob.ts';
 import { compareStrings, sha256 } from '../../model/canonical.ts';
+import { TOOL_VERSION } from '../../model/version.ts';
 import { basename, extname } from '../../util/paths.ts';
 import { mapWithConcurrency, defaultConcurrency } from '../../util/concurrency.ts';
 import type { DiagnosticsCollector, Logger, ProgressReporter } from '../../logging/diagnostics.ts';
@@ -182,7 +183,12 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
 
   const presentFiles = new Set(walked.map((file) => file.path));
   const previous = options.state?.files ?? {};
-  const incremental = options.state !== null && options.state.configHash === options.configHash;
+  const incremental =
+    options.state !== null &&
+    options.state.configHash === options.configHash &&
+    // Invalidates the cache when the tool itself is upgraded: parser behaviour
+    // and canonical output may change between releases.
+    options.state.toolVersion === TOOL_VERSION;
   const changes = emptyChanges(incremental);
 
   const entries: ScanEntry[] = walked.map((file) => {
@@ -295,12 +301,20 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
   // unchanged file is still reported as "unchanged".
   for (const entry of entries) {
     const path = entry.walked.path;
+    // Sensitive and oversized files are never content-hashed, so they have no
+    // previous hash by construction. Treating them as "added" would make the
+    // context permanently "stale" (`status`, `verify`) even when nothing in the
+    // repository has changed. They are recorded as unchanged instead.
+    if (entry.sensitive || entry.tooLarge) {
+      changes.unchanged.push(path);
+      continue;
+    }
     if (entry.previousHash === null) {
       changes.added.push(path);
       continue;
     }
     const hashMatches = entry.hash.length > 0 && entry.hash === entry.previousHash;
-    if (hashMatches || entry.sensitive || entry.tooLarge || entry.fastUnchanged) changes.unchanged.push(path);
+    if (hashMatches || entry.fastUnchanged) changes.unchanged.push(path);
     else changes.modified.push(path);
   }
   for (const path of Object.keys(previous)) {
@@ -359,6 +373,12 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
     });
   }
   files.sort((a, b) => compareStrings(a.path, b.path));
+
+  if (files.length === 0) {
+    diagnostics.warn('WARN_NO_FILES_MATCHED', 'no files matched the include patterns: nothing was analyzed', {
+      hint: 'Check "include" in .agent/config.json or pass --include. The defaults already cover src/, app/, packages/ and source files at any depth.',
+    });
+  }
 
   options.progress?.({ phase: 'done', message: `Analyzed ${files.length} file(s)` });
   return {

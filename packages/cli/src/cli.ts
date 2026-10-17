@@ -5,7 +5,7 @@
  * prints a projection of the result. It is fully testable without spawning a
  * process because {@link runCli} receives its I/O as parameters.
  */
-import { AgentContext, toDiagnosticPayload, isAgentContextError, type AgentContextOptions } from '@ai-agent-context/core';
+import { AgentContext, TOOL_VERSION, toDiagnosticPayload, isAgentContextError, type AgentContextOptions } from '@ai-agent-context/core';
 import { ConsoleOutput } from './ui/console.ts';
 import { runInitCommand } from './commands/init.ts';
 import { runScanCommand } from './commands/scan.ts';
@@ -22,7 +22,8 @@ import { runRevisionDiffCommand } from './commands/revision-diff.ts';
 import { runVerifyCommand } from './commands/verify.ts';
 
 export const CLI_NAME = 'agent-context';
-export const CLI_VERSION = '0.3.7';
+/** Re-exported from the core package so there is a single version source. */
+export const CLI_VERSION = TOOL_VERSION;
 
 
 export interface CliIo {
@@ -69,6 +70,7 @@ const KNOWN_FLAGS = new Set([
   'help',
   'version',
   'json',
+  'full',
   'quiet',
   'verbose',
   'force',
@@ -124,11 +126,15 @@ export function parseArguments(argv: readonly string[]): ParsedArguments {
       if (body.length === 0) continue;
       const equals = body.indexOf('=');
       if (equals !== -1) {
-        appendFlag(flags, body.slice(0, equals), body.slice(equals + 1));
+        const name = body.slice(0, equals);
+        appendFlag(flags, name, body.slice(equals + 1));
+        if (!KNOWN_FLAGS.has(name)) unknownFlags.push(name);
         continue;
       }
       if (body.startsWith('no-')) {
-        flags.set(body.slice(3), false);
+        const name = body.slice(3);
+        flags.set(name, false);
+        if (!KNOWN_FLAGS.has(name)) unknownFlags.push(name);
         continue;
       }
       const next = argv[index + 1];
@@ -163,11 +169,32 @@ export function flagString(parsed: ParsedArguments, name: string): string | unde
 export function flagList(parsed: ParsedArguments, name: string): string[] | undefined {
   const value = flagString(parsed, name);
   if (value === undefined) return undefined;
-  const items = value
-    .split(',')
+  const items = splitTopLevel(value)
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
   return items.length > 0 ? items : undefined;
+}
+
+/**
+ * Splits a comma separated flag value without breaking glob braces such as
+ * `src/{a,b}.ts` (the braces themselves may contain commas).
+ */
+function splitTopLevel(value: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let current = '';
+  for (const character of value) {
+    if (character === '{') depth += 1;
+    else if (character === '}') depth = Math.max(0, depth - 1);
+    if (character === ',' && depth === 0) {
+      parts.push(current);
+      current = '';
+      continue;
+    }
+    current += character;
+  }
+  parts.push(current);
+  return parts;
 }
 
 export function flagBoolean(parsed: ParsedArguments, name: string): boolean {
@@ -235,6 +262,7 @@ Options:
   --language <name>    Restrict language analysis (repeatable)
   --force              init: overwrite config · scan: ignore the local state
   --json               Machine readable output on stdout
+  --full               status/verify --json: include the complete unchanged file list
   --quiet              Suppress progress output
   --verbose            Verbose diagnostics on stderr
   --no-color           Disable colours

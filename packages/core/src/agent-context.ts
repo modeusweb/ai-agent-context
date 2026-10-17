@@ -16,7 +16,7 @@
  * - `scan()` is the only method that persists the context.
  */
 import path from 'node:path';
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import type { LanguageRegistry } from './adapters/language/registry.ts';
 import type { ConfigOverrides, AgentContextConfig } from './config/types.ts';
@@ -118,6 +118,11 @@ export class AgentContext {
    */
   static async load(options: AgentContextOptions = {}): Promise<AgentContext> {
     const root = path.resolve(options.root ?? process.cwd());
+    if (!existsSync(root) || !statSync(root).isDirectory()) {
+      throw new ContextStateError(`Repository root does not exist or is not a directory: ${root}`, [
+        'Pass an existing directory with --root, or run the command from inside the repository.',
+      ]);
+    }
     const loaded = await loadConfig({
       root,
       ...(options.config === undefined ? {} : { overrides: options.config }),

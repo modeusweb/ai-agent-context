@@ -106,4 +106,42 @@ describe('scanner', () => {
     assert.ok(report.files.total > 0);
     assert.ok(report.warnings.length >= 0);
   });
+
+  test('default include covers non-src layouts and root level source files', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    writeRepoFile(root, 'app/page.tsx', 'export default function Page() { return null; }\n');
+    writeRepoFile(root, 'server.ts', 'export const server = true;\n');
+    const context = await AgentContext.load({ root });
+    await context.scan();
+    const paths = (await context.getFiles()).map((file) => file.path);
+    assert.ok(paths.includes('app/page.tsx'), 'app/ layout must be analyzed by default');
+    assert.ok(paths.includes('server.ts'), 'root level source files must be analyzed by default');
+  });
+
+  test('warns when no file matches the include patterns', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    const context = await AgentContext.load({ root, config: { include: ['does-not-exist/**'] } });
+    const report = await context.scan();
+    assert.equal(report.files.total, 0);
+    assert.ok(report.warnings.some((warning) => warning.code === 'WARN_NO_FILES_MATCHED'));
+  });
+
+  test('sensitive files never mark the context as stale', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    writeRepoFile(root, 'src/credentials.json', '{ "token": "hunter2" }\n');
+
+    const context = await AgentContext.load({ root });
+    const first = await context.scan();
+    assert.equal(first.changes.added.includes('src/credentials.json'), false);
+
+    const second = await context.scan();
+    assert.equal(second.changes.added.length, 0, 'a sensitive file must never be reported as added');
+
+    const status = await (await AgentContext.load({ root })).status();
+    assert.equal(status.status, 'up-to-date');
+    assert.equal(status.changes.added.length + status.changes.modified.length + status.changes.deleted.length, 0);
+  });
 });

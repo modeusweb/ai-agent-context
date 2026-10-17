@@ -148,4 +148,48 @@ describe('cli end-to-end', () => {
     assert.equal(run(root, ['init', '--force']).status, 0);
     assert.equal(readFileSync(path.join(root, '.agent', 'config.json'), 'utf8').includes('"custom"'), false);
   });
+
+  test('--include keeps glob braces intact when splitting on commas', () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    writeRepoFile(root, 'src/only-this.ts', 'export const x = 1;\n');
+
+    const result = run(root, ['scan', '--include', 'src/{only-this,index}.ts', '--json']);
+    assert.equal(result.status, 0, result.stdout);
+    const report = JSON.parse(result.stdout) as { files: { total: number } };
+    assert.equal(report.files.total, 2, 'both brace alternatives must be analyzed');
+  });
+
+  test('an unknown --key=value flag is reported as a usage error', () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    assert.equal(run(root, ['scan', '--bogus=1']).status, 2);
+  });
+
+  test('scan fails loudly when no file matches the include patterns', () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    const result = run(root, ['scan', '--include', 'does-not-exist/**']);
+    assert.equal(result.status, 1, result.stdout);
+    assert.ok(/no files matched/i.test(result.stdout), result.stdout);
+  });
+
+  test('verify --json omits the unchanged list unless --full is passed', () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    assert.equal(run(root, ['scan']).status, 0);
+
+    const compact = run(root, ['verify', '--json']);
+    assert.equal(compact.status, 0, compact.stdout);
+    const compactPayload = JSON.parse(compact.stdout) as {
+      changes: { unchanged?: unknown; unchangedCount?: number };
+    };
+    assert.equal(compactPayload.changes.unchanged, undefined);
+    assert.equal(typeof compactPayload.changes.unchangedCount, 'number');
+
+    const full = run(root, ['verify', '--json', '--full']);
+    assert.equal(full.status, 0, full.stdout);
+    const fullPayload = JSON.parse(full.stdout) as { changes: { unchanged?: unknown[] } };
+    assert.ok(Array.isArray(fullPayload.changes.unchanged));
+  });
 });

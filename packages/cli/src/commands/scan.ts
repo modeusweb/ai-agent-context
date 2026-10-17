@@ -15,22 +15,33 @@ export async function runScanCommand(context: CliCommandContext, dependencies: C
 
   const agentContext = await dependencies.createContext(options);
   const report = await agentContext.scan({ force: flagBoolean(parsed, 'force') });
+  // A repository always has files; zero matched (and zero analyzed) means the
+  // include/exclude configuration excluded everything. Fail loudly so CI and
+  // scripts notice instead of silently committing an empty context.
+  const nothingAnalyzed = report.files.total === 0;
 
   if (context.json) {
     output.print(JSON.stringify(report, null, 2));
-    return report.files.failed > 0 && report.files.total === 0 ? 1 : 0;
+    return nothingAnalyzed ? 1 : 0;
   }
 
   output.success(`Analyzed ${report.files.total} files.`);
   for (const line of renderScanSummary(report)) output.print(line);
   output.blank();
   output.print('Context updated:');
-  output.list(['.agent/index.json', '.agent/architecture.json', '.agent/dependencies.json', '.agent/conventions.md', '.agent/decisions.json']);
+  output.list([
+    '.agent/index.json',
+    '.agent/architecture.json',
+    '.agent/dependencies.json',
+    '.agent/conventions.json',
+    ...(agentContext.config.output.conventionsMarkdown ? ['.agent/conventions.md'] : []),
+    '.agent/decisions.json',
+  ]);
   if (!output.quiet) {
     output.blank();
     output.print('Next:');
     output.print('  agent-context diff      # review the context changes');
     output.print('  agent-context explain <path>');
   }
-  return 0;
+  return nothingAnalyzed ? 1 : 0;
 }

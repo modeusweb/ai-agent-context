@@ -3,9 +3,8 @@
  *
  * Implemented without runtime dependencies (the package keeps a zero-dependency
  * core): newline-delimited JSON-RPC 2.0 on stdin/stdout, covering the subset of
- * MCP that matters for tools — `initialize`, `tools/list`, `tools/call`, `ping`.
- * `resources` and `prompts` are advertised as empty capabilities: the documented
- * extension point for later versions.
+ * MCP that matters here — `initialize`, `tools/list`, `tools/call`, `resources/*`,
+ * `prompts/*` and `ping`.
  *
  * The transport is injectable, so the protocol can be tested without a process.
  */

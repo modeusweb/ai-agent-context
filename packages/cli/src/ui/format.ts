@@ -53,6 +53,16 @@ export function renderScanSummary(report: ScanReport): string[] {
   return lines;
 }
 
+/**
+ * Machine readable status without the (potentially huge) list of unchanged
+ * files. `unchanged` is replaced by `unchangedCount`; pass `--full` to keep the
+ * complete list.
+ */
+export function compactStatusPayload(status: StatusReport): Record<string, unknown> {
+  const { unchanged, ...changes } = status.changes;
+  return { ...status, changes: { ...changes, unchangedCount: unchanged.length } };
+}
+
 export function renderStatus(status: StatusReport): string[] {
   const lines: string[] = [];
   lines.push('Repository context');

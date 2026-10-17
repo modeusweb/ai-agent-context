@@ -264,6 +264,20 @@ export function validateToolArguments(schema: JsonSchema, value: unknown): Valid
         errors.push(`${key} must be a finite number`);
       }
       if (property.type === 'boolean' && typeof entry !== 'boolean') errors.push(`${key} must be a boolean`);
+      if (property.type === 'array') {
+        if (!Array.isArray(entry)) {
+          errors.push(`${key} must be an array`);
+        } else if (property.items !== undefined) {
+          entry.forEach((item, index) => {
+            if (property.items!.type === 'string' && typeof item !== 'string') {
+              errors.push(`${key}[${index}] must be a string`);
+            }
+            if (property.items!.enum !== undefined && !property.items!.enum.includes(String(item))) {
+              errors.push(`${key}[${index}] must be one of: ${property.items!.enum.join(', ')}`);
+            }
+          });
+        }
+      }
       if (property.enum !== undefined && (!property.enum.includes(String(entry)))) {
         errors.push(`${key} must be one of: ${property.enum.join(', ')}`);
       }

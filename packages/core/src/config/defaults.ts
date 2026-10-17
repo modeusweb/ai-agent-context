@@ -19,7 +19,20 @@ export const DEFAULT_EXCLUDE: string[] = [
   '__pycache__/**',
 ];
 
-export const DEFAULT_INCLUDE: string[] = ['src/**', 'packages/**', 'apps/**', 'lib/**', 'test/**', 'tests/**', '**/*.md', '*.json'];
+export const DEFAULT_INCLUDE: string[] = [
+  'src/**',
+  'packages/**',
+  'apps/**',
+  'lib/**',
+  'test/**',
+  'tests/**',
+  '**/*.md',
+  '*.json',
+  // Source files at any depth, so root-level and non-`src` layouts (app/, pages/,
+  // server/, api/, cmd/, internal/, scripts/, ...) are analyzed too. `exclude`
+  // keeps node_modules, dist, build, coverage and friends out of the scan.
+  '*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,vue,svelte}',
+];
 
 /** Files that are never read, even when they match the include patterns. */
 export const DEFAULT_SENSITIVE_PATTERNS: string[] = [

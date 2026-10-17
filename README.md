@@ -240,12 +240,33 @@ agent-context verify --json
 
 `verify` is read-only and never regenerates context.
 
+`--json` output omits the (potentially very large) list of unchanged files and reports `changes.unchangedCount` instead; pass `--full` to include the complete list.
 
+### `clean`
 
 Removes generated context:
 
 ```bash
 agent-context clean
+agent-context clean --yes      # skip the confirmation prompt
+```
+
+### `history <target>`
+
+Bounded local Git history for a module or path: commits, authors, dates and the files each commit touched.
+
+```bash
+agent-context history src/payments
+agent-context history src/payments --limit-history 50 --json
+```
+
+### `revision-diff`
+
+Local diff introduced by a revision relative to a base ref (`HEAD` by default).
+
+```bash
+agent-context revision-diff --revision HEAD~1
+agent-context revision-diff --revision <sha> --base main --json
 ```
 
 ### `search`
@@ -397,6 +418,8 @@ The `.agent/` directory contains structured, versionable context:
   }
 }
 ```
+
+Every key is optional: omitted keys keep their defaults. The defaults already cover `src/`, `packages/`, `apps/`, `lib/` and source files at any depth (`*.{ts,tsx,js,jsx,vue,svelte,...}`), plus `**/*.md` and `*.json`, while `node_modules/`, `dist/`, `build/`, `coverage/`, `.git/` and `.agent/` are always excluded.
 
 ## Monorepo Support
 

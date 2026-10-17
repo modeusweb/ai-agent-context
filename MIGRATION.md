@@ -1,5 +1,44 @@
 # Migration guide
 
+## v0.4.0
+
+Reliability and ergonomics release. The `.agent/` v1 schema is unchanged, so an
+existing context stays readable — but a rescan is recommended, and a few
+behaviors changed intentionally.
+
+### Behavior changes
+
+- **Sensitive / oversized files no longer mark the context as stale.** They are
+  reported as `unchanged` instead of recurring in `changes.added`, so `status`
+  and `verify` no longer stay permanently `stale` when a sensitive path also
+  matches `include` (for example `src/credentials.json`).
+- **Broader default `include`.** The defaults now also match source files at any
+  depth (`*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,vue,svelte}`), so layouts without a
+  `src/` directory (`app/`, `pages/`, `server/`, `api/`, root-level files, ...)
+  are analyzed out of the box. Projects that set `include` explicitly in
+  `.agent/config.json` are unaffected.
+- **`scan` fails loudly on an empty match.** When no file matches the include
+  patterns, `scan` emits a warning and exits with code `1` instead of silently
+  reporting success.
+- **Strict flag parsing.** Unknown `--key=value` and `--no-key` flags are now
+  rejected with a usage error (exit code `2`), consistent with the
+  space-separated form.
+- **`AgentContext.load()` validates the root.** A missing root, or a path that is
+  not a directory, now throws instead of resolving to an empty scan.
+- **Compact JSON for `status` / `verify`.** `--json` omits the full
+  `changes.unchanged` list and reports `changes.unchangedCount`; pass `--full`
+  to restore the complete list.
+- **`index.json` no longer advertises `conventions.md`** when
+  `output.conventionsMarkdown` is disabled; the `context.conventionsMarkdown`
+  key is omitted entirely.
+- **Cache invalidation on upgrade.** The incremental parse cache is invalidated
+  when the tool version changes, so a package upgrade always re-parses.
+- **Single version source.** The CLI and MCP adapter derive their version from
+  `@ai-agent-context/core` (`TOOL_VERSION`); the `ai-agent-context` dependency on
+  core is raised to `^0.4.0`.
+
+No code changes are required from consumers that only read `.agent/` documents.
+
 ## v0.3.7
 
 Packaging hotfix: the published MCP package now depends on the current core release instead of an older minimum, preventing mixed-version runtime behavior during staged npm processing.

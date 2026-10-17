@@ -21,6 +21,7 @@ import type { AgentContextConfig, ConfigOverrides } from '../config/types.ts';
 import { loadConfig } from '../config/load.ts';
 import { DiagnosticsCollector, Logger, type ProgressReporter } from '../logging/diagnostics.ts';
 import { SCHEMA_VERSION } from '../model/schema.ts';
+import { TOOL_VERSION } from '../model/version.ts';
 import { compareStrings } from '../model/canonical.ts';
 import { FileSystemAdapter } from '../adapters/filesystem/fs-adapter.ts';
 import { GitAdapter, type GitAvailability } from '../adapters/git/git-adapter.ts';
@@ -147,7 +148,7 @@ function emptyState(configHash: string, counts: LocalState['counts']): LocalStat
   return {
     schemaVersion: SCHEMA_VERSION,
     generatedBy: 'ai-agent-context',
-    toolVersion: '0.0.0',
+    toolVersion: TOOL_VERSION,
     lastScanAt: null,
     configHash,
     counts,
@@ -274,6 +275,7 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
 
   const state: LocalState = previousState === null ? emptyState(loaded.hash, counts) : { ...previousState };
   state.schemaVersion = SCHEMA_VERSION;
+  state.toolVersion = TOOL_VERSION;
   state.configHash = loaded.hash;
   state.counts = counts;
   state.lastScanAt = new Date(now()).toISOString();

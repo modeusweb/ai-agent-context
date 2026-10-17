@@ -57,7 +57,8 @@ export interface IndexDocument {
     architecture: string;
     dependencies: string;
     conventions: string;
-    conventionsMarkdown: string;
+    /** Present only when `output.conventionsMarkdown` is enabled. */
+    conventionsMarkdown?: string;
     decisions: string;
   };
   git: { enabled: boolean; windowDays: number; commitsAnalyzed: number } | null;

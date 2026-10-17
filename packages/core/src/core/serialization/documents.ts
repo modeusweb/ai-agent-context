@@ -76,7 +76,7 @@ export function buildIndexDocument(
       architecture: 'architecture.json',
       dependencies: 'dependencies.json',
       conventions: 'conventions.json',
-      conventionsMarkdown: 'conventions.md',
+      ...(config.output.conventionsMarkdown ? { conventionsMarkdown: 'conventions.md' } : {}),
       decisions: 'decisions.json',
     },
     git: config.features.git

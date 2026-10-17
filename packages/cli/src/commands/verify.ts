@@ -1,7 +1,7 @@
 /** `agent-context verify` — fail in CI when context is missing, invalid or stale. */
 import type { CliCommandContext, CliDependencies } from '../cli.ts';
-import { contextOptions } from '../cli.ts';
-import { renderStatus } from '../ui/format.ts';
+import { contextOptions, flagBoolean } from '../cli.ts';
+import { compactStatusPayload, renderStatus } from '../ui/format.ts';
 
 export async function runVerifyCommand(context: CliCommandContext, dependencies: CliDependencies): Promise<number> {
   const { output, parsed, io } = context;
@@ -14,7 +14,8 @@ export async function runVerifyCommand(context: CliCommandContext, dependencies:
     status.contextFiles.invalid.length === 0;
 
   if (context.json) {
-    output.print(JSON.stringify({ ...status, valid }, null, 2));
+    const payload = flagBoolean(parsed, 'full') ? status : compactStatusPayload(status);
+    output.print(JSON.stringify({ ...payload, valid }, null, 2));
   } else {
     for (const line of renderStatus(status)) output.print(line);
     output.blank();
