@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T08:11:15.164Z",
+  "generatedAt": "2026-10-17T22:00:26.242Z",
   "node": "v24.21.0",
   "summary": {
     "repositories": 6,
@@ -61,14 +61,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 126,
-        "warmMs": 71,
+        "coldMs": 133,
+        "warmMs": 73,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 63,
+        "ms": 65,
         "bytes": 4832
       },
       "tokenBudget": {
@@ -130,14 +130,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 104,
-        "warmMs": 75,
+        "coldMs": 111,
+        "warmMs": 78,
         "parsed": 16,
         "warmParsed": 0,
         "warmReused": 16
       },
       "compact": {
-        "ms": 65,
+        "ms": 71,
         "bytes": 9473
       },
       "tokenBudget": {
@@ -217,14 +217,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 92,
-        "warmMs": 71,
+        "coldMs": 95,
+        "warmMs": 75,
         "parsed": 14,
         "warmParsed": 0,
         "warmReused": 14
       },
       "compact": {
-        "ms": 63,
+        "ms": 67,
         "bytes": 8227
       },
       "tokenBudget": {
@@ -292,14 +292,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 78,
-        "warmMs": 67,
+        "coldMs": 82,
+        "warmMs": 70,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 58,
+        "ms": 63,
         "bytes": 5060
       },
       "tokenBudget": {
@@ -355,8 +355,8 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 90,
-        "warmMs": 75,
+        "coldMs": 89,
+        "warmMs": 71,
         "parsed": 10,
         "warmParsed": 0,
         "warmReused": 10
@@ -424,14 +424,14 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 550,
-        "warmMs": 148,
+        "coldMs": 454,
+        "warmMs": 153,
         "parsed": 130,
         "warmParsed": 0,
         "warmReused": 130
       },
       "compact": {
-        "ms": 139,
+        "ms": 143,
         "bytes": 19219
       },
       "tokenBudget": {

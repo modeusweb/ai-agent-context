@@ -493,6 +493,18 @@
       "moduleId": "tools",
       "path": "tools/set-version.mjs",
       "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "tools/smoke.mjs"
+        }
+      ],
+      "moduleId": "tools",
+      "path": "tools/smoke.mjs",
+      "type": "test"
     }
   ],
   "generatedBy": "ai-agent-context",
@@ -530,7 +542,7 @@
       "files": 1,
       "git": {
         "architectureChangeSignals": [],
-        "changeFrequency": "high",
+        "changeFrequency": "medium",
         "contributorCount": 1,
         "historicalChanges": 9,
         "lastChanged": "2026-10-17",
@@ -596,7 +608,7 @@
       "files": 1,
       "git": {
         "architectureChangeSignals": [],
-        "changeFrequency": "medium",
+        "changeFrequency": "low",
         "contributorCount": 1,
         "historicalChanges": 5,
         "lastChanged": "2026-10-17",
@@ -1727,12 +1739,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 9,
+        "historicalChanges": 10,
         "lastChanged": "2026-10-17",
-        "recentChanges": 9,
+        "recentChanges": 10,
         "topContributors": [
           {
-            "commits": 13,
+            "commits": 14,
             "name": "modeusweb"
           }
         ]
@@ -2656,7 +2668,7 @@
       "files": 2,
       "git": {
         "architectureChangeSignals": [],
-        "changeFrequency": "high",
+        "changeFrequency": "medium",
         "contributorCount": 1,
         "historicalChanges": 9,
         "lastChanged": "2026-10-17",
@@ -2759,25 +2771,27 @@
       "boundaries": [],
       "dependsOn": [],
       "entryPoints": [
-        "tools/set-version.mjs"
+        "tools/set-version.mjs",
+        "tools/smoke.mjs"
       ],
       "fileList": [
         "tools/benchmark.mjs",
         "tools/clean.mjs",
         "tools/generate-fixtures.mjs",
-        "tools/set-version.mjs"
+        "tools/set-version.mjs",
+        "tools/smoke.mjs"
       ],
-      "files": 4,
+      "files": 5,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 5,
+        "historicalChanges": 6,
         "lastChanged": "2026-10-17",
-        "recentChanges": 5,
+        "recentChanges": 6,
         "topContributors": [
           {
-            "commits": 6,
+            "commits": 7,
             "name": "modeusweb"
           }
         ]
@@ -2796,6 +2810,16 @@
       ],
       "responsibilities": [
         {
+          "confidence": 0.45,
+          "evidence": [
+            {
+              "detail": "schedules recurring work (signal: schedule:usage)",
+              "source": "tools/smoke.mjs"
+            }
+          ],
+          "value": "role: worker (heuristic)"
+        },
+        {
           "confidence": 0.9,
           "evidence": [
             {
@@ -2806,14 +2830,27 @@
           "value": "public API: writeAllFixtures"
         }
       ],
-      "roles": [],
+      "roles": [
+        {
+          "confidence": 0.45,
+          "evidence": [
+            {
+              "detail": "schedules recurring work (signal: schedule:usage)",
+              "source": "tools/smoke.mjs"
+            }
+          ],
+          "value": "worker"
+        }
+      ],
       "signals": [
         "console:usage",
         "module:esm",
+        "schedule:usage",
         "test:suite"
       ],
       "testFiles": [
-        "tools/set-version.mjs"
+        "tools/set-version.mjs",
+        "tools/smoke.mjs"
       ],
       "usedBy": []
     }
@@ -2821,10 +2858,10 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 40,
+    "entryPoints": 41,
     "layeringViolations": 1,
     "modules": 13,
-    "rolesDetected": 16,
+    "rolesDetected": 17,
     "workspacePackages": 3
   },
   "workspace": {

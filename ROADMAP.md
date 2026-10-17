@@ -31,8 +31,8 @@
 Уже реализованы:
 
 - ядро анализатора без runtime-зависимостей;
-- CLI: `init`, `scan`, `status`, `explain`, `context`, `task`, `impact`, `search`, `diff`, `history`, `revision-diff`, `verify`, `clean`;
-- MCP stdio-сервер: 13 tools, Resources, Prompts, строгая валидация аргументов;
+- CLI: `init`, `scan`, `status`, `explain`, `context`, `task`, `impact`, `search`, `diff`, `detect`, `history`, `revision-diff`, `verify`, `clean`;
+- MCP stdio-сервер: 14 tools, Resources, Prompts, строгая валидация аргументов;
 - incremental scanning и content-addressed parse cache;
 - knowledge graph, определение модулей, entry points, cycles, layering diagnostics;
 - определение dependencies, conventions и decisions с confidence и evidence;
@@ -336,6 +336,7 @@ path traversal rejection, `verify` command, SECURITY.md, deterministic output.
 - [ ] Проверены Windows, Linux и macOS (CI matrix).
 - [ ] Выполнены `npm run verify`, `npm audit` и `git diff --check`.
 - [ ] Проверены performance и deterministic output.
+- [ ] Собственный репозиторий пересканирован, а обновлённый `.agent/` закоммичен (`node packages/cli/dist/bin.js scan && git add .agent`). Пункт обязателен: CI job `self-scan` выполняет `init && scan` **перед** `verify`, поэтому проверяет сгенерированный контекст и не замечает протухание закоммиченного.
 - [ ] Версия выставлена через `node tools/set-version.mjs <semver>`.
 - [ ] Проверена публикация всех затронутых npm packages через dry run.
 - [ ] Обновлены known limitations и security notes.

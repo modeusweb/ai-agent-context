@@ -33,7 +33,13 @@ below because they were measured together.
   it now sees them; if you asserted the `unresolved` list was empty in a
   repository with `../..` imports, that assertion now fails correctly.
 
-### Behavior changes carried over from 0.6.0
+## v0.6.0
+
+Measurable value: the "compact context" claim replaced by reproducible numbers.
+The `.agent/` v1 schema is unchanged, but this release **changes what
+`explain` returns** — read the behavior changes below before relying on it.
+
+### Behavior changes
 
 - **`explain` picks a projection based on module size.** The payload now carries
   a `detail` field (`compact` or `full`). By default, modules whose own source
@@ -58,16 +64,6 @@ below because they were measured together.
   `responsibilities` now contains only entries that add something.
 - **Entry points lose their evidence in the compact projection.** They keep
   `path`, `type` and `confidence`.
-
-### Security fix
-
-- **A rejected path traversal is now always reported.** Unresolved imports were
-  filtered by taking `lastIndexOf('.')` of the whole specifier, which points at
-  the leading `..` of a relative specifier. A traversal into an extensionless
-  path (`../../../etc/passwd`) was therefore classified as a non-code asset and
-  dropped from `dependencies.json` entirely — the rejection was still enforced,
-  but it was invisible to anyone auditing the context. The extension is now read
-  from the last path segment, and escapes bypass the asset filter.
 
 ### New API
 

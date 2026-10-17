@@ -38,7 +38,7 @@
         ],
         "value": "infrastructure"
       },
-      "importedByModules": 3,
+      "importedByModules": 4,
       "name": "node:child_process",
       "scope": "runtime"
     },
@@ -1038,6 +1038,18 @@
         "node:url"
       ],
       "file": "tools/set-version.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:child_process",
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/smoke.mjs",
       "internalModules": [],
       "module": "tools"
     }

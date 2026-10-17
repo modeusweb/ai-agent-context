@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:fb462177",
+      "id": "imports:d8650e8f",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (57/99 files)."
+      "statement": "Type-only dependencies use `import type` (57/100 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:2b08c4dc",
+      "id": "languages:eab5d7db",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (103 files) and JavaScript (4 files)."
+      "statement": "Implementation mixes TypeScript (103 files) and JavaScript (5 files)."
     },
     {
       "category": "Naming",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:0a1efe75",
+      "id": "naming:81be3e00",
       "origin": "observed",
-      "statement": "Functions use camelCase (275/278 declarations)."
+      "statement": "Functions use camelCase (279/282 declarations)."
     },
     {
       "category": "Naming",
@@ -145,9 +145,9 @@
           "source": "packages/cli/src/commands/clean.ts"
         }
       ],
-      "id": "naming:1c94aed0",
+      "id": "naming:b9c70254",
       "origin": "observed",
-      "statement": "Source files use camelCase (74/87 files)."
+      "statement": "Source files use camelCase (75/88 files)."
     },
     {
       "category": "Naming",
@@ -204,9 +204,9 @@
           "source": "packages/core/test/architecture.test.ts"
         }
       ],
-      "id": "tests:9fe98e71",
+      "id": "tests:80ebc61f",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (18/19 test files)."
+      "statement": "Tests live in a dedicated test directory (18/20 test files)."
     },
     {
       "category": "Toolchain",

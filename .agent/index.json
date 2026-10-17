@@ -10,14 +10,14 @@
   "files": {
     "entries": [
       {
-        "hash": "f7917590b1e34375982bfe60b2168fbd0667e944eee7a9c2b19a070fde54176d",
+        "hash": "05f398e64f14ae55757a7230f53217360141873bd53fa12a7e9823c23c70a8ab",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "CONTRIBUTING.md"
       },
       {
-        "hash": "0b2bdb08b08c1f357772442167e2d28e26808f4b324ab85a82b30929da14c6e7",
+        "hash": "c0fe450c311f38cc1750bf93a65a17f0b914f12088b9ba22ca28c93492e2a2a2",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -31,7 +31,7 @@
         "path": "README.md"
       },
       {
-        "hash": "ff5266b70c97448c628c8af3c6eb9237eab813ed82883141c9fa16333f5d29fe",
+        "hash": "8450536acccc34465a7347448ee162adb551871f83027e8dc0de1eb474c92f48",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -45,7 +45,7 @@
         "path": "SECURITY.md"
       },
       {
-        "hash": "e22a139dac7a317be241a89524b41d8252b91f0f50cef7111d930f6507ba07f9",
+        "hash": "6d81430b9ecd4ae003284b1769838e1891e0dc07e1c3695d808a6507c12a7c30",
         "kind": "config",
         "language": "json",
         "module": null,
@@ -59,7 +59,7 @@
         "path": "package-lock.json"
       },
       {
-        "hash": "01755183d6d4853ef63a9090b09dc9f735365468344730e47ec38664b1a7316d",
+        "hash": "21347ca4e6cf97a60cd6e700d6fdd7140e0da1011ce6c4917a0492c97fb35a8a",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -899,6 +899,13 @@
         "path": "tools/set-version.mjs"
       },
       {
+        "hash": "ce0edd91593aaf80a6eb32ad8cce5094def13a2148805b42fa11986923ddb803",
+        "kind": "test",
+        "language": "javascript",
+        "module": "tools",
+        "path": "tools/smoke.mjs"
+      },
+      {
         "hash": "e40aaa38bb6430c4de6980cdbd5ab1a504cf1035f59cf94b935aefc93632d1e2",
         "kind": "config",
         "language": "tsconfig",
@@ -917,7 +924,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 24,
+    "commitsAnalyzed": 26,
     "enabled": true,
     "windowDays": 180
   },
@@ -929,13 +936,13 @@
       "decisions": 11,
       "dependencies": 18,
       "docs": 8,
-      "entryPoints": 40,
+      "entryPoints": 41,
       "externalDependencies": 11,
-      "files": 129,
+      "files": 130,
       "modules": 13,
       "source": 88,
-      "symbols": 655,
-      "tests": 19
+      "symbols": 667,
+      "tests": 20
     },
     "isMonorepo": true,
     "languages": [
