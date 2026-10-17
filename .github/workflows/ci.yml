@@ -76,6 +76,44 @@ jobs:
         run: node packages/cli/dist/bin.js init && node packages/cli/dist/bin.js scan
       - name: Verify the generated context
         run: node packages/cli/dist/bin.js verify --json
+      # `detect` exits 2 on a path traversal and 1 on a warning. A warning is
+      # expected on a repository with import cycles, so only errors gate the build.
+      - name: Report analysis coverage gaps
+        run: node packages/cli/dist/bin.js detect --json
+
+  benchmark:
+    name: benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Measure resolution rate and token budget
+        run: node tools/benchmark.mjs > /tmp/benchmark.json
+      - name: Fail if a path traversal was not rejected
+        run: |
+          node -e "
+            const r = require('/tmp/benchmark.json');
+            const s = r.summary;
+            console.log('import resolution rate:', s.imports.resolutionRate);
+            console.log('actionable unresolved:', s.imports.actionableUnresolved);
+            console.log('path escapes:', s.imports.pathEscapes);
+            for (const k of ['under8Kb','from8To64Kb','over64Kb']) {
+              const b = s.tokenBudget[k];
+              if (b.modules > 0) console.log(k, b.modules, 'modules:', b.savedPercent + '%');
+            }
+            if (s.imports.pathEscapes > 0) { console.error('path traversal was not rejected'); process.exit(1); }
+          "
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-report
+          path: /tmp/benchmark.json
 
   publish-check:
     name: publish dry run

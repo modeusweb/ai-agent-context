@@ -128,6 +128,8 @@ export {
 export type { ExplainInput, ExplainDetail, ResolvedTarget } from './core/context/explain.ts';
 export { buildRepositoryContext, collectCommands } from './core/context/repository-context.ts';
 export type { RepositoryContext, RepositoryContextOptions, RepositoryContextPayload, ContextCommand } from './core/context/types.ts';
+export { detectIssues } from './core/context/diagnostics.ts';
+export type { DetectionReport, DetectedIssue, IssueKind, IssueSeverity } from './core/context/diagnostics.ts';
 export { SearchService, toSearchResult } from './core/search/service.ts';
 export type { SearchOptions } from './core/search/service.ts';
 export { Bm25Index } from './core/search/bm25.ts';

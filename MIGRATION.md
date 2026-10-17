@@ -1,10 +1,20 @@
-# Migration guide
+﻿# Migration guide
 
 ## v0.6.0
 
-Payload size and measurable metrics. The `.agent/` v1 schema is unchanged and no
-rescan is required — this release changes what `explain` returns, not what is
-persisted.
+Payload size, measurable metrics, and honest coverage reporting. The `.agent/`
+v1 schema is unchanged and no rescan is required — this release changes what
+`explain` returns and adds a diagnostic command, not what is persisted.
+
+### New commands and tools
+
+- **`agent-context detect`** — reports what the analysis could not determine:
+  unresolved imports classified by cause (real gap / excluded build output /
+  rejected path traversal), failed and partial parses, sensitive files skipped,
+  import cycles, layering violations and modules with no resolved dependency.
+  Exit `0` when nothing exceeds `info`, `1` on warnings, `2` on errors.
+- **MCP tool `detect_coverage_gaps`** — the same report for agents. There are now
+  fourteen tools.
 
 ### Behavior changes
 
@@ -32,6 +42,16 @@ persisted.
 - **Entry points lose their evidence in the compact projection.** They keep
   `path`, `type` and `confidence`.
 
+### Security fix
+
+- **A rejected path traversal is now always reported.** Unresolved imports were
+  filtered by taking `lastIndexOf('.')` of the whole specifier, which points at
+  the leading `..` of a relative specifier. A traversal into an extensionless
+  path (`../../../etc/passwd`) was therefore classified as a non-code asset and
+  dropped from `dependencies.json` entirely — the rejection was still enforced,
+  but it was invisible to anyone auditing the context. The extension is now read
+  from the last path segment, and escapes bypass the asset filter.
+
 ### New API
 
 ```ts
@@ -39,9 +59,12 @@ await context.explain('src/payments');                            // auto
 await context.explain('src/payments', { detail: 'full' });       // force full
 await context.explain('src/payments', { detail: 'compact' });    // force compact
 await context.explain('src/payments', { compactSourceThresholdBytes: 32_768 });
+
+const report = await context.detect();
 ```
 
-New exports: `ExplainDetail`, `COMPACT_SOURCE_THRESHOLD_BYTES`.
+New exports: `ExplainDetail`, `COMPACT_SOURCE_THRESHOLD_BYTES`, `detectIssues`,
+`DetectionReport`, `DetectedIssue`, `IssueKind`, `IssueSeverity`.
 The `explain_module` MCP tool accepts a `detail` argument; the CLI accepts
 `--detail auto|full|compact` and exits `2` on an unknown value.
 
@@ -64,7 +87,10 @@ The `explain_module` MCP tool accepts a `detail` argument; the CLI accepts
 
 The default source list now includes this repository alongside the fixtures. The
 fixtures are all under 4 KB and cannot demonstrate the product claim; they remain
-because they are useful as regression inputs.
+because they are useful as regression inputs. The script also prunes
+`node_modules` and `.git` from its working copy, so it neither copies hundreds of
+megabytes nor depends on symlink privileges.
+
 
 ## v0.5.0
 

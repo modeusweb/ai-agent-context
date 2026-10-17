@@ -14,7 +14,7 @@ import {
   escapesRoot,
   normalizeRelative,
 } from '../dist/index.js';
-import { cleanupTemp, createTempRepo } from './helpers.ts';
+import { cleanupTemp, createTempRepo, writeRepoFile } from './helpers.ts';
 
 const tempRoots: string[] = [];
 after(() => {
@@ -130,6 +130,37 @@ describe('import resolution', () => {
     const result = resolve('/etc/passwd', 'packages/core/src/core/graph/modules.ts');
     assert.equal(result.kind, 'unresolved');
     assert.match(result.attempts[0] ?? '', /outside the repository root/);
+  });
+
+  test('an extensionless traversal is still recognised as an escape', () => {
+    // The graph used to classify unresolved imports by taking lastIndexOf('.')
+    // of the whole specifier, which points at the leading ".." — so a
+    // traversal into an extensionless path was filtered out as a non-code
+    // asset and vanished from the report entirely.
+    const shallow = resolve('../../../etc/passwd', 'src/index.ts');
+    assert.equal(shallow.kind, 'unresolved');
+    assert.match(shallow.attempts[0] ?? '', /outside the repository root/);
+
+    const withExtension = resolve('../../../etc/shadow.ts', 'src/index.ts');
+    assert.equal(withExtension.kind, 'unresolved');
+    assert.match(withExtension.attempts[0] ?? '', /outside the repository root/);
+  });
+
+  test('a rejected traversal reaches the persisted dependency document', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    writeRepoFile(root, 'src/index.ts', "import { x } from '../../../etc/passwd';\nexport const used = x;\n");
+
+    const context = await AgentContext.load({ root });
+    await context.scan();
+    const dependencies = await context.getDependencies();
+    const escape = dependencies.unresolved.find((entry) =>
+      (entry.attempts[0] ?? '').includes('outside the repository root'),
+    );
+    assert.ok(
+      escape,
+      `a rejected traversal must be reported, got ${JSON.stringify(dependencies.unresolved)}`,
+    );
   });
 
   test('reports genuinely missing targets as unresolved, not as escapes', () => {

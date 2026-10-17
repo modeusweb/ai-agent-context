@@ -38,6 +38,19 @@ const MODULE_PROPERTY: JsonSchema = {
 
 export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
+    name: 'detect_coverage_gaps',
+    title: 'Detect coverage gaps',
+    description:
+      'Reports what the analysis could NOT determine: unresolved imports (separated into real gaps, excluded build output and rejected path traversals), failed and partial parses, sensitive files skipped, import cycles, layering violations and modules with no resolved dependency. Call this before relying on the dependency graph, so you know which parts of it are missing.',
+    inputSchema: {
+      type: 'object',
+      properties: { root: ROOT_PROPERTY },
+      additionalProperties: false,
+    },
+    outputDescription:
+      'Coverage gaps ranked by severity (error/warning/info), plus analyzed-file and import-resolution ratios.',
+  },
+  {
     name: 'get_context_for_task',
     title: 'Get context for task',
     description:

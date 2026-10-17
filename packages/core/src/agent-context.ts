@@ -49,6 +49,8 @@ import { LocalStateStore, type LocalState } from './core/scanner/cache.ts';
 import type { ArchitectureDocument, DependenciesDocument, IndexDocument } from './core/serialization/types.ts';
 import { explainModule } from './core/context/explain.ts';
 import type { ExplainDetail } from './core/context/explain.ts';
+import { detectIssues } from './core/context/diagnostics.ts';
+import type { DetectionReport } from './core/context/diagnostics.ts';
 import { buildRepositoryContext } from './core/context/repository-context.ts';
 import type { RepositoryContext, RepositoryContextOptions } from './core/context/types.ts';
 import { SearchService, type SearchOptions } from './core/search/service.ts';
@@ -234,6 +236,18 @@ export class AgentContext {
   async getDependenciesOf(moduleId: string): Promise<string[]> {
     const repository = await this.getRepository();
     return (repository.modules.find((module) => module.id === moduleId)?.dependsOn ?? []).sort(compareStrings);
+  }
+
+  /**
+   * What the analysis could not determine.
+   *
+   * An agent about to act on a dependency graph needs to know which parts of it
+   * are missing; this turns every "could not resolve / could not parse" signal
+   * into one ranked list.
+   */
+  async detect(): Promise<DetectionReport> {
+    const result = await this.ensurePipeline({ dryRun: true });
+    return detectIssues(result.graph, result.parsed, SCHEMA_VERSION);
   }
 
   /** Compact, agent oriented repository context. */

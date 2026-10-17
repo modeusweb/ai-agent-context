@@ -282,6 +282,50 @@ agent-context verify --json
 
 `--json` output omits the (potentially very large) list of unchanged files and reports `changes.unchangedCount` instead; pass `--full` to include the complete list.
 
+### `detect`
+
+Reports what the analysis could **not** determine. An agent about to act on a
+dependency graph needs to know which parts of that graph are missing.
+
+```bash
+agent-context detect
+agent-context detect --json
+```
+
+Output:
+```
+Coverage gaps
+
+[!] import-cycle — 2 item(s)
+      modules form a dependency cycle
+      - packages/cli/src -> packages/cli/src/commands
+      - packages/core/src -> packages/core/src/config
+
+[-] unresolved-import — 17 item(s)
+      imports of excluded build output; expected, and absent from the graph by design
+      - packages/core/test/architecture.test.ts -> ../dist/index.js
+      ...
+
+Analyzed 128/128 file(s); 100.0% of resolvable imports resolved (18 resolved, 0 unresolved, 17 excluded build-output import(s)).
+These are gaps in the analysis, not defects in the repository.
+```
+
+Issues are ranked by severity and classified by cause, because "there is no
+dependency here" and "the analyzer failed to resolve it" are different facts:
+
+| Severity | Kinds |
+| --- | --- |
+| `error` | `path-escape` — an import tried to climb above the repository root and was rejected; `unresolved-alias` |
+| `warning` | `unresolved-import` — an import that should have resolved; `failed-parse`; `import-cycle`; `layering-violation` |
+| `info` | imports of excluded build output; `partial-parse`; `sensitive-skipped`; `module-without-dependencies` |
+
+The import resolution rate deliberately excludes imports of excluded build
+output and rejected traversals: neither is a resolution failure, and counting
+them would report a healthy repository as broken.
+
+Exit codes: `0` nothing above `info`, `1` at least one warning, `2` at least one
+error (the context should not be trusted without reading the affected files).
+
 ### `clean`
 
 Removes generated context:
@@ -508,6 +552,11 @@ are worth knowing before you rely on it:
 Platform built-ins (`node:fs`, `node:path`, …) rank below declared packages in
 bounded projections: they are capabilities of the runtime, not facts about the
 project.
+
+**`agent-context detect` tells you where the analysis was incomplete.** Before
+relying on the dependency graph, run it: it reports unresolved imports separated
+into real gaps, excluded build output and rejected path traversals, plus failed
+parses, cycles and layering violations.
 
 ## Architecture
 

@@ -24,9 +24,10 @@ async function setup() {
 }
 
 describe('mcp tool definitions', () => {
-  test('exposes the thirteen documented tools', () => {
+  test('exposes the fourteen documented tools', () => {
     const names = TOOL_DEFINITIONS.map((tool) => tool.name).sort();
     assert.deepEqual(names, [
+      'detect_coverage_gaps',
       'explain_module',
       'get_architecture',
       'get_change_impact',

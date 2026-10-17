@@ -75,6 +75,11 @@ export async function callTool(
   const root = asString(args['root']) ?? defaultRoot;
 
   switch (name) {
+    case 'detect_coverage_gaps': {
+      const context = await pool.get(root);
+      return { isError: false, payload: await context.detect() };
+    }
+
     case 'get_context_for_task': {
       const task = asString(args['task']);
       if (task === undefined) return errorPayload('get_context_for_task requires the "task" argument');

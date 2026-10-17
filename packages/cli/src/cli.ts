@@ -12,6 +12,7 @@ import { runScanCommand } from './commands/scan.ts';
 import { runDiffCommand } from './commands/diff.ts';
 import { runStatusCommand } from './commands/status.ts';
 import { runExplainCommand } from './commands/explain.ts';
+import { runDetectCommand } from './commands/detect.ts';
 import { runCleanCommand } from './commands/clean.ts';
 import { runSearchCommand } from './commands/search.ts';
 import { runContextCommand } from './commands/context.ts';
@@ -246,7 +247,8 @@ Commands:
   diff                 Show repository context changes since the last scan
   status               Show whether the context is up to date
   verify               CI check: fail when context is missing, invalid, or stale
-  explain <path>       Explain a module (or the module owning a file)
+  explain <path>       Explain a module, directory or file (--detail auto|full|compact)
+  detect               Report what the analysis could NOT determine
   search <query>       Deterministic lexical search over the context
   context              Compact repository context summary
   task <description>   Bounded task-oriented context for an agent
@@ -262,6 +264,7 @@ Options:
   --exclude <glob>     Override exclude patterns
   --ignore <glob>      Additional ignore patterns
   --language <name>    Restrict language analysis (repeatable)
+  --detail <level>     explain: auto (default), full or compact
   --force              init: overwrite config · scan: ignore the local state
   --json               Machine readable output on stdout
   --full               status/verify --json: include the complete unchanged file list
@@ -273,6 +276,7 @@ Options:
 
 Exit codes:
   0 success · 1 analysis error · 2 usage error
+  detect: 0 nothing above info · 1 warnings · 2 errors
 `;
 
 /** Runs the CLI and returns the process exit code. */
@@ -332,6 +336,8 @@ export async function runCli(argv: readonly string[], ioOverrides: Partial<CliIo
         return await runVerifyCommand(commandContext, dependencies);
       case 'explain':
         return await runExplainCommand(commandContext, dependencies);
+      case 'detect':
+        return await runDetectCommand(commandContext, dependencies);
       case 'search':
         return await runSearchCommand(commandContext, dependencies);
       case 'context':

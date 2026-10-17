@@ -230,6 +230,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/detect.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/detect.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/test/determinism.test.ts"
         }
       ],
@@ -518,7 +530,7 @@
       "files": 1,
       "git": {
         "architectureChangeSignals": [],
-        "changeFrequency": "high",
+        "changeFrequency": "medium",
         "contributorCount": 1,
         "historicalChanges": 8,
         "lastChanged": "2026-10-17",
@@ -586,12 +598,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 4,
+        "historicalChanges": 5,
         "lastChanged": "2026-10-17",
-        "recentChanges": 4,
+        "recentChanges": 5,
         "topContributors": [
           {
-            "commits": 4,
+            "commits": 5,
             "name": "modeusweb"
           }
         ]
@@ -680,12 +692,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 13,
+        "historicalChanges": 14,
         "lastChanged": "2026-10-17",
-        "recentChanges": 13,
+        "recentChanges": 14,
         "topContributors": [
           {
-            "commits": 16,
+            "commits": 17,
             "name": "modeusweb"
           }
         ]
@@ -847,6 +859,7 @@
       "fileList": [
         "packages/cli/src/commands/clean.ts",
         "packages/cli/src/commands/context.ts",
+        "packages/cli/src/commands/detect.ts",
         "packages/cli/src/commands/diff.ts",
         "packages/cli/src/commands/explain.ts",
         "packages/cli/src/commands/history.ts",
@@ -859,17 +872,17 @@
         "packages/cli/src/commands/task.ts",
         "packages/cli/src/commands/verify.ts"
       ],
-      "files": 13,
+      "files": 14,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 6,
+        "historicalChanges": 7,
         "lastChanged": "2026-10-17",
-        "recentChanges": 6,
+        "recentChanges": 7,
         "topContributors": [
           {
-            "commits": 18,
+            "commits": 19,
             "name": "modeusweb"
           }
         ]
@@ -889,6 +902,11 @@
           "file": "packages/cli/src/commands/context.ts",
           "kind": "function",
           "name": "runContextCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/detect.ts",
+          "kind": "function",
+          "name": "runDetectCommand"
         },
         {
           "file": "packages/cli/src/commands/diff.ts",
@@ -969,11 +987,11 @@
               "source": "packages/cli/src/commands/context.ts"
             },
             {
-              "detail": "exports runDiffCommand (function)",
-              "source": "packages/cli/src/commands/diff.ts"
+              "detail": "exports runDetectCommand (function)",
+              "source": "packages/cli/src/commands/detect.ts"
             }
           ],
-          "value": "public API: runCleanCommand, runContextCommand, runDiffCommand, runExplainCommand, runHistoryCommand, runImpactCommand, runInitCommand, runRevisionDiffCommand"
+          "value": "public API: runCleanCommand, runContextCommand, runDetectCommand, runDiffCommand, runExplainCommand, runHistoryCommand, runImpactCommand, runInitCommand"
         }
       ],
       "roles": [
@@ -1187,6 +1205,7 @@
         "packages/core/src/core/architecture/detector.ts",
         "packages/core/src/core/architecture/entry-points.ts",
         "packages/core/src/core/architecture/role-detector.ts",
+        "packages/core/src/core/context/diagnostics.ts",
         "packages/core/src/core/context/explain.ts",
         "packages/core/src/core/context/repository-context.ts",
         "packages/core/src/core/context/types.ts",
@@ -1218,17 +1237,17 @@
         "packages/core/src/logging/diagnostics.ts",
         "packages/core/src/pipeline/scan-pipeline.ts"
       ],
-      "files": 47,
+      "files": 48,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 11,
+        "historicalChanges": 12,
         "lastChanged": "2026-10-17",
-        "recentChanges": 11,
+        "recentChanges": 12,
         "topContributors": [
           {
-            "commits": 76,
+            "commits": 79,
             "name": "modeusweb"
           }
         ]
@@ -1708,12 +1727,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 8,
+        "historicalChanges": 9,
         "lastChanged": "2026-10-17",
-        "recentChanges": 8,
+        "recentChanges": 9,
         "topContributors": [
           {
-            "commits": 11,
+            "commits": 13,
             "name": "modeusweb"
           }
         ]
@@ -2286,6 +2305,7 @@
         "packages/core/test/canonical.test.ts",
         "packages/core/test/config.test.ts",
         "packages/core/test/conventions.test.ts",
+        "packages/core/test/detect.test.ts",
         "packages/core/test/determinism.test.ts",
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
@@ -2303,6 +2323,7 @@
         "packages/core/test/canonical.test.ts",
         "packages/core/test/config.test.ts",
         "packages/core/test/conventions.test.ts",
+        "packages/core/test/detect.test.ts",
         "packages/core/test/determinism.test.ts",
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
@@ -2315,17 +2336,17 @@
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts"
       ],
-      "files": 15,
+      "files": 16,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 10,
+        "historicalChanges": 11,
         "lastChanged": "2026-10-17",
-        "recentChanges": 10,
+        "recentChanges": 11,
         "topContributors": [
           {
-            "commits": 24,
+            "commits": 25,
             "name": "modeusweb"
           }
         ]
@@ -2443,6 +2464,7 @@
         "packages/core/test/canonical.test.ts",
         "packages/core/test/config.test.ts",
         "packages/core/test/conventions.test.ts",
+        "packages/core/test/detect.test.ts",
         "packages/core/test/determinism.test.ts",
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
@@ -2636,12 +2658,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 7,
+        "historicalChanges": 8,
         "lastChanged": "2026-10-17",
-        "recentChanges": 7,
+        "recentChanges": 8,
         "topContributors": [
           {
-            "commits": 12,
+            "commits": 14,
             "name": "modeusweb"
           }
         ]
@@ -2750,12 +2772,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 4,
+        "historicalChanges": 5,
         "lastChanged": "2026-10-17",
-        "recentChanges": 4,
+        "recentChanges": 5,
         "topContributors": [
           {
-            "commits": 5,
+            "commits": 6,
             "name": "modeusweb"
           }
         ]
@@ -2799,7 +2821,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 39,
+    "entryPoints": 40,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 16,

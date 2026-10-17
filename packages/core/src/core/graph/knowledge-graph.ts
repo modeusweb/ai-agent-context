@@ -414,8 +414,20 @@ export function buildKnowledgeGraph(input: KnowledgeGraphInput): KnowledgeGraph 
         continue;
       }
 
-      const extension = record.specifier.slice(record.specifier.lastIndexOf('.'));
-      const looksLikeCode = !record.specifier.includes('.') || CODE_EXTENSIONS.has(extension);
+      // Unresolved imports of non-code assets (`./styles.css`) are noise, so they are
+      // skipped. Two things must not be skipped:
+      //
+      //  - the extension is read from the last path *segment*. Taking
+      //    `lastIndexOf('.')` of the whole specifier points at the leading `..`
+      //    of a relative specifier, which made every climbing import look like
+      //    an unknown extension;
+      //  - a rejected traversal is always recorded. It is a security event, and
+      //    filtering it out as "not code" would hide it from the report.
+      const lastSegment = record.specifier.slice(record.specifier.lastIndexOf('/') + 1);
+      const extension = lastSegment.includes('.') ? lastSegment.slice(lastSegment.lastIndexOf('.')) : '';
+      const isPathEscape = resolved.attempts.some((attempt) => attempt.includes('outside the repository root'));
+      const looksLikeCode =
+        isPathEscape || !lastSegment.includes('.') || CODE_EXTENSIONS.has(extension);
       if (looksLikeCode) unresolved.push({ file: file.path, specifier: record.specifier, attempts: resolved.attempts });
     }
 
