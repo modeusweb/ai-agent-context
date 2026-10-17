@@ -401,6 +401,30 @@ Every result carries `score` and a `reason` explaining why the node matched:
 
 Exit code is `1` when nothing matched, which is convenient in scripts.
 
+## Node.js compatibility
+
+| Version | Published packages | This repository's test suite |
+| --- | --- | --- |
+| 20.11.0 and above | supported (`engines.node >= 20.11.0`) | cannot run |
+| 22.18 and above | supported | supported |
+| 24 | supported | supported |
+
+Two different floors for two different reasons. The published packages ship compiled JavaScript with no runtime dependencies, so nothing in the code needs a newer Node. This repository's tests are TypeScript and run through Node's native type stripping, which is unflagged only from 22.18 — on Node 20 the build succeeds but the tests cannot start at all.
+
+CI mirrors this rather than asserting it: the `test` job runs the TypeScript suite on Node 22.18 and 24 across Linux, Windows and macOS, while `npm run smoke` packs the real tarballs, installs them into a clean project and drives the CLI and the MCP server over stdio on Node 20.11 as well. If `engines.node` is raised, the smoke job is what notices.
+
+## Compatibility and stability
+
+MCP protocol support spans five revisions; see
+[`packages/mcp/README.md`](packages/mcp/README.md) for the matrix and the
+configuration presets.
+
+[`STABILITY.md`](STABILITY.md) states which exported symbols are a compatibility
+promise, which are internal, and how a deprecation runs its course. The promise is
+enforced: `npm run api:check` fails when the exported surface changes without the
+lock being updated, and `npm run stability:check` fails when this file names a
+symbol the packages do not export.
+
 ## Programmatic API
 
 ```typescript

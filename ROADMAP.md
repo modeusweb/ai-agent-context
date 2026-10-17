@@ -413,28 +413,29 @@ measurable value for teams.
 
 | Component | Status |
 | --- | --- |
-| Stable semver API for `core`, `cli` and `mcp` | in progress — no public API has changed incompatibly since 0.4, but no deprecation policy is published yet |
-| Stable context schema and migration policy | in progress — schema v1 unchanged since 0.3; `migrate` exists, the compatibility policy does not |
+| Stable semver API for `core`, `cli` and `mcp` | done — `STABILITY.md` publishes the promise and the rules; the surface is locked and checked in CI |
+| Stable context schema and migration policy | done — schema v1 stable since 0.3, compatibility policy published, `migrate`/`migrate --check` operational |
 | Task-oriented context and impact analysis over a correct graph | done |
 | Quality TypeScript/JavaScript structural analysis | done for the supported subset |
 | Temporal context for git history | done |
 | npm workspaces and verified monorepo scenarios | done |
 | Production-ready local CLI and stdio MCP server | done |
-| Compatibility matrix for Node.js and MCP clients | MCP matrix published in `packages/mcp/README.md`; the Node matrix is asserted by CI but not yet written down in the README |
+| Compatibility matrix for Node.js and MCP clients | done — Node matrix written down in the README, MCP matrix in `packages/mcp/README.md` |
 | Benchmark report on public repositories | not done — the set is this repository plus five synthetic fixtures |
 
 ### Remaining work
 
-1. **Publish a deprecation policy** for the public API: what constitutes a
-   breaking change, how long a deprecation lasts, what is removed in a major.
-2. **Publish a context schema compatibility policy**: which schema changes are
-   additive, which require `agent-context migrate`, and how a consumer detects
-   an incompatible document.
-3. **Write the Node.js compatibility matrix** into the README as a table rather
-   than leaving it implied by CI.
-4. **Close the precision/recall gap** with a labelled corpus, or state it as a
+1. **Close the precision/recall gap** with a labelled corpus, or state it as a
    permanent limitation.
-5. **Add public repositories to the benchmark**, pinned by commit SHA.
+2. **Add public repositories to the benchmark**, pinned by commit SHA, so the
+   numbers are not carried by one repository.
+3. **Re-audit the exported surface against STABILITY.md.** The internal exports
+   are named as such, but promoting a few of them — the document builders and the
+   language adapters are the most likely candidates for embedders — would make the
+   package more useful without widening the promise by accident.
+4. **Decide whether `.agent/` schema v2 is worth the migration cost.** Nothing
+   currently needs it; the policy exists so the decision does not have to be
+   improvised when something does.
 
 ### Release criteria
 

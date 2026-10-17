@@ -65,6 +65,23 @@ jobs:
       - run: npm ci
       - run: npm run smoke
 
+  # The exported symbols of each package are a contract. This job fails when a
+  # refactor adds, renames or removes one without the lock being updated, which
+  # is what turns "we do not break the API" from a promise into a check.
+  api-surface:
+    name: api surface
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: The public API must match the lock
+        run: node tools/api-surface.mjs
+
   audit:
     name: audit
     runs-on: ubuntu-latest
