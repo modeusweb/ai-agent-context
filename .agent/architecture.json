@@ -530,14 +530,14 @@
       "files": 1,
       "git": {
         "architectureChangeSignals": [],
-        "changeFrequency": "medium",
+        "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 8,
+        "historicalChanges": 9,
         "lastChanged": "2026-10-17",
-        "recentChanges": 8,
+        "recentChanges": 9,
         "topContributors": [
           {
-            "commits": 8,
+            "commits": 9,
             "name": "modeusweb"
           }
         ]
@@ -692,12 +692,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 14,
+        "historicalChanges": 15,
         "lastChanged": "2026-10-17",
-        "recentChanges": 14,
+        "recentChanges": 15,
         "topContributors": [
           {
-            "commits": 17,
+            "commits": 18,
             "name": "modeusweb"
           }
         ]
@@ -877,12 +877,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 7,
+        "historicalChanges": 8,
         "lastChanged": "2026-10-17",
-        "recentChanges": 7,
+        "recentChanges": 8,
         "topContributors": [
           {
-            "commits": 19,
+            "commits": 20,
             "name": "modeusweb"
           }
         ]
@@ -1242,12 +1242,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 12,
+        "historicalChanges": 13,
         "lastChanged": "2026-10-17",
-        "recentChanges": 12,
+        "recentChanges": 13,
         "topContributors": [
           {
-            "commits": 79,
+            "commits": 83,
             "name": "modeusweb"
           }
         ]
@@ -2341,12 +2341,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 11,
+        "historicalChanges": 12,
         "lastChanged": "2026-10-17",
-        "recentChanges": 11,
+        "recentChanges": 12,
         "topContributors": [
           {
-            "commits": 25,
+            "commits": 27,
             "name": "modeusweb"
           }
         ]
@@ -2656,14 +2656,14 @@
       "files": 2,
       "git": {
         "architectureChangeSignals": [],
-        "changeFrequency": "medium",
+        "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 8,
+        "historicalChanges": 9,
         "lastChanged": "2026-10-17",
-        "recentChanges": 8,
+        "recentChanges": 9,
         "topContributors": [
           {
-            "commits": 14,
+            "commits": 16,
             "name": "modeusweb"
           }
         ]
@@ -2845,21 +2845,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.6.0"
+        "version": "0.7.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.6.0"
+        "version": "0.7.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.6.0"
+        "version": "0.7.0"
       }
     ],
     "workspaceGlobs": [

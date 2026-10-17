@@ -17,7 +17,7 @@
         "path": "CONTRIBUTING.md"
       },
       {
-        "hash": "6781c4d4cf1de32441a9d991f049ef28576861e47b112bb1e1bb1096a998773e",
+        "hash": "0b2bdb08b08c1f357772442167e2d28e26808f4b324ab85a82b30929da14c6e7",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -31,7 +31,7 @@
         "path": "README.md"
       },
       {
-        "hash": "8b35b7b10ce2f304dcfbcaef174814f1d05dfbe6def0677640e65c353df28018",
+        "hash": "ff5266b70c97448c628c8af3c6eb9237eab813ed82883141c9fa16333f5d29fe",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -80,7 +80,7 @@
         "path": "packages/cli/README.md"
       },
       {
-        "hash": "5c3e108212ea7087883f592722b5a038f48d9294787ba1ee28317156ef94a515",
+        "hash": "7584332bf9611f6807e9ab7d7bd5caefd295dbd93007c56728ed3403ea96cf47",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -248,7 +248,7 @@
         "path": "packages/core/README.md"
       },
       {
-        "hash": "2c94e891613de3ebfe289bf82bbcf306a07c0faccc1a65866f52640537a2e1c1",
+        "hash": "d8063542432601c1125c475012bbdf2a404e7a024116b0bf2bdd3aface979bd5",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -633,7 +633,7 @@
         "path": "packages/core/src/model/types.ts"
       },
       {
-        "hash": "eb0a07702d20f3b3737f3f0bd4dfbea3c12e50966e9a4e07b9bda082311338a4",
+        "hash": "c2199e304f0f19d443de4147f4f9d811e229f8e62b8a03617dc9c316470c8c71",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
@@ -808,7 +808,7 @@
         "path": "packages/mcp/README.md"
       },
       {
-        "hash": "80003c1e786e57b3c769aafdb0c877e534e1357a51844a192fb5ee4d1c029489",
+        "hash": "173697afc3186026adb9e0b49ab25ddb9bd3461e9c92d0b9b4fdb893339dd063",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -917,7 +917,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 23,
+    "commitsAnalyzed": 24,
     "enabled": true,
     "windowDays": 180
   },

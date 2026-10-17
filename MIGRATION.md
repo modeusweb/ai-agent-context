@@ -1,10 +1,13 @@
 ﻿# Migration guide
 
-## v0.6.0
+## v0.7.0
 
-Payload size, measurable metrics, and honest coverage reporting. The `.agent/`
-v1 schema is unchanged and no rescan is required — this release changes what
-`explain` returns and adds a diagnostic command, not what is persisted.
+Coverage reporting and a security fix. The `.agent/` v1 schema is unchanged and
+no rescan is required — this release adds a diagnostic command and fixes how
+traversal attempts are classified, it does not change what is persisted.
+
+Shipped alongside the payload work in 0.6.0; the two are documented together
+below because they were measured together.
 
 ### New commands and tools
 
@@ -16,7 +19,21 @@ v1 schema is unchanged and no rescan is required — this release changes what
 - **MCP tool `detect_coverage_gaps`** — the same report for agents. There are now
   fourteen tools.
 
-### Behavior changes
+### Security fix
+
+- **A rejected path traversal is now always reported.** Unresolved imports were
+  filtered by taking `lastIndexOf('.')` of the whole specifier, which points at
+  the leading `..` of a relative specifier. A traversal into an extensionless
+  path (`../../../etc/passwd`) was therefore classified as a non-code asset and
+  dropped from `dependencies.json` entirely — the rejection was still enforced,
+  but it was invisible to anyone auditing the context. The extension is now read
+  from the last path segment, and escapes bypass the asset filter.
+
+  If you built tooling that audits `dependencies.json` for traversal attempts,
+  it now sees them; if you asserted the `unresolved` list was empty in a
+  repository with `../..` imports, that assertion now fails correctly.
+
+### Behavior changes carried over from 0.6.0
 
 - **`explain` picks a projection based on module size.** The payload now carries
   a `detail` field (`compact` or `full`). By default, modules whose own source
