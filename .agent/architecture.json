@@ -350,6 +350,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/policy.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/policy.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/test/resolver.test.ts"
         }
       ],
@@ -835,6 +847,7 @@
         "packages/cli/src/commands/history.ts",
         "packages/cli/src/commands/impact.ts",
         "packages/cli/src/commands/init.ts",
+        "packages/cli/src/commands/migrate.ts",
         "packages/cli/src/commands/revision-diff.ts",
         "packages/cli/src/commands/scan.ts",
         "packages/cli/src/commands/search.ts",
@@ -842,7 +855,7 @@
         "packages/cli/src/commands/task.ts",
         "packages/cli/src/commands/verify.ts"
       ],
-      "files": 14,
+      "files": 15,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
@@ -863,6 +876,16 @@
       "packageName": "ai-agent-context",
       "path": "packages/cli/src/commands",
       "publicExports": [
+        {
+          "file": "packages/cli/src/commands/migrate.ts",
+          "kind": "interface",
+          "name": "MigrationReport"
+        },
+        {
+          "file": "packages/cli/src/commands/migrate.ts",
+          "kind": "type",
+          "name": "MigrationState"
+        },
         {
           "file": "packages/cli/src/commands/clean.ts",
           "kind": "function",
@@ -902,6 +925,11 @@
           "file": "packages/cli/src/commands/init.ts",
           "kind": "function",
           "name": "runInitCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/migrate.ts",
+          "kind": "function",
+          "name": "runMigrateCommand"
         },
         {
           "file": "packages/cli/src/commands/revision-diff.ts",
@@ -949,19 +977,19 @@
           "confidence": 0.9,
           "evidence": [
             {
+              "detail": "exports MigrationReport (interface)",
+              "source": "packages/cli/src/commands/migrate.ts"
+            },
+            {
+              "detail": "exports MigrationState (type)",
+              "source": "packages/cli/src/commands/migrate.ts"
+            },
+            {
               "detail": "exports runCleanCommand (function)",
               "source": "packages/cli/src/commands/clean.ts"
-            },
-            {
-              "detail": "exports runContextCommand (function)",
-              "source": "packages/cli/src/commands/context.ts"
-            },
-            {
-              "detail": "exports runDetectCommand (function)",
-              "source": "packages/cli/src/commands/detect.ts"
             }
           ],
-          "value": "public API: runCleanCommand, runContextCommand, runDetectCommand, runDiffCommand, runExplainCommand, runHistoryCommand, runImpactCommand, runInitCommand"
+          "value": "public API: MigrationReport, MigrationState, runCleanCommand, runContextCommand, runDetectCommand, runDiffCommand, runExplainCommand, runHistoryCommand"
         }
       ],
       "roles": [
@@ -1511,10 +1539,11 @@
       "fileList": [
         "packages/core/src/config/defaults.ts",
         "packages/core/src/config/load.ts",
+        "packages/core/src/config/policy.ts",
         "packages/core/src/config/types.ts",
         "packages/core/src/config/validate.ts"
       ],
-      "files": 4,
+      "files": 5,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "low",
@@ -1591,6 +1620,11 @@
           "name": "LoadedConfig"
         },
         {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "interface",
+          "name": "OrganizationPolicy"
+        },
+        {
           "file": "packages/core/src/config/types.ts",
           "kind": "interface",
           "name": "OutputConfig"
@@ -1599,6 +1633,21 @@
           "file": "packages/core/src/config/defaults.ts",
           "kind": "const",
           "name": "PACKAGE_ENTRY_FIELDS"
+        },
+        {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "const",
+          "name": "POLICY_FILE"
+        },
+        {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "const",
+          "name": "POLICY_VERSION"
+        },
+        {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "interface",
+          "name": "ResolvedPolicy"
         },
         {
           "file": "packages/core/src/config/types.ts",
@@ -1616,9 +1665,39 @@
           "name": "applyOverrides"
         },
         {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "function",
+          "name": "applyPolicy"
+        },
+        {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "function",
+          "name": "enforcePolicy"
+        },
+        {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "function",
+          "name": "findPolicyFile"
+        },
+        {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "function",
+          "name": "loadPolicy"
+        },
+        {
           "file": "packages/core/src/config/validate.ts",
           "kind": "function",
           "name": "parseConfigText"
+        },
+        {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "function",
+          "name": "parsePolicy"
+        },
+        {
+          "file": "packages/core/src/config/policy.ts",
+          "kind": "function",
+          "name": "policyIdentity"
         },
         {
           "file": "packages/core/src/config/validate.ts",
@@ -1697,12 +1776,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 10,
+        "historicalChanges": 11,
         "lastChanged": "2026-10-17",
-        "recentChanges": 10,
+        "recentChanges": 11,
         "topContributors": [
           {
-            "commits": 14,
+            "commits": 15,
             "name": "modeusweb"
           }
         ]
@@ -2285,6 +2364,7 @@
         "packages/core/test/incremental.test.ts",
         "packages/core/test/integration.test.ts",
         "packages/core/test/language.test.ts",
+        "packages/core/test/policy.test.ts",
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts"
       ],
@@ -2303,10 +2383,11 @@
         "packages/core/test/incremental.test.ts",
         "packages/core/test/integration.test.ts",
         "packages/core/test/language.test.ts",
+        "packages/core/test/policy.test.ts",
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts"
       ],
-      "files": 16,
+      "files": 17,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
@@ -2444,6 +2525,7 @@
         "packages/core/test/incremental.test.ts",
         "packages/core/test/integration.test.ts",
         "packages/core/test/language.test.ts",
+        "packages/core/test/policy.test.ts",
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts"
       ],
@@ -2479,12 +2561,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 11,
+        "historicalChanges": 12,
         "lastChanged": "2026-10-17",
-        "recentChanges": 11,
+        "recentChanges": 12,
         "topContributors": [
           {
-            "commits": 19,
+            "commits": 24,
             "name": "modeusweb"
           }
         ]
@@ -2887,12 +2969,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 9,
+        "historicalChanges": 10,
         "lastChanged": "2026-10-17",
-        "recentChanges": 9,
+        "recentChanges": 10,
         "topContributors": [
           {
-            "commits": 9,
+            "commits": 11,
             "name": "modeusweb"
           }
         ]
@@ -3030,7 +3112,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 43,
+    "entryPoints": 44,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3054,21 +3136,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.8.0"
+        "version": "0.9.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.8.0"
+        "version": "0.9.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.8.0"
+        "version": "0.9.0"
       }
     ],
     "workspaceGlobs": [

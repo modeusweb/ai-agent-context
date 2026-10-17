@@ -17,49 +17,49 @@ evidence behind it are listed. Statements marked `config` come from declared con
 
 ## Exports
 
-- Modules use named exports rather than default exports (412/412 exported symbols are named). _(confidence 0.85, observed)_
+- Modules use named exports rather than default exports (426/426 exported symbols are named). _(confidence 0.85, observed)_
   - evidence: `packages/cli/src/cli.ts` — exports CLI_NAME
   - evidence: `packages/cli/src/cli.ts` — exports CLI_VERSION
   - evidence: `packages/cli/src/cli.ts` — exports CliIo
 
 ## Imports
 
-- External dependencies are imported before internal modules (30/36 files). _(confidence 0.75, observed)_
+- External dependencies are imported before internal modules (33/39 files). _(confidence 0.75, observed)_
   - evidence: `<repository>` — import order observed across files that import both kinds of modules
-- Type-only dependencies use `import type` (57/102 files). _(confidence 0.80, observed)_
+- Type-only dependencies use `import type` (59/105 files). _(confidence 0.80, observed)_
   - evidence: `<repository>` — import type / export type statements detected
 
 ## Languages
 
-- Implementation mixes TypeScript (107 files) and JavaScript (5 files). _(confidence 0.90, observed)_
+- Implementation mixes TypeScript (110 files) and JavaScript (5 files). _(confidence 0.90, observed)_
   - evidence: `<repository>` — languages are derived from file extensions, not from content guessing
 
 ## Naming
 
-- Classes use PascalCase (26/26 declarations). _(confidence 0.95, observed)_
+- Classes use PascalCase (27/27 declarations). _(confidence 0.95, observed)_
   - evidence: `packages/cli/src/ui/console.ts` — class "ConsoleOutput" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/fs-adapter.ts` — class "FileSystemAdapter" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/sensitive.ts` — class "SensitivePathFilter" uses PascalCase
-- Functions use camelCase (296/299 declarations). _(confidence 0.95, observed)_
+- Functions use camelCase (309/312 declarations). _(confidence 0.95, observed)_
   - evidence: `packages/cli/src/cli.ts` — function "appendFlag" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "parseArguments" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "flagString" uses camelCase
-- Source files use camelCase (77/90 files). _(confidence 0.92, observed)_
+- Source files use camelCase (79/92 files). _(confidence 0.92, observed)_
   - evidence: `packages/cli/src/bin.ts` — file name uses camelCase
   - evidence: `packages/cli/src/cli.ts` — file name uses camelCase
   - evidence: `packages/cli/src/commands/clean.ts` — file name uses camelCase
-- Type aliases use PascalCase (32/32 declarations). _(confidence 0.95, observed)_
+- Type aliases use PascalCase (33/33 declarations). _(confidence 0.95, observed)_
+  - evidence: `packages/cli/src/commands/migrate.ts` — type "MigrationState" uses PascalCase
   - evidence: `packages/core/src/adapters/language/ts-js/lexer.ts` — type "TokenType" uses PascalCase
   - evidence: `packages/core/src/adapters/language/types.ts` — type "Signal" uses PascalCase
-  - evidence: `packages/core/src/config/validate.ts` — type "Raw" uses PascalCase
-- TypeScript interfaces use PascalCase (158/158 declarations). _(confidence 0.95, observed)_
+- TypeScript interfaces use PascalCase (161/161 declarations). _(confidence 0.95, observed)_
   - evidence: `packages/cli/src/cli.ts` — interface "CliIo" uses PascalCase
   - evidence: `packages/cli/src/cli.ts` — interface "ParsedArguments" uses PascalCase
   - evidence: `packages/cli/src/cli.ts` — interface "CliCommandContext" uses PascalCase
 
 ## Tests
 
-- Tests live in a dedicated test directory (20/22 test files). _(confidence 0.80, observed)_
+- Tests live in a dedicated test directory (21/23 test files). _(confidence 0.80, observed)_
   - evidence: `packages/cli/test/cli.test.ts` — test located in a central tests directory
   - evidence: `packages/core/test/architecture.test.ts` — test located in a central tests directory
 

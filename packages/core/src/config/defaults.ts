@@ -98,6 +98,7 @@ export const DEFAULT_CONFIG: AgentContextConfig = {
     allowSensitiveFiles: false,
     redactSecrets: true,
     extraSensitivePatterns: [],
+    readOnly: false,
   },
 };
 

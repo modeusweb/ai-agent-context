@@ -282,6 +282,26 @@ agent-context verify --json
 
 `--json` output omits the (potentially very large) list of unchanged files and reports `changes.unchangedCount` instead; pass `--full` to include the complete list.
 
+A reusable workflow is published at `.github/workflows/reusable-verify-context.yml`:
+
+```yaml
+jobs:
+  context:
+    uses: modeusweb/ai-agent-context/.github/workflows/reusable-verify-context.yml@v0.9.0
+```
+
+### `migrate`
+
+Brings a persisted `.agent/` up to the current schema. Context is committed, so it outlives the tool that wrote it, and a release that changes what the analyzer produces can leave a repository holding context that no longer matches its own source.
+
+```bash
+agent-context migrate            # regenerate when needed
+agent-context migrate --check    # report only, exit 1 when action is needed
+agent-context migrate --json
+```
+
+States: `current`, `stale` (drifted from the working tree), `missing`, `invalid` (unreadable or unsupported schema version). `--check` writes nothing, which makes it usable as a CI gate alongside `verify`.
+
 ### `detect`
 
 Reports what the analysis could **not** determine. An agent about to act on a
@@ -499,11 +519,48 @@ The `.agent/` directory contains structured, versionable context:
     "conventions": true,
     "decisions": true,
     "git": true
+  },
+  "security": {
+    "allowSensitiveFiles": false,
+    "redactSecrets": true,
+    "extraSensitivePatterns": [],
+    "readOnly": false
   }
 }
 ```
 
 Every key is optional: omitted keys keep their defaults. The defaults already cover `src/`, `packages/`, `apps/`, `lib/` and source files at any depth (`*.{ts,tsx,js,jsx,vue,svelte,...}`), plus `**/*.md` and `*.json`, while `node_modules/`, `dist/`, `build/`, `coverage/`, `.git/` and `.agent/` are always excluded.
+
+### Read-only mode
+
+`security.readOnly`, or the global `--read-only` flag, refuses every write while leaving every query working:
+
+```bash
+agent-context scan --read-only
+# ✗ Refusing to scan and write .agent/: this repository is in read-only mode.
+#   Queries (status, explain, context, task, impact, search, detect, verify) keep working.
+```
+
+The guard lives in the `AgentContext` facade rather than in each command, so no code path can write around it — including an MCP tool handler and an embedder calling `scan()` directly. Only `scan()` and `init()` write.
+
+### Organization policy
+
+`.agent/config.json` is written by contributors, so on its own it cannot enforce a rule the organization requires. `.agent-policy.json` is the floor beneath it, and it is looked up in the repository root **or any parent directory** — one file at a monorepo or organization checkout applies to everything under it. `AGENT_CONTEXT_POLICY` overrides the search.
+
+```json
+{
+  "version": 1,
+  "exclude": ["vendor/private"],
+  "sensitive": ["*.tfvars"],
+  "allowSensitiveFiles": false,
+  "redactSecrets": true,
+  "readOnly": false
+}
+```
+
+A repository may tighten; it may not loosen. The policy unions its patterns in, forces `allowSensitiveFiles` off when it says `false`, forces redaction on when it says `true`, and forces read-only on when it says `true` — none of which a repository setting or CLI flag can undo. A policy that sets `redactSecrets: false`, or carries an unknown `version`, is **rejected rather than ignored**: a policy that silently fails to apply is indistinguishable from no policy at all. See [SECURITY.md](SECURITY.md).
+
+A change to the policy invalidates the incremental cache, so context is never reused across a tightening of the rules.
 
 ## Monorepo Support
 

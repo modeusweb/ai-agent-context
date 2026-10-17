@@ -21,6 +21,7 @@ import { runImpactCommand } from './commands/impact.ts';
 import { runHistoryCommand } from './commands/history.ts';
 import { runRevisionDiffCommand } from './commands/revision-diff.ts';
 import { runVerifyCommand } from './commands/verify.ts';
+import { runMigrateCommand } from './commands/migrate.ts';
 
 export const CLI_NAME = 'agent-context';
 /** Re-exported from the core package so there is a single version source. */
@@ -77,6 +78,8 @@ const KNOWN_FLAGS = new Set([
   'verbose',
   'force',
   'yes',
+  'check',
+  'read-only',
   'color',
   'cache',
   'all',
@@ -218,6 +221,10 @@ export function contextOptions(parsed: ParsedArguments, io: CliIo): AgentContext
       ...(exclude === undefined ? {} : { exclude }),
       ...(ignore === undefined ? {} : { ignore }),
       ...(languages === undefined ? {} : { languages }),
+      // `--read-only` is a tightening override, so it composes with the
+      // organization policy: an organization that already forbids writes is not
+      // loosened by this flag being absent, and nothing can undo it when present.
+      ...(parsed.flags.get('read-only') === true ? { security: { readOnly: true } } : {}),
     },
   };
   const configPath = flagString(parsed, 'config');
@@ -247,6 +254,7 @@ Commands:
   diff                 Show repository context changes since the last scan
   status               Show whether the context is up to date
   verify               CI check: fail when context is missing, invalid, or stale
+  migrate              Bring .agent/ up to the current schema (--check reports only)
   explain <path>       Explain a module, directory or file (--detail auto|full|compact)
   detect               Report what the analysis could NOT determine
   search <query>       Deterministic lexical search over the context
@@ -266,6 +274,8 @@ Options:
   --language <name>    Restrict language analysis (repeatable)
   --detail <level>     explain: auto (default), full or compact
   --force              init: overwrite config · scan: ignore the local state
+  --read-only          Refuse every write; queries keep working
+  --check              migrate: report whether migration is needed, write nothing
   --json               Machine readable output on stdout
   --full               status/verify --json: include the complete unchanged file list
   --quiet              Suppress progress output
@@ -334,6 +344,8 @@ export async function runCli(argv: readonly string[], ioOverrides: Partial<CliIo
         return await runStatusCommand(commandContext, dependencies);
       case 'verify':
         return await runVerifyCommand(commandContext, dependencies);
+      case 'migrate':
+        return await runMigrateCommand(commandContext, dependencies);
       case 'explain':
         return await runExplainCommand(commandContext, dependencies);
       case 'detect':

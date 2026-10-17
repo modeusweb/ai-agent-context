@@ -1,0 +1,88 @@
+# Reusable workflow: fail a build when the committed `.agent/` is stale.
+#
+# Call it from another repository:
+#
+#   jobs:
+#     context:
+#       uses: modeusweb/ai-agent-context/.github/workflows/reusable-verify-context.yml@v0.9.0
+#       with:
+#         node-version: '22.18'
+#
+# `.agent/` is committed by design, so it drifts silently: a contributor changes
+# the source, forgets to rescan, and the context an agent reads no longer
+# describes the repository. This workflow fails the build in that case instead.
+#
+# `verify` is read-only and never regenerates context, which is what makes it
+# usable as a gate: the failure is a true statement about the committed state,
+# not a side effect of the check repairing it.
+name: verify agent context
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: Node.js version used to run the check.
+        type: string
+        default: '22.18'
+      working-directory:
+        description: Repository subdirectory to verify.
+        type: string
+        default: '.'
+      fail-on-warnings:
+        description: |
+          When true, warnings reported by `detect` also fail the build.
+          `detect` exits 1 on warnings and 2 on errors; a rejected path
+          traversal is an error and always fails.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: verify .agent/ is current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # git history feeds the activity signals; a shallow
+                         # clone makes `history` and activity metrics empty.
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: npm ci
+
+      - name: Verify committed context
+        working-directory: ${{ inputs.working-directory }}
+        run: npx agent-context verify --json > verify.json || { cat verify.json; exit 1; }
+
+      - name: Check for an unsupported schema version
+        working-directory: ${{ inputs.working-directory }}
+        run: npx agent-context migrate --check
+
+      - name: Report analysis coverage gaps
+        working-directory: ${{ inputs.working-directory }}
+        continue-on-error: ${{ !inputs.fail-on-warnings }}
+        run: npx agent-context detect --json > detect.json || true
+
+      - name: Summarise coverage
+        if: always()
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          if [ -f detect.json ]; then
+            node -e "
+              const r = require('./detect.json');
+              console.log('errors=' + r.counts.error, 'warnings=' + r.counts.warning,
+                          'resolutionRate=' + r.imports.resolutionRate);
+              if (r.imports.pathEscapes > 0) {
+                console.error('a path traversal was not rejected; the context must not be trusted');
+                process.exit(1);
+              }
+            "
+          fi

@@ -206,6 +206,9 @@ export function validateConfig(raw: unknown, source = '.agent/config.json'): Val
         source,
       );
     }
+    if (rawSecurity.readOnly !== undefined) {
+      security.readOnly = bool(rawSecurity.readOnly, 'security.readOnly', source);
+    }
     config.security = security;
   }
 

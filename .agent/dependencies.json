@@ -272,6 +272,15 @@
     },
     {
       "externalPackages": [],
+      "file": "packages/cli/src/commands/migrate.ts",
+      "internalModules": [
+        "@ai-agent-context/core",
+        "packages/cli/src"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
       "file": "packages/cli/src/commands/revision-diff.ts",
       "internalModules": [
         "packages/cli/src"
@@ -450,6 +459,18 @@
       "internalModules": [
         "packages/core/src",
         "packages/core/src/model"
+      ],
+      "module": "packages/core/src/config"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:fs/promises",
+        "node:path"
+      ],
+      "file": "packages/core/src/config/policy.ts",
+      "internalModules": [
+        "packages/core/src"
       ],
       "module": "packages/core/src/config"
     },
@@ -930,6 +951,18 @@
     {
       "externalPackages": [
         "node:assert/strict",
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:test"
+      ],
+      "file": "packages/core/test/policy.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
         "node:test"
       ],
       "file": "packages/core/test/resolver.test.ts",
@@ -1101,7 +1134,7 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "4 file(s) import @ai-agent-context/core",
+          "detail": "5 file(s) import @ai-agent-context/core",
           "source": "packages/cli/src/commands"
         },
         {
@@ -1114,11 +1147,11 @@
         },
         {
           "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
-          "source": "packages/cli/src/commands/scan.ts"
+          "source": "packages/cli/src/commands/migrate.ts"
         },
         {
           "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
-          "source": "packages/cli/src/commands/search.ts"
+          "source": "packages/cli/src/commands/scan.ts"
         }
       ],
       "from": "packages/cli/src/commands",
@@ -1129,7 +1162,7 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "14 file(s) import packages/cli/src",
+          "detail": "15 file(s) import packages/cli/src",
           "source": "packages/cli/src/commands"
         },
         {
@@ -1277,12 +1310,16 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "2 file(s) import packages/core/src",
+          "detail": "3 file(s) import packages/core/src",
           "source": "packages/core/src/config"
         },
         {
           "detail": "relative import resolved to packages/core/src/errors.ts",
           "source": "packages/core/src/config/load.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/src/errors.ts",
+          "source": "packages/core/src/config/policy.ts"
         },
         {
           "detail": "relative import resolved to packages/core/src/errors.ts",
@@ -1512,7 +1549,7 @@
     "cycles": 2,
     "externalPackages": 11,
     "internalModuleEdges": 18,
-    "unresolvedImports": 21
+    "unresolvedImports": 22
   },
   "unresolved": [
     {
@@ -1605,6 +1642,13 @@
       ],
       "file": "packages/core/test/language.test.ts",
       "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/policy.test.ts",
+      "specifier": "../../core/dist/index.js"
     },
     {
       "attempts": [

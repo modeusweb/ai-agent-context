@@ -43,9 +43,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "exports:6caea35c",
+      "id": "exports:af4e82c8",
       "origin": "observed",
-      "statement": "Modules use named exports rather than default exports (412/412 exported symbols are named)."
+      "statement": "Modules use named exports rather than default exports (426/426 exported symbols are named)."
     },
     {
       "category": "Imports",
@@ -56,9 +56,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:4bb62aad",
+      "id": "imports:0b166306",
       "origin": "observed",
-      "statement": "External dependencies are imported before internal modules (30/36 files)."
+      "statement": "External dependencies are imported before internal modules (33/39 files)."
     },
     {
       "category": "Imports",
@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:84ee5a1c",
+      "id": "imports:0be8e1c2",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (57/102 files)."
+      "statement": "Type-only dependencies use `import type` (59/105 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:bbb45603",
+      "id": "languages:683694d9",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (107 files) and JavaScript (5 files)."
+      "statement": "Implementation mixes TypeScript (110 files) and JavaScript (5 files)."
     },
     {
       "category": "Naming",
@@ -103,9 +103,9 @@
           "source": "packages/core/src/adapters/filesystem/sensitive.ts"
         }
       ],
-      "id": "naming:f127fb68",
+      "id": "naming:b5e05e54",
       "origin": "observed",
-      "statement": "Classes use PascalCase (26/26 declarations)."
+      "statement": "Classes use PascalCase (27/27 declarations)."
     },
     {
       "category": "Naming",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:e9fdf0d3",
+      "id": "naming:fc48ac2a",
       "origin": "observed",
-      "statement": "Functions use camelCase (296/299 declarations)."
+      "statement": "Functions use camelCase (309/312 declarations)."
     },
     {
       "category": "Naming",
@@ -145,14 +145,18 @@
           "source": "packages/cli/src/commands/clean.ts"
         }
       ],
-      "id": "naming:83362552",
+      "id": "naming:0eec3e7a",
       "origin": "observed",
-      "statement": "Source files use camelCase (77/90 files)."
+      "statement": "Source files use camelCase (79/92 files)."
     },
     {
       "category": "Naming",
       "confidence": 0.95,
       "evidence": [
+        {
+          "detail": "type \"MigrationState\" uses PascalCase",
+          "source": "packages/cli/src/commands/migrate.ts"
+        },
         {
           "detail": "type \"TokenType\" uses PascalCase",
           "source": "packages/core/src/adapters/language/ts-js/lexer.ts"
@@ -160,15 +164,11 @@
         {
           "detail": "type \"Signal\" uses PascalCase",
           "source": "packages/core/src/adapters/language/types.ts"
-        },
-        {
-          "detail": "type \"Raw\" uses PascalCase",
-          "source": "packages/core/src/config/validate.ts"
         }
       ],
-      "id": "naming:f3d36869",
+      "id": "naming:74ab12c7",
       "origin": "observed",
-      "statement": "Type aliases use PascalCase (32/32 declarations)."
+      "statement": "Type aliases use PascalCase (33/33 declarations)."
     },
     {
       "category": "Naming",
@@ -187,9 +187,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:57a8ca6d",
+      "id": "naming:89b612e9",
       "origin": "observed",
-      "statement": "TypeScript interfaces use PascalCase (158/158 declarations)."
+      "statement": "TypeScript interfaces use PascalCase (161/161 declarations)."
     },
     {
       "category": "Tests",
@@ -204,9 +204,9 @@
           "source": "packages/core/test/architecture.test.ts"
         }
       ],
-      "id": "tests:f7dd999f",
+      "id": "tests:fbdfa604",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (20/22 test files)."
+      "statement": "Tests live in a dedicated test directory (21/23 test files)."
     },
     {
       "category": "Toolchain",

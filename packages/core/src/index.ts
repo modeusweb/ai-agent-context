@@ -44,6 +44,7 @@ export {
   AnalysisError,
   ContextStateError,
   AdapterUnavailableError,
+  ReadOnlyError,
   isAgentContextError,
   toDiagnosticPayload,
 } from './errors.ts';
@@ -53,6 +54,19 @@ export { DEFAULT_CONFIG, DEFAULT_EXCLUDE, DEFAULT_INCLUDE, DEFAULT_SENSITIVE_PAT
 export { loadConfig, applyOverrides, writeConfigFile, normalizeConfig, initConfigTemplate } from './config/load.ts';
 export { validateConfig, parseConfigText } from './config/validate.ts';
 export type { AgentContextConfig, ConfigOverrides, FeaturesConfig, LoadedConfig } from './config/types.ts';
+
+/* Organization policy */
+export {
+  POLICY_FILE,
+  POLICY_VERSION,
+  parsePolicy,
+  findPolicyFile,
+  loadPolicy,
+  applyPolicy,
+  enforcePolicy,
+  policyIdentity,
+} from './config/policy.ts';
+export type { OrganizationPolicy, ResolvedPolicy } from './config/policy.ts';
 
 /* Adapters */
 export { FileSystemAdapter } from './adapters/filesystem/fs-adapter.ts';

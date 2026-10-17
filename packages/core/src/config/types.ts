@@ -62,6 +62,14 @@ export interface SecurityConfig {
   redactSecrets: boolean;
   /** Additional glob patterns treated as sensitive. */
   extraSensitivePatterns: string[];
+  /**
+   * Read-only contract: every query works, but nothing may write.
+   *
+   * `scan()` and `init()` refuse to run, so an MCP server or a CI step started
+   * with read-only enabled cannot modify the working tree even by accident.
+   * An organization policy can force this on.
+   */
+  readOnly: boolean;
 }
 
 export interface AgentContextConfig {
@@ -94,6 +102,8 @@ export interface LoadedConfig {
   config: AgentContextConfig;
   /** Path of the config file that was read, or `null` for pure defaults. */
   source: string | null;
+  /** Organization policy file that applied, or `null` when there was none. */
+  policySource: string | null;
   /** Stable hash of the resolved configuration (used for cache invalidation). */
   hash: string;
   warnings: string[];

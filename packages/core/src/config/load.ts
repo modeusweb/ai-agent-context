@@ -15,6 +15,7 @@ import { AGENT_DIR, CONFIG_FILE } from '../model/schema.ts';
 import { DEFAULT_CONFIG } from './defaults.ts';
 import { parseConfigText, validateConfig } from './validate.ts';
 import type { AgentContextConfig, ConfigOverrides, LoadedConfig } from './types.ts';
+import { enforcePolicy, loadPolicy } from './policy.ts';
 
 /** Deep merge of CLI overrides on top of a resolved configuration. */
 export function applyOverrides(config: AgentContextConfig, overrides: ConfigOverrides | undefined): AgentContextConfig {
@@ -62,6 +63,8 @@ export interface LoadConfigOptions {
   configPath?: string;
   /** Skip reading the config file entirely (used by `init`). */
   ignoreFile?: boolean;
+  /** Skip the organization policy (tests and embedders that supply their own). */
+  ignorePolicy?: boolean;
 }
 
 export async function loadConfig(options: LoadConfigOptions): Promise<LoadedConfig> {
@@ -82,9 +85,13 @@ export async function loadConfig(options: LoadConfigOptions): Promise<LoadedConf
   const config = applyOverrides(fileConfig, options.overrides);
   warnings.push(...validateMerged(config));
   // Note: `root` is intentionally excluded from the hash — moving a repository
-  // must not invalidate the local cache.
+  // must not invalidate the local cache. The organization policy *is* included:
+  // tightening the policy must invalidate a cache built under weaker rules.
   const hash = hashValue({ ...config, root: '.' });
-  return { config, source, hash, warnings };
+  const loaded: LoadedConfig = { config, source, policySource: null, hash, warnings };
+  if (options.ignorePolicy === true) return loaded;
+  const policy = await loadPolicy(root);
+  return enforcePolicy(loaded, policy);
 }
 
 /** Synchronous config resolution for CLI startup paths that must not await. */
@@ -101,7 +108,7 @@ export function resolveConfigSync(root: string, overrides?: ConfigOverrides, con
   }
   const config = applyOverrides(fileConfig, overrides);
   warnings.push(...validateMerged(config));
-  return { config, source, hash: hashValue({ ...config, root: '.' }), warnings };
+  return { config, source, policySource: null, hash: hashValue({ ...config, root: '.' }), warnings };
 }
 
 /** Validates an already parsed configuration object (used by tests and adapters). */

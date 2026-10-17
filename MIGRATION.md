@@ -1,5 +1,97 @@
 # Migration guide
 
+## v0.9.0
+
+Organization policy, a read-only contract, and schema migration tooling. The
+`.agent/` v1 schema is unchanged and **no rescan is required** — nothing about
+the analysis or the persisted context changed. Everything below is additive, with
+one exception noted under "Behavior change".
+
+### New configuration key
+
+```json
+{
+  "security": {
+    "readOnly": false
+  }
+}
+```
+
+`readOnly` refuses every write and leaves every query working. The guard is
+enforced in the `AgentContext` facade, not per command, so an MCP tool handler
+and an embedder calling `scan()` directly hit the same check. `scan()` and
+`init()` are the only operations that write. `agent-context init` writes the
+repository template and therefore still works under a read-only *repository*
+setting; it is refused only when the mode was enforced by the policy.
+
+Equivalent CLI flag: `--read-only` on any command.
+
+### New API
+
+```ts
+import {
+  POLICY_FILE, POLICY_VERSION, parsePolicy, findPolicyFile,
+  loadPolicy, applyPolicy, enforcePolicy, ReadOnlyError,
+} from '@ai-agent-context/core';
+
+const context = await AgentContext.load({ root });
+context.readOnly;              // boolean
+await AgentContext.load({ root, ignorePolicy: true }); // escape hatch
+```
+
+`ReadOnlyError` has code `ERR_READ_ONLY`, names the file that enforced the mode,
+and its first hint lists the commands that keep working.
+
+### Organization policy
+
+`.agent-policy.json` is discovered in the repository root or any parent
+directory, so one file at a monorepo or organization checkout applies to
+everything beneath it. `AGENT_CONTEXT_POLICY` overrides the search. It is a
+floor: a repository can tighten, never loosen.
+
+- its patterns are unioned into `exclude` and the sensitive list;
+- `allowSensitiveFiles: false` forces the escape hatch off;
+- `redactSecrets: true` forces redaction on;
+- `readOnly: true` forces read-only on, which no repository setting or CLI flag
+  can undo.
+
+Two documents are **rejected rather than ignored**, because a policy that
+silently fails to apply is indistinguishable from no policy at all:
+
+- an unknown `version`;
+- `redactSecrets: false` — disabling redaction would copy secret material into a
+  file people commit and share.
+
+A policy change changes the configuration hash, so a cache built under weaker
+rules is never reused after the rules tighten.
+
+### `agent-context migrate`
+
+Brings a persisted `.agent/` up to the current schema. `--check` writes nothing
+and exits `1` when the context is not what this version would produce, which
+makes it a CI gate complementary to `verify`:
+
+```bash
+agent-context migrate
+agent-context migrate --check --json
+```
+
+States reported: `current`, `stale`, `missing`, `invalid`.
+
+### Behavior change
+
+A request without a `method` is now reported as `-32600` (Invalid Request) rather
+than `-32601` (Method not found). See the v0.8.0 section.
+
+### CI
+
+A reusable workflow is published at
+`.github/workflows/reusable-verify-context.yml`, callable from another repository
+by `uses:`. It runs the read-only `verify` and `migrate --check`, and fails on a
+rejected path traversal.
+
+No code changes are required for consumers that only read `.agent/` documents.
+
 ## v0.8.0
 
 MCP protocol support. The `.agent/` v1 schema is unchanged and no rescan is

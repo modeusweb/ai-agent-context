@@ -80,6 +80,29 @@ export class AdapterUnavailableError extends AgentContextError {
   }
 }
 
+/**
+ * Raised when a write is attempted while the read-only contract is in force.
+ *
+ * The contract is about the whole tool, not one command: an MCP server started
+ * against a repository whose policy sets `readOnly` must not be able to write,
+ * whichever code path asks. Queries keep working — only writes are refused.
+ */
+export class ReadOnlyError extends AgentContextError {
+  constructor(operation: string, source?: string) {
+    super({
+      code: 'ERR_READ_ONLY',
+      message: `Refusing to ${operation}: this repository is in read-only mode.`,
+      hints: [
+        'Queries (status, explain, context, task, impact, search, detect, verify) keep working.',
+        'Disable "security.readOnly" in .agent/config.json, or in the organization policy that sets it, to allow writes.',
+        ...(source === undefined ? [] : [`Enforced by ${source}.`]),
+      ],
+      ...(source === undefined ? {} : { source }),
+    });
+    this.name = 'ReadOnlyError';
+  }
+}
+
 export function isAgentContextError(error: unknown): error is AgentContextError {
   return error instanceof AgentContextError;
 }

@@ -54,7 +54,7 @@ import type { DetectionReport } from './core/context/diagnostics.ts';
 import { buildRepositoryContext } from './core/context/repository-context.ts';
 import type { RepositoryContext, RepositoryContextOptions } from './core/context/types.ts';
 import { SearchService, type SearchOptions } from './core/search/service.ts';
-import { ContextStateError } from './errors.ts';
+import { ContextStateError, ReadOnlyError } from './errors.ts';
 
 export interface AgentContextOptions {
   /** Repository root; defaults to `process.cwd()`. */
@@ -70,6 +70,8 @@ export interface AgentContextOptions {
   now?: () => number;
   /** Injectable git adapter (tests, sandboxes). */
   gitAdapter?: GitAdapter;
+  /** Skip the organization policy (embedders that supply their own rules). */
+  ignorePolicy?: boolean;
 }
 
 export interface ScanOptions {
@@ -102,6 +104,8 @@ export class AgentContext {
   private readonly options: AgentContextOptions;
   private resolvedConfig: AgentContextConfig;
   private configSource: string | null = null;
+  /** Organization policy file that applied, when one did. */
+  private readOnlySource: string | undefined;
   private pipeline: PipelineResult | null = null;
   private pipelineMode: 'dry' | 'full' | null = null;
 
@@ -130,9 +134,11 @@ export class AgentContext {
       root,
       ...(options.config === undefined ? {} : { overrides: options.config }),
       ...(options.configPath === undefined ? {} : { configPath: options.configPath }),
+      ...(options.ignorePolicy === undefined ? {} : { ignorePolicy: options.ignorePolicy }),
     });
     const context = new AgentContext(root, options, loaded.config);
     context.configSource = loaded.source;
+    if (loaded.policySource !== null) context.readOnlySource = loaded.policySource;
     context.persisted = await readPersistedContext(root);
     return context;
   }
@@ -145,6 +151,23 @@ export class AgentContext {
   /** Path of the configuration file in use, relative to the root, when it exists. */
   get configFile(): string | null {
     return this.configSource;
+  }
+
+  /**
+   * Whether the read-only contract is in force.
+   *
+   * Enforced at the facade rather than per command, so no code path can write:
+   * an MCP tool handler, a future command, or an embedder calling `scan()`
+   * directly all hit the same guard.
+   */
+  get readOnly(): boolean {
+    return this.resolvedConfig.security.readOnly;
+  }
+
+  /** Throws {@link ReadOnlyError} when writes are not permitted. */
+  private assertWritable(operation: string): void {
+    if (!this.readOnly) return;
+    throw new ReadOnlyError(operation, this.readOnlySource);
   }
 
   private pipelineOptions(scanOptions: ScanOptions = {}): Parameters<typeof runPipeline>[0] {
@@ -180,6 +203,7 @@ export class AgentContext {
 
   /** Scans the repository and persists the context into `.agent/`. */
   async scan(options: ScanOptions = {}): Promise<ScanReport> {
+    this.assertWritable('scan and write .agent/');
     // A scan must always observe the current working tree — it never reuses the
     // cached pipeline. `force` re-reads every file, ignoring the local state.
     const pipelineOptions = this.pipelineOptions({ ...options, dryRun: false });
@@ -484,6 +508,7 @@ export class AgentContext {
    * Idempotent: an existing configuration is left untouched unless `force` is set.
    */
   async init(options: { force?: boolean } = {}): Promise<InitResult> {
+    this.assertWritable('create .agent/');
     const configPath = path.join(this.root, CONFIG_FILE);
     const existed = existsSync(configPath);
     const created: string[] = [];
@@ -498,7 +523,11 @@ export class AgentContext {
     }
     let overwritten = false;
     if (!existed || options.force === true) {
-      const loaded = await loadConfig({ root: this.root, ignoreFile: true });
+      // The template is the *repository's* configuration. Baking an organization
+      // policy into it would duplicate a file the repository does not own, at a
+      // lower precedence than the real one, and misdescribe where the rule
+      // comes from.
+      const loaded = await loadConfig({ root: this.root, ignoreFile: true, ignorePolicy: true });
       await writeConfigFile(this.root, loaded.config, true);
       if (existed) overwritten = true;
       else created.push(CONFIG_FILE);
