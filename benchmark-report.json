@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-10-17T07:01:55.439Z",
+  "generatedAt": "2026-10-17T08:11:15.164Z",
   "node": "v24.21.0",
   "summary": {
     "repositories": 6,
-    "files": 180,
+    "files": 184,
     "imports": {
       "resolved": 32,
-      "excludedOutput": 17,
+      "excludedOutput": 18,
       "actionableUnresolved": 0,
       "pathEscapes": 0,
       "resolutionRate": 1
@@ -24,18 +24,18 @@
         "savedPercent": -107.1
       },
       "from8To64Kb": {
-        "modules": 12,
-        "sourceBytes": 278196,
-        "explainBytes": 95446,
-        "ratio": 0.3431,
-        "savedPercent": 65.7
+        "modules": 11,
+        "sourceBytes": 229140,
+        "explainBytes": 84449,
+        "ratio": 0.3685,
+        "savedPercent": 63.1
       },
       "over64Kb": {
-        "modules": 1,
-        "sourceBytes": 382857,
-        "explainBytes": 15925,
-        "ratio": 0.0416,
-        "savedPercent": 95.8
+        "modules": 2,
+        "sourceBytes": 465730,
+        "explainBytes": 29048,
+        "ratio": 0.0624,
+        "savedPercent": 93.8
       }
     }
   },
@@ -61,14 +61,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 132,
-        "warmMs": 72,
+        "coldMs": 126,
+        "warmMs": 71,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 62,
+        "ms": 63,
         "bytes": 4832
       },
       "tokenBudget": {
@@ -130,7 +130,7 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 108,
+        "coldMs": 104,
         "warmMs": 75,
         "parsed": 16,
         "warmParsed": 0,
@@ -218,13 +218,13 @@
       },
       "scan": {
         "coldMs": 92,
-        "warmMs": 72,
+        "warmMs": 71,
         "parsed": 14,
         "warmParsed": 0,
         "warmReused": 14
       },
       "compact": {
-        "ms": 62,
+        "ms": 63,
         "bytes": 8227
       },
       "tokenBudget": {
@@ -299,7 +299,7 @@
         "warmReused": 7
       },
       "compact": {
-        "ms": 57,
+        "ms": 58,
         "bytes": 5060
       },
       "tokenBudget": {
@@ -355,14 +355,14 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 84,
-        "warmMs": 70,
+        "coldMs": 90,
+        "warmMs": 75,
         "parsed": 10,
         "warmParsed": 0,
         "warmReused": 10
       },
       "compact": {
-        "ms": 59,
+        "ms": 63,
         "bytes": 8325
       },
       "tokenBudget": {
@@ -405,12 +405,12 @@
     },
     {
       "repository": "ai-agent-context",
-      "files": 126,
-      "sourceFiles": 86,
+      "files": 130,
+      "sourceFiles": 88,
       "modules": 13,
       "imports": {
         "resolved": 18,
-        "excludedOutput": 17,
+        "excludedOutput": 18,
         "actionableUnresolved": 0,
         "pathEscapes": 0,
         "resolutionRate": 1
@@ -424,15 +424,15 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 459,
-        "warmMs": 143,
-        "parsed": 126,
+        "coldMs": 550,
+        "warmMs": 148,
+        "parsed": 130,
         "warmParsed": 0,
-        "warmReused": 126
+        "warmReused": 130
       },
       "compact": {
-        "ms": 131,
-        "bytes": 19471
+        "ms": 139,
+        "bytes": 19219
       },
       "tokenBudget": {
         "under8Kb": {
@@ -443,49 +443,49 @@
           "savedPercent": 0
         },
         "from8To64Kb": {
-          "modules": 12,
-          "sourceBytes": 278196,
-          "explainBytes": 95446,
-          "ratio": 0.3431,
-          "savedPercent": 65.7
+          "modules": 11,
+          "sourceBytes": 229140,
+          "explainBytes": 84449,
+          "ratio": 0.3685,
+          "savedPercent": 63.1
         },
         "over64Kb": {
-          "modules": 1,
-          "sourceBytes": 382857,
-          "explainBytes": 15925,
-          "ratio": 0.0416,
-          "savedPercent": 95.8
+          "modules": 2,
+          "sourceBytes": 465730,
+          "explainBytes": 29048,
+          "ratio": 0.0624,
+          "savedPercent": 93.8
         },
         "largest": [
           {
             "module": "packages/core/src",
-            "bytes": 382857,
-            "explainBytes": 15925,
-            "ratio": 0.0416
+            "bytes": 393223,
+            "explainBytes": 15923,
+            "ratio": 0.0405
           },
           {
             "module": "packages/core/test",
-            "bytes": 65238,
-            "explainBytes": 12737,
-            "ratio": 0.1952
+            "bytes": 72507,
+            "explainBytes": 13125,
+            "ratio": 0.181
           },
           {
             "module": "tools",
-            "bytes": 42556,
-            "explainBytes": 6714,
-            "ratio": 0.1578
+            "bytes": 54054,
+            "explainBytes": 7943,
+            "ratio": 0.1469
           },
           {
             "module": "packages/mcp/src/tools",
-            "bytes": 24261,
-            "explainBytes": 5816,
-            "ratio": 0.2397
+            "bytes": 25164,
+            "explainBytes": 5817,
+            "ratio": 0.2312
           },
           {
-            "module": "packages/core/src/model",
-            "bytes": 20618,
-            "explainBytes": 12340,
-            "ratio": 0.5985
+            "module": "packages/cli/src/commands",
+            "bytes": 21733,
+            "explainBytes": 7073,
+            "ratio": 0.3254
           }
         ]
       }

@@ -11,19 +11,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
-    name: verify (node ${{ matrix.node }})
+  # Full suite. The tests are TypeScript and run through Node's native type
+  # stripping, which needs 22.18+ (unflagged) — so the matrix starts there.
+  test:
+    name: test (${{ matrix.os }}, node ${{ matrix.node }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        # The published packages declare engines.node >= 20.11.0, so the lowest
-        # supported version is part of the matrix on purpose.
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node: ['20.11.0', '22', '24']
-        exclude:
-          - os: macos-latest
-            node: '20.11.0'
+        node: ['22.18', '24']
     steps:
       - uses: actions/checkout@v4
 
@@ -32,8 +29,7 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
 
-      - name: Install
-        run: npm ci
+      - run: npm ci
 
       - name: Build
         run: npm run build
@@ -43,6 +39,31 @@ jobs:
 
       - name: Test
         run: node --test "packages/core/test/**/*.test.ts" "packages/cli/test/**/*.test.ts" "packages/mcp/test/**/*.test.ts"
+
+  # Proves the `engines.node >= 20.11.0` claim instead of assuming it.
+  #
+  # The published packages ship compiled JavaScript, so they run on Node 20 even
+  # though the repository's own test suite cannot: the tests are .ts files and
+  # need Node's native type stripping. `npm run smoke` packs every package,
+  # installs the tarballs into a clean project and drives the CLI and the MCP
+  # server over stdio — against what users actually install, not the workspace.
+  packaged-smoke:
+    name: packaged smoke (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20.11.0', '22.18', '24']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+      - run: npm run smoke
 
   audit:
     name: audit
@@ -74,12 +95,21 @@ jobs:
       # keeps the committed context from silently rotting.
       - name: Scan this repository
         run: node packages/cli/dist/bin.js init && node packages/cli/dist/bin.js scan
-      - name: Verify the generated context
+      - name: Verify the generated context is not stale
         run: node packages/cli/dist/bin.js verify --json
-      # `detect` exits 2 on a path traversal and 1 on a warning. A warning is
-      # expected on a repository with import cycles, so only errors gate the build.
+
+      # `detect` exits 1 when it finds warnings, and this repository genuinely
+      # has import cycles and a layering finding, so the exit code is expected.
+      # Only an error (a rejected path traversal) may fail the build.
       - name: Report analysis coverage gaps
-        run: node packages/cli/dist/bin.js detect --json
+        run: node packages/cli/dist/bin.js detect --json > /tmp/detect.json || true
+      - name: Fail if a path traversal was not rejected
+        run: |
+          node -e "
+            const r = require('/tmp/detect.json');
+            console.log('errors=' + r.counts.error, 'warnings=' + r.counts.warning, 'resolutionRate=' + r.imports.resolutionRate);
+            if (r.imports.pathEscapes > 0) { console.error('path traversal was not rejected'); process.exit(1); }
+          "
 
   benchmark:
     name: benchmark
@@ -99,8 +129,7 @@ jobs:
       - name: Fail if a path traversal was not rejected
         run: |
           node -e "
-            const r = require('/tmp/benchmark.json');
-            const s = r.summary;
+            const s = require('/tmp/benchmark.json').summary;
             console.log('import resolution rate:', s.imports.resolutionRate);
             console.log('actionable unresolved:', s.imports.actionableUnresolved);
             console.log('path escapes:', s.imports.pathEscapes);
@@ -118,7 +147,7 @@ jobs:
   publish-check:
     name: publish dry run
     runs-on: ubuntu-latest
-    needs: [verify]
+    needs: [test, packaged-smoke, audit]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -126,9 +155,9 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - run: npm run build
       - name: Confirm every package can be packed
         run: |
-          npm run build
           npm pack ./packages/core --pack-destination /tmp/pack
           npm pack ./packages/cli  --pack-destination /tmp/pack
           npm pack ./packages/mcp  --pack-destination /tmp/pack

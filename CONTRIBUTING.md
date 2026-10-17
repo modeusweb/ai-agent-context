@@ -14,7 +14,28 @@ npm run verify
 `npm run verify` is the gate: it builds all packages, typechecks the test tree
 and runs the full suite. Run it before every push.
 
-Requires Node.js `>= 20.11.0`.
+### Which Node version
+
+Two different floors, for two different reasons:
+
+| | Floor | Why |
+| --- | --- | --- |
+| **Published packages** (`ai-agent-context`, `@ai-agent-context/*`) | `>= 20.11.0` | They ship compiled JavaScript with no runtime dependencies. Nothing in the code needs a newer Node. |
+| **Working on this repository** (build, `npm run verify`) | `>= 22.18.0` | The test suite is TypeScript and runs through Node's native type stripping, which is unflagged from 22.18. On Node 20 the build succeeds and the tests cannot start at all. |
+
+CI mirrors this: the `test` job runs the TypeScript suite on Node 22.18 and 24
+across Linux, Windows and macOS, while `npm run smoke` packs the real tarballs
+and exercises them on Node 20.11 as well. If you bump `engines.node`, the smoke
+job is what will notice.
+
+```bash
+npm run smoke     # pack, install into a clean project, drive the CLI and MCP
+```
+
+`npm run smoke` is deliberately not a unit test: it is the only thing that
+validates the published artifacts, and it runs on a repository built to contain
+the inputs that have broken things before — an import that climbs two
+directories, and an import that tries to escape the repository root.
 
 ## Repository layout
 
@@ -82,6 +103,7 @@ All three packages share one version, held in
 ```bash
 node tools/set-version.mjs 0.6.0
 npm run verify
+npm run smoke
 git commit -am "chore(release): v0.6.0"
 npm run publish:all
 ```
