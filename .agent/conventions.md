@@ -26,12 +26,12 @@ evidence behind it are listed. Statements marked `config` come from declared con
 
 - External dependencies are imported before internal modules (44/50 files). _(confidence 0.75, observed)_
   - evidence: `<repository>` — import order observed across files that import both kinds of modules
-- Type-only dependencies use `import type` (59/119 files). _(confidence 0.80, observed)_
+- Type-only dependencies use `import type` (59/120 files). _(confidence 0.80, observed)_
   - evidence: `<repository>` — import type / export type statements detected
 
 ## Languages
 
-- Implementation mixes TypeScript (117 files) and JavaScript (13 files). _(confidence 0.90, observed)_
+- Implementation mixes TypeScript (117 files) and JavaScript (14 files). _(confidence 0.90, observed)_
   - evidence: `<repository>` — languages are derived from file extensions, not from content guessing
 
 ## Naming
@@ -40,11 +40,11 @@ evidence behind it are listed. Statements marked `config` come from declared con
   - evidence: `packages/cli/src/ui/console.ts` — class "ConsoleOutput" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/fs-adapter.ts` — class "FileSystemAdapter" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/sensitive.ts` — class "SensitivePathFilter" uses PascalCase
-- Functions use camelCase (437/441 declarations). _(confidence 0.95, observed)_
+- Functions use camelCase (441/445 declarations). _(confidence 0.95, observed)_
   - evidence: `packages/cli/src/cli.ts` — function "appendFlag" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "parseArguments" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "flagString" uses camelCase
-- Source files use camelCase (79/100 files). _(confidence 0.91, observed)_
+- Source files use camelCase (79/101 files). _(confidence 0.91, observed)_
   - evidence: `packages/cli/src/bin.ts` — file name uses camelCase
   - evidence: `packages/cli/src/cli.ts` — file name uses camelCase
   - evidence: `packages/cli/src/commands/clean.ts` — file name uses camelCase

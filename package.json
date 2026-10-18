@@ -40,6 +40,7 @@
     "api:lock": "npm run build && node tools/api-surface.mjs --write",
     "api:check": "npm run build && node tools/api-surface.mjs",
     "stability:check": "npm run build && node tools/check-stability.mjs",
+    "context:check": "node tools/check-context.mjs",
     "ground-truth": "npm run build && node tools/ground-truth.mjs",
     "ground-truth:entry": "npm run build && node tools/ground-truth-entry.mjs",
     "ground-truth:public": "npm run build && node tools/ground-truth-public.mjs",

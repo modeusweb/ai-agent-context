@@ -66,7 +66,7 @@
         "path": "package-lock.json"
       },
       {
-        "hash": "9cde565607fb651860bfbfb63ffaa4bebf16dcb2a5d47dd6de6a09c8a5f3a289",
+        "hash": "ac6ec656249ce2ac95ed9f486708be658f686f2d7959252af64cb2ada21aba1c",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -1011,6 +1011,13 @@
         "path": "tools/benchmark.mjs"
       },
       {
+        "hash": "6a346c20c0ab8ad358aac380011c663ed98731fdcc9ba8f61aad3c62ed3e900a",
+        "kind": "source",
+        "language": "javascript",
+        "module": "tools",
+        "path": "tools/check-context.mjs"
+      },
+      {
         "hash": "9c65b06a1d53a4da0b1c64dac499a9196dd5b225dbfc7bb5f20578dd5d221a10",
         "kind": "source",
         "language": "javascript",
@@ -1113,7 +1120,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 48,
+    "commitsAnalyzed": 49,
     "enabled": true,
     "windowDays": 180
   },
@@ -1127,10 +1134,10 @@
       "docs": 9,
       "entryPoints": 54,
       "externalDependencies": 13,
-      "files": 157,
+      "files": 158,
       "modules": 13,
-      "source": 100,
-      "symbols": 940,
+      "source": 101,
+      "symbols": 951,
       "tests": 33
     },
     "isMonorepo": true,

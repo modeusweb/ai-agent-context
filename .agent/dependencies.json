@@ -1186,6 +1186,17 @@
     },
     {
       "externalPackages": [
+        "node:child_process",
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/check-context.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
         "node:fs",
         "node:path",
         "node:url"

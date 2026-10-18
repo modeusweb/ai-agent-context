@@ -140,24 +140,23 @@ jobs:
       - run: npm ci
       - run: npm run build
       # The tool must produce a usable context for its own repository, and the
-      # committed context (`.agent/*.json` is versioned on purpose) must match
-      # what the current scanner produces.
+      # committed context (`.agent/*.json` is versioned on purpose) must still
+      # describe the source it was generated from.
       #
-      # `verify` alone cannot catch this: `scan` regenerates `.agent/` first, so
-      # by the time it runs there is never anything pending. The assertion that
-      # actually detects drift is a diff of the regenerated tree against the
-      # committed one, so the scan stays and the diff is what gates.
+      # Two simpler checks were tried first and neither works on a clean clone:
+      # `git diff --exit-code -- .agent` demands byte-identical regeneration,
+      # which can never hold because index.json records `git.commitsAnalyzed`
+      # (so every commit changes it) and the repository directory name; and
+      # `verify` diffs against `.agent/.local/state.json`, which is gitignored,
+      # so with no baseline it reports all 157 files as pending and always
+      # exits 1.
+      #
+      # What matters is the set of recorded `path -> sha256` pairs, which is
+      # what this compares. See tools/check-context.mjs.
       - name: Regenerate the context for this repository
         run: node packages/cli/dist/bin.js init && node packages/cli/dist/bin.js scan
-      - name: Fail if the committed context is stale
-        run: |
-          if ! git diff --exit-code -- .agent; then
-            echo "::error::.agent/ is out of date. Run 'npm run scan' equivalent and commit the result."
-            git --no-pager diff --stat -- .agent
-            exit 1
-          fi
-      - name: Verify the committed context is not stale
-        run: node packages/cli/dist/bin.js verify --json
+      - name: Fail if the committed context no longer describes the source
+        run: node tools/check-context.mjs
 
       # `detect` exits 1 when it finds warnings, and this repository genuinely
       # has import cycles and a layering finding, so the exit code is expected.

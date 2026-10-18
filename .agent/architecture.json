@@ -3207,6 +3207,7 @@
       "fileList": [
         "tools/api-surface.mjs",
         "tools/benchmark.mjs",
+        "tools/check-context.mjs",
         "tools/check-stability.mjs",
         "tools/clean.mjs",
         "tools/exported-types.d.mts",
@@ -3220,7 +3221,7 @@
         "tools/smoke.mjs",
         "tools/trust-metrics.mjs"
       ],
-      "files": 14,
+      "files": 15,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
