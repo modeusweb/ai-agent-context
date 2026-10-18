@@ -29,7 +29,7 @@
  *   node tools/ground-truth.mjs [repoRoot]
  *   node tools/ground-truth.mjs --json
  */
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
@@ -71,18 +71,144 @@ function walk(dir, { extensions, manifests }, acc = []) {
 /** Workspace package name to its directory, read from the package manifests. */
 function readWorkspacePackages() {
   const byName = new Map();
-  for (const manifest of walk(repoRoot, { extensions: new Set(), manifests: true })) {
-    try {
-      const parsed = JSON.parse(readFileSync(manifest, 'utf8'));
-      if (typeof parsed.name === 'string') byName.set(parsed.name, path.resolve(path.dirname(manifest)));
-    } catch {
-      // A manifest we cannot read contributes no package identity.
+  for (const manifest of manifests) {
+    if (typeof manifest.parsed.name === 'string') {
+      byName.set(manifest.parsed.name, manifest.directory);
     }
   }
   return byName;
 }
 
+/**
+ * Every package manifest in the tree, including ones without a `name`.
+ *
+ * A manifest without a name cannot be a dependency target, but it can still be
+ * the package a file belongs to, and which dependencies it declares is the
+ * evidence for whether a bare specifier reaches the registry.
+ */
+function readManifests() {
+  const manifests = [];
+  for (const manifestPath of walk(repoRoot, { extensions: new Set(), manifests: true })) {
+    try {
+      manifests.push({ directory: path.resolve(path.dirname(manifestPath)), parsed: JSON.parse(readFileSync(manifestPath, 'utf8')) });
+    } catch {
+      // A manifest we cannot read declares nothing.
+    }
+  }
+  return manifests;
+}
+
+/** The manifest that owns a file: the nearest ancestor directory that has one. */
+function nearestManifest(file) {
+  let directory = path.dirname(path.resolve(file));
+  while (true) {
+    for (const manifest of manifests) {
+      if (manifest.directory === directory) return manifest;
+    }
+    const parent = path.dirname(directory);
+    if (parent === directory || directory.length < repoRoot.length) break;
+    directory = parent;
+  }
+  return null;
+}
+
+/**
+ * Whether a manifest declares `specifier` as a dependency.
+ *
+ * Subpath imports count as the package: `pkg/sub` is a dependency on `pkg`.
+ */
+function declaresDependency(manifest, specifier) {
+  if (manifest === null) return false;
+  const packageName = specifier.startsWith('@')
+    ? specifier.split('/').slice(0, 2).join('/')
+    : specifier.split('/')[0];
+  for (const field of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
+    const declared = manifest.parsed[field];
+    if (declared !== null && typeof declared === 'object' && Object.hasOwn(declared, packageName)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+const manifests = readManifests();
 const packagesByName = readWorkspacePackages();
+const workspaceNames = readWorkspaceMemberNames();
+
+/**
+ * Workspace membership, read from the workspace configuration.
+ *
+ * Only a declared member counts, and that distinction is load-bearing. A
+ * repository can contain a package manifest whose `name` matches the package it
+ * sits next to without being part of any workspace — a benchmark directory that
+ * pins the published `clsx@1.1.0` next to the `clsx` sources is the ordinary
+ * case. Treating that bare specifier as an in-repo edge would add an edge the
+ * analyzer deliberately does not draw, and make it look wrong for being right.
+ *
+ * The analyzer reads membership from the same place, so the oracle has to as
+ * well; mirroring it here is not copying an implementation, it is the only way
+ * for two graphs to be comparable at all.
+ */
+function readWorkspaceMemberNames() {
+  const patterns = readWorkspacePatterns();
+  if (patterns.length === 0) return new Set();
+  const names = new Set();
+  for (const [name, directory] of packagesByName) {
+    const relative = path.relative(repoRoot, directory).split(path.sep).join('/');
+    if (patterns.some((pattern) => matchesWorkspacePattern(relative, pattern))) names.add(name);
+  }
+  return names;
+}
+
+/** Workspace directory patterns, from npm/yarn `workspaces` or pnpm's own file. */
+function readWorkspacePatterns() {
+  const patterns = [];
+  try {
+    const parsed = JSON.parse(readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
+    const declared = Array.isArray(parsed.workspaces)
+      ? parsed.workspaces
+      : parsed.workspaces?.packages;
+    if (Array.isArray(declared)) {
+      for (const entry of declared) if (typeof entry === 'string') patterns.push(entry);
+    }
+  } catch {
+    // A repository with no readable root manifest declares no workspace.
+  }
+  const pnpm = path.join(repoRoot, 'pnpm-workspace.yaml');
+  if (!existsSync(pnpm)) return patterns;
+  // The `packages:` list is a flat run of dash-prefixed paths, which is all
+  // that is needed here; taking a YAML dependency for it would not pay for
+  // itself in a script whose whole point is to stay independent of the product.
+  let inPackages = false;
+  for (const line of readFileSync(pnpm, 'utf8').split(/\r?\n/)) {
+    if (/^packages:\s*$/.test(line)) {
+      inPackages = true;
+      continue;
+    }
+    if (!inPackages) continue;
+    const match = /^\s+-\s*(.+?)\s*$/.exec(line);
+    if (match !== null) {
+      patterns.push(match[1].replace(/^['"]|['"]$/g, ''));
+      continue;
+    }
+    if (line.trim() !== '') break;
+  }
+  return patterns;
+}
+
+/** Matches a workspace-relative directory against a pattern such as `packages/*`. */
+function matchesWorkspacePattern(directory, pattern) {
+  const segments = pattern.replace(/^\.\//, '').replace(/\/+$/, '').split('/');
+  const actual = directory.split('/').filter((segment) => segment !== '');
+  let cursor = 0;
+  for (const segment of segments) {
+    if (segment === '**') return true;
+    if (cursor >= actual.length) return false;
+    if (segment !== '*' && segment !== actual[cursor]) return false;
+    cursor += 1;
+  }
+  return cursor === actual.length;
+}
 
 /**
  * The workspace package that owns an absolute path, if any.
@@ -168,12 +294,24 @@ function buildGroundTruth() {
     for (const specifier of specifiersIn(file)) {
       specifiers += 1;
 
-      // A bare specifier naming a workspace package is an in-repo dependency, not
-      // an external one. Counting it as external would delete the edge and make
-      // the analyzer look wrong for being right.
+      // A bare specifier naming a package in this repository is usually an
+      // in-repo dependency rather than an external one, but "usually" is doing
+      // real work in that sentence and each case has to be decided separately.
       if (packagesByName.has(specifier)) {
-        packagePairs.add(`${toRelative(file)} -> ${specifier}`);
-        continue;
+        const declared = declaresDependency(nearestManifest(file), specifier);
+        // Declared as a registry range and not a workspace member: this is a
+        // published package the repository depends on. `clsx` keeps a `bench/`
+        // directory that pins `clsx@1.1.0` next to the `clsx` sources, on
+        // purpose, to compare against the released build.
+        if (workspaceNames.has(specifier) || !declared) {
+          // Otherwise it is either a workspace member or a self-reference. The
+          // second case is `ky` importing `ky` from its own type tests, which
+          // means the local entry point, not a download. An undeclared bare
+          // import of your own package name is what self-reference looks like;
+          // package managers require real dependencies to be declared.
+          packagePairs.add(`${toRelative(file)} -> ${specifier}`);
+          continue;
+        }
       }
       if (!specifier.startsWith('.') && !specifier.startsWith('/')) {
         external += 1;
@@ -204,7 +342,7 @@ function buildGroundTruth() {
       // Anything still owned by a workspace package, for example a package
       // resolved through node_modules, is an in-repo dependency.
       const owning = packageOwning(absolute);
-      if (owning !== null) packagePairs.add(` -> `);
+      if (owning !== null) packagePairs.add(`${toRelative(file)} -> ${owning}`);
     }
   }
   return { filePairs, packagePairs, files: files.length, specifiers, inRepo, external, unresolved, excludedOutput };

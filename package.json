@@ -41,6 +41,8 @@
     "api:check": "npm run build && node tools/api-surface.mjs",
     "stability:check": "npm run build && node tools/check-stability.mjs",
     "ground-truth": "npm run build && node tools/ground-truth.mjs",
+    "ground-truth:public": "npm run build && node tools/ground-truth-public.mjs",
+    "benchmark:public": "npm run build && node tools/benchmark.mjs --public",
     "smoke": "npm run build && node tools/smoke.mjs",
     "pack:all": "npm run build && npm pack ./packages/core && npm pack ./packages/cli && npm pack ./packages/mcp"
   },

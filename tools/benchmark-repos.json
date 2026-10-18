@@ -1,0 +1,76 @@
+{
+  "$comment": [
+    "Public repositories used to measure the product on real code.",
+    "",
+    "Each entry is pinned to a commit SHA so the measurement is reproducible:",
+    "a moving target would make every benchmark run incomparable with the last,",
+    "which is the same mistake as measuring against a moving specifier. Bump a",
+    "SHA deliberately, in its own change, so a metric movement can be attributed",
+    "to the repository rather than to us.",
+    "",
+    "Selection criteria, in priority order:",
+    "  - TypeScript or JavaScript source, since those are the languages the",
+    "    analyzer supports; a Python repository would measure nothing.",
+    "  - Permissively licensed, so the benchmark is unambiguous about what it is",
+    "    doing with the code. Nothing is vendored: each repository is cloned into a",
+    "    temporary directory, measured, and deleted.",
+    "  - A spread of sizes and shapes, so the token-budget buckets and the module",
+    "    detection are exercised on more than one kind of layout.",
+    "  - Small enough to clone quickly. The point is many repositories measured",
+    "    often, not one large one measured rarely.",
+    "",
+    "Run with: npm run benchmark:public",
+    "On CI it runs on a schedule and on demand, so a network-dependent job cannot",
+    "block a pull request."
+  ],
+  "repositories": [
+    {
+      "name": "clsx",
+      "url": "https://github.com/lukeed/clsx.git",
+      "sha": "925494cf31bcd97d3337aacd34e659e80cae7fe2",
+      "note": "Tiny single-file TypeScript package: the lower bound of the size range."
+    },
+    {
+      "name": "p-map",
+      "url": "https://github.com/sindresorhus/p-map.git",
+      "sha": "d61b6a33cc1d5533ad5711b435959f3f78c3d2fe",
+      "note": "Small TypeScript package with several runtime dependencies."
+    },
+    {
+      "name": "ansi-styles",
+      "url": "https://github.com/chalk/ansi-styles.git",
+      "sha": "8cf247afbecf29a8227f7d0beb69c2997fc6bc61",
+      "note": "Older CommonJS codebase, to check the analyzer does not assume modern module syntax."
+    },
+    {
+      "name": "ky",
+      "url": "https://github.com/sindresorhus/ky.git",
+      "sha": "3541888878c4d303a8bc2ad61815f4e048f55a5d",
+      "note": "Modern ESM TypeScript with tests colocated next to sources."
+    },
+    {
+      "name": "ora",
+      "url": "https://github.com/sindresorhus/ora.git",
+      "sha": "b204360b0df925289759858c93d3d3ca824914c3",
+      "note": "TypeScript with build output committed and a wider dependency surface."
+    },
+    {
+      "name": "execa",
+      "url": "https://github.com/sindresorhus/execa.git",
+      "sha": "b87aab71b2ac3da1799914a7ef79a36bd2d14c03",
+      "note": "Larger modern TypeScript package: exercises the 8-64 KB size bucket."
+    },
+    {
+      "name": "got",
+      "url": "https://github.com/sindresorhus/got.git",
+      "sha": "05b4476913da39a47dd8e20d29e250f28b0a6dca",
+      "note": "Substantial TypeScript package with deep internal directories."
+    },
+    {
+      "name": "changesets",
+      "url": "https://github.com/changesets/changesets.git",
+      "sha": "e2ee472cc6c901a0bb29781dac12603f6e4d5215",
+      "note": "npm workspaces monorepo, so cross-package resolution is measured on something other than our own layout."
+    }
+  ]
+}

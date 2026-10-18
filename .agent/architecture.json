@@ -326,6 +326,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/generics.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/generics.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/test/git.test.ts"
         }
       ],
@@ -1851,12 +1863,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 17,
+        "historicalChanges": 18,
         "lastChanged": "2026-10-18",
-        "recentChanges": 17,
+        "recentChanges": 18,
         "topContributors": [
           {
-            "commits": 21,
+            "commits": 22,
             "name": "modeusweb"
           }
         ]
@@ -2436,6 +2448,7 @@
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
         "packages/core/test/filesystem.test.ts",
+        "packages/core/test/generics.test.ts",
         "packages/core/test/git.test.ts",
         "packages/core/test/helpers.ts",
         "packages/core/test/incremental.test.ts",
@@ -2458,6 +2471,7 @@
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
         "packages/core/test/filesystem.test.ts",
+        "packages/core/test/generics.test.ts",
         "packages/core/test/git.test.ts",
         "packages/core/test/helpers.ts",
         "packages/core/test/incremental.test.ts",
@@ -2468,7 +2482,7 @@
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts"
       ],
-      "files": 20,
+      "files": 21,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
@@ -2603,6 +2617,7 @@
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
         "packages/core/test/filesystem.test.ts",
+        "packages/core/test/generics.test.ts",
         "packages/core/test/git.test.ts",
         "packages/core/test/helpers.ts",
         "packages/core/test/incremental.test.ts",
@@ -3121,22 +3136,23 @@
         "tools/check-stability.mjs",
         "tools/clean.mjs",
         "tools/generate-fixtures.mjs",
+        "tools/ground-truth-public.mjs",
         "tools/ground-truth.mjs",
         "tools/set-version.mjs",
         "tools/smoke.mjs",
         "tools/trust-metrics.mjs"
       ],
-      "files": 9,
+      "files": 10,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 10,
+        "historicalChanges": 11,
         "lastChanged": "2026-10-18",
-        "recentChanges": 10,
+        "recentChanges": 11,
         "topContributors": [
           {
-            "commits": 13,
+            "commits": 14,
             "name": "modeusweb"
           }
         ]
@@ -3226,7 +3242,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 49,
+    "entryPoints": 50,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3250,21 +3266,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.12.1"
+        "version": "0.13.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.12.1"
+        "version": "0.13.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.12.1"
+        "version": "0.13.0"
       }
     ],
     "workspaceGlobs": [

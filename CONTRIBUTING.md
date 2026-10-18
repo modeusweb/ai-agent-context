@@ -47,6 +47,26 @@ fixtures/       # synthetic repositories used by tests and the benchmark
 tools/          # repo automation (fixtures, benchmark, versioning, clean)
 ```
 
+### Tools that judge the analyzer
+
+Three of them exist because the analyzer cannot be trusted to grade itself:
+
+| Tool | Question it answers |
+| --- | --- |
+| `tools/ground-truth.mjs` | Does the dependency graph agree with the TypeScript compiler? |
+| `tools/ground-truth-public.mjs` | Does it agree on other people's code, not just ours? |
+| `tools/benchmark.mjs --public` | What does it do on repositories we did not write? |
+
+`tools/benchmark-repos.json` pins those third-party repositories by commit SHA.
+Bump a SHA deliberately, in its own change: a moving target makes every metric
+movement unattributable, which is the same mistake as measuring against a moving
+specifier.
+
+**Run the public ones before claiming a parser change is safe.** Every parser
+defect found so far passed the full suite of tests on this repository and every
+fixture, and was caught only by pointing the oracle at code someone else wrote. A
+green local run is evidence about our conventions, not about the product.
+
 Only `packages/core` may be depended on by the other two. Core keeps **zero
 runtime dependencies** on purpose — it is what makes the tool installable
 anywhere and safe to run on untrusted repositories. Adding a dependency to core

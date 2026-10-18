@@ -656,13 +656,13 @@ precision or recall falls below 100%.
 
 | Metric | Value |
 | --- | --- |
-| Specifiers examined | 653 (460 in-repo, 155 external) |
-| File-level import pairs | 408 |
+| Specifiers examined | 663 (462 in-repo, 165 external) |
+| File-level import pairs | 410 |
 | Module edges, ground truth | 18 |
 | Module edges, analyzer | 18 |
 | **Precision** | **100%** (0 false positives) |
 | **Recall** | **100%** (0 false negatives) |
-| Unresolved imports cross-checked | 23 — all imports of excluded build output, **0 missed** |
+| Unresolved imports cross-checked | 25 — all imports of excluded build output, **0 missed** |
 
 **Why this is not the same number twice.** `summary.imports.resolutionRate` is
 produced by the analyzer describing itself: it counts what its own resolver
@@ -681,8 +681,12 @@ an edge exists comes from the compiler.
 - Build output is excluded, matching the analyzer's documented `excludedOutput`
   class. An edge derived from `dist/` would make the dependency graph depend on
   whether the project happened to be built.
-- A bare specifier naming a workspace package is an in-repo dependency, not an
-  external one.
+- A bare specifier naming a declared workspace package is an in-repo dependency,
+  not an external one. A package importing **itself by name** — which is what
+  `ky`'s own type tests do — is a dependency on its local entry point. A
+  specifier the importing manifest *declares* as a dependency is a registry
+  dependency even when the name matches a package in the same tree, which is what
+  separates `clsx`'s `bench/` from `ky`'s `test-d/`.
 - An analyzer target matches a truth target when they are equal, or when the
   analyzer target is a workspace package containing the truth target. Both
   describe one dependency at different levels of detail; matches that needed this
@@ -694,12 +698,50 @@ to resolve is also put to the compiler and classified as `expectedBuildOutput`,
 `agreedMissing`, or `missed`. A single `missed` entry means the headline
 resolution rate is overstated.
 
-**Known limits.** One real repository plus five synthetic fixtures, all of them
-small; the compiler is only an oracle for TypeScript/JavaScript, and it applies
-its own resolution rules rather than the analyzer's configuration. This measures
-whether the resolver agrees with a well-known independent implementation — it does
-not certify the analyzer's heuristics, which remain confidence-bearing and
-advisory.
+**Known limits.** The compiler is only an oracle for TypeScript/JavaScript, and
+it applies its own resolution rules rather than the analyzer's configuration.
+This measures whether the resolver agrees with a well-known independent
+implementation — it does not certify the analyzer's heuristics, which remain
+confidence-bearing and advisory.
+
+## The same check on other people's repositories
+
+Measuring yourself is not evidence. Every repository above is one the analyzer
+was written alongside, so a defect that only exists in third-party code would
+pass all of it — and one did: a nested generic in a type annotation closed the
+type argument list with `>>`, which the lexer had merged into a single shift
+token, and the parser then scanned to the end of the file and dropped every
+statement after it, reporting success. In a barrel file that is most of the
+public surface.
+
+Eight third-party repositories are therefore pinned by commit SHA in
+`tools/benchmark-repos.json`:
+
+```bash
+npm run benchmark:public        # clone, measure, delete
+npm run ground-truth:public     # the same oracle, on the same set
+```
+
+| Repository | Shape | Files | Resolution | Path escapes | Determinism | Precision / recall |
+| --- | --- | ---: | ---: | ---: | --- | --- |
+| `clsx` | single file | 13 | 100% | 0 | yes | 100% / 100% |
+| `p-map` | small, several deps | 11 | 100% | 0 | yes | single module |
+| `ansi-styles` | CommonJS | 8 | 100% | 0 | yes | single module |
+| `ky` | modern ESM TypeScript | 105 | 100% | 0 | yes | 100% / 100% |
+| `ora` | TypeScript, build output committed | 11 | 100% | 0 | yes | single module |
+| `execa` | larger TypeScript | 673 | 100% | 0 | yes | 100% / 100% |
+| `got` | deep directory tree | 127 | 100% | 0 | yes | 100% / 100% |
+| `changesets` | pnpm workspace monorepo | 288 | 100% | 0 | yes | 100% / 100% |
+
+A commit SHA rather than a branch, so two runs compare each other; a moving
+target would make every measurement incomparable with the last. Nothing is
+vendored — each repository is cloned into a temporary directory, measured, and
+deleted. "Single module" means the repository has no module edges to compare, so
+precision and recall are undefined there rather than 100%.
+
+CI runs this as `public repositories`, on pushes to `master` and weekly, but not
+on pull requests: it needs the network, and a slow clone should not block a
+change that can be reviewed without it.
 
 ## Measured, not asserted
 

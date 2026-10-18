@@ -1,48 +1,48 @@
 {
-  "generatedAt": "2026-10-17T22:49:14.169Z",
+  "generatedAt": "2026-10-18T00:30:49.500Z",
   "node": "v24.21.0",
   "summary": {
-    "repositories": 6,
-    "files": 192,
+    "repositories": 14,
+    "files": 1438,
     "imports": {
-      "resolved": 32,
-      "excludedOutput": 22,
+      "resolved": 378,
+      "excludedOutput": 29,
       "actionableUnresolved": 0,
       "pathEscapes": 0,
       "resolutionRate": 1
     },
     "graph": {
-      "moduleEdges": 32,
-      "cycles": 3
+      "moduleEdges": 378,
+      "cycles": 8
     },
     "trust": {
-      "judgements": 363,
-      "withEvidence": 363,
+      "judgements": 2179,
+      "withEvidence": 2179,
       "withoutEvidence": 0,
       "coveragePercent": 100,
       "nonDeterministic": 0
     },
     "tokenBudget": {
       "under8Kb": {
-        "modules": 13,
-        "sourceBytes": 16677,
-        "explainBytes": 34531,
-        "ratio": 2.0706,
-        "savedPercent": -107.1
+        "modules": 42,
+        "sourceBytes": 108026,
+        "explainBytes": 127269,
+        "ratio": 1.1781,
+        "savedPercent": -17.8
       },
       "from8To64Kb": {
-        "modules": 11,
-        "sourceBytes": 298426,
-        "explainBytes": 91831,
-        "ratio": 0.3077,
-        "savedPercent": 69.2
+        "modules": 68,
+        "sourceBytes": 1746828,
+        "explainBytes": 695496,
+        "ratio": 0.3981,
+        "savedPercent": 60.2
       },
       "over64Kb": {
-        "modules": 2,
-        "sourceBytes": 483242,
-        "explainBytes": 29707,
-        "ratio": 0.0615,
-        "savedPercent": 93.9
+        "modules": 25,
+        "sourceBytes": 5695592,
+        "explainBytes": 301367,
+        "ratio": 0.0529,
+        "savedPercent": 94.7
       }
     }
   },
@@ -68,14 +68,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 135,
+        "coldMs": 132,
         "warmMs": 76,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 67,
+        "ms": 66,
         "bytes": 4832
       },
       "trust": {
@@ -146,14 +146,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 109,
-        "warmMs": 80,
+        "coldMs": 111,
+        "warmMs": 79,
         "parsed": 16,
         "warmParsed": 0,
         "warmReused": 16
       },
       "compact": {
-        "ms": 71,
+        "ms": 70,
         "bytes": 9473
       },
       "trust": {
@@ -242,14 +242,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 98,
-        "warmMs": 79,
+        "coldMs": 95,
+        "warmMs": 77,
         "parsed": 14,
         "warmParsed": 0,
         "warmReused": 14
       },
       "compact": {
-        "ms": 67,
+        "ms": 69,
         "bytes": 8227
       },
       "trust": {
@@ -326,14 +326,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 81,
-        "warmMs": 73,
+        "coldMs": 80,
+        "warmMs": 69,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 62,
+        "ms": 61,
         "bytes": 5060
       },
       "trust": {
@@ -399,13 +399,13 @@
       },
       "scan": {
         "coldMs": 87,
-        "warmMs": 74,
+        "warmMs": 78,
         "parsed": 10,
         "warmParsed": 0,
         "warmReused": 10
       },
       "compact": {
-        "ms": 69,
+        "ms": 64,
         "bytes": 8325
       },
       "trust": {
@@ -457,12 +457,12 @@
     },
     {
       "repository": "ai-agent-context",
-      "files": 138,
-      "sourceFiles": 93,
+      "files": 148,
+      "sourceFiles": 96,
       "modules": 13,
       "imports": {
         "resolved": 18,
-        "excludedOutput": 22,
+        "excludedOutput": 24,
         "actionableUnresolved": 0,
         "pathEscapes": 0,
         "resolutionRate": 1
@@ -471,29 +471,29 @@
       "graph": {
         "moduleEdges": 18,
         "crossPackageEdges": 0,
-        "externalPackages": 11,
+        "externalPackages": 12,
         "cycles": 2,
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 487,
+        "coldMs": 511,
         "warmMs": 164,
-        "parsed": 138,
+        "parsed": 148,
         "warmParsed": 0,
-        "warmReused": 138
+        "warmReused": 148
       },
       "compact": {
-        "ms": 148,
-        "bytes": 20105
+        "ms": 156,
+        "bytes": 19766
       },
       "trust": {
-        "judgements": 145,
-        "withEvidence": 145,
+        "judgements": 150,
+        "withEvidence": 150,
         "withoutEvidence": 0,
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "382f6122"
+        "contextHash": "6cf8723f"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -504,52 +504,891 @@
           "savedPercent": 0
         },
         "from8To64Kb": {
-          "modules": 11,
-          "sourceBytes": 298426,
-          "explainBytes": 91831,
-          "ratio": 0.3077,
-          "savedPercent": 69.2
+          "modules": 10,
+          "sourceBytes": 244429,
+          "explainBytes": 84072,
+          "ratio": 0.344,
+          "savedPercent": 65.6
         },
         "over64Kb": {
-          "modules": 2,
-          "sourceBytes": 483242,
-          "explainBytes": 29707,
-          "ratio": 0.0615,
-          "savedPercent": 93.9
+          "modules": 3,
+          "sourceBytes": 585541,
+          "explainBytes": 40072,
+          "ratio": 0.0684,
+          "savedPercent": 93.2
         },
         "largest": [
           {
             "module": "packages/core/src",
-            "bytes": 395891,
+            "bytes": 396359,
             "explainBytes": 15960,
             "ratio": 0.0403
           },
           {
             "module": "packages/core/test",
-            "bytes": 87351,
-            "explainBytes": 13747,
-            "ratio": 0.1574
+            "bytes": 99290,
+            "explainBytes": 15182,
+            "ratio": 0.1529
           },
           {
             "module": "tools",
-            "bytes": 59366,
-            "explainBytes": 8418,
-            "ratio": 0.1418
+            "bytes": 89892,
+            "explainBytes": 8930,
+            "ratio": 0.0993
           },
           {
             "module": "packages/mcp/src",
-            "bytes": 37070,
+            "bytes": 37321,
             "explainBytes": 9773,
-            "ratio": 0.2636
+            "ratio": 0.2619
           },
           {
             "module": "packages/mcp/test",
-            "bytes": 35353,
-            "explainBytes": 6279,
-            "ratio": 0.1776
+            "bytes": 36188,
+            "explainBytes": 6607,
+            "ratio": 0.1826
+          }
+        ]
+      }
+    },
+    {
+      "repository": "clsx",
+      "files": 13,
+      "sourceFiles": 6,
+      "modules": 5,
+      "imports": {
+        "resolved": 1,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 1,
+        "crossPackageEdges": 0,
+        "externalPackages": 1,
+        "cycles": 0,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 96,
+        "warmMs": 75,
+        "parsed": 13,
+        "warmParsed": 0,
+        "warmReused": 13
+      },
+      "compact": {
+        "ms": 64,
+        "bytes": 6301
+      },
+      "trust": {
+        "judgements": 35,
+        "withEvidence": 35,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "e7d7cda1"
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 5,
+          "sourceBytes": 11897,
+          "explainBytes": 7306,
+          "ratio": 0.6141,
+          "savedPercent": 38.6
+        },
+        "from8To64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "over64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "largest": [
+          {
+            "module": "test",
+            "bytes": 7009,
+            "explainBytes": 1718,
+            "ratio": 0.2451
+          },
+          {
+            "module": "bin",
+            "bytes": 1865,
+            "explainBytes": 1226,
+            "ratio": 0.6574
+          },
+          {
+            "module": "bench",
+            "bytes": 1395,
+            "explainBytes": 1389,
+            "ratio": 0.9957
+          },
+          {
+            "module": "src",
+            "bytes": 997,
+            "explainBytes": 1079,
+            "ratio": 1.0822
+          },
+          {
+            "module": "clsx",
+            "bytes": 631,
+            "explainBytes": 1894,
+            "ratio": 3.0016
+          }
+        ]
+      }
+    },
+    {
+      "repository": "p-map",
+      "files": 11,
+      "sourceFiles": 7,
+      "modules": 1,
+      "imports": {
+        "resolved": 0,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 0,
+        "crossPackageEdges": 0,
+        "externalPackages": 11,
+        "cycles": 0,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 141,
+        "warmMs": 71,
+        "parsed": 11,
+        "warmParsed": 0,
+        "warmReused": 11
+      },
+      "compact": {
+        "ms": 64,
+        "bytes": 7006
+      },
+      "trust": {
+        "judgements": 37,
+        "withEvidence": 37,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "b2c23983"
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "from8To64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "over64Kb": {
+          "modules": 1,
+          "sourceBytes": 354867,
+          "explainBytes": 9766,
+          "ratio": 0.0275,
+          "savedPercent": 97.2
+        },
+        "largest": [
+          {
+            "module": "p-map",
+            "bytes": 354867,
+            "explainBytes": 9766,
+            "ratio": 0.0275
+          }
+        ]
+      }
+    },
+    {
+      "repository": "ansi-styles",
+      "files": 8,
+      "sourceFiles": 3,
+      "modules": 1,
+      "imports": {
+        "resolved": 0,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 0,
+        "crossPackageEdges": 0,
+        "externalPackages": 3,
+        "cycles": 0,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 84,
+        "warmMs": 69,
+        "parsed": 8,
+        "warmParsed": 0,
+        "warmReused": 8
+      },
+      "compact": {
+        "ms": 62,
+        "bytes": 5039
+      },
+      "trust": {
+        "judgements": 25,
+        "withEvidence": 25,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "af1defff"
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "from8To64Kb": {
+          "modules": 1,
+          "sourceBytes": 23145,
+          "explainBytes": 6920,
+          "ratio": 0.299,
+          "savedPercent": 70.1
+        },
+        "over64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "largest": [
+          {
+            "module": "ansi-styles",
+            "bytes": 23145,
+            "explainBytes": 6920,
+            "ratio": 0.299
+          }
+        ]
+      }
+    },
+    {
+      "repository": "ky",
+      "files": 105,
+      "sourceFiles": 52,
+      "modules": 9,
+      "imports": {
+        "resolved": 21,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 21,
+        "crossPackageEdges": 0,
+        "externalPackages": 19,
+        "cycles": 1,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 398,
+        "warmMs": 123,
+        "parsed": 105,
+        "warmParsed": 0,
+        "warmReused": 105
+      },
+      "compact": {
+        "ms": 110,
+        "bytes": 13926
+      },
+      "trust": {
+        "judgements": 154,
+        "withEvidence": 154,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "d8e52b86"
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 3,
+          "sourceBytes": 10329,
+          "explainBytes": 10602,
+          "ratio": 1.0264,
+          "savedPercent": -2.6
+        },
+        "from8To64Kb": {
+          "modules": 4,
+          "sourceBytes": 137573,
+          "explainBytes": 29618,
+          "ratio": 0.2153,
+          "savedPercent": 78.5
+        },
+        "over64Kb": {
+          "modules": 2,
+          "sourceBytes": 935400,
+          "explainBytes": 27977,
+          "ratio": 0.0299,
+          "savedPercent": 97
+        },
+        "largest": [
+          {
+            "module": "test",
+            "bytes": 864717,
+            "explainBytes": 18238,
+            "ratio": 0.0211
+          },
+          {
+            "module": "source/core",
+            "bytes": 70683,
+            "explainBytes": 9739,
+            "ratio": 0.1378
+          },
+          {
+            "module": "source/types",
+            "bytes": 60749,
+            "explainBytes": 7171,
+            "ratio": 0.118
+          },
+          {
+            "module": "source/utils",
+            "bytes": 48580,
+            "explainBytes": 10265,
+            "ratio": 0.2113
+          },
+          {
+            "module": "test-d",
+            "bytes": 17980,
+            "explainBytes": 5921,
+            "ratio": 0.3293
+          }
+        ]
+      }
+    },
+    {
+      "repository": "ora",
+      "files": 11,
+      "sourceFiles": 6,
+      "modules": 1,
+      "imports": {
+        "resolved": 0,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 0,
+        "crossPackageEdges": 0,
+        "externalPackages": 16,
+        "cycles": 0,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 107,
+        "warmMs": 73,
+        "parsed": 11,
+        "warmParsed": 0,
+        "warmReused": 11
+      },
+      "compact": {
+        "ms": 63,
+        "bytes": 7597
+      },
+      "trust": {
+        "judgements": 44,
+        "withEvidence": 44,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "aaae8e72"
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "from8To64Kb": {
+          "modules": 0,
+          "sourceBytes": 0,
+          "explainBytes": 0,
+          "ratio": 1,
+          "savedPercent": 0
+        },
+        "over64Kb": {
+          "modules": 1,
+          "sourceBytes": 102329,
+          "explainBytes": 10476,
+          "ratio": 0.1024,
+          "savedPercent": 89.8
+        },
+        "largest": [
+          {
+            "module": "ora",
+            "bytes": 102329,
+            "explainBytes": 10476,
+            "ratio": 0.1024
+          }
+        ]
+      }
+    },
+    {
+      "repository": "execa",
+      "files": 673,
+      "sourceFiles": 274,
+      "modules": 43,
+      "imports": {
+        "resolved": 137,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 137,
+        "crossPackageEdges": 0,
+        "externalPackages": 47,
+        "cycles": 2,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 1492,
+        "warmMs": 414,
+        "parsed": 673,
+        "warmParsed": 0,
+        "warmReused": 673
+      },
+      "compact": {
+        "ms": 406,
+        "bytes": 15973
+      },
+      "trust": {
+        "judgements": 745,
+        "withEvidence": 745,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "c0a34a2a"
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 3,
+          "sourceBytes": 12926,
+          "explainBytes": 23715,
+          "ratio": 1.8347,
+          "savedPercent": -83.5
+        },
+        "from8To64Kb": {
+          "modules": 28,
+          "sourceBytes": 775398,
+          "explainBytes": 340886,
+          "ratio": 0.4396,
+          "savedPercent": 56
+        },
+        "over64Kb": {
+          "modules": 12,
+          "sourceBytes": 1408305,
+          "explainBytes": 126212,
+          "ratio": 0.0896,
+          "savedPercent": 91
+        },
+        "largest": [
+          {
+            "module": "test/transform",
+            "bytes": 248405,
+            "explainBytes": 13998,
+            "ratio": 0.0564
+          },
+          {
+            "module": "test/stdio",
+            "bytes": 192669,
+            "explainBytes": 15737,
+            "ratio": 0.0817
+          },
+          {
+            "module": "test-d/stdio",
+            "bytes": 160320,
+            "explainBytes": 8319,
+            "ratio": 0.0519
+          },
+          {
+            "module": "test/verbose",
+            "bytes": 130932,
+            "explainBytes": 13926,
+            "ratio": 0.1064
+          },
+          {
+            "module": "test/methods",
+            "bytes": 102664,
+            "explainBytes": 10324,
+            "ratio": 0.1006
+          }
+        ]
+      }
+    },
+    {
+      "repository": "got",
+      "files": 127,
+      "sourceFiles": 32,
+      "modules": 9,
+      "imports": {
+        "resolved": 15,
+        "excludedOutput": 5,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 15,
+        "crossPackageEdges": 0,
+        "externalPackages": 54,
+        "cycles": 1,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 553,
+        "warmMs": 137,
+        "parsed": 127,
+        "warmParsed": 0,
+        "warmReused": 127
+      },
+      "compact": {
+        "ms": 126,
+        "bytes": 14991
+      },
+      "trust": {
+        "judgements": 204,
+        "withEvidence": 204,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "5ecd733e"
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 2,
+          "sourceBytes": 6214,
+          "explainBytes": 4626,
+          "ratio": 0.7444,
+          "savedPercent": 25.6
+        },
+        "from8To64Kb": {
+          "modules": 5,
+          "sourceBytes": 102974,
+          "explainBytes": 42134,
+          "ratio": 0.4092,
+          "savedPercent": 59.1
+        },
+        "over64Kb": {
+          "modules": 2,
+          "sourceBytes": 1891929,
+          "explainBytes": 40623,
+          "ratio": 0.0215,
+          "savedPercent": 97.9
+        },
+        "largest": [
+          {
+            "module": "test",
+            "bytes": 1552852,
+            "explainBytes": 23099,
+            "ratio": 0.0149
+          },
+          {
+            "module": "source/core",
+            "bytes": 339077,
+            "explainBytes": 17524,
+            "ratio": 0.0517
+          },
+          {
+            "module": "source",
+            "bytes": 27360,
+            "explainBytes": 5377,
+            "ratio": 0.1965
+          },
+          {
+            "module": "test/types",
+            "bytes": 27248,
+            "explainBytes": 10030,
+            "ratio": 0.3681
+          },
+          {
+            "module": "test/helpers",
+            "bytes": 26160,
+            "explainBytes": 14613,
+            "ratio": 0.5586
+          }
+        ]
+      }
+    },
+    {
+      "repository": "changesets",
+      "files": 288,
+      "sourceFiles": 100,
+      "modules": 40,
+      "imports": {
+        "resolved": 172,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 172,
+        "crossPackageEdges": 0,
+        "externalPackages": 56,
+        "cycles": 1,
+        "layeringViolations": 0
+      },
+      "scan": {
+        "coldMs": 675,
+        "warmMs": 228,
+        "parsed": 288,
+        "warmParsed": 0,
+        "warmReused": 288
+      },
+      "compact": {
+        "ms": 211,
+        "bytes": 24183
+      },
+      "trust": {
+        "judgements": 567,
+        "withEvidence": 567,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "abc526dc"
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 16,
+          "sourceBytes": 49983,
+          "explainBytes": 46489,
+          "ratio": 0.9301,
+          "savedPercent": 7
+        },
+        "from8To64Kb": {
+          "modules": 20,
+          "sourceBytes": 463309,
+          "explainBytes": 191866,
+          "ratio": 0.4141,
+          "savedPercent": 58.6
+        },
+        "over64Kb": {
+          "modules": 4,
+          "sourceBytes": 417221,
+          "explainBytes": 46241,
+          "ratio": 0.1108,
+          "savedPercent": 88.9
+        },
+        "largest": [
+          {
+            "module": "packages/apply-release-plan/src",
+            "bytes": 138000,
+            "explainBytes": 12255,
+            "ratio": 0.0888
+          },
+          {
+            "module": "packages/cli/src/commands/version",
+            "bytes": 113863,
+            "explainBytes": 11435,
+            "ratio": 0.1004
+          },
+          {
+            "module": "@changesets/e2e",
+            "bytes": 85888,
+            "explainBytes": 12566,
+            "ratio": 0.1463
+          },
+          {
+            "module": "packages/assemble-release-plan/src",
+            "bytes": 79470,
+            "explainBytes": 9985,
+            "ratio": 0.1256
+          },
+          {
+            "module": "packages/cli/src/lib",
+            "bytes": 54714,
+            "explainBytes": 15128,
+            "ratio": 0.2765
           }
         ]
       }
     }
-  ]
+  ],
+  "public": {
+    "note": "Repositories pinned by commit SHA in tools/benchmark-repos.json. Measured on a temporary clone; nothing is vendored.",
+    "requested": 8,
+    "measured": 8,
+    "repositories": [
+      {
+        "name": "clsx",
+        "url": "https://github.com/lukeed/clsx.git",
+        "sha": "925494cf31bcd97d3337aacd34e659e80cae7fe2",
+        "note": "Tiny single-file TypeScript package: the lower bound of the size range.",
+        "files": 13,
+        "modules": 5,
+        "resolutionRate": 1,
+        "pathEscapes": 0,
+        "moduleEdges": 1,
+        "cycles": 0,
+        "coveragePercent": 100,
+        "deterministic": true,
+        "over8Kb": 0,
+        "explainRatio8To64Kb": 1,
+        "explainRatioOver64Kb": 1
+      },
+      {
+        "name": "p-map",
+        "url": "https://github.com/sindresorhus/p-map.git",
+        "sha": "d61b6a33cc1d5533ad5711b435959f3f78c3d2fe",
+        "note": "Small TypeScript package with several runtime dependencies.",
+        "files": 11,
+        "modules": 1,
+        "resolutionRate": 1,
+        "pathEscapes": 0,
+        "moduleEdges": 0,
+        "cycles": 0,
+        "coveragePercent": 100,
+        "deterministic": true,
+        "over8Kb": 1,
+        "explainRatio8To64Kb": 1,
+        "explainRatioOver64Kb": 0.0275
+      },
+      {
+        "name": "ansi-styles",
+        "url": "https://github.com/chalk/ansi-styles.git",
+        "sha": "8cf247afbecf29a8227f7d0beb69c2997fc6bc61",
+        "note": "Older CommonJS codebase, to check the analyzer does not assume modern module syntax.",
+        "files": 8,
+        "modules": 1,
+        "resolutionRate": 1,
+        "pathEscapes": 0,
+        "moduleEdges": 0,
+        "cycles": 0,
+        "coveragePercent": 100,
+        "deterministic": true,
+        "over8Kb": 1,
+        "explainRatio8To64Kb": 0.299,
+        "explainRatioOver64Kb": 1
+      },
+      {
+        "name": "ky",
+        "url": "https://github.com/sindresorhus/ky.git",
+        "sha": "3541888878c4d303a8bc2ad61815f4e048f55a5d",
+        "note": "Modern ESM TypeScript with tests colocated next to sources.",
+        "files": 105,
+        "modules": 9,
+        "resolutionRate": 1,
+        "pathEscapes": 0,
+        "moduleEdges": 21,
+        "cycles": 1,
+        "coveragePercent": 100,
+        "deterministic": true,
+        "over8Kb": 6,
+        "explainRatio8To64Kb": 0.2153,
+        "explainRatioOver64Kb": 0.0299
+      },
+      {
+        "name": "ora",
+        "url": "https://github.com/sindresorhus/ora.git",
+        "sha": "b204360b0df925289759858c93d3d3ca824914c3",
+        "note": "TypeScript with build output committed and a wider dependency surface.",
+        "files": 11,
+        "modules": 1,
+        "resolutionRate": 1,
+        "pathEscapes": 0,
+        "moduleEdges": 0,
+        "cycles": 0,
+        "coveragePercent": 100,
+        "deterministic": true,
+        "over8Kb": 1,
+        "explainRatio8To64Kb": 1,
+        "explainRatioOver64Kb": 0.1024
+      },
+      {
+        "name": "execa",
+        "url": "https://github.com/sindresorhus/execa.git",
+        "sha": "b87aab71b2ac3da1799914a7ef79a36bd2d14c03",
+        "note": "Larger modern TypeScript package: exercises the 8-64 KB size bucket.",
+        "files": 673,
+        "modules": 43,
+        "resolutionRate": 1,
+        "pathEscapes": 0,
+        "moduleEdges": 137,
+        "cycles": 2,
+        "coveragePercent": 100,
+        "deterministic": true,
+        "over8Kb": 40,
+        "explainRatio8To64Kb": 0.4396,
+        "explainRatioOver64Kb": 0.0896
+      },
+      {
+        "name": "got",
+        "url": "https://github.com/sindresorhus/got.git",
+        "sha": "05b4476913da39a47dd8e20d29e250f28b0a6dca",
+        "note": "Substantial TypeScript package with deep internal directories.",
+        "files": 127,
+        "modules": 9,
+        "resolutionRate": 1,
+        "pathEscapes": 0,
+        "moduleEdges": 15,
+        "cycles": 1,
+        "coveragePercent": 100,
+        "deterministic": true,
+        "over8Kb": 7,
+        "explainRatio8To64Kb": 0.4092,
+        "explainRatioOver64Kb": 0.0215
+      },
+      {
+        "name": "changesets",
+        "url": "https://github.com/changesets/changesets.git",
+        "sha": "e2ee472cc6c901a0bb29781dac12603f6e4d5215",
+        "note": "npm workspaces monorepo, so cross-package resolution is measured on something other than our own layout.",
+        "files": 288,
+        "modules": 40,
+        "resolutionRate": 1,
+        "pathEscapes": 0,
+        "moduleEdges": 172,
+        "cycles": 1,
+        "coveragePercent": 100,
+        "deterministic": true,
+        "over8Kb": 24,
+        "explainRatio8To64Kb": 0.4141,
+        "explainRatioOver64Kb": 0.1108
+      }
+    ]
+  }
 }

@@ -452,11 +452,6 @@ the numbers were published:
   now reported as `excludedBuildOutput`, which is what the analyzer already calls
   them.
 
-- **Tests importing `../core/dist/index.js` were counted as dependencies on the**
-  **package.** Build output is excluded by design, and an edge derived from it
-  would make the graph depend on whether the project happened to be built. These
-  are now reported as `excludedBuildOutput`, which is what the analyzer already
-  calls them.
 **A real defect the work exposed.** Pointing the oracle at the fixture
 repositories revealed that they had accumulated `.agent/` directories: every
 read-only query wrote a parse cache into the repository it had only been asked to
@@ -477,6 +472,78 @@ recall remain unmeasured, because no independent oracle exists for them.
 
 ---
 
+## v0.13.0 — Evidence on other people's code (in progress)
+
+**Goal:** stop measuring ourselves on the one codebase we wrote the analyzer
+for.
+
+**The problem this release solved.** Every measurement so far — benchmark,
+oracle, determinism, evidence coverage — ran against this repository and five
+synthetic fixtures. All of it is a repository whose conventions the analyzer was
+built around, so a defect that only exists in other people's code passes all of
+it without raising anything.
+
+**Implemented**
+
+- **`tools/benchmark-repos.json`** pins eight third-party repositories by commit
+  SHA, chosen for a spread of sizes, eras and layouts: `clsx` (single file),
+  `p-map`, `ansi-styles` (CommonJS), `ky`, `ora`, `execa`, `got` (modern
+  TypeScript, the largest) and `changesets` (a pnpm workspace, so cross-package
+  resolution is measured on a layout that is not ours). A SHA rather than a branch
+  is the whole point: a moving target would make every run incomparable with the
+  last, which is measuring a moving specifier.
+- **`node tools/benchmark.mjs --public`** clones each one into a temporary
+  directory, measures it, and deletes it. Nothing is vendored. Results are
+  reported under a separate `public` key rather than merged into the headline
+  totals, so the numbers do not quietly change meaning depending on whether the
+  network was available.
+- **`tools/ground-truth-public.mjs`** runs the TypeScript-compiler oracle over
+  the same set, so the resolver is checked on foreign code rather than asserted.
+- **CI job `public repositories`**, on pushes to `master` and on a weekly
+  schedule but not on pull requests: a slow or unreachable clone should not block
+  a change that can be reviewed without it. It fails if any pinned repository was
+  not measured — measuring less than it claims, while going green, is the worst
+  outcome available.
+
+**Measured:** eight of eight cloned and measured. Every one at 100% import
+resolution, 0 path escapes, 100% evidence coverage, deterministic output, and
+100% precision and recall against the compiler where the repository has module
+edges to compare. 1298 files across the set. The token-budget claim holds on
+foreign code: modules over 64 KB cost 2.2%–11.1% of source bytes.
+
+**Two real defects the work surfaced**, both found by the oracle disagreeing with
+the compiler on a repository neither of us wrote:
+
+- **The parser silently discarded most of a barrel file.** The lexer merges
+  `>>`, `>>>` and `>>=` into single tokens, which is correct for shift operators,
+  so the two angle brackets closing `Partial<Mutable<T>>` arrived as one token.
+  `skipBalanced` compared token values exactly, never reached depth zero, scanned
+  to the end of the file and returned there — so **every statement after that
+  annotation lost its imports and exports, and the parse still reported
+  success.** In `ky/source/index.ts` that removed seven re-exports and one module
+  edge. `get_dependents`, `get_change_impact`, layering diagnostics and cycle
+  detection all read that graph. Fixed by counting the brackets a token carries
+  rather than comparing its value; five regression tests in
+  `packages/core/test/generics.test.ts`.
+- **The oracle counted a published dependency as a source dependency.** A bare
+  specifier naming any package manifest in the tree was treated as an in-repo
+  workspace edge. `clsx` keeps a `bench/` directory that pins `clsx@1.1.0` next to
+  the `clsx` sources on purpose, to compare against the released build; the oracle
+  called that an edge to the local module and reported a false negative against an
+  analyzer that was right. Membership is now read from `workspaces` /
+  `pnpm-workspace.yaml`, with a separate rule for a package importing itself by
+  name — which is what `ky`'s own type tests do, and which is a real dependency on
+  the local entry point.
+
+**Known limits, restated because the numbers are again perfect.** Three of the
+eight repositories have a single module, so precision and recall are undefined
+there rather than 100%; the public set covers resolution and determinism well and
+architectural inference barely. Entry-point precision and recall remain
+unmeasured: the compiler is an oracle for module resolution only, and nothing
+independent exists for the others.
+
+---
+
 ## v1.0 — Stable repository intelligence (in progress)
 
 **Goal:** a stable release with a proven API, mature integrations and
@@ -494,14 +561,15 @@ measurable value for teams.
 | npm workspaces and verified monorepo scenarios | done |
 | Production-ready local CLI and stdio MCP server | done |
 | Compatibility matrix for Node.js and MCP clients | done — Node matrix written down in the README, MCP matrix in `packages/mcp/README.md` |
-| Benchmark report on public repositories | not done — the set is this repository plus five synthetic fixtures |
+| Benchmark report on public repositories | done since 0.13.0 — eight third-party repositories pinned by commit SHA, measured and oracle-checked in CI |
 
 ### Remaining work
 
 1. ~~Close the precision/recall gap.~~ Done in 0.12.0 against the TypeScript
    independent oracle exists for.
-2. **Add public repositories to the benchmark**, pinned by commit SHA, so the
-   numbers are not carried by one repository.
+2. ~~Add public repositories to the benchmark, pinned by commit SHA.~~ Done in
+   0.13.0: eight repositories, all at 100% resolution and, where there are module
+   edges to compare, 100% precision and recall.
 3. **Re-audit the exported surface against STABILITY.md.** The internal exports
    are named as such, but promoting a few of them — the document builders and the
    language adapters are the most likely candidates for embedders — would make the
@@ -509,6 +577,11 @@ measurable value for teams.
 4. **Decide whether `.agent/` schema v2 is worth the migration cost.** Nothing
    currently needs it; the policy exists so the decision does not have to be
    improvised when something does.
+5. **Decide what to do about entry-point precision and recall.** The compiler is
+   an oracle for module resolution and says nothing about entry points. Either
+   hand-label a corpus and measure, or state it as a permanent limitation in the
+   metrics table. Leaving it as a metric marked "not measured" in v1.0 would be
+   the one part of the table that looks like an oversight.
 
 ### Release criteria
 
@@ -566,7 +639,7 @@ it is only claimed.
 | cold/warm scan, parsed/reused | measured | `row.scan` |
 | evidence coverage: share of judgements citing at least one source | measured since 0.10.0 | `summary.trust.coveragePercent`, CI gate |
 | determinism: byte-identical context for one commit | measured since 0.10.0 | `summary.trust.nonDeterministic`, CI gate |
-| entry-point and dependency precision/recall | measured since 0.12.0 | `npm run ground-truth`, CI gate: 100% precision and recall against the TypeScript compiler |
+| entry-point and dependency precision/recall | measured since 0.12.0, on third-party code since 0.13.0 | `npm run ground-truth`, `npm run ground-truth:public`, CI gates: 100% precision and recall against the TypeScript compiler |
 
 **How the newer metrics are computed.** Evidence coverage walks the generated
 documents and counts objects carrying a numeric `confidence`: exactly the
@@ -585,28 +658,33 @@ failure fails the build.
 
 Three scope rules apply, and each is counted in the output so none can quietly
 absorb a disagreement: build output is excluded, matching the analyzer's own
-`excludedOutput` class; a bare specifier naming a workspace package is an in-repo
-dependency rather than an external one; and an analyzer edge to a workspace
-package matches a truth edge into that package's directory, because both describe
-one dependency at different levels of detail.
+`excludedOutput` class; a bare specifier naming a declared workspace package is
+an in-repo dependency rather than an external one; and an analyzer edge to a
+workspace package matches a truth edge into that package's directory, because both
+describe one dependency at different levels of detail.
+
+The workspace rule has a second clause, added in 0.13.0 after measuring third-party
+code: a package importing **itself by name** — which is what `ky`'s own type tests
+do — is a dependency on its local entry point, not a download. Conversely a
+specifier that the importing manifest *declares* as a dependency is a registry
+dependency even when the name matches a package in the same tree, which is what
+separates `clsx`'s `bench/` from `ky`'s `test-d/`. Package managers require real
+dependencies to be declared, so the declaration is evidence rather than a
+convention.
 
 Eighteen module edges is a coarse denominator, so the finer check is also run:
 every import the analyzer failed to resolve is put to the compiler and classified
 as `expectedBuildOutput`, `agreedMissing`, or `missed`. A single `missed` entry
 means the headline resolution rate is overstated.
 
+**The same oracle runs on third-party code.** `npm run ground-truth:public`
+repeats this over the eight pinned repositories in `tools/benchmark-repos.json`,
+which is where the nested-generic parser defect was found: every measurement on
+this repository had passed it.
+
 **What this does not certify.** The compiler is an oracle for module resolution
 only. It says nothing about entry points, roles, conventions or decisions, which
 remain heuristics carrying a confidence and evidence.
-
-**How the newer metrics are computed.** Evidence coverage walks the generated
-documents and counts objects carrying a numeric `confidence`: exactly the
-assertions the analyzer makes as heuristics. Structural facts (module ids, paths,
-import specifiers) carry no confidence and are deliberately not counted. A
-repository with no heuristics shows `null`, not 100%: there was nothing to
-explain. Determinism compares a byte-level hash of the documents after two
-independent scans with the cache bypassed, so a difference can only come from
-the analyzer rather than from what it happened to reuse.
 
 **Current values on this repository and the five fixtures:** evidence coverage
 100% (363 judgements, 0 without a source), 0 non-deterministic repositories.

@@ -4,6 +4,10 @@ on:
   push:
     branches: [master]
   pull_request:
+  # Weekly, so a pinned repository that stops being cloneable, or a third-party
+  # change that breaks resolution, is noticed even when nothing is pushed.
+  schedule:
+    - cron: '17 4 * * 1'
   workflow_dispatch:
 
 concurrency:
@@ -194,6 +198,51 @@ jobs:
         with:
           name: benchmark-report
           path: /tmp/benchmark.json
+
+  # Evidence on other people's code.
+  #
+  # Every other job measures a repository we wrote the analyzer for. A defect
+  # that only exists in third-party code would pass all of them, which is not a
+  # theoretical concern: this job is what caught the nested-generic parser bug
+  # that silently dropped every import in a file after one annotation.
+  #
+  # It needs the network, so it does not run on pull requests. A slow or
+  # unreachable clone should not block a change that can be reviewed without it.
+  public-evidence:
+    name: public repositories
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Measure the pinned third-party repositories
+        run: node tools/benchmark.mjs --public > /tmp/public-benchmark.json
+      # Measuring fewer repositories than the manifest pins would be the worst
+      # possible outcome here: the job would go green while quietly checking
+      # less than it claims.
+      - name: Fail if a pinned repository was missed or escaped its root
+        run: |
+          node -e "
+            const p = require('/tmp/public-benchmark.json').public;
+            console.log('measured ' + p.measured + '/' + p.requested + ' pinned repositories');
+            for (const r of p.repositories) {
+              if (r.error) { console.error(r.name + ': ' + r.error); process.exitCode = 1; continue; }
+              console.log(r.name.padEnd(14), String(r.files).padStart(4) + ' files', 'resolution ' + r.resolutionRate, 'escapes ' + r.pathEscapes);
+              if (r.pathEscapes > 0) { console.error(r.name + ': a path traversal was not rejected'); process.exitCode = 1; }
+            }
+            if (p.measured !== p.requested) { console.error('not every pinned repository was measured'); process.exitCode = 1; }
+          "
+      - name: Compare each graph with the TypeScript compiler
+        run: node tools/ground-truth-public.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-benchmark
+          path: /tmp/public-benchmark.json
 
   publish-check:
     name: publish dry run

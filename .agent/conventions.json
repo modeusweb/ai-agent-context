@@ -56,9 +56,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:fbc94e16",
+      "id": "imports:0ac94608",
       "origin": "observed",
-      "statement": "External dependencies are imported before internal modules (35/41 files)."
+      "statement": "External dependencies are imported before internal modules (36/42 files)."
     },
     {
       "category": "Imports",
@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:d8929d7a",
+      "id": "imports:e50a52cb",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (59/111 files)."
+      "statement": "Type-only dependencies use `import type` (59/113 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:ce787a52",
+      "id": "languages:b1e64894",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (112 files) and JavaScript (9 files)."
+      "statement": "Implementation mixes TypeScript (113 files) and JavaScript (10 files)."
     },
     {
       "category": "Naming",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:c842ddc1",
+      "id": "naming:ea5602ba",
       "origin": "observed",
-      "statement": "Functions use camelCase (329/332 declarations)."
+      "statement": "Functions use camelCase (349/352 declarations)."
     },
     {
       "category": "Naming",
@@ -145,9 +145,9 @@
           "source": "packages/cli/src/commands/clean.ts"
         }
       ],
-      "id": "naming:251ff6be",
+      "id": "naming:075f0171",
       "origin": "observed",
-      "statement": "Source files use camelCase (79/96 files)."
+      "statement": "Source files use camelCase (79/97 files)."
     },
     {
       "category": "Naming",
@@ -204,9 +204,9 @@
           "source": "packages/cli/test/public-api.lock.json"
         }
       ],
-      "id": "tests:b9853e7f",
+      "id": "tests:9c00a534",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (26/28 test files)."
+      "statement": "Tests live in a dedicated test directory (27/29 test files)."
     },
     {
       "category": "Toolchain",

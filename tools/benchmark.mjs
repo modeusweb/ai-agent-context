@@ -31,6 +31,7 @@
  * stdout as JSON for CI to archive.
  */
 import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -52,7 +53,60 @@ const DEFAULT_SOURCES = [
   root,
 ];
 
-const sources = args.length > 0 ? args.map((entry) => path.resolve(entry)) : DEFAULT_SOURCES;
+// The public set exists because the fixtures are useless for the product claim
+// and this repository alone is a sample of one. Every entry is pinned to a
+// commit SHA, so two runs compare each other; a moving target would make every
+// measurement incomparable with the last, which is measuring a moving specifier.
+//
+// Nothing is vendored. Each repository is cloned into a temporary directory,
+// measured, and deleted.
+function loadPublicRepositories() {
+  const manifest = JSON.parse(readFileSync(path.join(root, 'tools/benchmark-repos.json'), 'utf8'));
+  return manifest.repositories.map((entry) => ({
+    ...entry,
+    dir: path.join(publicWorkspace, path.basename(new URL(entry.url).pathname).replace(/\.git$/, '')),
+  }));
+}
+
+const wantsPublic = args.includes('--public') || process.env.AAC_PUBLIC_BENCH === '1';
+const positional = args.filter((entry) => !entry.startsWith('--'));
+const publicWorkspace = mkdtempSync(path.join(os.tmpdir(), 'aac-bench-public-'));
+
+function fetchPublicRepositories(entries) {
+  for (const entry of entries) {
+    process.stderr.write(`cloning ${entry.name}...`);
+    try {
+      // Fetching a single commit keeps the clone shallow and fast even for
+      // repositories with a long history.
+      execFileSync(
+        'git',
+        ['clone', '--quiet', '--depth', '1', '--no-tags', entry.url, entry.dir],
+        { stdio: ['ignore', 'ignore', 'pipe'] },
+      );
+      execFileSync('git', ['fetch', '--quiet', '--depth', '1', 'origin', entry.sha], {
+        cwd: entry.dir,
+        stdio: ['ignore', 'ignore', 'pipe'],
+      });
+      execFileSync('git', ['checkout', '--quiet', entry.sha], { cwd: entry.dir, stdio: 'ignore' });
+      const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: entry.dir, encoding: 'utf8' }).trim();
+      if (head !== entry.sha) throw new Error(`expected ${entry.sha}, checked out ${head}`);
+      process.stderr.write(` ok (${head.slice(0, 8)})\n`);
+    } catch (error) {
+      process.stderr.write(` FAILED\n`);
+      entry.error = error instanceof Error ? error.message : String(error);
+    }
+  }
+}
+const publicRepositories = wantsPublic ? loadPublicRepositories() : [];
+if (publicRepositories.length > 0) {
+  fetchPublicRepositories(publicRepositories);
+  process.stderr.write(`cloned ${publicRepositories.filter((r) => r.error === undefined).length}/${publicRepositories.length} repositories\n`);
+}
+
+const sources = [
+  ...(positional.length > 0 ? positional.map((entry) => path.resolve(entry)) : DEFAULT_SOURCES),
+  ...publicRepositories.filter((entry) => entry.error === undefined).map((entry) => entry.dir),
+];
 
 const compactOptions = {
   maxModules: 10,
@@ -335,6 +389,43 @@ const report = {
   rows,
 };
 
+if (publicRepositories.length > 0) {
+  // Reported separately from the local totals: these repositories are not
+  // ours, so merging them into the headline numbers would quietly change what
+  // "the benchmark" measures depending on whether the network was available.
+  report.public = {
+    note: 'Repositories pinned by commit SHA in tools/benchmark-repos.json. Measured on a temporary clone; nothing is vendored.',
+    requested: publicRepositories.length,
+    measured: publicRepositories.filter((entry) => entry.error === undefined).length,
+    repositories: publicRepositories.map((entry) => {
+      const row = rows.find((candidate) => candidate.repository === path.basename(entry.dir));
+      return {
+        name: entry.name,
+        url: entry.url,
+        sha: entry.sha,
+        note: entry.note,
+        ...(entry.error === undefined ? {} : { error: entry.error }),
+        ...(row === undefined
+          ? {}
+          : {
+              files: row.files,
+              modules: row.modules,
+              resolutionRate: row.imports.resolutionRate,
+              pathEscapes: row.imports.pathEscapes,
+              moduleEdges: row.graph.moduleEdges,
+              cycles: row.graph.cycles,
+              coveragePercent: row.trust.coveragePercent,
+              deterministic: row.trust.deterministic,
+              over8Kb: row.tokenBudget.from8To64Kb.modules + row.tokenBudget.over64Kb.modules,
+              explainRatio8To64Kb: row.tokenBudget.from8To64Kb.ratio,
+              explainRatioOver64Kb: row.tokenBudget.over64Kb.ratio,
+            }),
+      };
+    }),
+  };
+}
+
 const output = `${JSON.stringify(report, null, 2)}\n`;
 writeFileSync(path.join(root, 'benchmark-report.json'), output, 'utf8');
 process.stdout.write(output);
+rmSync(publicWorkspace, { recursive: true, force: true });

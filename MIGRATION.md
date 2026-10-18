@@ -1,5 +1,79 @@
 # Migration guide
 
+## v0.13.0
+
+A parser fix that changes what the analyzer sees. **Re-scan your repository**:
+the graph can gain edges it previously lost, so anything derived from the old
+scan — impact analysis, dependents, cycle detection — may change.
+
+No configuration, schema or API change. Nothing needs migrating.
+
+### Fixed: a nested generic discarded the rest of the file
+
+The lexer merges `>>`, `>>>` and `>>=` into single tokens, which is correct for
+real shift operators. The parser then compared token values exactly, so the two
+angle brackets closing a nested generic —
+
+```ts
+const ky: Partial<Mutable<KyInstance>> = (input: Input) => createRequest(input);
+```
+
+— arrived as one token and never matched the closer. Depth never reached zero, so
+the scan continued to the end of the file and returned there. **Every statement
+after that annotation silently lost its imports and exports, and the parse still
+reported success.**
+
+In a barrel file that is most of the public surface. The consequences were not
+cosmetic: `get_dependents`, `get_change_impact`, layering diagnostics and cycle
+detection all read the graph this produced.
+
+```ts
+// Before: source/index.ts reported three internal modules.
+// After:  the re-exports that followed the annotation are counted too.
+
+export {KyError} from './errors/KyError.js';      // was missing
+export {HTTPError} from './errors/HTTPError.js';  // was missing
+```
+
+The fix counts how many brackets a token carries instead of comparing its value.
+`>>` closes two levels, `>>>` three. A genuine shift expression is unaffected,
+because this only applies where a type argument list is being closed. Five
+regression tests cover it in `packages/core/test/generics.test.ts`, including one
+that asserts the parse still reports itself complete — the original failure was
+silent, which is why nothing pointed at the file.
+
+This was found by running the dependency-graph oracle against third-party
+repositories instead of only this one, and it did not appear in any of the 219
+tests written against fixtures that were themselves simple enough not to contain
+the pattern.
+
+### Evidence now covers other people's code
+
+- `tools/benchmark-repos.json` pins eight third-party repositories by commit SHA.
+- `npm run benchmark:public` clones, measures and deletes them.
+- `npm run ground-truth:public` runs the TypeScript-compiler oracle over the
+  same set.
+
+CI gains a `public repositories` job. It runs on pushes to `master` and on a
+weekly schedule, deliberately **not** on pull requests: it needs the network, and
+a slow clone should not block a change that can be reviewed without it.
+
+Result: 8/8 measured, every one at 100% import resolution, 0 path escapes, 100%
+evidence coverage, deterministic, and 100% precision and recall against the
+compiler wherever the repository has module edges to compare. Three of the eight
+have a single module, so precision and recall are undefined there rather than
+100%.
+
+### Corrected: how a bare specifier is classified
+
+The oracle now reads workspace membership from `workspaces` /
+`pnpm-workspace.yaml` instead of treating any same-named manifest in the tree as
+a workspace package, and it recognises a package importing itself by name as a
+local reference. This changes what the **tooling reports**, not what the analyzer
+does — the analyzer already resolved all three cases correctly.
+
+---
+
 ## v0.12.0
 
 An independent oracle for the dependency graph. No behaviour change, no rescan

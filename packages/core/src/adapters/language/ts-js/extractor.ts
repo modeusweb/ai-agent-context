@@ -133,16 +133,41 @@ function literalValue(token: Token | undefined): string | null {
 }
 
 /** Returns the index *after* the matching closing token, or `tokens.length`. */
+/**
+ * How many closing brackets a punctuator closes.
+ *
+ * `>` needs care: the lexer merges `>>`, `>>>`, `>=` and `>>=` into single
+ * tokens, so the two angle brackets that close `Partial<Mutable<T>>` arrive as
+ * one token and an exact comparison never sees them. Counting the leading run of
+ * `>` recovers the correct number.
+ *
+ * This is not a cosmetic detail. Without it, `skipBalanced` never reaches depth
+ * zero, scans to the end of the file and returns there — and the extractor then
+ * silently drops every statement after the annotation, reporting a successful
+ * parse. A barrel file with one nested generic in it would lose most of its
+ * dependencies, and therefore most of its change-impact analysis.
+ */
+function closingCount(value: string, close: string): number {
+  if (value === close) return 1;
+  if (close !== '>' || value.charAt(0) !== '>') return 0;
+  let count = 0;
+  while (value.charAt(count) === '>') count += 1;
+  return count;
+}
+
 function skipBalanced(tokens: readonly Token[], index: number, open: string, close: string): number {
   let depth = 0;
   for (let cursor = index; cursor < tokens.length; cursor += 1) {
-    const value = tokens[cursor]!.value;
-    if (tokens[cursor]!.type !== 'punct') continue;
-    if (value === open) depth += 1;
-    else if (value === close) {
-      depth -= 1;
-      if (depth === 0) return cursor + 1;
+    const token = tokens[cursor]!;
+    if (token.type !== 'punct') continue;
+    if (token.value === open) {
+      depth += 1;
+      continue;
     }
+    const closing = closingCount(token.value, close);
+    if (closing === 0) continue;
+    depth -= closing;
+    if (depth <= 0) return cursor + 1;
   }
   return tokens.length;
 }
@@ -165,11 +190,21 @@ function skipDeclarator(tokens: readonly Token[], from: number): number {
   for (let cursor = from; cursor < tokens.length; cursor += 1) {
     const token = tokens[cursor]!;
     if (token.type === 'punct') {
-      if (token.value === '(' || token.value === '{' || token.value === '[' || token.value === '<') depth += 1;
-      else if (token.value === ')' || token.value === '}' || token.value === ']' || token.value === '>') {
+      if (token.value === '(' || token.value === '{' || token.value === '[' || token.value === '<') {
+        depth += 1;
+        continue;
+      }
+      const closing =
+        closingCount(token.value, ')') +
+        closingCount(token.value, '}') +
+        closingCount(token.value, ']') +
+        closingCount(token.value, '>');
+      if (closing > 0) {
         if (depth === 0) return cursor;
-        depth -= 1;
-      } else if (depth === 0 && (token.value === ';' || token.value === ',')) return cursor;
+        depth -= closing;
+        continue;
+      }
+      if (depth === 0 && (token.value === ';' || token.value === ',')) return cursor;
       continue;
     }
     if (depth === 0 && token.line > startLine && token.type === 'keyword' && STATEMENT_START.has(token.value)) {

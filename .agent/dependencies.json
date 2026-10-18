@@ -943,6 +943,15 @@
         "node:assert/strict",
         "node:test"
       ],
+      "file": "packages/core/test/generics.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
       "file": "packages/core/test/git.test.ts",
       "internalModules": [],
       "module": "packages/core/test"
@@ -1112,6 +1121,7 @@
     },
     {
       "externalPackages": [
+        "node:child_process",
         "node:fs",
         "node:os",
         "node:path",
@@ -1149,6 +1159,18 @@
         "node:url"
       ],
       "file": "tools/generate-fixtures.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:child_process",
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/ground-truth-public.mjs",
       "internalModules": [],
       "module": "tools"
     },
@@ -1632,7 +1654,7 @@
     "cycles": 2,
     "externalPackages": 12,
     "internalModuleEdges": 18,
-    "unresolvedImports": 24
+    "unresolvedImports": 25
   },
   "unresolved": [
     {
@@ -1704,6 +1726,13 @@
       ],
       "file": "packages/core/test/filesystem.test.ts",
       "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/generics.test.ts",
+      "specifier": "../../core/dist/index.js"
     },
     {
       "attempts": [
