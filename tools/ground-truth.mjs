@@ -268,18 +268,55 @@ function specifiersIn(file) {
 }
 
 /**
+ * The repository's own TypeScript resolution options.
+ *
+ * Without `paths` from the tsconfig, the compiler cannot resolve a single
+ * aliased import, and every alias edge the analyzer draws counts as a false
+ * positive — the measurement disagreeing with the product about a rule the
+ * product had read correctly. The options are read with the compiler's own
+ * parser, so the alias table is the one in the repository rather than a
+ * reimplementation of it.
+ */
+function readCompilerOptions() {
+  const options = {
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
+    allowJs: true,
+    resolveJsonModule: true,
+    baseUrl: repoRoot,
+  };
+  const configPath = path.join(repoRoot, 'tsconfig.json');
+  if (!existsSync(configPath)) return options;
+  try {
+    const read = ts.readConfigFile(configPath, ts.sys.readFile);
+    if (read.error !== undefined) return options;
+    const parsed = ts.parseJsonConfigFileContent(read.config, ts.sys, repoRoot);
+    if (parsed.options.paths !== undefined) {
+      // `paths` are relative to the tsconfig, and the compiler needs a base to
+      // resolve them against. A config with `paths` and no `baseUrl` is common
+      // — the base is then the directory of the tsconfig itself.
+      const base = parsed.options.baseUrl === undefined ? repoRoot : path.resolve(repoRoot, parsed.options.baseUrl);
+      options.baseUrl = base;
+      options.paths = {};
+      for (const [pattern, targets] of Object.entries(parsed.options.paths)) {
+        options.paths[pattern] = targets.map((target) => path.resolve(base, target));
+      }
+    } else if (parsed.options.baseUrl !== undefined) {
+      options.baseUrl = path.resolve(repoRoot, parsed.options.baseUrl);
+    }
+  } catch {
+    // A tsconfig the compiler cannot read leaves the default options in place.
+  }
+  return options;
+}
+
+/**
  * Ground truth: importer to imported file, plus importer to workspace package.
  *
  * Type-only imports are counted. They are real edges in the graph this product
  * builds, and excluding them would quietly shrink the denominator.
  */
 function buildGroundTruth() {
-  const compilerOptions = {
-    moduleResolution: ts.ModuleResolutionKind.Bundler,
-    allowJs: true,
-    resolveJsonModule: true,
-    baseUrl: repoRoot,
-  };
+  const compilerOptions = readCompilerOptions();
   const filePairs = new Set();
   const packagePairs = new Set();
   let specifiers = 0;
@@ -463,6 +500,11 @@ for (const candidate of truthModuleEdges) {
  *
  *  - `expectedBuildOutput` - the compiler resolves it into excluded build output,
  *    which is exactly the documented `excludedOutput` class;
+ *  - `excludedFile` - the analyzer says the target exists but was left out of
+ *    the analysis, and the compiler agrees it resolves to a real file. The
+ *    claim is checked against the file system rather than taken on trust: if
+ *    the file were not there, the analyzer would be claiming an exclusion for
+ *    something that does not exist;
  *  - `agreedMissing` - the compiler cannot resolve it either, so both agree the
  *    import is broken;
  *  - `missed` - the compiler resolves it to in-repo source that the analyzer was
@@ -476,7 +518,7 @@ function classifyUnresolved(document) {
     resolveJsonModule: true,
     baseUrl: repoRoot,
   };
-  const counts = { total: 0, expectedBuildOutput: 0, agreedMissing: 0, missed: 0 };
+  const counts = { total: 0, expectedBuildOutput: 0, excludedFile: 0, agreedMissing: 0, missed: 0 };
   const missed = [];
   for (const entry of document.unresolved ?? []) {
     counts.total += 1;
@@ -488,6 +530,14 @@ function classifyUnresolved(document) {
     }
     const absolute = path.resolve(path.dirname(importer), resolved.resolvedFileName);
     if (insideRepo(absolute)) {
+      // The analyzer excluded the file on purpose — it is too large, or the
+      // sensitive-file policy forbids reading it. That is a limit of the
+      // coverage rather than a hole in the graph, and the claim is verified
+      // here: the file has to exist for the exclusion to be honest.
+      if (entry.reason === 'excluded-file' && existsSync(absolute)) {
+        counts.excludedFile += 1;
+        continue;
+      }
       counts.missed += 1;
       if (missed.length < 5) missed.push(`${entry.file}: ${entry.specifier}`);
     } else if (isExcludedBuildOutput(absolute)) {
@@ -546,7 +596,7 @@ if (asJson) {
   console.log(`package rule:     ${result.matchedViaPackageRule} match(es) needed package-level normalisation`);
   console.log(`precision:        ${result.precisionPercent === null ? 'n/a' : `${result.precisionPercent}%`}`);
   console.log(`recall:           ${result.recallPercent === null ? 'n/a' : `${result.recallPercent}%`}`);
-console.log(`unresolved cross-check: ${result.unresolvedCrossCheck.total} reported (${result.unresolvedCrossCheck.expectedBuildOutput} build output, ${result.unresolvedCrossCheck.agreedMissing} agreed missing, ${result.unresolvedCrossCheck.missed} MISSED)`);
+console.log(`unresolved cross-check: ${result.unresolvedCrossCheck.total} reported (${result.unresolvedCrossCheck.expectedBuildOutput} build output, ${result.unresolvedCrossCheck.excludedFile} excluded file, ${result.unresolvedCrossCheck.agreedMissing} agreed missing, ${result.unresolvedCrossCheck.missed} MISSED)`);
   if (result.missedSample.length > 0) console.log(`  missed: ${result.missedSample.join('   ')}`);
 }
 

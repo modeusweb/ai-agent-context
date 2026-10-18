@@ -938,6 +938,15 @@
         "node:assert/strict",
         "node:test"
       ],
+      "file": "packages/core/test/excluded-files.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
       "file": "packages/core/test/explain-detail.test.ts",
       "internalModules": [],
       "module": "packages/core/test"
@@ -1741,7 +1750,7 @@
     "cycles": 2,
     "externalPackages": 13,
     "internalModuleEdges": 19,
-    "unresolvedImports": 29
+    "unresolvedImports": 30
   },
   "unresolved": [
     {
@@ -1749,6 +1758,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/architecture.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1756,6 +1766,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/canonical.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1763,6 +1774,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/config.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1770,6 +1782,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/conventions.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1777,6 +1790,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/detect.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1784,6 +1798,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/determinism.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1791,6 +1806,15 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/dry-run.test.ts",
+      "reason": "missing",
+      "specifier": "../../core/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/excluded-files.test.ts",
+      "reason": "missing",
       "specifier": "../../core/dist/index.js"
     },
     {
@@ -1798,6 +1822,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/explain-detail.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1805,6 +1830,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/explain.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1812,6 +1838,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/filesystem.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1819,6 +1846,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/generics.test.ts",
+      "reason": "missing",
       "specifier": "../../core/dist/index.js"
     },
     {
@@ -1826,6 +1854,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/git.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1833,6 +1862,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/incremental.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1840,6 +1870,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/integration.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1847,6 +1878,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/jsx.test.ts",
+      "reason": "missing",
       "specifier": "../../core/dist/index.js"
     },
     {
@@ -1854,6 +1886,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/language.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1861,6 +1894,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/policy.test.ts",
+      "reason": "missing",
       "specifier": "../../core/dist/index.js"
     },
     {
@@ -1868,6 +1902,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/resolver.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1875,6 +1910,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/scanner.test.ts",
+      "reason": "missing",
       "specifier": "../dist/index.js"
     },
     {
@@ -1882,6 +1918,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/template-literals.test.ts",
+      "reason": "missing",
       "specifier": "../../core/dist/index.js"
     },
     {
@@ -1889,6 +1926,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/mcp/test/mcp.test.ts",
+      "reason": "missing",
       "specifier": "../../core/dist/index.js"
     },
     {
@@ -1896,6 +1934,7 @@
         "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/mcp/test/mcp.test.ts",
+      "reason": "missing",
       "specifier": "../../mcp/dist/index.js"
     },
     {
@@ -1903,6 +1942,7 @@
         "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/mcp/test/presets.test.ts",
+      "reason": "missing",
       "specifier": "../../mcp/dist/index.js"
     },
     {
@@ -1910,6 +1950,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/mcp/test/protocol.test.ts",
+      "reason": "missing",
       "specifier": "../../core/dist/index.js"
     },
     {
@@ -1917,6 +1958,7 @@
         "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/mcp/test/protocol.test.ts",
+      "reason": "missing",
       "specifier": "../../mcp/dist/index.js"
     },
     {
@@ -1924,6 +1966,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "tools/benchmark.mjs",
+      "reason": "missing",
       "specifier": "../packages/core/dist/index.js"
     },
     {
@@ -1931,6 +1974,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "tools/ground-truth-entry.mjs",
+      "reason": "missing",
       "specifier": "../packages/core/dist/index.js"
     },
     {
@@ -1938,6 +1982,7 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "tools/ground-truth.mjs",
+      "reason": "missing",
       "specifier": "../packages/core/dist/index.js"
     },
     {
@@ -1945,6 +1990,7 @@
         "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
       ],
       "file": "tools/mcp-client-check.mjs",
+      "reason": "missing",
       "specifier": "../packages/mcp/dist/index.js"
     }
   ]

@@ -51,6 +51,25 @@ export type DependencyKind =
 /** Coarse file classification, language agnostic. */
 export type FileKind = 'source' | 'test' | 'config' | 'docs' | 'asset' | 'other';
 
+/**
+ * The causes an import can fail to resolve for.
+ *
+ * - `missing`: nothing matched. A real gap in the graph.
+ * - `excluded-file`: the target exists but was excluded from the analysis — it
+ *   is too large, or the sensitive-file policy forbids reading it. A limit of
+ *   the analysis, not a hole in the graph.
+ * - `excluded-build-output`: the target is generated output, which the analysis
+ *   excludes by design.
+ * - `path-escape`: the specifier tried to climb above the repository root.
+ * - `unresolved-alias`: a tsconfig path alias matched nothing that was analyzed.
+ */
+export type UnresolvedReason =
+  | 'missing'
+  | 'excluded-file'
+  | 'excluded-build-output'
+  | 'path-escape'
+  | 'unresolved-alias';
+
 /** Why a directory/package was treated as an architectural module. */
 export type ModuleBasis = 'workspace-package' | 'index-file' | 'directory' | 'single-file';
 

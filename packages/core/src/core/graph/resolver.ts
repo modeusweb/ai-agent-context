@@ -11,6 +11,7 @@
  */
 import { builtinModules } from 'node:module';
 import type { DependencyKind } from '../../model/types.ts';
+import type { UnresolvedReason } from '../../model/types.ts';
 import { escapesRoot, extname, dirname, join, joinStrict, normalizeRelative } from '../../util/paths.ts';
 import { compareStrings } from '../../model/canonical.ts';
 import { packageNameFromSpecifier } from '../../adapters/language/ts-js/package-signals.ts';
@@ -55,6 +56,16 @@ export interface AliasEntry {
 export interface ResolverInput {
   /** All analyzed file paths (repository-relative POSIX). */
   filePaths: ReadonlySet<string>;
+  /**
+   * Files that exist but were excluded from the analysis, with the reason.
+   *
+   * Without this, an import of an excluded file looks exactly like an import of
+   * a file that does not exist. The two mean very different things: the first
+   * is a limit of the analysis, the second is a hole in the graph. Reporting
+   * both as missing made a repository with large declaration files look as if
+   * a third of its imports were broken.
+   */
+  excludedFiles?: ReadonlyMap<string, string>;
   /** Path aliases collected from tsconfig files. */
   aliases: AliasEntry[];
   /** Workspace package name → package directory and entry candidates. */
@@ -71,6 +82,8 @@ export interface ResolvedImport {
   evidence: string;
   /** Candidates that were tried and rejected (only for unresolved imports). */
   attempts: string[];
+  /** Why the import did not resolve, when it did not. */
+  reason?: UnresolvedReason;
 }
 
 /** Tries the extension and index-file candidates of a specifier base path. */
@@ -96,7 +109,7 @@ export function withExtensions(base: string, filePaths: ReadonlySet<string>): st
   return null;
 }
 
-function unresolved(specifier: string, attempts: string[]): ResolvedImport {
+function unresolved(specifier: string, attempts: string[], reason: UnresolvedReason = 'missing'): ResolvedImport {
   return {
     kind: 'unresolved',
     target: specifier,
@@ -104,21 +117,64 @@ function unresolved(specifier: string, attempts: string[]): ResolvedImport {
     confidence: 0.3,
     evidence: `could not resolve "${specifier}" to an analyzed file`,
     attempts,
+    reason,
   };
+}
+
+/**
+ * The paths a specifier base could refer to, in the order they are tried.
+ *
+ * The same set the resolver searches for analyzed files, so that a file which
+ * exists but is excluded is found by the same rules that would have found it
+ * otherwise.
+ */
+function excludedCandidates(base: string): string[] {
+  const normalized = normalizeRelative(base);
+  const candidates = [normalized];
+  const extension = extname(normalized);
+  if (extension.length > 0) {
+    const rewrites = ESM_TO_TS[extension];
+    if (rewrites !== undefined) {
+      const stem = normalized.slice(0, -extension.length);
+      for (const candidate of rewrites) candidates.push(`${stem}${candidate}`);
+    }
+  } else {
+    for (const candidate of RESOLUTION_EXTENSIONS) candidates.push(`${normalized}${candidate}`);
+    for (const candidate of RESOLUTION_EXTENSIONS) candidates.push(`${normalized}/index${candidate}`);
+  }
+  return candidates;
 }
 
 export class ImportResolver {
   private readonly filePaths: ReadonlySet<string>;
+  private readonly excludedFiles: ReadonlyMap<string, string>;
   private readonly aliases: AliasEntry[];
   private readonly workspacePackages: ResolverInput['workspacePackages'];
 
   constructor(input: ResolverInput) {
     this.filePaths = input.filePaths;
+    this.excludedFiles = input.excludedFiles ?? new Map();
     // Deeper `base` first: the tsconfig closest to the importing file wins.
     this.aliases = [...input.aliases].sort((a, b) =>
       a.base.length === b.base.length ? compareStrings(a.pattern, b.pattern) : b.base.length - a.base.length,
     );
     this.workspacePackages = input.workspacePackages;
+  }
+
+  /**
+   * Whether a specifier base points at a file that exists but was excluded.
+   *
+   * The reason is what makes the difference visible: a file excluded for being
+   * too large and one excluded by the sensitive-file policy are both limits of
+   * the analysis, and both are worth naming.
+   */
+  private excludedTarget(base: string): { path: string; reason: string } | null {
+    if (this.excludedFiles.size === 0) return null;
+    for (const candidate of excludedCandidates(base)) {
+      const reason = this.excludedFiles.get(candidate);
+      if (reason !== undefined) return { path: candidate, reason };
+    }
+    return null;
   }
 
   /** Resolves a specifier written in `fromFile`. */
@@ -131,9 +187,11 @@ export class ImportResolver {
       // the join is computed in strict mode and the escape checked explicitly.
       const joined = joinStrict(dirname(fromFile), normalizedSpecifier);
       if (joined.escaped || joined.absolute) {
-        return unresolved(specifier, [
-          `relative specifier "${specifier}" resolves outside the repository root`,
-        ]);
+        return unresolved(
+          specifier,
+          [`relative specifier "${specifier}" resolves outside the repository root`],
+          'path-escape',
+        );
       }
       const base = joined.path;
       const resolved = withExtensions(base, this.filePaths);
@@ -150,11 +208,28 @@ export class ImportResolver {
           attempts: [],
         };
       }
+      const excluded = this.excludedTarget(base);
+      if (excluded !== null) {
+        return unresolved(
+          specifier,
+          [`"${excluded.path}" exists but was excluded from the analysis: ${excluded.reason}`],
+          'excluded-file',
+        );
+      }
       return unresolved(specifier, [`no analyzed file matched "${base}" with a known extension or index file`]);
     }
 
     const aliasMatch = this.matchAlias(normalizedSpecifier);
-    if (aliasMatch !== null) return aliasMatch;
+    if (aliasMatch !== null) {
+      // A path alias that matched but resolved to nothing does not end the
+      // search. TypeScript treats `paths` as one candidate among several and
+      // falls back to node_modules, and the same has to happen here: a monorepo
+      // that declares `"@scope/*": ["./packages/*/src/*"]` also has packages
+      // named `@scope/thing` that live in their own directory, and the alias
+      // must not shadow them.
+      const isPackageShaped = packageNameFromSpecifier(normalizedSpecifier) !== null;
+      if (aliasMatch.reason !== 'unresolved-alias' || !isPackageShaped) return aliasMatch;
+    }
 
     const packageName = packageNameFromSpecifier(normalizedSpecifier);
     if (packageName !== null) {
@@ -224,10 +299,20 @@ export class ImportResolver {
             attempts: [],
           };
         }
+        const excluded = this.excludedTarget(base);
+        if (excluded !== null) {
+          return unresolved(
+            specifier,
+            [`"${excluded.path}" exists but was excluded from the analysis: ${excluded.reason}`],
+            'excluded-file',
+          );
+        }
       }
-      return unresolved(specifier, [
-        `alias "${alias.pattern}" declared in ${alias.source} did not resolve to an analyzed file`,
-      ]);
+      return unresolved(
+        specifier,
+        [`alias "${alias.pattern}" declared in ${alias.source} did not resolve to an analyzed file`],
+        'unresolved-alias',
+      );
     }
     return null;
   }

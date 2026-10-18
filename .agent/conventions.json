@@ -43,9 +43,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "exports:ca757f2a",
+      "id": "exports:7656a52d",
       "origin": "observed",
-      "statement": "Modules use named exports rather than default exports (433/433 exported symbols are named)."
+      "statement": "Modules use named exports rather than default exports (434/434 exported symbols are named)."
     },
     {
       "category": "Imports",
@@ -56,9 +56,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:3b5ceac5",
+      "id": "imports:b66b668a",
       "origin": "observed",
-      "statement": "External dependencies are imported before internal modules (43/49 files)."
+      "statement": "External dependencies are imported before internal modules (44/50 files)."
     },
     {
       "category": "Imports",
@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:dbe00318",
+      "id": "imports:c29f72dd",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (59/118 files)."
+      "statement": "Type-only dependencies use `import type` (59/119 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:12a003ab",
+      "id": "languages:8754e2b4",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (116 files) and JavaScript (13 files)."
+      "statement": "Implementation mixes TypeScript (117 files) and JavaScript (13 files)."
     },
     {
       "category": "Naming",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:c4b28fed",
+      "id": "naming:01fbb2ef",
       "origin": "observed",
-      "statement": "Functions use camelCase (370/373 declarations)."
+      "statement": "Functions use camelCase (375/378 declarations)."
     },
     {
       "category": "Naming",
@@ -166,9 +166,9 @@
           "source": "packages/core/src/adapters/language/types.ts"
         }
       ],
-      "id": "naming:74ab12c7",
+      "id": "naming:b17a2475",
       "origin": "observed",
-      "statement": "Type aliases use PascalCase (33/33 declarations)."
+      "statement": "Type aliases use PascalCase (34/34 declarations)."
     },
     {
       "category": "Naming",
@@ -204,9 +204,9 @@
           "source": "packages/cli/test/public-api.lock.json"
         }
       ],
-      "id": "tests:7a912ba6",
+      "id": "tests:c4156e43",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (29/31 test files)."
+      "statement": "Tests live in a dedicated test directory (30/33 test files)."
     },
     {
       "category": "Toolchain",

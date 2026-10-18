@@ -778,6 +778,65 @@ are applications this environment cannot launch.
 
 ---
 
+## v0.18.0 — What the analyzer does not cover, told apart from what it misses (in progress)
+
+**Goal:** stop reporting a limit of the analysis as a defect in the repository.
+
+**The problem this release solved.** The pinned set contained nine repositories
+up to 686 files. Pointing the analyzer at a 2953-file monorepo, `playwright`,
+showed the largest gap in the product: **import resolution 53.8%**, 255
+unresolved imports, and 119 `detect` errors. None of that was the repository's
+fault.
+
+Two distinct causes, both of which the product was reporting wrongly.
+
+**A file that exists but was excluded from the analysis.** `playwright` has a
+generated declaration file of 1.5 MB, and forty modules import it. The file
+exceeds the size limit, so it is not analyzed — and an import of it was
+reported as an import of a file that does not exist. The distinction is the
+whole point: one is a limit of the coverage, the other is a hole in the graph.
+Reporting both as missing made a healthy repository look broken, and made
+`detect` fail with errors that were not errors.
+
+The resolver now knows which files were excluded and why. `unresolvedImport`
+entries carry a `reason` — `missing`, `excluded-file`, `excluded-build-output`,
+`path-escape`, `unresolved-alias` — and `detect` reports the new class as
+`info`. The resolution rate excludes them, as it already excluded build output.
+
+**A path alias shadowed a package name.** A tsconfig `paths` alias that matched
+but resolved to nothing ended the search, so a specifier that was really a
+package name was never looked up as one. TypeScript treats `paths` as one
+candidate among several and falls back to node_modules; the product did not, so
+a monorepo declaring a wildcard alias for its own scope lost every package of
+that scope.
+
+**Measured on `playwright`, 2953 files:** import resolution **53.8% → 80.0%**,
+unresolved imports **255 → 92**, `detect` errors **120 → 1** — the one left
+being a path escape, which is a security signal and stays an error. The oracle's
+count of imports the compiler resolves and the analyzer does not went from
+**40 to 0**; it applies the same rule now, and verifies each exclusion claim
+against the file system rather than trusting it.
+
+**The oracle had a defect of its own, in the same place.** It did not read
+`paths` from the tsconfig, so it could not resolve a single aliased import, and
+every alias edge the analyzer drew counted as a false positive. It reads the
+alias table with the compiler's own parser now.
+
+**What is still open, published rather than hidden.** `playwright` reports
+**precision 69.8% and recall 91.1%**: 111 edges the analyzer draws that the
+oracle does not, and 25 it does not draw that the oracle does. The individual
+imports resolve correctly — the disagreement is in how aliased imports are
+attributed to modules, the lift from files to modules. It is a real defect, it
+is measured, and it is not yet fixed. `playwright` is deliberately **not** in
+the pinned set, because a gate that fails is not a gate.
+
+**Why this matters more than the number.** Every metric in this project was
+measured on repositories small enough that the interesting cases did not appear.
+The headline resolution rate was 100% on all nine pinned repositories and 53.8%
+on the first one large enough to have a file the analysis declines to read.
+
+---
+
 ## v1.0 — Stable repository intelligence (in progress)
 
 **Goal:** a stable release with a proven API, mature integrations and

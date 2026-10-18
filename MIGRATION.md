@@ -1,5 +1,71 @@
 # Migration guide
 
+## v0.18.0
+
+Two fixes that change what the analyzer reports about imports. **Re-scan your
+repository**: imports that were previously reported as missing are now
+classified correctly, and the resolution rate changes.
+
+No configuration or schema change. Nothing needs migrating.
+
+### Fixed: an import of an excluded file was reported as a missing import
+
+A file can exist and still be outside the analysis — too large to read, or
+forbidden by the sensitive-file policy. An import of such a file was reported
+as an import of a file that does not exist.
+
+The two mean very different things. One is a limit of the coverage; the other is
+a hole in the graph. Reporting both as missing made `playwright` — which has a
+generated declaration file of 1.5 MB that forty modules import — report **53.8%
+import resolution and 255 unresolved imports**, and made `detect` fail with 119
+errors that were not errors at all.
+
+The resolver now knows which files were excluded and why, and reports that
+distinctly:
+
+- `unresolvedImport` entries gain a `reason`: `missing`, `excluded-file`,
+  `excluded-build-output`, `path-escape` or `unresolved-alias`.
+- `detect` reports a new `excluded-file` issue at `info` severity, and
+  `imports.excludedFiles` counts them.
+- The resolution rate excludes them, exactly as it already excluded build
+  output. On `playwright` the rate goes from 53.8% to 80%, and the number of
+  genuine failures from 255 to 92.
+
+### Fixed: a path alias shadowed a package name
+
+A tsconfig `paths` alias that matched but resolved to nothing ended the search,
+so a specifier that was really a package name was never looked up as one.
+
+TypeScript treats `paths` as one candidate among several and falls back to
+node_modules when the mapping does not resolve. The same now happens here.
+Without it, a monorepo that declares a wildcard alias for its own scope lost
+every package of that scope — 119 imports in `playwright`, each reported as a
+`detect` **error** rather than as what it is, a dependency on a package that is
+not installed in a fresh clone.
+
+### Measured
+
+`playwright`, 2953 files: import resolution **53.8% → 80.0%**, unresolved
+imports 255 → 92, `detect` errors 120 → 1. The one remaining error is a path
+escape, which is a security signal and stays an error.
+
+The oracle agrees: imports the compiler resolves and the analyzer does not went
+from **40 to 0**. The oracle now applies the same exclusion rule, and verifies
+each claim against the file system rather than taking it on trust — an exclusion
+for a file that does not exist is still a miss.
+
+### Not yet fixed, and recorded rather than hidden
+
+`playwright` still reports **precision 69.8% and recall 91.1%** against the
+oracle: 111 edges the analyzer draws that the oracle does not, and 25 it does
+not draw that the oracle does. These are at module level, not at file level, and
+they involve how aliased imports are attributed to modules. The individual
+imports resolve correctly; the disagreement is in the lift from files to
+modules. It is an open defect, and the numbers are published rather than
+quietly excluded from the set.
+
+---
+
 ## v0.17.0
 
 Tooling and documentation only. No behaviour change, no rescan required, nothing

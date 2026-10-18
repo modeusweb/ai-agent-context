@@ -178,6 +178,18 @@
       "type": "package-export"
     },
     {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/src/core/graph/knowledge-graph.ts"
+        }
+      ],
+      "moduleId": "packages/core/src",
+      "path": "packages/core/src/core/graph/knowledge-graph.ts",
+      "type": "test"
+    },
+    {
       "confidence": 0.7,
       "evidence": [
         {
@@ -283,6 +295,18 @@
       ],
       "moduleId": "packages/core/test",
       "path": "packages/core/test/dry-run.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/excluded-files.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/excluded-files.test.ts",
       "type": "test"
     },
     {
@@ -1288,6 +1312,7 @@
         "packages/core/src/util"
       ],
       "entryPoints": [
+        "packages/core/src/core/graph/knowledge-graph.ts",
         "packages/core/src/index.ts"
       ],
       "fileList": [
@@ -1626,9 +1651,12 @@
       ],
       "signals": [
         "error:custom-class",
-        "module:esm"
+        "module:esm",
+        "test:suite"
       ],
-      "testFiles": [],
+      "testFiles": [
+        "packages/core/src/core/graph/knowledge-graph.ts"
+      ],
       "usedBy": [
         "packages/core/src/config"
       ]
@@ -1887,12 +1915,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 23,
+        "historicalChanges": 24,
         "lastChanged": "2026-10-18",
-        "recentChanges": 23,
+        "recentChanges": 24,
         "topContributors": [
           {
-            "commits": 28,
+            "commits": 29,
             "name": "modeusweb"
           }
         ]
@@ -2157,6 +2185,11 @@
           "file": "packages/core/src/model/types.ts",
           "kind": "interface",
           "name": "TaskContext"
+        },
+        {
+          "file": "packages/core/src/model/types.ts",
+          "kind": "type",
+          "name": "UnresolvedReason"
         },
         {
           "file": "packages/core/src/model/types.ts",
@@ -2471,6 +2504,7 @@
         "packages/core/test/detect.test.ts",
         "packages/core/test/determinism.test.ts",
         "packages/core/test/dry-run.test.ts",
+        "packages/core/test/excluded-files.test.ts",
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
         "packages/core/test/filesystem.test.ts",
@@ -2496,6 +2530,7 @@
         "packages/core/test/detect.test.ts",
         "packages/core/test/determinism.test.ts",
         "packages/core/test/dry-run.test.ts",
+        "packages/core/test/excluded-files.test.ts",
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
         "packages/core/test/filesystem.test.ts",
@@ -2512,7 +2547,7 @@
         "packages/core/test/scanner.test.ts",
         "packages/core/test/template-literals.test.ts"
       ],
-      "files": 23,
+      "files": 24,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
@@ -2644,6 +2679,7 @@
         "packages/core/test/detect.test.ts",
         "packages/core/test/determinism.test.ts",
         "packages/core/test/dry-run.test.ts",
+        "packages/core/test/excluded-files.test.ts",
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
         "packages/core/test/filesystem.test.ts",
@@ -3183,12 +3219,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 15,
+        "historicalChanges": 16,
         "lastChanged": "2026-10-18",
-        "recentChanges": 15,
+        "recentChanges": 16,
         "topContributors": [
           {
-            "commits": 25,
+            "commits": 26,
             "name": "modeusweb"
           }
         ]
@@ -3285,7 +3321,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 52,
+    "entryPoints": 54,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3309,21 +3345,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.17.0"
+        "version": "0.18.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.17.0"
+        "version": "0.18.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.17.0"
+        "version": "0.18.0"
       }
     ],
     "workspaceGlobs": [

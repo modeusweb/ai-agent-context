@@ -12,7 +12,8 @@
  * configuration, not a defect in the project.
  */
 import type { ParsedFile } from '../../adapters/language/types.ts';
-import type { KnowledgeGraph } from '../graph/knowledge-graph.ts';
+import type { KnowledgeGraph, UnresolvedImport } from '../graph/knowledge-graph.ts';
+import type { UnresolvedReason } from '../../model/types.ts';
 import { compareStrings } from '../../model/canonical.ts';
 
 export type IssueSeverity = 'error' | 'warning' | 'info';
@@ -21,6 +22,7 @@ export type IssueKind =
   | 'path-escape'
   | 'unresolved-import'
   | 'unresolved-alias'
+  | 'excluded-file'
   | 'failed-parse'
   | 'partial-parse'
   | 'sensitive-skipped'
@@ -67,6 +69,8 @@ export interface DetectionReport {
     resolved: number;
     unresolved: number;
     excludedOutput: number;
+  /** Imports of files that exist but were excluded from the analysis. */
+  excludedFiles: number;
     pathEscapes: number;
     resolutionRate: number;
   };
@@ -121,10 +125,34 @@ export function detectIssues(
 ): DetectionReport {
   const issues: Array<DetectedIssue | null> = [];
 
-  const escapes = graph.unresolved.filter((entry) =>
-    (entry.attempts[0] ?? '').includes('outside the repository root'),
-  );
-  const unresolved = graph.unresolved.filter((entry) => !(entry.attempts[0] ?? '').includes('outside the repository root'));
+  /**
+   * The cause of an unresolved import.
+   *
+   * The resolver states it. Before, the cause had to be read out of the wording
+   * of the attempt list, which worked for the two cases that were thought of —
+   * build output and a path escape — and silently lumped everything else
+   * together. An import of a file that exists but was excluded from the
+   * analysis is a limit of the coverage, not a hole in the graph, and counting
+   * it as missing made a repository with large declaration files look as if a
+   * third of its imports were broken.
+   */
+  const reasonOf = (entry: UnresolvedImport): UnresolvedReason => {
+    // Build output is a property of the path, and the resolver does not know
+    // about it: the file is not in the tree at all. That check comes first
+    // because it holds whatever the resolver said.
+    if (EXCLUDED_OUTPUT.test(entry.specifier)) return 'excluded-build-output';
+    if (entry.reason !== undefined) return entry.reason;
+    const attempt = entry.attempts[0] ?? '';
+    if (attempt.includes('outside the repository root')) return 'path-escape';
+    if (attempt.includes('did not resolve')) return 'unresolved-alias';
+    return 'missing';
+  };
+
+  const escapes = graph.unresolved.filter((entry) => reasonOf(entry) === 'path-escape');
+  const excludedFiles = graph.unresolved.filter((entry) => reasonOf(entry) === 'excluded-file');
+  const excludedOutput = graph.unresolved.filter((entry) => reasonOf(entry) === 'excluded-build-output');
+  const unresolvedAliases = graph.unresolved.filter((entry) => reasonOf(entry) === 'unresolved-alias');
+  const missing = graph.unresolved.filter((entry) => reasonOf(entry) === 'missing');
 
   issues.push(
     fold(
@@ -134,12 +162,6 @@ export function detectIssues(
       'import specifiers tried to climb above the repository root and were rejected',
     ),
   );
-
-  const unresolvedAliases = unresolved.filter((entry) =>
-    (entry.attempts[0] ?? '').includes('did not resolve'),
-  );
-  const missing = unresolved.filter((entry) => !EXCLUDED_OUTPUT.test(entry.specifier));
-  const excluded = unresolved.filter((entry) => EXCLUDED_OUTPUT.test(entry.specifier));
 
   issues.push(
     fold(
@@ -161,8 +183,16 @@ export function detectIssues(
     fold(
       'unresolved-import',
       'info',
-      excluded.map((entry) => `${entry.file} -> ${entry.specifier}`),
+      excludedOutput.map((entry) => `${entry.file} -> ${entry.specifier}`),
       'imports of excluded build output; expected, and absent from the graph by design',
+    ),
+  );
+  issues.push(
+    fold(
+      'excluded-file',
+      'info',
+      excludedFiles.map((entry) => `${entry.file} -> ${entry.specifier}`),
+      'imports of files that exist but were excluded from the analysis; the coverage stops there, not the graph',
     ),
   );
 
@@ -233,7 +263,6 @@ export function detectIssues(
   ).length;
   const resolvableMisses = missing.length + unresolvedAliases.length;
   const resolvableTotal = resolvedEdges + resolvableMisses;
-
   return {
     schemaVersion,
     clean: present.every((issue) => issue.severity === 'info'),
@@ -256,7 +285,11 @@ export function detectIssues(
       // Imports that should have resolved and did not.
       unresolved: resolvableMisses,
       // Reported above, excluded from the rate on purpose.
-      excludedOutput: excluded.length,
+      excludedOutput: excludedOutput.length,
+      // Also excluded from the rate, and for the same reason: the file exists,
+      // the analysis simply does not cover it. A repository whose coverage stops
+      // at a large declaration file is not a repository with broken imports.
+      excludedFiles: excludedFiles.length,
       pathEscapes: escapes.length,
       resolutionRate:
         resolvableTotal === 0 ? 1 : Number((resolvedEdges / resolvableTotal).toFixed(4)),

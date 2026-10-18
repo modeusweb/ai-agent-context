@@ -21,13 +21,14 @@ import type {
   Relationship,
   Repository,
   SymbolNode,
+  UnresolvedReason,
   WorkspaceInfo,
 } from '../../model/types.ts';
 import type { ParsedFile } from '../../adapters/language/types.ts';
 import { compareStrings, uniqueSorted } from '../../model/canonical.ts';
 import { CONFIDENCE } from '../../model/schema.ts';
-import { join, normalizeRelative } from '../../util/paths.ts';
-import { ImportResolver, withExtensions, type AliasEntry } from './resolver.ts';
+import { extname, join, normalizeRelative } from '../../util/paths.ts';
+import { ImportResolver, withExtensions, RESOLUTION_EXTENSIONS, type AliasEntry } from './resolver.ts';
 import { collectAliases } from './aliases.ts';
 import { buildModules } from './modules.ts';
 import type { ScanOutput } from '../scanner/scanner.ts';
@@ -46,6 +47,16 @@ export interface UnresolvedImport {
   file: string;
   specifier: string;
   attempts: string[];
+  /**
+   * Why the import did not resolve, when the resolver could tell.
+   *
+   * The distinction matters: an import of a file that exists but was excluded
+   * from the analysis is not a gap in the graph, it is a gap in the coverage,
+   * and counting it as missing made a healthy repository look broken. Before
+   * this field the cause had to be inferred from the wording of `attempts`,
+   * which is why excluded build output was separated and nothing else was.
+   */
+  reason?: UnresolvedReason;
 }
 
 export interface KnowledgeGraph {
@@ -320,6 +331,26 @@ export function buildKnowledgeGraph(input: KnowledgeGraphInput): KnowledgeGraph 
     files.filter((file) => !file.sensitive && file.parseStatus !== 'skipped').map((file) => file.path),
   );
 
+  /**
+   * Files that exist but were left out of the analysis, with the reason.
+   *
+   * The resolver needs them so that an import of such a file is reported as
+   * excluded rather than missing. Only files the resolver could have matched
+   * belong here: a `.vue` file is not a resolution candidate at all, so its
+   * absence is not a limit of the analysis but simply not an import target.
+   */
+  const excludedFiles = new Map<string, string>();
+  for (const file of files) {
+    if (resolvableFiles.has(file.path)) continue;
+    if (file.sensitive) {
+      excludedFiles.set(file.path, 'the sensitive-file policy forbids reading it');
+      continue;
+    }
+    if (file.parseStatus === 'skipped' && RESOLUTION_EXTENSIONS.includes(extname(file.path))) {
+      excludedFiles.set(file.path, 'it exceeds analysis.maxFileSizeBytes');
+    }
+  }
+
   const moduleBuild = buildModules({ workspace, files, parsed: scan.parsed, moduleDepth: input.moduleDepth });
   const modulesById = new Map(moduleBuild.modules.map((module) => [module.id, module]));
 
@@ -327,6 +358,7 @@ export function buildKnowledgeGraph(input: KnowledgeGraphInput): KnowledgeGraph 
   const aliases = collectAliases(scan.parsed);
   const resolver = new ImportResolver({
     filePaths: resolvableFiles,
+    excludedFiles,
     aliases,
     workspacePackages: resolverWorkspacePackages(workspace, resolvableFiles),
   });
@@ -428,7 +460,14 @@ export function buildKnowledgeGraph(input: KnowledgeGraphInput): KnowledgeGraph 
       const isPathEscape = resolved.attempts.some((attempt) => attempt.includes('outside the repository root'));
       const looksLikeCode =
         isPathEscape || !lastSegment.includes('.') || CODE_EXTENSIONS.has(extension);
-      if (looksLikeCode) unresolved.push({ file: file.path, specifier: record.specifier, attempts: resolved.attempts });
+      if (looksLikeCode) {
+        unresolved.push({
+          file: file.path,
+          specifier: record.specifier,
+          attempts: resolved.attempts,
+          ...(resolved.reason === undefined ? {} : { reason: resolved.reason }),
+        });
+      }
     }
 
     const importedNames = importedSymbolNames(facts);
