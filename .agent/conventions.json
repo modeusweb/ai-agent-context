@@ -56,9 +56,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:0b166306",
+      "id": "imports:fbc94e16",
       "origin": "observed",
-      "statement": "External dependencies are imported before internal modules (33/39 files)."
+      "statement": "External dependencies are imported before internal modules (35/41 files)."
     },
     {
       "category": "Imports",
@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:e7c4248d",
+      "id": "imports:d8929d7a",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (59/109 files)."
+      "statement": "Type-only dependencies use `import type` (59/111 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:948ae65a",
+      "id": "languages:ce787a52",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (111 files) and JavaScript (8 files)."
+      "statement": "Implementation mixes TypeScript (112 files) and JavaScript (9 files)."
     },
     {
       "category": "Naming",
@@ -124,13 +124,13 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:ab3066b3",
+      "id": "naming:c842ddc1",
       "origin": "observed",
-      "statement": "Functions use camelCase (314/317 declarations)."
+      "statement": "Functions use camelCase (329/332 declarations)."
     },
     {
       "category": "Naming",
-      "confidence": 0.92,
+      "confidence": 0.91,
       "evidence": [
         {
           "detail": "file name uses camelCase",
@@ -145,9 +145,9 @@
           "source": "packages/cli/src/commands/clean.ts"
         }
       ],
-      "id": "naming:e7786469",
+      "id": "naming:251ff6be",
       "origin": "observed",
-      "statement": "Source files use camelCase (79/95 files)."
+      "statement": "Source files use camelCase (79/96 files)."
     },
     {
       "category": "Naming",
@@ -204,9 +204,9 @@
           "source": "packages/cli/test/public-api.lock.json"
         }
       ],
-      "id": "tests:3f3c9ba6",
+      "id": "tests:b9853e7f",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (25/27 test files)."
+      "statement": "Tests live in a dedicated test directory (26/28 test files)."
     },
     {
       "category": "Toolchain",

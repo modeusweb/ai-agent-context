@@ -278,6 +278,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/dry-run.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/dry-run.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/test/explain-detail.test.ts"
         }
       ],
@@ -1158,12 +1170,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "low",
         "contributorCount": 1,
-        "historicalChanges": 5,
+        "historicalChanges": 6,
         "lastChanged": "2026-10-17",
-        "recentChanges": 5,
+        "recentChanges": 6,
         "topContributors": [
           {
-            "commits": 5,
+            "commits": 6,
             "name": "modeusweb"
           }
         ]
@@ -1839,12 +1851,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 15,
+        "historicalChanges": 16,
         "lastChanged": "2026-10-17",
-        "recentChanges": 15,
+        "recentChanges": 16,
         "topContributors": [
           {
-            "commits": 19,
+            "commits": 20,
             "name": "modeusweb"
           }
         ]
@@ -2420,6 +2432,7 @@
         "packages/core/test/conventions.test.ts",
         "packages/core/test/detect.test.ts",
         "packages/core/test/determinism.test.ts",
+        "packages/core/test/dry-run.test.ts",
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
         "packages/core/test/filesystem.test.ts",
@@ -2441,6 +2454,7 @@
         "packages/core/test/conventions.test.ts",
         "packages/core/test/detect.test.ts",
         "packages/core/test/determinism.test.ts",
+        "packages/core/test/dry-run.test.ts",
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
         "packages/core/test/filesystem.test.ts",
@@ -2454,17 +2468,17 @@
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts"
       ],
-      "files": 19,
+      "files": 20,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 13,
+        "historicalChanges": 14,
         "lastChanged": "2026-10-17",
-        "recentChanges": 13,
+        "recentChanges": 14,
         "topContributors": [
           {
-            "commits": 28,
+            "commits": 30,
             "name": "modeusweb"
           }
         ]
@@ -2585,6 +2599,7 @@
         "packages/core/test/conventions.test.ts",
         "packages/core/test/detect.test.ts",
         "packages/core/test/determinism.test.ts",
+        "packages/core/test/dry-run.test.ts",
         "packages/core/test/explain-detail.test.ts",
         "packages/core/test/explain.test.ts",
         "packages/core/test/filesystem.test.ts",
@@ -3040,12 +3055,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 10,
+        "historicalChanges": 11,
         "lastChanged": "2026-10-17",
-        "recentChanges": 10,
+        "recentChanges": 11,
         "topContributors": [
           {
-            "commits": 11,
+            "commits": 12,
             "name": "modeusweb"
           }
         ]
@@ -3106,21 +3121,22 @@
         "tools/check-stability.mjs",
         "tools/clean.mjs",
         "tools/generate-fixtures.mjs",
+        "tools/ground-truth.mjs",
         "tools/set-version.mjs",
         "tools/smoke.mjs",
         "tools/trust-metrics.mjs"
       ],
-      "files": 8,
+      "files": 9,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 8,
+        "historicalChanges": 9,
         "lastChanged": "2026-10-17",
-        "recentChanges": 8,
+        "recentChanges": 9,
         "topContributors": [
           {
-            "commits": 10,
+            "commits": 12,
             "name": "modeusweb"
           }
         ]
@@ -3210,7 +3226,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 48,
+    "entryPoints": 49,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3234,21 +3250,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.11.0"
+        "version": "0.12.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.11.0"
+        "version": "0.12.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.11.0"
+        "version": "0.12.0"
       }
     ],
     "workspaceGlobs": [

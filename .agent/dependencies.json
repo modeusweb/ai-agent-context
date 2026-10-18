@@ -185,6 +185,26 @@
       "importedByModules": 4,
       "name": "node:url",
       "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
+        "confidence": 0.6,
+        "evidence": [
+          {
+            "detail": "imported by source code but not declared as a dependency in any workspace package",
+            "source": "<package.json>"
+          },
+          {
+            "detail": "dependency is a known build or test tool",
+            "source": "package.json"
+          }
+        ],
+        "value": "tooling"
+      },
+      "importedByModules": 1,
+      "name": "typescript",
+      "scope": "runtime"
     }
   ],
   "fileImports": [
@@ -883,6 +903,17 @@
     {
       "externalPackages": [
         "node:assert/strict",
+        "node:fs",
+        "node:path",
+        "node:test"
+      ],
+      "file": "packages/core/test/dry-run.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
         "node:test"
       ],
       "file": "packages/core/test/explain-detail.test.ts",
@@ -1118,6 +1149,17 @@
         "node:url"
       ],
       "file": "tools/generate-fixtures.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url",
+        "typescript"
+      ],
+      "file": "tools/ground-truth.mjs",
       "internalModules": [],
       "module": "tools"
     },
@@ -1588,9 +1630,9 @@
   "summary": {
     "crossPackageEdges": 0,
     "cycles": 2,
-    "externalPackages": 11,
+    "externalPackages": 12,
     "internalModuleEdges": 18,
-    "unresolvedImports": 22
+    "unresolvedImports": 24
   },
   "unresolved": [
     {
@@ -1634,6 +1676,13 @@
       ],
       "file": "packages/core/test/determinism.test.ts",
       "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/dry-run.test.ts",
+      "specifier": "../../core/dist/index.js"
     },
     {
       "attempts": [
@@ -1745,6 +1794,13 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "tools/benchmark.mjs",
+      "specifier": "../packages/core/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "tools/ground-truth.mjs",
       "specifier": "../packages/core/dist/index.js"
     }
   ]

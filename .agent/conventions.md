@@ -24,14 +24,14 @@ evidence behind it are listed. Statements marked `config` come from declared con
 
 ## Imports
 
-- External dependencies are imported before internal modules (33/39 files). _(confidence 0.75, observed)_
+- External dependencies are imported before internal modules (35/41 files). _(confidence 0.75, observed)_
   - evidence: `<repository>` — import order observed across files that import both kinds of modules
-- Type-only dependencies use `import type` (59/109 files). _(confidence 0.80, observed)_
+- Type-only dependencies use `import type` (59/111 files). _(confidence 0.80, observed)_
   - evidence: `<repository>` — import type / export type statements detected
 
 ## Languages
 
-- Implementation mixes TypeScript (111 files) and JavaScript (8 files). _(confidence 0.90, observed)_
+- Implementation mixes TypeScript (112 files) and JavaScript (9 files). _(confidence 0.90, observed)_
   - evidence: `<repository>` — languages are derived from file extensions, not from content guessing
 
 ## Naming
@@ -40,11 +40,11 @@ evidence behind it are listed. Statements marked `config` come from declared con
   - evidence: `packages/cli/src/ui/console.ts` — class "ConsoleOutput" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/fs-adapter.ts` — class "FileSystemAdapter" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/sensitive.ts` — class "SensitivePathFilter" uses PascalCase
-- Functions use camelCase (314/317 declarations). _(confidence 0.95, observed)_
+- Functions use camelCase (329/332 declarations). _(confidence 0.95, observed)_
   - evidence: `packages/cli/src/cli.ts` — function "appendFlag" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "parseArguments" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "flagString" uses camelCase
-- Source files use camelCase (79/95 files). _(confidence 0.92, observed)_
+- Source files use camelCase (79/96 files). _(confidence 0.91, observed)_
   - evidence: `packages/cli/src/bin.ts` — file name uses camelCase
   - evidence: `packages/cli/src/cli.ts` — file name uses camelCase
   - evidence: `packages/cli/src/commands/clean.ts` — file name uses camelCase
@@ -59,7 +59,7 @@ evidence behind it are listed. Statements marked `config` come from declared con
 
 ## Tests
 
-- Tests live in a dedicated test directory (25/27 test files). _(confidence 0.80, observed)_
+- Tests live in a dedicated test directory (26/28 test files). _(confidence 0.80, observed)_
   - evidence: `packages/cli/test/cli.test.ts` — test located in a central tests directory
   - evidence: `packages/cli/test/public-api.lock.json` — test located in a central tests directory
 
