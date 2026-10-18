@@ -710,7 +710,7 @@ largest gap in the analyzer so far.
   subpath — the repository that found the gaps above.
 
 **Measured:** `radix-ui/primitives`, 686 files — **25 partial parses before,
-zero after.** Across the whole pinned set, 1932 files, 100% parse coverage, and
+zero after.** Across the whole pinned set, 1922 files, 100% parse coverage, and
 100% precision and recall against the compiler on both oracles.
 
 **Two defects in the oracle, found by the same repository.** The analyzer was
@@ -757,8 +757,9 @@ measurable value for teams.
 1. ~~Close the precision/recall gap.~~ Done in 0.12.0 against the TypeScript
    independent oracle exists for.
 2. ~~Add public repositories to the benchmark, pinned by commit SHA.~~ Done in
-   0.13.0: eight repositories, all at 100% resolution and, where there are module
-   edges to compare, 100% precision and recall.
+   0.13.0 with eight repositories and extended in 0.16.0 to nine, all at 100%
+   resolution and, where there are module edges to compare, 100% precision and
+   recall.
 3. ~~Re-audit the exported surface against STABILITY.md.~~ Audited in 0.14.0, and
    the answer was mostly "promote fewer than expected", plus one mechanism that
    did not do what it claimed.

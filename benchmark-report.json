@@ -1,48 +1,48 @@
 {
-  "generatedAt": "2026-10-18T01:20:23.832Z",
+  "generatedAt": "2026-10-18T01:52:10.454Z",
   "node": "v24.21.0",
   "summary": {
-    "repositories": 14,
-    "files": 1444,
+    "repositories": 15,
+    "files": 2131,
     "imports": {
-      "resolved": 380,
-      "excludedOutput": 32,
+      "resolved": 765,
+      "excludedOutput": 33,
       "actionableUnresolved": 0,
       "pathEscapes": 0,
       "resolutionRate": 1
     },
     "graph": {
-      "moduleEdges": 380,
+      "moduleEdges": 765,
       "cycles": 8
     },
     "trust": {
-      "judgements": 2192,
-      "withEvidence": 2192,
+      "judgements": 3259,
+      "withEvidence": 3259,
       "withoutEvidence": 0,
       "coveragePercent": 100,
       "nonDeterministic": 0
     },
     "tokenBudget": {
       "under8Kb": {
-        "modules": 42,
-        "sourceBytes": 108026,
-        "explainBytes": 128203,
-        "ratio": 1.1868,
-        "savedPercent": -18.7
+        "modules": 77,
+        "sourceBytes": 182579,
+        "explainBytes": 202273,
+        "ratio": 1.1079,
+        "savedPercent": -10.8
       },
       "from8To64Kb": {
-        "modules": 68,
-        "sourceBytes": 1750001,
-        "explainBytes": 708861,
-        "ratio": 0.4051,
-        "savedPercent": 59.5
+        "modules": 103,
+        "sourceBytes": 2736880,
+        "explainBytes": 1009750,
+        "ratio": 0.3689,
+        "savedPercent": 63.1
       },
       "over64Kb": {
-        "modules": 25,
-        "sourceBytes": 5740769,
-        "explainBytes": 309015,
-        "ratio": 0.0538,
-        "savedPercent": 94.6
+        "modules": 38,
+        "sourceBytes": 7506232,
+        "explainBytes": 453154,
+        "ratio": 0.0604,
+        "savedPercent": 94
       }
     }
   },
@@ -73,14 +73,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 134,
-        "warmMs": 75,
+        "coldMs": 142,
+        "warmMs": 76,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 68,
+        "ms": 65,
         "bytes": 4832
       },
       "trust": {
@@ -156,32 +156,32 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 111,
-        "warmMs": 79,
+        "coldMs": 108,
+        "warmMs": 78,
         "parsed": 16,
         "warmParsed": 0,
         "warmReused": 16
       },
       "compact": {
-        "ms": 69,
-        "bytes": 9473
+        "ms": 70,
+        "bytes": 9037
       },
       "trust": {
-        "judgements": 75,
-        "withEvidence": 75,
+        "judgements": 71,
+        "withEvidence": 71,
         "withoutEvidence": 0,
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "85923bf2"
+        "contextHash": "fd6b824b"
       },
       "tokenBudget": {
         "under8Kb": {
           "modules": 5,
           "sourceBytes": 6412,
-          "explainBytes": 13234,
-          "ratio": 2.0639,
-          "savedPercent": -106.4
+          "explainBytes": 12864,
+          "ratio": 2.0062,
+          "savedPercent": -100.6
         },
         "from8To64Kb": {
           "modules": 0,
@@ -207,8 +207,8 @@
           {
             "module": "src/api",
             "bytes": 1600,
-            "explainBytes": 2907,
-            "ratio": 1.8169
+            "explainBytes": 2537,
+            "ratio": 1.5856
           },
           {
             "module": "src/infrastructure",
@@ -257,8 +257,8 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 100,
-        "warmMs": 77,
+        "coldMs": 96,
+        "warmMs": 80,
         "parsed": 14,
         "warmParsed": 0,
         "warmReused": 14
@@ -346,14 +346,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 84,
+        "coldMs": 81,
         "warmMs": 70,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 62,
+        "ms": 61,
         "bytes": 5060
       },
       "trust": {
@@ -423,32 +423,32 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 109,
-        "warmMs": 73,
+        "coldMs": 89,
+        "warmMs": 71,
         "parsed": 10,
         "warmParsed": 0,
         "warmReused": 10
       },
       "compact": {
-        "ms": 64,
-        "bytes": 8325
+        "ms": 63,
+        "bytes": 8043
       },
       "trust": {
-        "judgements": 50,
-        "withEvidence": 50,
+        "judgements": 48,
+        "withEvidence": 48,
         "withoutEvidence": 0,
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "c0976745"
+        "contextHash": "3d48e5e1"
       },
       "tokenBudget": {
         "under8Kb": {
           "modules": 2,
           "sourceBytes": 4760,
-          "explainBytes": 7333,
-          "ratio": 1.5405,
-          "savedPercent": -54.1
+          "explainBytes": 7129,
+          "ratio": 1.4977,
+          "savedPercent": -49.8
         },
         "from8To64Kb": {
           "modules": 0,
@@ -468,8 +468,8 @@
           {
             "module": "api-project",
             "bytes": 3198,
-            "explainBytes": 4511,
-            "ratio": 1.4106
+            "explainBytes": 4307,
+            "ratio": 1.3468
           },
           {
             "module": "src/services",
@@ -482,8 +482,8 @@
     },
     {
       "repository": "ai-agent-context",
-      "files": 154,
-      "sourceFiles": 100,
+      "files": 155,
+      "sourceFiles": 99,
       "parse": {
         "partial": 0,
         "failed": 0,
@@ -492,7 +492,7 @@
       "modules": 13,
       "imports": {
         "resolved": 19,
-        "excludedOutput": 27,
+        "excludedOutput": 28,
         "actionableUnresolved": 0,
         "pathEscapes": 0,
         "resolutionRate": 1
@@ -506,24 +506,24 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 543,
-        "warmMs": 169,
-        "parsed": 154,
+        "coldMs": 527,
+        "warmMs": 164,
+        "parsed": 155,
         "warmParsed": 0,
-        "warmReused": 154
+        "warmReused": 155
       },
       "compact": {
-        "ms": 153,
-        "bytes": 19837
+        "ms": 151,
+        "bytes": 19954
       },
       "trust": {
-        "judgements": 153,
-        "withEvidence": 153,
+        "judgements": 155,
+        "withEvidence": 155,
         "withoutEvidence": 0,
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "f0c48621"
+        "contextHash": "6871d9a2"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -536,47 +536,47 @@
         "from8To64Kb": {
           "modules": 10,
           "sourceBytes": 247602,
-          "explainBytes": 84167,
-          "ratio": 0.3399,
-          "savedPercent": 66
+          "explainBytes": 84407,
+          "ratio": 0.3409,
+          "savedPercent": 65.9
         },
         "over64Kb": {
           "modules": 3,
-          "sourceBytes": 630718,
-          "explainBytes": 43062,
-          "ratio": 0.0683,
+          "sourceBytes": 645512,
+          "explainBytes": 44207,
+          "ratio": 0.0685,
           "savedPercent": 93.2
         },
         "largest": [
           {
             "module": "packages/core/src",
-            "bytes": 400575,
-            "explainBytes": 15969,
-            "ratio": 0.0399
-          },
-          {
-            "module": "tools",
-            "bytes": 115858,
-            "explainBytes": 10400,
-            "ratio": 0.0898
+            "bytes": 408410,
+            "explainBytes": 16593,
+            "ratio": 0.0406
           },
           {
             "module": "packages/core/test",
-            "bytes": 114285,
-            "explainBytes": 16693,
-            "ratio": 0.1461
+            "bytes": 120101,
+            "explainBytes": 17405,
+            "ratio": 0.1449
+          },
+          {
+            "module": "tools",
+            "bytes": 117001,
+            "explainBytes": 10209,
+            "ratio": 0.0873
           },
           {
             "module": "packages/mcp/src",
             "bytes": 37321,
-            "explainBytes": 9773,
-            "ratio": 0.2619
+            "explainBytes": 9844,
+            "ratio": 0.2638
           },
           {
             "module": "packages/mcp/test",
             "bytes": 36542,
-            "explainBytes": 6607,
-            "ratio": 0.1808
+            "explainBytes": 6616,
+            "ratio": 0.1811
           }
         ]
       }
@@ -607,15 +607,15 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 96,
-        "warmMs": 77,
+        "coldMs": 95,
+        "warmMs": 72,
         "parsed": 13,
         "warmParsed": 0,
         "warmReused": 13
       },
       "compact": {
-        "ms": 64,
-        "bytes": 6301
+        "ms": 63,
+        "bytes": 6299
       },
       "trust": {
         "judgements": 35,
@@ -624,14 +624,14 @@
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "e7d7cda1"
+        "contextHash": "03aa056b"
       },
       "tokenBudget": {
         "under8Kb": {
           "modules": 5,
           "sourceBytes": 11897,
-          "explainBytes": 7306,
-          "ratio": 0.6141,
+          "explainBytes": 7304,
+          "ratio": 0.6139,
           "savedPercent": 38.6
         },
         "from8To64Kb": {
@@ -664,8 +664,8 @@
           {
             "module": "bench",
             "bytes": 1395,
-            "explainBytes": 1389,
-            "ratio": 0.9957
+            "explainBytes": 1387,
+            "ratio": 0.9943
           },
           {
             "module": "src",
@@ -708,14 +708,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 143,
-        "warmMs": 73,
+        "coldMs": 144,
+        "warmMs": 72,
         "parsed": 11,
         "warmParsed": 0,
         "warmReused": 11
       },
       "compact": {
-        "ms": 64,
+        "ms": 63,
         "bytes": 7127
       },
       "trust": {
@@ -725,7 +725,7 @@
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "272df9a2"
+        "contextHash": "e2e60ad6"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -745,15 +745,15 @@
         "over64Kb": {
           "modules": 1,
           "sourceBytes": 354867,
-          "explainBytes": 9750,
+          "explainBytes": 9759,
           "ratio": 0.0275,
-          "savedPercent": 97.3
+          "savedPercent": 97.2
         },
         "largest": [
           {
             "module": "p-map",
             "bytes": 354867,
-            "explainBytes": 9750,
+            "explainBytes": 9759,
             "ratio": 0.0275
           }
         ]
@@ -762,7 +762,7 @@
     {
       "repository": "ansi-styles",
       "files": 8,
-      "sourceFiles": 3,
+      "sourceFiles": 4,
       "parse": {
         "partial": 0,
         "failed": 0,
@@ -785,24 +785,24 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 87,
-        "warmMs": 71,
+        "coldMs": 92,
+        "warmMs": 76,
         "parsed": 8,
         "warmParsed": 0,
         "warmReused": 8
       },
       "compact": {
-        "ms": 61,
-        "bytes": 5039
+        "ms": 62,
+        "bytes": 4727
       },
       "trust": {
-        "judgements": 25,
-        "withEvidence": 25,
+        "judgements": 23,
+        "withEvidence": 23,
         "withoutEvidence": 0,
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "af1defff"
+        "contextHash": "c05f4099"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -815,9 +815,9 @@
         "from8To64Kb": {
           "modules": 1,
           "sourceBytes": 23145,
-          "explainBytes": 6920,
-          "ratio": 0.299,
-          "savedPercent": 70.1
+          "explainBytes": 6741,
+          "ratio": 0.2913,
+          "savedPercent": 70.9
         },
         "over64Kb": {
           "modules": 0,
@@ -830,8 +830,8 @@
           {
             "module": "ansi-styles",
             "bytes": 23145,
-            "explainBytes": 6920,
-            "ratio": 0.299
+            "explainBytes": 6741,
+            "ratio": 0.2913
           }
         ]
       }
@@ -862,14 +862,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 404,
-        "warmMs": 124,
+        "coldMs": 490,
+        "warmMs": 119,
         "parsed": 105,
         "warmParsed": 0,
         "warmReused": 105
       },
       "compact": {
-        "ms": 111,
+        "ms": 107,
         "bytes": 13954
       },
       "trust": {
@@ -879,7 +879,7 @@
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "6258bf86"
+        "contextHash": "64fd4175"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -892,28 +892,28 @@
         "from8To64Kb": {
           "modules": 4,
           "sourceBytes": 137573,
-          "explainBytes": 30816,
-          "ratio": 0.224,
-          "savedPercent": 77.6
+          "explainBytes": 30974,
+          "ratio": 0.2251,
+          "savedPercent": 77.5
         },
         "over64Kb": {
           "modules": 2,
           "sourceBytes": 935400,
-          "explainBytes": 28837,
-          "ratio": 0.0308,
+          "explainBytes": 28882,
+          "ratio": 0.0309,
           "savedPercent": 96.9
         },
         "largest": [
           {
             "module": "test",
             "bytes": 864717,
-            "explainBytes": 18228,
+            "explainBytes": 18270,
             "ratio": 0.0211
           },
           {
             "module": "source/core",
             "bytes": 70683,
-            "explainBytes": 10609,
+            "explainBytes": 10612,
             "ratio": 0.1501
           },
           {
@@ -925,14 +925,14 @@
           {
             "module": "source/utils",
             "bytes": 48580,
-            "explainBytes": 10275,
-            "ratio": 0.2115
+            "explainBytes": 10453,
+            "ratio": 0.2152
           },
           {
             "module": "test-d",
             "bytes": 17980,
-            "explainBytes": 5921,
-            "ratio": 0.3293
+            "explainBytes": 5901,
+            "ratio": 0.3282
           }
         ]
       }
@@ -940,7 +940,7 @@
     {
       "repository": "ora",
       "files": 11,
-      "sourceFiles": 6,
+      "sourceFiles": 7,
       "parse": {
         "partial": 0,
         "failed": 0,
@@ -963,24 +963,24 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 106,
-        "warmMs": 75,
+        "coldMs": 105,
+        "warmMs": 70,
         "parsed": 11,
         "warmParsed": 0,
         "warmReused": 11
       },
       "compact": {
         "ms": 63,
-        "bytes": 7597
+        "bytes": 6772
       },
       "trust": {
-        "judgements": 44,
-        "withEvidence": 44,
+        "judgements": 37,
+        "withEvidence": 37,
         "withoutEvidence": 0,
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "aaae8e72"
+        "contextHash": "f9926264"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -1000,16 +1000,16 @@
         "over64Kb": {
           "modules": 1,
           "sourceBytes": 102329,
-          "explainBytes": 10476,
-          "ratio": 0.1024,
-          "savedPercent": 89.8
+          "explainBytes": 9491,
+          "ratio": 0.0927,
+          "savedPercent": 90.7
         },
         "largest": [
           {
             "module": "ora",
             "bytes": 102329,
-            "explainBytes": 10476,
-            "ratio": 0.1024
+            "explainBytes": 9491,
+            "ratio": 0.0927
           }
         ]
       }
@@ -1040,24 +1040,24 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 1494,
-        "warmMs": 417,
+        "coldMs": 1457,
+        "warmMs": 408,
         "parsed": 673,
         "warmParsed": 0,
         "warmReused": 673
       },
       "compact": {
-        "ms": 431,
-        "bytes": 16011
+        "ms": 430,
+        "bytes": 15842
       },
       "trust": {
-        "judgements": 745,
-        "withEvidence": 745,
+        "judgements": 729,
+        "withEvidence": 729,
         "withoutEvidence": 0,
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "47b80afa"
+        "contextHash": "bb27a1a2"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -1070,29 +1070,29 @@
         "from8To64Kb": {
           "modules": 28,
           "sourceBytes": 775398,
-          "explainBytes": 346587,
-          "ratio": 0.447,
-          "savedPercent": 55.3
+          "explainBytes": 346150,
+          "ratio": 0.4464,
+          "savedPercent": 55.4
         },
         "over64Kb": {
           "modules": 12,
           "sourceBytes": 1408305,
-          "explainBytes": 126202,
-          "ratio": 0.0896,
-          "savedPercent": 91
+          "explainBytes": 125396,
+          "ratio": 0.089,
+          "savedPercent": 91.1
         },
         "largest": [
           {
             "module": "test/transform",
             "bytes": 248405,
-            "explainBytes": 13998,
+            "explainBytes": 14004,
             "ratio": 0.0564
           },
           {
             "module": "test/stdio",
             "bytes": 192669,
-            "explainBytes": 15737,
-            "ratio": 0.0817
+            "explainBytes": 15576,
+            "ratio": 0.0808
           },
           {
             "module": "test-d/stdio",
@@ -1109,7 +1109,7 @@
           {
             "module": "test/methods",
             "bytes": 102664,
-            "explainBytes": 10324,
+            "explainBytes": 10327,
             "ratio": 0.1006
           }
         ]
@@ -1136,29 +1136,29 @@
       "graph": {
         "moduleEdges": 15,
         "crossPackageEdges": 0,
-        "externalPackages": 54,
+        "externalPackages": 53,
         "cycles": 1,
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 565,
-        "warmMs": 141,
+        "coldMs": 657,
+        "warmMs": 134,
         "parsed": 127,
         "warmParsed": 0,
         "warmReused": 127
       },
       "compact": {
-        "ms": 128,
-        "bytes": 15278
+        "ms": 124,
+        "bytes": 15002
       },
       "trust": {
-        "judgements": 207,
-        "withEvidence": 207,
+        "judgements": 204,
+        "withEvidence": 204,
         "withoutEvidence": 0,
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "9664bfe1"
+        "contextHash": "2f12faaf"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -1171,29 +1171,29 @@
         "from8To64Kb": {
           "modules": 5,
           "sourceBytes": 102974,
-          "explainBytes": 45361,
-          "ratio": 0.4405,
-          "savedPercent": 55.9
+          "explainBytes": 45213,
+          "ratio": 0.4391,
+          "savedPercent": 56.1
         },
         "over64Kb": {
           "modules": 2,
           "sourceBytes": 1891929,
-          "explainBytes": 42555,
-          "ratio": 0.0225,
+          "explainBytes": 42206,
+          "ratio": 0.0223,
           "savedPercent": 97.8
         },
         "largest": [
           {
             "module": "test",
             "bytes": 1552852,
-            "explainBytes": 23086,
-            "ratio": 0.0149
+            "explainBytes": 22942,
+            "ratio": 0.0148
           },
           {
             "module": "source/core",
             "bytes": 339077,
-            "explainBytes": 19469,
-            "ratio": 0.0574
+            "explainBytes": 19264,
+            "ratio": 0.0568
           },
           {
             "module": "source",
@@ -1204,8 +1204,8 @@
           {
             "module": "test/types",
             "bytes": 27248,
-            "explainBytes": 10030,
-            "ratio": 0.3681
+            "explainBytes": 10016,
+            "ratio": 0.3676
           },
           {
             "module": "test/helpers",
@@ -1242,24 +1242,24 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 680,
-        "warmMs": 227,
+        "coldMs": 659,
+        "warmMs": 223,
         "parsed": 288,
         "warmParsed": 0,
         "warmReused": 288
       },
       "compact": {
-        "ms": 209,
-        "bytes": 24211
+        "ms": 206,
+        "bytes": 24048
       },
       "trust": {
-        "judgements": 572,
-        "withEvidence": 572,
+        "judgements": 570,
+        "withEvidence": 570,
         "withoutEvidence": 0,
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "2be10c0f"
+        "contextHash": "3ffd40e1"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -1272,14 +1272,14 @@
         "from8To64Kb": {
           "modules": 20,
           "sourceBytes": 463309,
-          "explainBytes": 195010,
-          "ratio": 0.4209,
+          "explainBytes": 194946,
+          "ratio": 0.4208,
           "savedPercent": 57.9
         },
         "over64Kb": {
           "modules": 4,
           "sourceBytes": 417221,
-          "explainBytes": 48133,
+          "explainBytes": 48136,
           "ratio": 0.1154,
           "savedPercent": 88.5
         },
@@ -1293,8 +1293,8 @@
           {
             "module": "packages/cli/src/commands/version",
             "bytes": 113863,
-            "explainBytes": 11435,
-            "ratio": 0.1004
+            "explainBytes": 11438,
+            "ratio": 0.1005
           },
           {
             "module": "@changesets/e2e",
@@ -1311,8 +1311,109 @@
           {
             "module": "packages/cli/src/lib",
             "bytes": 54714,
-            "explainBytes": 15345,
-            "ratio": 0.2805
+            "explainBytes": 15176,
+            "ratio": 0.2774
+          }
+        ]
+      }
+    },
+    {
+      "repository": "primitives",
+      "files": 686,
+      "sourceFiles": 277,
+      "parse": {
+        "partial": 0,
+        "failed": 0,
+        "skipped": 41
+      },
+      "modules": 83,
+      "imports": {
+        "resolved": 385,
+        "excludedOutput": 0,
+        "actionableUnresolved": 0,
+        "pathEscapes": 0,
+        "resolutionRate": 1
+      },
+      "unresolvedSample": [],
+      "graph": {
+        "moduleEdges": 385,
+        "crossPackageEdges": 0,
+        "externalPackages": 28,
+        "cycles": 0,
+        "layeringViolations": 9
+      },
+      "scan": {
+        "coldMs": 1655,
+        "warmMs": 450,
+        "parsed": 686,
+        "warmParsed": 0,
+        "warmReused": 686
+      },
+      "compact": {
+        "ms": 433,
+        "bytes": 75141
+      },
+      "trust": {
+        "judgements": 1101,
+        "withEvidence": 1101,
+        "withoutEvidence": 0,
+        "coveragePercent": 100,
+        "unsupportedEvidence": [],
+        "deterministic": true,
+        "contextHash": "865e882a"
+      },
+      "tokenBudget": {
+        "under8Kb": {
+          "modules": 35,
+          "sourceBytes": 74553,
+          "explainBytes": 74646,
+          "ratio": 1.0012,
+          "savedPercent": -0.1
+        },
+        "from8To64Kb": {
+          "modules": 35,
+          "sourceBytes": 986879,
+          "explainBytes": 301319,
+          "ratio": 0.3053,
+          "savedPercent": 69.5
+        },
+        "over64Kb": {
+          "modules": 13,
+          "sourceBytes": 1750669,
+          "explainBytes": 145077,
+          "ratio": 0.0829,
+          "savedPercent": 91.7
+        },
+        "largest": [
+          {
+            "module": "apps/storybook/stories",
+            "bytes": 703018,
+            "explainBytes": 15223,
+            "ratio": 0.0217
+          },
+          {
+            "module": "packages/react/select/src",
+            "bytes": 158245,
+            "explainBytes": 12053,
+            "ratio": 0.0762
+          },
+          {
+            "module": "packages/react/collection/src",
+            "bytes": 121250,
+            "explainBytes": 10237,
+            "ratio": 0.0844
+          },
+          {
+            "module": "e2e",
+            "bytes": 100980,
+            "explainBytes": 9382,
+            "ratio": 0.0929
+          },
+          {
+            "module": "packages/react/navigation-menu/src",
+            "bytes": 93342,
+            "explainBytes": 12347,
+            "ratio": 0.1323
           }
         ]
       }
@@ -1320,8 +1421,8 @@
   ],
   "public": {
     "note": "Repositories pinned by commit SHA in tools/benchmark-repos.json. Measured on a temporary clone; nothing is vendored.",
-    "requested": 8,
-    "measured": 8,
+    "requested": 9,
+    "measured": 9,
     "repositories": [
       {
         "name": "clsx",
@@ -1377,7 +1478,7 @@
         "coveragePercent": 100,
         "deterministic": true,
         "over8Kb": 1,
-        "explainRatio8To64Kb": 0.299,
+        "explainRatio8To64Kb": 0.2913,
         "explainRatioOver64Kb": 1
       },
       {
@@ -1396,8 +1497,8 @@
         "coveragePercent": 100,
         "deterministic": true,
         "over8Kb": 6,
-        "explainRatio8To64Kb": 0.224,
-        "explainRatioOver64Kb": 0.0308
+        "explainRatio8To64Kb": 0.2251,
+        "explainRatioOver64Kb": 0.0309
       },
       {
         "name": "ora",
@@ -1416,7 +1517,7 @@
         "deterministic": true,
         "over8Kb": 1,
         "explainRatio8To64Kb": 1,
-        "explainRatioOver64Kb": 0.1024
+        "explainRatioOver64Kb": 0.0927
       },
       {
         "name": "execa",
@@ -1434,8 +1535,8 @@
         "coveragePercent": 100,
         "deterministic": true,
         "over8Kb": 40,
-        "explainRatio8To64Kb": 0.447,
-        "explainRatioOver64Kb": 0.0896
+        "explainRatio8To64Kb": 0.4464,
+        "explainRatioOver64Kb": 0.089
       },
       {
         "name": "got",
@@ -1453,8 +1554,8 @@
         "coveragePercent": 100,
         "deterministic": true,
         "over8Kb": 7,
-        "explainRatio8To64Kb": 0.4405,
-        "explainRatioOver64Kb": 0.0225
+        "explainRatio8To64Kb": 0.4391,
+        "explainRatioOver64Kb": 0.0223
       },
       {
         "name": "changesets",
@@ -1472,8 +1573,27 @@
         "coveragePercent": 100,
         "deterministic": true,
         "over8Kb": 24,
-        "explainRatio8To64Kb": 0.4209,
+        "explainRatio8To64Kb": 0.4208,
         "explainRatioOver64Kb": 0.1154
+      },
+      {
+        "name": "radix-primitives",
+        "url": "https://github.com/radix-ui/primitives.git",
+        "sha": "eb3a2b7091293e27df8f9ba906632d8daa3d81a3",
+        "note": "TSX at scale, and a pnpm workspace with dozens of packages importing each other by subpath. Chosen for the syntax it contains rather than its popularity: it is the repository that found the JSX gaps.",
+        "files": 686,
+        "modules": 83,
+        "partialParses": 0,
+        "failedParses": 0,
+        "resolutionRate": 1,
+        "pathEscapes": 0,
+        "moduleEdges": 385,
+        "cycles": 0,
+        "coveragePercent": 100,
+        "deterministic": true,
+        "over8Kb": 48,
+        "explainRatio8To64Kb": 0.3053,
+        "explainRatioOver64Kb": 0.0829
       }
     ]
   }
