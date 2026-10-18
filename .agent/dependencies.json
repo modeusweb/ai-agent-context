@@ -154,7 +154,7 @@
         ],
         "value": "infrastructure"
       },
-      "importedByModules": 8,
+      "importedByModules": 9,
       "name": "node:path",
       "scope": "runtime"
     },
@@ -1107,7 +1107,9 @@
       "module": "packages/mcp/src"
     },
     {
-      "externalPackages": [],
+      "externalPackages": [
+        "node:path"
+      ],
       "file": "packages/mcp/src/tools/handlers.ts",
       "internalModules": [
         "@ai-agent-context/core"
@@ -1125,6 +1127,7 @@
     {
       "externalPackages": [
         "node:assert/strict",
+        "node:path",
         "node:test"
       ],
       "file": "packages/mcp/test/mcp.test.ts",
@@ -1750,9 +1753,17 @@
     "cycles": 2,
     "externalPackages": 13,
     "internalModuleEdges": 19,
-    "unresolvedImports": 30
+    "unresolvedImports": 31
   },
   "unresolved": [
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/cli/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/cli/test/cli.test.ts",
+      "reason": "missing",
+      "specifier": "../../cli/dist/index.js"
+    },
     {
       "attempts": [
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"

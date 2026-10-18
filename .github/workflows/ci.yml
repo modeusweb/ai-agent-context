@@ -85,6 +85,11 @@ jobs:
       - run: npm run build
       - name: The public API must match the lock
         run: node tools/api-surface.mjs
+      # README/STABILITY claim `npm run stability:check` fails when STABILITY.md
+      # names a symbol the packages do not export, but no workflow ever ran it,
+      # so the promise was unchecked. It needs a build, so it lives here.
+      - name: STABILITY.md must not promise a symbol that does not exist
+        run: node tools/check-stability.mjs
 
   # Checks the dependency graph against an independent resolver: the TypeScript
   # compiler. The analyzer reporting on itself can only ever agree with itself,
@@ -134,11 +139,24 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      # The tool must produce a usable context for its own repository; this also
-      # keeps the committed context from silently rotting.
-      - name: Scan this repository
+      # The tool must produce a usable context for its own repository, and the
+      # committed context (`.agent/*.json` is versioned on purpose) must match
+      # what the current scanner produces.
+      #
+      # `verify` alone cannot catch this: `scan` regenerates `.agent/` first, so
+      # by the time it runs there is never anything pending. The assertion that
+      # actually detects drift is a diff of the regenerated tree against the
+      # committed one, so the scan stays and the diff is what gates.
+      - name: Regenerate the context for this repository
         run: node packages/cli/dist/bin.js init && node packages/cli/dist/bin.js scan
-      - name: Verify the generated context is not stale
+      - name: Fail if the committed context is stale
+        run: |
+          if ! git diff --exit-code -- .agent; then
+            echo "::error::.agent/ is out of date. Run 'npm run scan' equivalent and commit the result."
+            git --no-pager diff --stat -- .agent
+            exit 1
+          fi
+      - name: Verify the committed context is not stale
         run: node packages/cli/dist/bin.js verify --json
 
       # `detect` exits 1 when it finds warnings, and this repository genuinely
@@ -169,6 +187,20 @@ jobs:
       - run: npm run build
       - name: Measure resolution rate and token budget
         run: node tools/benchmark.mjs > /tmp/benchmark.json
+      # A resolver regression that leaves the rate below 1 ships green today
+      # unless it happens to break path traversal, which is the only metric
+      # actually enforced. README documents the resolution rate as a gate.
+      - name: Fail if resolution regressed
+        run: |
+          node -e "
+            const s = require('/tmp/benchmark.json').summary;
+            console.log('import resolution rate:', s.imports.resolutionRate);
+            console.log('actionable unresolved:', s.imports.actionableUnresolved);
+            if (s.imports.resolutionRate < 1 || s.imports.actionableUnresolved > 0) {
+              console.error('import resolution regressed');
+              process.exit(1);
+            }
+          "
       - name: Fail if a path traversal was not rejected
         run: |
           node -e "

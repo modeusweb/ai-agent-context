@@ -296,6 +296,10 @@ export async function runCli(argv: readonly string[], ioOverrides: Partial<CliIo
     stderr: ioOverrides.stderr ?? ((line: string) => process.stderr.write(`${line}\n`)),
     cwd: ioOverrides.cwd ?? process.cwd(),
     env: ioOverrides.env ?? process.env,
+    // Carried over so that an embedder (or a test) can force colours on or off;
+    // without it the `??` below could never fall through and the decision was
+    // made by the real process.stdout alone.
+    ...(ioOverrides.color === undefined ? {} : { color: ioOverrides.color }),
   };
   const parsed = parseArguments(argv);
   const color =

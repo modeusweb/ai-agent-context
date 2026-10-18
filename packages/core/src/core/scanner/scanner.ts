@@ -18,7 +18,7 @@ import { PatternSet } from '../../util/glob.ts';
 import { compareStrings, sha256 } from '../../model/canonical.ts';
 import { TOOL_VERSION } from '../../model/version.ts';
 import { basename, extname } from '../../util/paths.ts';
-import { mapWithConcurrency, defaultConcurrency } from '../../util/concurrency.ts';
+import { mapWithConcurrency, runWithConcurrency, defaultConcurrency } from '../../util/concurrency.ts';
 import type { DiagnosticsCollector, Logger, ProgressReporter } from '../../logging/diagnostics.ts';
 import { FileSystemAdapter, type WalkedFile } from '../../adapters/filesystem/fs-adapter.ts';
 import { SensitivePathFilter } from '../../adapters/filesystem/sensitive.ts';
@@ -255,7 +255,13 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
       diagnostics.add(diagnostic.source === undefined ? { ...diagnostic, source: entry.walked.path } : diagnostic);
     }
     if (options.dryRun !== true) {
-      cacheWrites.push(() => options.cache.put(hash, toSnapshot(parsed)));
+      cacheWrites.push(async () => {
+        try {
+          await options.cache.put(hash, toSnapshot(parsed));
+        } catch (error) {
+          diagnostics.warn('WARN_CACHE_WRITE', error instanceof Error ? error.message : String(error));
+        }
+      });
     }
   };
 
@@ -301,13 +307,10 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
     }
   });
 
-  for (const write of cacheWrites) {
-    try {
-      await write();
-    } catch (error) {
-      diagnostics.warn('WARN_CACHE_WRITE', error instanceof Error ? error.message : String(error));
-    }
-  }
+  // Cache writes are independent and I/O bound, so they are flushed with the same
+  // bounded concurrency as the reads. Awaiting them one at a time turned a full
+  // cold scan into one sequential mkdir + writeFile per file.
+  await runWithConcurrency(concurrency, cacheWrites);
 
   // Change classification happens after hashing, so an mtime-only touch of an
   // unchanged file is still reported as "unchanged".

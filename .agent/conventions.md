@@ -40,7 +40,7 @@ evidence behind it are listed. Statements marked `config` come from declared con
   - evidence: `packages/cli/src/ui/console.ts` — class "ConsoleOutput" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/fs-adapter.ts` — class "FileSystemAdapter" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/sensitive.ts` — class "SensitivePathFilter" uses PascalCase
-- Functions use camelCase (375/378 declarations). _(confidence 0.95, observed)_
+- Functions use camelCase (383/386 declarations). _(confidence 0.95, observed)_
   - evidence: `packages/cli/src/cli.ts` — function "appendFlag" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "parseArguments" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "flagString" uses camelCase
@@ -59,7 +59,7 @@ evidence behind it are listed. Statements marked `config` come from declared con
 
 ## Tests
 
-- Tests live in a dedicated test directory (30/33 test files). _(confidence 0.80, observed)_
+- Tests live in a dedicated test directory (30/32 test files). _(confidence 0.80, observed)_
   - evidence: `packages/cli/test/cli.test.ts` — test located in a central tests directory
   - evidence: `packages/cli/test/public-api.lock.json` — test located in a central tests directory
 

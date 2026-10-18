@@ -3,6 +3,7 @@
  * call the tool dispatcher directly with a pre-scanned fixture repository.
  */
 import assert from 'node:assert/strict';
+import path from 'node:path';
 import { after, describe, test } from 'node:test';
 import { AgentContext } from '../../core/dist/index.js';
 import { TOOL_DEFINITIONS, toolByName, callTool, ContextPool, McpServer, createMemoryTransport, validateToolArguments } from '../../mcp/dist/index.js';
@@ -240,5 +241,63 @@ describe('mcp tool handlers', () => {
     const second = await pool.get(root);
     assert.equal(first, second);
     assert.ok(context instanceof AgentContext);
+  });
+
+  test('context pool keys on the resolved root, so one spelling means one analysis', async () => {
+    const { root, pool } = await setup();
+    const awkward = `${root}${path.sep}`;
+    const first = await pool.get(root);
+    const second = await pool.get(awkward);
+    assert.equal(first, second, 'a trailing separator must not trigger a second scan');
+  });
+
+  test('a failed load is evicted so the next call can retry', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    let attempts = 0;
+    const pool = new ContextPool({
+      root,
+      createContext: async () => {
+        attempts += 1;
+        if (attempts === 1) throw new Error('transient failure');
+        return AgentContext.load({ root });
+      },
+    });
+
+    await assert.rejects(() => pool.get(root), /transient failure/);
+    // The rejection must not have been cached: the second attempt succeeds.
+    const recovered = await pool.get(root);
+    assert.ok(recovered instanceof AgentContext);
+    assert.equal(attempts, 2);
+  });
+});
+
+describe('mcp failure reporting', () => {
+  test('a tool that throws is reported as a result, never a protocol error', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    // Any failure inside the dispatch — a broken context, a failing analysis —
+    // must surface as a tool result the agent can read, not as a -32603 that
+    // hides the reason behind a transport level error.
+    const pool = new ContextPool({
+      root,
+      createContext: async () => {
+        throw new Error('analysis exploded');
+      },
+    });
+    const result = await callTool('get_architecture', {}, pool, root);
+    assert.equal(result.isError, true);
+    assert.match((result.payload as { error: string }).error, /analysis exploded/);
+  });
+
+  test('starting twice does not answer a request twice', async () => {
+    const { root } = await setup();
+    const transport = createMemoryTransport();
+    const server = new McpServer({ root, transport });
+    server.start();
+    server.start();
+    await server.handleMessage({ jsonrpc: '2.0', id: 1, method: 'resources/list' });
+    const responses = transport.sent.filter((message) => (message as { id?: unknown }).id === 1);
+    assert.equal(responses.length, 1, 'a duplicate reader would answer the same id twice');
   });
 });

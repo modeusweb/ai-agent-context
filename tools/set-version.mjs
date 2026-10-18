@@ -26,7 +26,20 @@ const targets = [
   { file: path.join(root, 'packages/core/package.json'), set: (raw) => setField(raw, 'version', version) },
   {
     file: path.join(root, 'packages/core/src/model/version.ts'),
-    set: (raw) => raw.replace(/TOOL_VERSION = '[^']*'/, `TOOL_VERSION = '${version}'`),
+    set: (raw) => {
+      // Asserted rather than assumed: a silent no-op here used to be reported
+      // as "updated", shipping a release whose TOOL_VERSION the CLI never
+      // reports. A release that lies about its own version is worse than one
+      // that fails loudly.
+      const next = raw.replace(/TOOL_VERSION = '[^']*'/, `TOOL_VERSION = '${version}'`);
+      if (next === raw) {
+        throw new Error(
+          'could not find TOOL_VERSION in packages/core/src/model/version.ts; ' +
+            'update it by hand and re-run.',
+        );
+      }
+      return next;
+    },
   },
   {
     file: path.join(root, 'packages/cli/package.json'),
@@ -56,4 +69,4 @@ for (const target of targets) {
 }
 
 console.log(`\nversion set to ${version}`);
-console.log('next: npm run verify && npm run publish:all');
+console.log('next: npm install --package-lock-only && npm run verify && npm run publish:all');

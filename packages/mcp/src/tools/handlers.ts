@@ -6,6 +6,7 @@
  * plain JSON payloads. No analysis, no caching policy, no formatting logic lives
  * here.
  */
+import path from 'node:path';
 import { AgentContext, type AgentContextOptions } from '@ai-agent-context/core';
 
 export interface ToolHandlerDependencies {
@@ -45,14 +46,24 @@ export class ContextPool {
   }
 
   async get(root: string): Promise<AgentContext> {
-    const existing = this.contexts.get(root);
+    // Keyed exactly the way `AgentContext.load` normalises the root, so
+    // "repo", "repo/" and an absolute spelling share one analysis instead of
+    // each triggering a full scan.
+    const key = path.resolve(root);
+    const existing = this.contexts.get(key);
     if (existing !== undefined) return existing;
-    const options: AgentContextOptions = { root };
+    const options: AgentContextOptions = { root: key };
     const pending =
       this.dependencies.createContext === undefined
         ? AgentContext.load(options)
         : this.dependencies.createContext(options);
-    this.contexts.set(root, pending);
+    this.contexts.set(key, pending);
+    // A rejected load is evicted again. Caching it would mean that one failure
+    // (missing root, permission denied, out of memory) disabled that root for
+    // the whole lifetime of the server, with no way to retry.
+    void pending.catch(() => {
+      if (this.contexts.get(key) === pending) this.contexts.delete(key);
+    });
     return pending;
   }
 
@@ -65,8 +76,24 @@ function errorPayload(message: string, extra: Record<string, unknown> = {}): Too
   return { isError: true, payload: { error: message, ...extra } };
 }
 
-/** Executes an MCP tool by name (first half of the switch). */
+/** Executes an MCP tool by name. */
 export async function callTool(
+  name: string,
+  args: Record<string, unknown>,
+  pool: ContextPool,
+  defaultRoot: string,
+): Promise<ToolCallResult> {
+  try {
+    return await runTool(name, args, pool, defaultRoot);
+  } catch (error) {
+    // A tool that runs and fails is a *result*, not a protocol error: the agent
+    // reads the message and can adapt. Guarding here rather than per tool means
+    // a new tool cannot forget the wrapper and start answering with -32603.
+    return errorPayload(error instanceof Error ? error.message : String(error));
+  }
+}
+
+async function runTool(
   name: string,
   args: Record<string, unknown>,
   pool: ContextPool,
@@ -100,11 +127,7 @@ export async function callTool(
       if (target === undefined) return errorPayload('get_change_impact requires the "target" argument');
       const maxFiles = asNumber(args['maxFiles']);
       const context = await pool.get(root);
-      try {
-        return { isError: false, payload: await context.getChangeImpact(target, maxFiles === undefined ? {} : { maxFiles }) };
-      } catch (error) {
-        return errorPayload(error instanceof Error ? error.message : String(error));
-      }
+      return { isError: false, payload: await context.getChangeImpact(target, maxFiles === undefined ? {} : { maxFiles }) };
     }
 
     case 'get_repository_context': {
@@ -196,11 +219,7 @@ export async function callTool(
       const target = asString(args['target']);
       if (target === undefined) return errorPayload('get_module_history requires the "target" argument');
       const limit = asNumber(args['limit']);
-      try {
-        return { isError: false, payload: await (await pool.get(root)).getModuleHistory(target, limit === undefined ? {} : { limit }) };
-      } catch (error) {
-        return errorPayload(error instanceof Error ? error.message : String(error));
-      }
+      return { isError: false, payload: await (await pool.get(root)).getModuleHistory(target, limit === undefined ? {} : { limit }) };
     }
 
     case 'get_revision_diff': {

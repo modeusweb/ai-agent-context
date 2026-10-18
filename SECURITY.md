@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Security fixes are provided for the latest published `0.8.x` release.
+Security fixes are provided for the latest published `1.x` release.
 
 ## Security model
 

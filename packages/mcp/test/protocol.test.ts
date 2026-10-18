@@ -62,6 +62,7 @@ function modernMeta(version: string): Record<string, unknown> {
 
 describe('protocol version helpers', () => {
   test('knows which revisions are implemented', () => {
+    assert.ok(isSupportedVersion('2024-10-07'));
     assert.ok(isSupportedVersion('2024-11-05'));
     assert.ok(isSupportedVersion('2026-07-28'));
     assert.equal(isSupportedVersion('1900-01-01'), false);
@@ -79,6 +80,7 @@ describe('protocol version helpers', () => {
   });
 
   test('legacy negotiation echoes a supported version and otherwise falls back', () => {
+    assert.equal(negotiateLegacyVersion('2024-10-07'), '2024-10-07');
     assert.equal(negotiateLegacyVersion('2024-11-05'), '2024-11-05');
     assert.equal(negotiateLegacyVersion('2025-03-26'), '2025-03-26');
     assert.equal(negotiateLegacyVersion('2025-06-18'), '2025-06-18');

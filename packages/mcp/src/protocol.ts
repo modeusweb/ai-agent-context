@@ -24,8 +24,17 @@
  * disconnect. This module is the fix.
  */
 
-/** Every protocol revision this server implements, oldest first. */
+/**
+ * Every protocol revision this server implements, oldest first.
+ *
+ * `2024-10-07` is the reference SDK's oldest supported revision. Omitting it was
+ * a real interoperability break: a client pinned to it asked for `2024-10-07`,
+ * got the `2024-11-05` fallback, and then refused the connection with "Server's
+ * protocol version is not supported" — the exact failure this module exists to
+ * prevent, fixed for four revisions and missed for the fifth.
+ */
 export const SUPPORTED_PROTOCOL_VERSIONS = [
+  '2024-10-07',
   '2024-11-05',
   '2025-03-26',
   '2025-06-18',

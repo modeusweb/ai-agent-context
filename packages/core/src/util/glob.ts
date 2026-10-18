@@ -155,8 +155,10 @@ export function compileRule(rawPattern: string): CompiledRule {
 function ancestorPaths(path: string): string[] {
   const parts = path.split('/').filter((segment) => segment.length > 0);
   const result: string[] = [];
+  // Built by appending one segment instead of re-slicing: for a path of depth
+  // `d` the naive version allocates O(d^2) characters per call.
   for (let index = 1; index < parts.length; index += 1) {
-    result.push(parts.slice(0, index).join('/'));
+    result.push(index === 1 ? parts[0]! : `${result[index - 2]}/${parts[index - 1]}`);
   }
   return result;
 }
@@ -176,15 +178,24 @@ export class PatternSet {
   /**
    * Evaluates rules in declaration order; the last matching rule wins (as in
    * `.gitignore`). Directory-scoped rules also match descendants.
+   *
+   * `isDirectory` is accepted so callers can document at the call site whether
+   * they are testing a directory or a file; evaluation is identical for both,
+   * because a directory-scoped rule already matches the directory itself.
+   *
+   * This runs once per directory and once per file during a repository walk, so
+   * the ancestor list — which costs one array plus one string per path segment
+   * — is built lazily and only for the rules that actually need it.
    */
   test(path: string, isDirectory = false): boolean {
     const normalized = normalizePatternPath(path);
     if (normalized.length === 0) return false;
-    const parents = ancestorPaths(normalized);
+    let parents: string[] | null = null;
     let ignored = false;
     for (const rule of this.rules) {
       let matched = rule.regex.test(normalized);
       if (!matched && rule.directoryScoped) {
+        parents ??= ancestorPaths(normalized);
         matched = parents.some((ancestor) => rule.regex.test(ancestor));
       }
       if (matched) ignored = !rule.negated;

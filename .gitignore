@@ -2,10 +2,15 @@
 node_modules/
 # Lockfiles are committed on purpose: the CLI and MCP packages resolve
 # @ai-agent-context/core through the workspace, and a reproducible install needs
-# the exact tree npm resolved.
-pnpm-lock.yaml
-yarn.lock
-bun.lock
+# the exact tree npm resolved. The stray ones from another package manager are
+# not — but the patterns are anchored to the repository root so that the
+# fixtures that deliberately ship one (fixtures/monorepo/pnpm-lock.yaml,
+# fixtures/cli-project/yarn.lock) stay tracked. Unanchored, they were silently
+# dropped, and a fresh clone then analysed a different tree than the one the
+# benchmarks and tests were written against.
+/pnpm-lock.yaml
+/yarn.lock
+/bun.lock
 
 # Build outputs
 dist/
@@ -38,9 +43,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment
-.env
-.env.local
-.env.*.local
+# Anchored to the root for the same reason as the lockfiles above:
+# fixtures/layered-app/.env is a committed fixture that exercises the
+# sensitive-file filter, and was being ignored at every depth.
+/.env
+/.env.local
+/.env.*.local
 
 # Local npm auth (never commit a token)
 .npmrc.local

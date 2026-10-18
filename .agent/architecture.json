@@ -643,18 +643,6 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
-          "source": "tools/set-version.mjs"
-        }
-      ],
-      "moduleId": "tools",
-      "path": "tools/set-version.mjs",
-      "type": "test"
-    },
-    {
-      "confidence": 0.95,
-      "evidence": [
-        {
-          "detail": "file name matches the test conventions of the repository",
           "source": "tools/smoke.mjs"
         }
       ],
@@ -1230,12 +1218,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "low",
         "contributorCount": 1,
-        "historicalChanges": 7,
+        "historicalChanges": 8,
         "lastChanged": "2026-10-18",
-        "recentChanges": 7,
+        "recentChanges": 8,
         "topContributors": [
           {
-            "commits": 7,
+            "commits": 8,
             "name": "modeusweb"
           }
         ]
@@ -1370,12 +1358,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 19,
+        "historicalChanges": 20,
         "lastChanged": "2026-10-18",
-        "recentChanges": 19,
+        "recentChanges": 20,
         "topContributors": [
           {
-            "commits": 94,
+            "commits": 97,
             "name": "modeusweb"
           }
         ]
@@ -1915,12 +1903,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 24,
+        "historicalChanges": 25,
         "lastChanged": "2026-10-18",
-        "recentChanges": 24,
+        "recentChanges": 25,
         "topContributors": [
           {
-            "commits": 29,
+            "commits": 31,
             "name": "modeusweb"
           }
         ]
@@ -2552,12 +2540,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 19,
+        "historicalChanges": 20,
         "lastChanged": "2026-10-18",
-        "recentChanges": 19,
+        "recentChanges": 20,
         "topContributors": [
           {
-            "commits": 37,
+            "commits": 39,
             "name": "modeusweb"
           }
         ]
@@ -3195,7 +3183,6 @@
       "boundaries": [],
       "dependsOn": [],
       "entryPoints": [
-        "tools/set-version.mjs",
         "tools/smoke.mjs"
       ],
       "fileList": [
@@ -3219,12 +3206,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 16,
+        "historicalChanges": 17,
         "lastChanged": "2026-10-18",
-        "recentChanges": 16,
+        "recentChanges": 17,
         "topContributors": [
           {
-            "commits": 26,
+            "commits": 27,
             "name": "modeusweb"
           }
         ]
@@ -3310,7 +3297,6 @@
         "test:suite"
       ],
       "testFiles": [
-        "tools/set-version.mjs",
         "tools/smoke.mjs"
       ],
       "usedBy": [
@@ -3321,7 +3307,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 54,
+    "entryPoints": 53,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3345,21 +3331,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.18.0"
+        "version": "1.0.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.18.0"
+        "version": "1.0.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.18.0"
+        "version": "1.0.0"
       }
     ],
     "workspaceGlobs": [

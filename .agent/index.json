@@ -59,7 +59,7 @@
         "path": "benchmark-report.json"
       },
       {
-        "hash": "2f5cacf297486c0f739cea00c14d785ef8629f021a39a91bec0d0f8a8022a49e",
+        "hash": "1f2016a13a63cd4ca7bb72d9a5394f87cacafa42375458bc617f79d960455680",
         "kind": "config",
         "language": "json",
         "module": null,
@@ -87,7 +87,7 @@
         "path": "packages/cli/README.md"
       },
       {
-        "hash": "a3513d096d670732a9f4730a3a7a7358b4e8e5a0bbacb7e6c3d0c19dbb9f2d0f",
+        "hash": "afd2d4e8768560011b3462a8e67736a6208122ce5bc22b7485c6840303123326",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -101,7 +101,7 @@
         "path": "packages/cli/src/bin.ts"
       },
       {
-        "hash": "798ddd573b05d2a58621560f21ff7daf826be18efa6bcd991f43e9289ac9f216",
+        "hash": "48adab51c27f7217343b9515a27b5d211784d02958c475e23317aa7e2ba3a26b",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src",
@@ -234,7 +234,7 @@
         "path": "packages/cli/src/ui/format.ts"
       },
       {
-        "hash": "0b0e5b30b4438a2cda47a010a9ce12606ae153bafa9bef6490180c71533ebec7",
+        "hash": "0415024112168d281ea7c3992af090bd8be9bef925167b55fdc3745fa20d8729",
         "kind": "test",
         "language": "typescript",
         "module": "packages/cli/test",
@@ -269,7 +269,7 @@
         "path": "packages/core/README.md"
       },
       {
-        "hash": "8a818e8378fd6c040e256c72b79eea2bd780158f45416fdebb0af8e532483ca8",
+        "hash": "a8fca1e2afe7d529cd2a7819a8ecf6c7a7709647a472d8ed89391b7fbf91a27b",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -528,7 +528,7 @@
         "path": "packages/core/src/core/scanner/cache.ts"
       },
       {
-        "hash": "3ce37ecc26343c83dbb1a245b03cef40448d4dba26aefd135743189233822436",
+        "hash": "d462d4c726765bd37d14aea1b953ec9bf20de1d93acba60125bbd42f7d8cdaa4",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
@@ -661,7 +661,7 @@
         "path": "packages/core/src/model/types.ts"
       },
       {
-        "hash": "3b926b43d96132b3dc622e624aa57fee98fa049f1f14e98f608a1bca6ebde34d",
+        "hash": "880b26ca2ccd3589c8ea6748b85152abb1f1d7ca74125508f6cbf1100bafc586",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
@@ -682,7 +682,7 @@
         "path": "packages/core/src/util/concurrency.ts"
       },
       {
-        "hash": "c0734fcb7683dbe7ad4f121f540947bccf708597f19b892a42b4dc94170d8c26",
+        "hash": "e0faa3ba1307f6d4b87fef0e979df1c344c0a24eef5fdb364c53fd2bd6e7f15c",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/util",
@@ -892,7 +892,7 @@
         "path": "packages/mcp/README.md"
       },
       {
-        "hash": "d7c2a6aee024b06a4aea9ce3e1315e0793a6f738d9d551340781a23635896035",
+        "hash": "42018a192d5cc6c52d2e3b20f6d093d3c081e967eeb52ec658949d2af5841c0d",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -920,14 +920,14 @@
         "path": "packages/mcp/src/presets.ts"
       },
       {
-        "hash": "4d411f617b17e97a1d2794ee43f80eab1ea10a24528365d7b86b88c276fdf598",
+        "hash": "8e7676fc74b3ec444375950f3ed77a7dea4aa6e0f2456f4e1d1a0c9ae591ab1d",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src",
         "path": "packages/mcp/src/protocol.ts"
       },
       {
-        "hash": "e8d7fc71ce6162372da8d143ecefff67994db07a8ea6c8a4741e7a0ad5fc81ac",
+        "hash": "4ba33f67f213f08eae149e7454cf5d1fd12c48efbb954ecc211569c5431a44e7",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src",
@@ -941,7 +941,7 @@
         "path": "packages/mcp/src/tools/definitions.ts"
       },
       {
-        "hash": "ab53347317a50eeb43907070300370cab3de24fb367459eefa3e0a3f73e711df",
+        "hash": "fcac3e889f315b69aeb9d6442b7d50b3d6da8354d925dc0be2f6cebc7e1e3c1c",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src/tools",
@@ -955,7 +955,7 @@
         "path": "packages/mcp/src/version.ts"
       },
       {
-        "hash": "6cf2344f5dbac918cb4f2b9dca9576cf8444e34b52721316da44eef493bbdc39",
+        "hash": "850d0fbb2dc3c03c1d58aa256ad2e55109b000e1a5dac21ddf2c289d0cc6fa34",
         "kind": "test",
         "language": "typescript",
         "module": "packages/mcp/test",
@@ -969,7 +969,7 @@
         "path": "packages/mcp/test/presets.test.ts"
       },
       {
-        "hash": "d690181f1c09a13a16660ee07506c4a2489005e884c08edbd861b0b3a3edf8ea",
+        "hash": "54fa710d7ce77bf406aed556b62ce959e6ad552071ef771352d653d1523332a9",
         "kind": "test",
         "language": "typescript",
         "module": "packages/mcp/test",
@@ -1060,7 +1060,7 @@
         "path": "tools/ground-truth-public.mjs"
       },
       {
-        "hash": "f5ac7e685568b60634ac01352faf7e663cc03ca3d1dec1b8b68dc2e4ba167f52",
+        "hash": "6f7ab90aa578c22981e2ddfc8b3006a7ec858cf5380a4cadbf500e649c563260",
         "kind": "source",
         "language": "javascript",
         "module": "tools",
@@ -1074,8 +1074,8 @@
         "path": "tools/mcp-client-check.mjs"
       },
       {
-        "hash": "603926ca79c359a1b6aa09cff1a8727e3f4eea8061f8794d03d6ef6bce4031d1",
-        "kind": "test",
+        "hash": "38f52ee754742c03238e7f53363ee0fd685e426713ad045d753e8f1277b67bbc",
+        "kind": "source",
         "language": "javascript",
         "module": "tools",
         "path": "tools/set-version.mjs"
@@ -1113,7 +1113,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 46,
+    "commitsAnalyzed": 47,
     "enabled": true,
     "windowDays": 180
   },
@@ -1125,13 +1125,13 @@
       "decisions": 12,
       "dependencies": 19,
       "docs": 9,
-      "entryPoints": 54,
+      "entryPoints": 53,
       "externalDependencies": 13,
       "files": 157,
       "modules": 13,
-      "source": 100,
-      "symbols": 870,
-      "tests": 33
+      "source": 101,
+      "symbols": 875,
+      "tests": 32
     },
     "isMonorepo": true,
     "languages": [

@@ -9,6 +9,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { cleanupTemp, createTempRepo, readRepoFile, writeRepoFile } from '../../core/test/helpers.ts';
+import { runCli } from '../../cli/dist/index.js';
 
 
 const CLI_BIN = path.resolve(
@@ -218,5 +219,42 @@ describe('cli end-to-end', () => {
     assert.equal(full.status, 0, full.stdout);
     const fullPayload = JSON.parse(full.stdout) as { changes: { unchanged?: unknown[] } };
     assert.ok(Array.isArray(fullPayload.changes.unchanged));
+  });
+});
+
+describe('cli colour control', () => {
+  // `runCli` accepts a `color` override so an embedder can decide; it used to
+  // be dropped on the floor, leaving the real (non-TTY) stdout to decide.
+  const ANSI = new RegExp(String.fromCharCode(27) + '\\[');
+
+  // `scan` is used rather than `status` because it is a command that actually
+  // paints: `renderStatus` returns plain strings, so it could not observe the
+  // decision at all.
+  async function runWithColor(root: string, color: boolean): Promise<string> {
+    const lines: string[] = [];
+    await runCli(['scan'], {
+      cwd: root,
+      env: {},
+      color,
+      stdout: (line: string) => lines.push(line),
+      stderr: () => {},
+    });
+    return lines.join('\n');
+  }
+
+  test('an injected color:true forces colours on a non-TTY stdout', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    const output = await runWithColor(root, true);
+    assert.ok(output.length > 0, 'the command must actually have produced output');
+    assert.match(output, ANSI, 'ANSI escapes must reach the injected stdout');
+  });
+
+  test('an injected color:false suppresses them', async () => {
+    const root = createTempRepo('simple-ts');
+    tempRoots.push(root);
+    const output = await runWithColor(root, false);
+    assert.ok(output.length > 0, 'the command must actually have produced output');
+    assert.doesNotMatch(output, ANSI);
   });
 });

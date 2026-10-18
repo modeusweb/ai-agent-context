@@ -131,6 +131,8 @@ export class McpServer {
   private readonly timeoutMs: number;
   private readonly inFlight = new Map<string, RequestState>();
   private initialized = false;
+  /** Whether {@link start} has already wired the transport. */
+  private started = false;
   /** Version agreed with a legacy client during `initialize`; null before that. */
   private negotiatedVersion: ProtocolVersion | null = null;
 
@@ -143,8 +145,13 @@ export class McpServer {
     });
   }
 
-  /** Wires the transport and starts serving. */
+  /** Wires the transport and starts serving. Calling it twice is a no-op. */
   start(): void {
+    // A transport's onMessage registers another reader on the channel, so a
+    // second call would dispatch every request twice and answer each id twice —
+    // which a JSON-RPC client rejects as a protocol violation.
+    if (this.started) return;
+    this.started = true;
     this.options.transport.onMessage((message) => {
       void this.handleMessage(message);
     });

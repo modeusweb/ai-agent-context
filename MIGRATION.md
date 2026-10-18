@@ -1,5 +1,73 @@
 # Migration guide
 
+## v1.0.0
+
+The first stable release. The public API is unchanged — `npm run api:check`
+reports the same 161 core / 191 CLI / 32 MCP exports as v0.18.0 — so this is a
+version number, not a migration. Everything below is a behaviour fix that a
+patch release would also have carried.
+
+Nothing needs migrating: no configuration change, no schema change, no rewrite
+of `.agent/`. Upgrade the three packages in lockstep.
+
+### Fixed: a client on protocol revision `2024-10-07` could not connect
+
+The server advertised five revisions and the reference SDK supports five, but
+they were not the same five: `2024-10-07` was missing. A client pinned to it
+asked for `2024-10-07`, was answered with the `2024-11-05` fallback, and then
+refused the connection with *"Server's protocol version is not supported"* —
+exactly the failure the dual-era negotiation in `protocol.ts` exists to prevent,
+which had been fixed for four revisions and missed for the fifth. It is now
+supported and negotiated like the others.
+
+### Fixed: a failing tool answered with a protocol error instead of a result
+
+Only 2 of the 14 tools converted a thrown error into an `isError` tool result.
+The other twelve let it escape, so the server answered `-32603` and the agent
+saw a transport failure instead of the reason the tool gave up — contradicting
+the documented contract and `tools/mcp-client-check.mjs`. The conversion now
+happens once, around the whole dispatcher, so a new tool cannot forget it.
+
+### Fixed: one failed load disabled a root for the rest of the session
+
+`ContextPool` cached the promise it was given, including a rejected one. A
+transient failure — a missing directory, a permission error — was remembered for
+the lifetime of the server and every later call replayed it. Failures are now
+evicted so the next call retries. The pool is also keyed on the resolved root,
+so `repo`, `repo/` and an absolute spelling share one analysis instead of
+triggering three.
+
+### Fixed: the committed context could not fail its own CI gate
+
+The self-scan job ran `scan` (which rewrites `.agent/`) and then `verify` (which
+checks for staleness). Regenerating first means there is never anything pending,
+so the step could not fail — the committed context could rot silently. CI now
+asserts on `git diff -- .agent`, which is the only assertion that can actually
+detect drift. Two further computed-but-ungated metrics are now enforced: import
+resolution (`< 100%` fails) and the ground-truth oracle's `missed` count, which
+was printed but never allowed to fail.
+
+### Fixed: fixtures were generated but never committed
+
+`.gitignore` matched `pnpm-lock.yaml`, `yarn.lock` and `.env` at *every* depth,
+so three files that `tools/generate-fixtures.mjs` deliberately produces were
+never tracked. A fresh clone analysed a different tree than the one the
+benchmarks and tests were written against — including the fixture that exercises
+the sensitive-file filter (`fixtures/layered-app/.env`). The patterns are now
+anchored to the repository root, where they were always meant to apply.
+
+### Performance
+
+Parse-cache entries are now flushed with the same bounded concurrency used for
+reads, instead of one `mkdir` + `writeFile` awaited at a time. Measured on a
+cold scan: **2.19x** faster cache flush (400 entries, 393 ms → 179 ms).
+
+Glob ancestor resolution is now built lazily, only for the directory-scoped
+rules that need it, instead of unconditionally for every path. This removes an
+O(depth²) allocation from the walk; with the default configuration (whose
+excludes are all directory-scoped) it measures ~1.03x, and it is a correctness
+neutral change.
+
 ## v0.18.0
 
 Two fixes that change what the analyzer reports about imports. **Re-scan your

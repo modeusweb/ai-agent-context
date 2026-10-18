@@ -603,3 +603,14 @@ console.log(`unresolved cross-check: ${result.unresolvedCrossCheck.total} report
 if (result.precisionPercent !== null && result.recallPercent !== null) {
   if (result.recallPercent < 100 || result.precisionPercent < 100) process.exitCode = 1;
 }
+
+// A "missed" specifier is one the analyzer reported as unresolved although the
+// compiler resolves it to in-repo source. It was printed but never gated, so the
+// headline resolution rate could be overstated while CI stayed green.
+if (result.unresolvedCrossCheck.missed > 0) {
+  console.error(
+    `\n${result.unresolvedCrossCheck.missed} import(s) reported unresolved but resolvable by the compiler:`,
+  );
+  for (const sample of result.missedSample) console.error(`  ${sample}`);
+  process.exitCode = 1;
+}
