@@ -82,6 +82,23 @@ jobs:
       - name: The public API must match the lock
         run: node tools/api-surface.mjs
 
+  # Checks the dependency graph against an independent resolver: the TypeScript
+  # compiler. The analyzer reporting on itself can only ever agree with itself,
+  # so the headline resolution rate needs a second opinion that can disagree.
+  ground-truth:
+    name: dependency graph vs typescript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Compare the graph with the compiler
+        run: node tools/ground-truth.mjs
+
   audit:
     name: audit
     runs-on: ubuntu-latest

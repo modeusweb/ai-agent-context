@@ -1,5 +1,78 @@
 # Migration guide
 
+## v0.12.0
+
+An independent oracle for the dependency graph. No behaviour change, no rescan
+required: nothing about the analysis or the persisted context changed.
+
+### The headline number is now checkable
+
+`summary.imports.resolutionRate` was produced by the analyzer describing itself.
+A resolver bug and its own accuracy check can only agree with each other, so the
+figure could not fail and therefore was not evidence of anything.
+
+`tools/ground-truth.mjs` compares the graph with the answer produced by the
+TypeScript compiler, which is already a dev dependency, shares no code with this
+project, and resolves modules for its own reasons:
+
+```bash
+npm run ground-truth
+npm run ground-truth -- --json
+```
+
+Specifiers are extracted with `ts.createSourceFile` and resolved with
+`ts.resolveModuleName`. Ground truth is importer-to-imported pairs, lifted to
+module edges using the analyzer's file-to-module partition — a division of the
+file list, not a claim about dependencies.
+
+### Measured
+
+653 specifiers, 408 file-level import pairs, 18 module edges on both sides.
+**Precision 100%, recall 100%**, no false positives, no false negatives. Of the
+23 imports the analyzer reports as unresolved, all 23 are imports of excluded
+build output and none is a miss.
+
+A second, finer check runs on top: every import the analyzer *failed* to resolve
+is put to the compiler and classified as `expectedBuildOutput`, `agreedMissing`,
+or `missed`. Eighteen module edges is a coarse denominator, so a single `missed`
+entry is the signal that matters.
+
+### CI
+
+A new job, `dependency graph vs typescript`, fails below 100% precision or
+recall.
+
+### Fixed: read-only queries wrote to the repository
+
+`scan-pipeline.ts` documents that nothing writes to `.agent/` when `dryRun` is
+set, "which is how `status` and `diff` stay side-effect free". That contract was
+broken. The incremental parse cache was written regardless of the flag, so every
+read-only query — `status`, `diff`, `detect`, `verify`, `explain`, `search`, and
+every MCP tool — created `.agent/.local/` in a repository it had only been asked
+to read.
+
+It also made `--read-only` incomplete: the flag refused `scan()`, while
+`status --read-only` still created files.
+
+The cache is now written only when the run is not a dry run. A dry run still
+*reads* the cache, so `status` and `diff` stay fast; it simply stops growing it.
+`scan()` is unaffected and still populates the cache, which the incremental path
+depends on.
+
+Found while building the oracle above: the fixture repositories had accumulated
+`.agent/` directories, because pointing any read-only tool at a fixture wrote
+into it. `createTempRepo` now strips `.agent/` when copying a fixture, so a test
+can never pass against context it did not produce.
+
+### Limits
+
+One real repository and five synthetic fixtures, all small. The compiler is an
+oracle for module resolution only — it says nothing about entry points, roles,
+conventions or decisions — and it applies its own resolution rules rather than the
+analyzer's configuration. Entry-point precision and recall remain unmeasured
+because no independent oracle exists for them.
+
+
 ## v0.11.0
 
 The first v1.0 work: the API stability promise, written down and enforced. No

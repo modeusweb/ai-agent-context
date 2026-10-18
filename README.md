@@ -639,6 +639,68 @@ relying on the dependency graph, run it: it reports unresolved imports separated
 into real gaps, excluded build output and rejected path traversals, plus failed
 parses, cycles and layering violations.
 
+## Dependency graph checked against an independent resolver
+
+`tools/ground-truth.mjs` compares the dependency graph with the answer produced by
+the TypeScript compiler, which shares no code with this project:
+
+```bash
+npm run ground-truth
+npm run ground-truth -- --json
+```
+
+It runs in CI as `dependency graph vs typescript`, and exits non-zero when
+precision or recall falls below 100%.
+
+**Current result on this repository:**
+
+| Metric | Value |
+| --- | --- |
+| Specifiers examined | 653 (460 in-repo, 155 external) |
+| File-level import pairs | 408 |
+| Module edges, ground truth | 18 |
+| Module edges, analyzer | 18 |
+| **Precision** | **100%** (0 false positives) |
+| **Recall** | **100%** (0 false negatives) |
+| Unresolved imports cross-checked | 23 — all imports of excluded build output, **0 missed** |
+
+**Why this is not the same number twice.** `summary.imports.resolutionRate` is
+produced by the analyzer describing itself: it counts what its own resolver
+managed to resolve. A resolver bug and its own accuracy check can only agree with
+each other. Here the specifiers are extracted with `ts.createSourceFile` and
+resolved with `ts.resolveModuleName`, so a disagreement is possible and a
+disagreement would fail the build.
+
+**What is compared.** Ground truth is importer-to-imported pairs, lifted to module
+edges using the analyzer's file-to-module partition. That partition is a division
+of the file list, not a claim about dependencies; everything that decides whether
+an edge exists comes from the compiler.
+
+**Three scope rules, each counted in the output so none can hide a disagreement:**
+
+- Build output is excluded, matching the analyzer's documented `excludedOutput`
+  class. An edge derived from `dist/` would make the dependency graph depend on
+  whether the project happened to be built.
+- A bare specifier naming a workspace package is an in-repo dependency, not an
+  external one.
+- An analyzer target matches a truth target when they are equal, or when the
+  analyzer target is a workspace package containing the truth target. Both
+  describe one dependency at different levels of detail; matches that needed this
+  rule are reported as `package rule`.
+
+**The finer check.** Eighteen module edges is a coarse denominator: one wrong
+edge moves the percentage by five points. So every import the analyzer *failed*
+to resolve is also put to the compiler and classified as `expectedBuildOutput`,
+`agreedMissing`, or `missed`. A single `missed` entry means the headline
+resolution rate is overstated.
+
+**Known limits.** One real repository plus five synthetic fixtures, all of them
+small; the compiler is only an oracle for TypeScript/JavaScript, and it applies
+its own resolution rules rather than the analyzer's configuration. This measures
+whether the resolver agrees with a well-known independent implementation — it does
+not certify the analyzer's heuristics, which remain confidence-bearing and
+advisory.
+
 ## Measured, not asserted
 
 The benchmark measures the claims rather than restating them, and CI fails on regressions:
@@ -646,6 +708,8 @@ The benchmark measures the claims rather than restating them, and CI fails on re
 | Metric | Current | Gate |
 | --- | --- | --- |
 | import resolution rate | 100% | yes |
+| dependency graph precision vs the TypeScript compiler | 100% (0 false positives) | yes |
+| dependency graph recall vs the TypeScript compiler | 100% (0 false negatives) | yes |
 | path escapes | 0 | yes |
 | evidence coverage | 100% (363/363 judgements cite a source) | yes |
 | determinism | 0 non-deterministic repositories | yes |

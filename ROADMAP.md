@@ -371,10 +371,11 @@ like a report of work already done.
 **Measured:** across this repository and the five fixtures, 363 judgements, 363
 with evidence, 0 without; 0 non-deterministic repositories.
 
-The metrics section now marks every entry as measured or not measured, and
-entry-point and dependency precision/recall is labelled as **not measured**: it
-needs a labelled corpus that does not exist yet. Claiming it in a metrics table
-is how a roadmap starts lying to its readers.
+The metrics section now marks every entry as measured or not measured. Evidence
+coverage and determinism became measured in this release; entry-point and
+dependency precision/recall became measured in 0.12.0. At the time this was
+written it was not, and claiming it in a metrics table is how a roadmap starts
+lying to its readers.
 
 ---
 
@@ -404,6 +405,78 @@ Two related problems were fixed at the same time:
 
 ---
 
+## v0.12.0 — An oracle for the graph (in progress)
+
+**Goal:** stop the analyzer from grading its own homework.
+
+**The problem this release solved.** `summary.imports.resolutionRate` is the
+product's headline number, and the analyzer produced it by describing itself. A
+resolver bug and its own accuracy check can only ever agree with each other, so
+the figure could not fail and therefore could not be evidence of anything. The
+metrics table had been listing precision and recall as measurable since v0.6
+without anything measuring them.
+
+**Implemented**
+
+- **`tools/ground-truth.mjs`** compares the dependency graph with the answer
+  produced by the TypeScript compiler, which is already a dev dependency, shares
+  no code with this project, and resolves modules for its own reasons.
+  Specifiers are extracted with `ts.createSourceFile` and resolved with
+  `ts.resolveModuleName`.
+- **A file-level cross-check** on top of the module-level comparison. Eighteen
+  module edges is a coarse denominator, so every import the analyzer *failed* to
+  resolve is also put to the compiler and classified as `expectedBuildOutput`,
+  `agreedMissing`, or `missed`. A single `missed` entry means the headline
+  resolution rate is overstated.
+- **CI gate** `dependency graph vs typescript`, failing below 100% precision or
+  recall. `npm run ground-truth` runs it locally; `--json` emits the payload.
+
+**Measured:** 653 specifiers, 408 file-level import pairs, 18 module edges on
+both sides. Precision 100%, recall 100%, 0 false positives, 0 false negatives. Of
+23 unresolved imports reported by the analyzer, all 23 are imports of excluded
+build output and none is a miss.
+
+**Three defects the work surfaced in the measurement itself**, each fixed before
+the numbers were published:
+
+- The first comparison reported 85.7% recall, because the module partition was
+  built from `fileImports` — which lists only files that *have* imports. Edges
+  ending at an import-free file were being dropped, which looks exactly like an
+  analyzer miss. The partition now comes from the module list.
+- The repository's own root manifest claimed every file, so the "which workspace
+  package owns this path" lookup fabricated edges on the root package. It now
+  takes the deepest match and ignores the root.
+- Tests importing `../core/dist/index.js` were counted as dependencies on the
+  package. Build output is excluded by design, and an edge derived from it would
+  make the graph depend on whether the project happened to be built. These are
+  now reported as `excludedBuildOutput`, which is what the analyzer already calls
+  them.
+
+- **Tests importing `../core/dist/index.js` were counted as dependencies on the**
+  **package.** Build output is excluded by design, and an edge derived from it
+  would make the graph depend on whether the project happened to be built. These
+  are now reported as `excludedBuildOutput`, which is what the analyzer already
+  calls them.
+**A real defect the work exposed.** Pointing the oracle at the fixture
+repositories revealed that they had accumulated `.agent/` directories: every
+read-only query wrote a parse cache into the repository it had only been asked to
+read, contradicting the pipeline's own documented contract and leaving
+`--read-only` incomplete, since it refused `scan()` while `status --read-only`
+still created files. The cache is now written only on a non-dry run; a dry run
+still reads it, so `status` and `diff` stay fast. `createTempRepo` now strips
+`.agent/` when copying a fixture, so a test can never pass against context it did
+not produce. Five regression tests cover the contract.
+
+**Known limits, stated because the numbers are perfect and perfect numbers
+deserve suspicion.** One real repository and five synthetic fixtures, all small.
+The compiler is an oracle for module resolution only: it says nothing about entry
+points, roles, conventions or decisions. It also applies its own resolution rules
+rather than the analyzer's configuration, so agreement is evidence about the
+resolver, not a certificate for the whole product. Entry-point precision and
+recall remain unmeasured, because no independent oracle exists for them.
+
+---
+
 ## v1.0 — Stable repository intelligence (in progress)
 
 **Goal:** a stable release with a proven API, mature integrations and
@@ -425,8 +498,8 @@ measurable value for teams.
 
 ### Remaining work
 
-1. **Close the precision/recall gap** with a labelled corpus, or state it as a
-   permanent limitation.
+1. ~~Close the precision/recall gap.~~ Done in 0.12.0 against the TypeScript
+   independent oracle exists for.
 2. **Add public repositories to the benchmark**, pinned by commit SHA, so the
    numbers are not carried by one repository.
 3. **Re-audit the exported surface against STABILITY.md.** The internal exports
@@ -493,11 +566,38 @@ it is only claimed.
 | cold/warm scan, parsed/reused | measured | `row.scan` |
 | evidence coverage: share of judgements citing at least one source | measured since 0.10.0 | `summary.trust.coveragePercent`, CI gate |
 | determinism: byte-identical context for one commit | measured since 0.10.0 | `summary.trust.nonDeterministic`, CI gate |
-| entry-point and dependency precision/recall on a labelled set | **not measured** | needs a labelled corpus; neither the corpus nor the code exists |
+| entry-point and dependency precision/recall | measured since 0.12.0 | `npm run ground-truth`, CI gate: 100% precision and recall against the TypeScript compiler |
 
-Before 0.10.0 the last two rows were listed as measurable while the benchmark
-measured neither. They are now either measured or marked unfinished — that
-difference is what makes the section readable.
+**How the newer metrics are computed.** Evidence coverage walks the generated
+documents and counts objects carrying a numeric `confidence`: exactly the
+assertions the analyzer makes as heuristics. Structural facts (module ids, paths,
+import specifiers) carry no confidence and are deliberately not counted. A
+repository with no heuristics shows `null`, not 100%: there was nothing to
+explain. Determinism compares a byte-level hash of the documents after two
+independent scans with the cache bypassed, so a difference can only come from
+the analyzer rather than from what it happened to reuse.
+
+**How precision and recall are computed.** `tools/ground-truth.mjs` extracts
+specifiers with `ts.createSourceFile` and resolves them with
+`ts.resolveModuleName`, then compares the resulting graph with the analyzer's.
+The compiler shares no code with this project, so the comparison can fail, and a
+failure fails the build.
+
+Three scope rules apply, and each is counted in the output so none can quietly
+absorb a disagreement: build output is excluded, matching the analyzer's own
+`excludedOutput` class; a bare specifier naming a workspace package is an in-repo
+dependency rather than an external one; and an analyzer edge to a workspace
+package matches a truth edge into that package's directory, because both describe
+one dependency at different levels of detail.
+
+Eighteen module edges is a coarse denominator, so the finer check is also run:
+every import the analyzer failed to resolve is put to the compiler and classified
+as `expectedBuildOutput`, `agreedMissing`, or `missed`. A single `missed` entry
+means the headline resolution rate is overstated.
+
+**What this does not certify.** The compiler is an oracle for module resolution
+only. It says nothing about entry points, roles, conventions or decisions, which
+remain heuristics carrying a confidence and evidence.
 
 **How the newer metrics are computed.** Evidence coverage walks the generated
 documents and counts objects carrying a numeric `confidence`: exactly the

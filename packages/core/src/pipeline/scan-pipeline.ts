@@ -191,6 +191,7 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
     ...(options.registry === undefined ? {} : { registry: options.registry }),
     fsAdapter,
     state: previousState,
+    dryRun: options.dryRun === true,
     cache,
     diagnostics,
     logger,

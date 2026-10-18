@@ -37,6 +37,10 @@ export function createTempRepo(fixture: string, options: { git?: boolean; name?:
   rmSync(target, { force: true, recursive: true });
   mkdirSync(path.dirname(target), { recursive: true });
   cpSync(source, target, { recursive: true });
+  // Generated context never belongs to a fixture. Copying one in would make the
+  // first scan in a test reuse a cache it is supposed to build, and would let a
+  // test pass against context it never produced.
+  rmSync(path.join(target, '.agent'), { force: true, recursive: true });
   if (options.git === true) initGit(target);
   return target;
 }

@@ -100,6 +100,16 @@ export interface ScanOptions {
   /** Previous local state, when available (enables the incremental path). */
   state: LocalState | null;
   cache: ParseCache;
+  /**
+   * When true, nothing is written to `.agent/`, including the parse cache.
+   *
+   * A dry run still *reads* the cache, so `status` and `diff` stay fast; it
+   * simply does not grow the cache while doing it. Without this, every read-only
+   * query created `.agent/.local/` in a repository it was only supposed to read,
+   * which contradicted the pipeline's documented contract and undermined
+   * read-only mode.
+   */
+  dryRun?: boolean;
   diagnostics: DiagnosticsCollector;
   logger: Logger;
   progress?: ProgressReporter;
@@ -244,7 +254,9 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
     for (const diagnostic of parsed.diagnostics) {
       diagnostics.add(diagnostic.source === undefined ? { ...diagnostic, source: entry.walked.path } : diagnostic);
     }
-    cacheWrites.push(() => options.cache.put(hash, toSnapshot(parsed)));
+    if (options.dryRun !== true) {
+      cacheWrites.push(() => options.cache.put(hash, toSnapshot(parsed)));
+    }
   };
 
   let processed = 0;
