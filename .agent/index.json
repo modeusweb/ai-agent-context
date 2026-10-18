@@ -17,35 +17,35 @@
         "path": "CONTRIBUTING.md"
       },
       {
-        "hash": "07842aef15ad17a7e3e3ecf6f6c8dda0a4af6a4d54128574829e7ad5dff1b6f1",
+        "hash": "33abfc17cb51fc12e1e07a2ca787e7d18e16383b5de63ff4a340ce56d2214f04",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "MIGRATION.md"
       },
       {
-        "hash": "d0dd11a2561436236fb8955f59ed930ed542b9426baf9473e0668d29457da6d8",
+        "hash": "0649addce8b5be6f414edb9cd68ea4ea8795fa5ac9728f5ee0a7082a4093ca04",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "README.md"
       },
       {
-        "hash": "d9c165cbcdbad6250809a5e5bd7bca144b2520b82ab27356d5912f46b1c1b183",
+        "hash": "1f62503215833915fcba3c4d3640814cf353a3bfa2637276ae8ffed6a1eab32d",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "ROADMAP.md"
       },
       {
-        "hash": "64f27551b372b059d693492915ae09fb8cf5e91220cf02d4b7e99a76dbac0091",
+        "hash": "eaf8808c400d2728082e1300982d4c0a1d9065ca44648016aac3505388507d02",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "SECURITY.md"
       },
       {
-        "hash": "7a25a60f6f0793269220c6f98e973f289234879337c454697f314b39f1c1303e",
+        "hash": "e2d26ca2b6d3030ef353e0dc4780382922873e8c056eabb5f828bb03a9a1a993",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -59,21 +59,21 @@
         "path": "benchmark-report.json"
       },
       {
-        "hash": "1f2016a13a63cd4ca7bb72d9a5394f87cacafa42375458bc617f79d960455680",
+        "hash": "20fb08f47319dd3ea6bfa74a81d1e6fadd3943d1901b39acc316f6b6bf06550e",
         "kind": "config",
         "language": "json",
         "module": null,
         "path": "package-lock.json"
       },
       {
-        "hash": "44999673fdbb52cc90d91bb5cec10a3146df3f8ba83df0543c3ab023b459b20d",
+        "hash": "9cde565607fb651860bfbfb63ffaa4bebf16dcb2a5d47dd6de6a09c8a5f3a289",
         "kind": "config",
         "language": "package-json",
         "module": null,
         "path": "package.json"
       },
       {
-        "hash": "046f3d82722111cc4ca425608004d9e543d59a7812fab7655738a106bc5945db",
+        "hash": "17cc252896c1825efc8bee1b3a53bbc70ae103c5e8e3fc98588804be8330c231",
         "kind": "other",
         "language": "unknown",
         "module": null,
@@ -94,21 +94,21 @@
         "path": "packages/cli/package.json"
       },
       {
-        "hash": "3d3656eab319b096b8650702a482e4c4f6403f6ac70924c54cd0a71a28adabfa",
+        "hash": "758204ece05a6b0dd5ff12d2260711e8e39d771296e2c894b3de7dbbf2214660",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src",
         "path": "packages/cli/src/bin.ts"
       },
       {
-        "hash": "48adab51c27f7217343b9515a27b5d211784d02958c475e23317aa7e2ba3a26b",
+        "hash": "581a8a3e13680f93f01b9bc9d26eb1f44a7e51724cc91745fce6aecbb3d9b22b",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src",
         "path": "packages/cli/src/cli.ts"
       },
       {
-        "hash": "b0349bd88a114fbbf922349abc742ec2a14ade78f7b2d116976f6435587e14a3",
+        "hash": "90190cadcb1b80dffdf0f4c97a6f420c65006bfb54770188d84a1f2f3cadaf5d",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
@@ -129,35 +129,35 @@
         "path": "packages/cli/src/commands/detect.ts"
       },
       {
-        "hash": "cd4ec6d87cf675d8ece1ac3218a82c37b0be467294614ff98a83c6f621e6e6d7",
+        "hash": "ad526c68d348fdb053d8a256d80941ad795fa4d8a0ec5ce960c59195b8a97f90",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/diff.ts"
       },
       {
-        "hash": "7c8afc289cd261411959af45e0697953af5944b864edab0792f9e0ab0285e92b",
+        "hash": "c57e0366dd00f0618f20afc08e606d28468d27909010abad50553fbb5f8f3c68",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/explain.ts"
       },
       {
-        "hash": "a95b3c89342421916e600e4d3a7d5ab808f855c5de6004765361f263c4d2a87f",
+        "hash": "c0f5da43a8f1188cf968c591407b66fa831c6ef44c92945dd9269fdde63c67a3",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/history.ts"
       },
       {
-        "hash": "9de74ae2963e3219cf41392f8e8640fe969a9e842b26c90b62006caf67795c4e",
+        "hash": "c564a88b1ee23c707939cc2bf3079154d4218ba772b319bceffabe4ff2134c1f",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/impact.ts"
       },
       {
-        "hash": "7bfe683f61a20c8622499bc014bdfeb29165399ff35d463a5f14124339b1c03c",
+        "hash": "149352db05dce6abd81e96116884b9cee43a4c4eda8bdfae7d18cdfd4fe4ec3f",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
@@ -171,70 +171,70 @@
         "path": "packages/cli/src/commands/migrate.ts"
       },
       {
-        "hash": "b51c0f98abed9203e33155adf85cf7878fddcf42fbea69742e1bc4a29248a8cc",
+        "hash": "58f6012046db24add35c7e70f7bc810752d14c768a2caf3832a14a291360465a",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/revision-diff.ts"
       },
       {
-        "hash": "01b94103fa299bceceab0a6335a6cba9ef6a1ddbccd6a89741fbeebad8f0a7ba",
+        "hash": "0de8b9277edfbb8532f0c051a5fbcf1b85ef7d3de3c306f0c6084c807a4a3d03",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/scan.ts"
       },
       {
-        "hash": "d2b8e6d9671aac869cc00e956bd60c248148d354f554dd86022749559ae18dcd",
+        "hash": "71a6597cba3a1964efa4753d61002e838563239868edf7181a46e5fea9b152d0",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/search.ts"
       },
       {
-        "hash": "4124d6950db46ea4de66347a0a431f8bc2b132ae1230a4a858bf0ba6fca0efe2",
+        "hash": "57b061837d60b947ae129d88bd79f1a21086ac99fe4260186a74157eca15a8f8",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/status.ts"
       },
       {
-        "hash": "2a8b3a114c4a7456e18b8654c6ddc58e20e4e65cd5c7a412d490cbe91a169bdd",
+        "hash": "c90ee92ca45ac647879fcd22ba8f6c16002237ca9cd56095d23dc6e0bef6ddc7",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/task.ts"
       },
       {
-        "hash": "e80392188b7d04a48415eb8438782ca14894c26a2bda44ea074f2c8071d1e001",
+        "hash": "9a66da355efa6acab9a2eca37b66e24a965d19fb9a33c21fd51fa5b8e57fcf3b",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/commands",
         "path": "packages/cli/src/commands/verify.ts"
       },
       {
-        "hash": "768bda2f76c8aacc8284776261bf97d70887b462e5e9f6bfae6f0c0ea89562d1",
+        "hash": "f79a8c9beb51d5eb0895f21209c09fdc367c8fb8ce00937b4e5956b9983865fa",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src",
         "path": "packages/cli/src/index.ts"
       },
       {
-        "hash": "1e3bd9773ea31c5bda2783c466c469d050c07af75fdb4ac32ac1b97ef2273820",
+        "hash": "7ad031e86e5eb225f7d3ac6d6eaef727dfca00ef5e75f43eb3eb74633091aeef",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/ui",
         "path": "packages/cli/src/ui/console.ts"
       },
       {
-        "hash": "fd9acfe6008b4cc84e8017731682c21dd10e1348f004fb887b3ae1117288f9c5",
+        "hash": "4655b2a773fa71cf6e52012feaf18be1c629dd66082887b0c1d73318fcce82ed",
         "kind": "source",
         "language": "typescript",
         "module": "packages/cli/src/ui",
         "path": "packages/cli/src/ui/format.ts"
       },
       {
-        "hash": "0415024112168d281ea7c3992af090bd8be9bef925167b55fdc3745fa20d8729",
+        "hash": "2c16c675b5e97becfd2dd9dca04178518b976389ef70e5c3b56187c23961f5f2",
         "kind": "test",
         "language": "typescript",
         "module": "packages/cli/test",
@@ -248,14 +248,14 @@
         "path": "packages/cli/test/public-api.lock.json"
       },
       {
-        "hash": "3237dee9e8e4fe205fe84cb6b19936427f4b5a34a7611d066f5f062303f18328",
+        "hash": "04fb92c690cd3c107b573e3978502b10a45320d746f76c4747b617de70b91383",
         "kind": "config",
         "language": "tsconfig",
         "module": null,
         "path": "packages/cli/tsconfig.json"
       },
       {
-        "hash": "046f3d82722111cc4ca425608004d9e543d59a7812fab7655738a106bc5945db",
+        "hash": "17cc252896c1825efc8bee1b3a53bbc70ae103c5e8e3fc98588804be8330c231",
         "kind": "other",
         "language": "unknown",
         "module": null,
@@ -276,112 +276,112 @@
         "path": "packages/core/package.json"
       },
       {
-        "hash": "83a282f3a987cf1cc7f0a6cb7b9cba7a494576bc1201c37ed7715ab1a89cfdcc",
+        "hash": "e447f68a0ed5e7745d391061365139981af0842ae0e816c407d9553c32c0e0c1",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/filesystem/fs-adapter.ts"
       },
       {
-        "hash": "e6d783168e558827ff77ad7cdf2124d1848c8fc5431f9a686d36ae54421bef0f",
+        "hash": "5b2520ea00acf21b960afc68c528d49a02297407f9fd59da615a848b6e9d915e",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/filesystem/sensitive.ts"
       },
       {
-        "hash": "dfc14933dfb8875ef2aa0c8d474bb160bb1f6be7d90a29ff04b227a009953882",
+        "hash": "0d3df3439e1082fb57ad983c579e2e2026c0ff951ae0695c5403838e0e47a3e4",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/git/git-adapter.ts"
       },
       {
-        "hash": "e6c5987b1f9d6b90ce34b3219d24fa6fb24f2188b6abb020efe559e2325324b9",
+        "hash": "308bc8ee4efa83b528ed1957c83f163519cc8b8cd43789e548c5fc1893858ddc",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/json/adapter.ts"
       },
       {
-        "hash": "c7899fc0f78d2444624a89f33936d05c296dbd6cd8c0d12163e88816fe87df51",
+        "hash": "1c81550080be06dce37dee2226efac3b5b345819ad895c4cdd5694e38fb192c1",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/markdown/adapter.ts"
       },
       {
-        "hash": "88441b5bbd162cd518714fd4631c7a1fccde61903243ed18ab5efc7038f26532",
+        "hash": "4cd7a3a69933ae0a57df795f71f8954182e178aa3b28acf6f8288dffe261dfe7",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/package-json/adapter.ts"
       },
       {
-        "hash": "3f95d1bae74a5c7ae68dfc2be970c466b72c57ad488284540ae0dd601cec0deb",
+        "hash": "52fb1d873fac8e303d465c0df1750770960219d76e670c9041d4f3c72364898b",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/registry.ts"
       },
       {
-        "hash": "a254fb297834898f808beb2cf28cb9a96264e18b3f6b39b399ccc53dd9ed7913",
+        "hash": "cb97c95dab22715a388d697409d0202657b00cba4206e7105630165e648538bc",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/ts-js/adapter.ts"
       },
       {
-        "hash": "5bfd323cb6b6f1619afd7d97cbffa69440e50df68416b258c94ba5a53138f191",
+        "hash": "b441667dbbc1dfad1c2b58bd92b5ae0531e58501fe8c058d89ae766b52b19613",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/ts-js/extractor.ts"
       },
       {
-        "hash": "1ebf6992b725f0cf5089c012ad7c92dc02cad0abc10d9ebfa3f4f4f0ca1c95c8",
+        "hash": "b3540a639fb79ba6f230070fc3babad16c4ce0cdd1ca8de127ffb0c44c796937",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/ts-js/lexer.ts"
       },
       {
-        "hash": "45b9bcf4fca7f5b656749b4464ae2361d88e7843931a5c954155482e3869c907",
+        "hash": "27f7bdbb58b5a7a89e24f0d9020f1040eccf04661680767329d1190cc5e47d68",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/ts-js/package-signals.ts"
       },
       {
-        "hash": "e945795f7f4c2d437562a8fcb54fefd220a711a489bc54897b635af4421b4998",
+        "hash": "d8d334c37d0cacd352fd2438b2fdfc1b75fa6f8c43cf4530ef5719ddd9572e4d",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/tsconfig/adapter.ts"
       },
       {
-        "hash": "3ace0d0980902070c2cac20ee60e0c6ba102754f8bc22941e0f0ce42cf9e646c",
+        "hash": "1a6fea589701f4331744c9a370f2bd15ad768cd781cdb7684d14b5c9d572e323",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/adapters/language/types.ts"
       },
       {
-        "hash": "734bd23410812727f83ae66ff224c066fc89d275baa6f409561a66f8391f60ca",
+        "hash": "4be54811d4017ae98e29d9cd65508ae4cc4d59b11d8702583b80c834ec975631",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/agent-context.ts"
       },
       {
-        "hash": "c0bea9237d8fc2e72f2c2afd2cae5064322178563227c0b67d19805c22738f72",
+        "hash": "14cb7b9afb151c1b81553850b31d449a7e95a708a24a70dfd682527e7dd244ed",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/config",
         "path": "packages/core/src/config/defaults.ts"
       },
       {
-        "hash": "10958fb6b3a8f92f06c1e0476284ca2ede99756a08fccb352bedbc7f71f198f7",
+        "hash": "537857c6bacb3cd9177ef520c666939cdd46921247f2a88c4fa6bf8ecde2724d",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/config",
@@ -395,266 +395,266 @@
         "path": "packages/core/src/config/policy.ts"
       },
       {
-        "hash": "ed7bf18de0351a823bf20feec0dc54ac9eec3e4017c9698d753b88a12dc282e3",
+        "hash": "4e822f8b79026fd7bcdbb905e0cecfb1a6a656e8d87769da945ab84d5d43216a",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/config",
         "path": "packages/core/src/config/types.ts"
       },
       {
-        "hash": "d26be075aafbdecd5ed6673829a1ac0c5bd5b05fdb101e9527685ff5ebf961d5",
+        "hash": "6376784f70546b8774fdb60dbf14d5c0367d8bb6952a9962a89586d26115a616",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/config",
         "path": "packages/core/src/config/validate.ts"
       },
       {
-        "hash": "25e8f92ffdecbb0a5e9561c94f334f8ab21470731098bc9d117bbce2f23c2ae6",
+        "hash": "6368f0626dffdd908f07d0c50bb42b5dae46d975ae1a252cc17ddd94b062b85c",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/architecture/detector.ts"
       },
       {
-        "hash": "51b0da27c73b84c86db53c4487651b26a35be05ff7722d7bde15eae0fa6fbcf5",
+        "hash": "d18217e6b66331be1359ce2496ab51e5b26ed1e66ec42e275cc06fe0e13293b4",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/architecture/entry-points.ts"
       },
       {
-        "hash": "741679d3ffc235299f8a47d037ef7e9506d7825eb8a66af3ddcfdc0fcad15170",
+        "hash": "be0892d7ecbd97aa446407346c2d53ddbc4752ff69be1e94f6265162b4b4f9e0",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/architecture/role-detector.ts"
       },
       {
-        "hash": "d32d34869131322d71b6fdddbf93544c6a99409026024b2e546d348b137d2c80",
+        "hash": "80cbefb6ca5a5c3b941a236a47500d6c06c35091b907eaac6f6fed26d4040011",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/context/diagnostics.ts"
       },
       {
-        "hash": "f00c1afb01b12e6301f2010fc204ccaad70205d7e01dc9ceb214335a1c6a6b05",
+        "hash": "7b44fd86a72832074c8c005709b929e2c0bedb921fc58cb89b8fafdba26be079",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/context/explain.ts"
       },
       {
-        "hash": "11331f7832cc07c3a160537d9249e4cb37fbafe03ae7d054ade4d043c1aee15e",
+        "hash": "9060e553c451853416937cf46612ade09eb7d72a9c13223565d54dbee2deebbe",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/context/repository-context.ts"
       },
       {
-        "hash": "d715c80583a2ce2b4e85d6123dfe572aabfd4c6bf104a0a097e0de28a611b082",
+        "hash": "0353354d3ef86fe2fb8e415ff374228800f560b3972816b4db4759f1fb77a552",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/context/types.ts"
       },
       {
-        "hash": "9ea2feb357fa6099175447cdfffada6714a493d3e21eed5441dd74568499162a",
-        "kind": "source",
+        "hash": "2cffcfb8229d4de59d3f359659927d2c3b8398e5cdbdde34c7e4f1a5140a49a4",
+        "kind": "test",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/conventions/detector.ts"
       },
       {
-        "hash": "92b3d3cbbb8e8395f663f472ac18b621aea04b781dd5a159f281a046251c3eb7",
+        "hash": "9d50b9643add6afa4f594595184e4281a45dbc69b3194b63206471dfdbb0ca12",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/conventions/renderer.ts"
       },
       {
-        "hash": "90b7cead17cfa84969576b6e2727a71059918935fac4552610389da6da48173b",
+        "hash": "b89ebfedf17eb169b766e6e5f23fded0763706750e6c24b920ddd5fb59a395cf",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/decisions/detector.ts"
       },
       {
-        "hash": "9c79979611c22974dad823e5af2ace35665f5418c2c8af88a76fe064d12cbb5b",
+        "hash": "df64baf181e2aab0f198fdc7c8533a1dfb604de4df08cfaa4e51aa172871d5d3",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/diff/differ.ts"
       },
       {
-        "hash": "2f1a14705933326fc458e1156ed7f9ffea6a6c7ffb07e4b7b8779288d41fe97e",
+        "hash": "35b5a56b74be096ef9e85caa709d92e0416c09d34e1d85a847591c51daf32892",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/git-analysis/activity.ts"
       },
       {
-        "hash": "bd026bbaf81e7cc50dfa748e998c0915354aa89d3dba66d7bfef4059ac4ad007",
+        "hash": "4dd9b61236881a8264ee480b5377f0838eb3ccd9a475694bd697995330f71729",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/graph/aliases.ts"
       },
       {
-        "hash": "999c8d59302ba1b3f87d17a652c7ef15eba0ecb1138759aa8526b1ee03725574",
+        "hash": "1407a48e5d5294bc541740d5011b1289412591fc124328e1ad16e2df313b8b60",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/graph/knowledge-graph.ts"
       },
       {
-        "hash": "d420642c90f4d0744a9ea935c35f3d6c39ad16e0c8265fdc774619f62306d6ef",
+        "hash": "98a267a29bf5c7e6aaf1bbfe46f29fa107fc4e5961e1f67b08a66f852a27071b",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/graph/modules.ts"
       },
       {
-        "hash": "d9658f36425dc2b2f8f46771f9bb6a3646ef5219cb31590d682ee4a91648be6d",
+        "hash": "f3ad968b06b3b10d25ce7509bba61e8b198ab7d363804d65a5eb10084f1003fd",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/graph/resolver.ts"
       },
       {
-        "hash": "b95bd84dbbc5758df2d09e54b8e34a42ccd32a1ec3494e0a459d0b30467f2e9b",
+        "hash": "8250e17bcb00ba0a788f4b1bf28f1e09b6a4f13eb53efbc9b52063572fcbeeea",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/scanner/cache.ts"
       },
       {
-        "hash": "d462d4c726765bd37d14aea1b953ec9bf20de1d93acba60125bbd42f7d8cdaa4",
+        "hash": "c3f67553c3523ebfc5a8cb177daf6a4256e1d03582ab06cfaff3750f988f82dc",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/scanner/scanner.ts"
       },
       {
-        "hash": "beca71f200236535dfbfeda056b02799ea7180dd451be488a0ff59b0f916ff4a",
+        "hash": "8d1ad523d0ad6410e8a34703037475aa8d5f63249f2b4d0c1e8bb41d55ea0570",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/scanner/types.ts"
       },
       {
-        "hash": "269b66adceccdd6d02b3f559b00b170665079e1f642fb64f9c3c9b101d9b06b9",
+        "hash": "3d87d15817e97f84f1d9005c8a066b636228fafd57678d48ffe964bd8af588d7",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/search/analyzer.ts"
       },
       {
-        "hash": "6d1a036c3c9790b1f69f83c3c086d56f2aa52f2de5490bc1ffc2ebf9657c0127",
+        "hash": "924ec97241dcf19aa509482e26e56a29732bb4c8a9fee0753420244b164f00f4",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/search/bm25.ts"
       },
       {
-        "hash": "ae14c0acac42dddf1d439a146b4ad607b40e1e099120029d8f0609e9a8c38e66",
+        "hash": "c3df44b4fe78a3aad3ed7a9ca4221bc5302a1988d684a9720b82233f84f17a29",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/search/documents.ts"
       },
       {
-        "hash": "c40019553a6fb31d9c8fe828d1ab1e0d00e8cb3003dce64bfa1add4cbc5b40c7",
+        "hash": "1877dad02a04565240162a49db5da5f9b545882201f1a2a5a721b21e318ddd50",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/search/service.ts"
       },
       {
-        "hash": "42af267bb4f059b53eda18156ce2c4fc2713ad8cf67b0ef8c5154237b61e26b1",
+        "hash": "d99636a3a172d0dff9e884706ff44c31d01ad73027a49ca1675558824a174143",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/search/types.ts"
       },
       {
-        "hash": "e3acc94a9230311066c149c7f81866cfa57dfc29fa00d96304b9ed990f2d8bc6",
+        "hash": "d26eddc9685a534ad7d042e109b4e7a84eb2573dfc14405592488ced10133d0d",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/serialization/documents.ts"
       },
       {
-        "hash": "9e9146a8fbf774617614990271370563a0ff1201cd8424461d6dd048cd9e6099",
+        "hash": "1a859e42cac86fd4e1f7fe2cfad15cb7da87f26b78bafa9bc76a6cda00b772a2",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/serialization/reader.ts"
       },
       {
-        "hash": "6399162226a923a421a4922f98eadb7c9d87298b46913737181977a2a7bdf6ba",
+        "hash": "f737983f7b200be3ffe7521f5370c37497188051edf6ed10ce315b1e1863dd51",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/serialization/types.ts"
       },
       {
-        "hash": "34546ec2b7a826ccf0ee12e830ded46c5fa648a9b521bee47ec9ce8e46b57209",
+        "hash": "9a96264db98028c28464f09469f970e32c11577b78377c8b01e8ae39590dbc31",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/serialization/writer.ts"
       },
       {
-        "hash": "555386cdf8077b79fa62c309357e38c936a49eadbd61511e16a6941c99de686f",
+        "hash": "38e991c5adcbe6512d69d8ecc0dbf38bd872c3171fb52a6577ec621265e843e1",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/workspace/package-facts.ts"
       },
       {
-        "hash": "6ee7023a13fdf7ac4d604e71a25506a416dd367284d27b7f759b5f80b84af1ce",
+        "hash": "c22714bc938dddb35f109b87c1b6030daf0e11c3d0a46b4e3870ea5118794ece",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/core/workspace/workspace.ts"
       },
       {
-        "hash": "68cbe1a37e584d85b81890a172a28a91a6ec3eb273e37235aa6f316853011396",
+        "hash": "0e1ec911c9bcb1bf330034fad95ade5b67c085bb4c1ac61280a14075a3f30a67",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/errors.ts"
       },
       {
-        "hash": "088aa3302c6a10f580b82f01aa025e83e0c209b929599bc42afca8c6c4d5fa32",
+        "hash": "572e5bc6d654553e14586adcf56f5b686117c15d93e2ddca5cf10033903cd845",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/index.ts"
       },
       {
-        "hash": "d81a148d26f0559eba7cdc572034819f11bc762a7f017982835ebfc4fefb12e7",
+        "hash": "17dc54c990ac4a220b4db2ea239de9d337343a36d6d25c6d145824650e8fb0e7",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/logging/diagnostics.ts"
       },
       {
-        "hash": "ffbb8a6e572b805b42667c959989027cc619a0c7397f22806ce368235de5d9c6",
+        "hash": "2b973efc16c352a2efccc4eb5a2701c0a5194e7c978c67352eea97bd67ccccc6",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
         "path": "packages/core/src/model/canonical.ts"
       },
       {
-        "hash": "5ef1e89d93db3de0f7d3590f444be206dbde3f1ed02a8921c444ed2feb9d9182",
+        "hash": "055a67b0424d16cfd5f79d52f84f20456a81f0c8a34c3b5a72e0b4eddf921141",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
         "path": "packages/core/src/model/schema.ts"
       },
       {
-        "hash": "9e2d0d51af1106a6f83f9740d57b1e0678c0b8c2d8f704711f82fd1de46e1258",
+        "hash": "fd6bd9aa784acf67279b4e84a4ec558b6fdd88c3ad96d859244e71a6a40969eb",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
@@ -668,35 +668,35 @@
         "path": "packages/core/src/model/version.ts"
       },
       {
-        "hash": "00654c6d3f368d7988ca86def75f8b14b9aa9eb9d63b24f094623d0f34a5f31f",
+        "hash": "cc684b955dc2d8eefd85220c3e10a23125cc24bb6e8a2336c1c56c1f0482f566",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
         "path": "packages/core/src/pipeline/scan-pipeline.ts"
       },
       {
-        "hash": "9ad98397228cd86c0744c1912cc12a9ed117763e5b4ae6ab389d69f67d76d088",
+        "hash": "af5944b2ff18aa860c3d820e07d82c0983f0854d0ef2977cbe18c78833c8407d",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/util",
         "path": "packages/core/src/util/concurrency.ts"
       },
       {
-        "hash": "e0faa3ba1307f6d4b87fef0e979df1c344c0a24eef5fdb364c53fd2bd6e7f15c",
+        "hash": "38eb4c2557279095165b881169c23be62818344a97f5aaaff131f78cf2c02818",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/util",
         "path": "packages/core/src/util/glob.ts"
       },
       {
-        "hash": "79edce0609c83521cb4fb7d849e55ec0c1a4cbd8b30201ea5c70cc4b519c85dc",
+        "hash": "5c13a3a4212ba200b339a528140993b957387c10329d0f6ccb1ce036825c2177",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/util",
         "path": "packages/core/src/util/paths.ts"
       },
       {
-        "hash": "01e9ba71ae0c6fd1539a529e3d45ed79b7da8f41e51078c96ef79f7b7991dfe4",
+        "hash": "a8a0923c88632614bd0205571ad20a6e1d30c9716729773c10e41eaf9e1b45c6",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/util",
@@ -710,14 +710,14 @@
         "path": "packages/core/test/api-surface.test.ts"
       },
       {
-        "hash": "a331cda92e179ff5af253d7602ee7608630af958dfd9f1dca8eb61cdeae3313b",
+        "hash": "a1c2dc2b427485f6137c9345fa5278123c490877b2b192cdfef75eb8a9021780",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
         "path": "packages/core/test/architecture.test.ts"
       },
       {
-        "hash": "64236a0ae6962837270de70ffd67610f39632248e9660583ad83a0dc69a55f0a",
+        "hash": "0f31f37179953ab421d14651576e17513030f8c787593c5d60bee763a79ba0e7",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
@@ -731,7 +731,7 @@
         "path": "packages/core/test/config.test.ts"
       },
       {
-        "hash": "5fcc83cca4d1e1b5a958751cc05b36e63ba76ba4539cc3a6e39822616d6186f6",
+        "hash": "a50fe079933eb2489b53f35a24caf1c9769e7e7b62dfbb7013dcc3f9a12e8c20",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
@@ -745,7 +745,7 @@
         "path": "packages/core/test/detect.test.ts"
       },
       {
-        "hash": "27bed5786e80d2a89a8f5c133efe409b31ee7b1c0c95d9c5f5f602401cfaf9d0",
+        "hash": "2fe1f5158d8f0c9b36df9f04d43a1e7e48af2c888ab522e25cf1186294d08439",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
@@ -801,21 +801,21 @@
         "path": "packages/core/test/git.test.ts"
       },
       {
-        "hash": "155754fcf6cd91dcdedae95b0a986a673d8bf5a7efe7ab2c180c61ff7d928264",
+        "hash": "95d98584eab311bd18954e8f3eca9ca49b4ccfd3ac1839597dea5280dc1779f5",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
         "path": "packages/core/test/helpers.ts"
       },
       {
-        "hash": "a2e412131d15c8dba748ce89a39fb703e3eefcefb9d54cb67a19a40180c2508e",
+        "hash": "afc657f125aaff9b2f7a347577818fa3e2c21dba92424a4386c294339aa44d90",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
         "path": "packages/core/test/incremental.test.ts"
       },
       {
-        "hash": "8b780bbe9b113ea106fcada0926810a7ef174c258504b883fc75066de9b6fa5e",
+        "hash": "fb1a7d93e51a11f6490d6eb9d3ccb7dfbd9ff291a8cd33b21ab7826cd39b83c0",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
@@ -857,7 +857,7 @@
         "path": "packages/core/test/resolver.test.ts"
       },
       {
-        "hash": "d862721da307fccd96de75eacd80a80d721a6cd81382d2524985b3ba83fd52a5",
+        "hash": "e5dd251c7049a956f26288b7dae0cc50fe4545ab7b194de204eed1ad4173a273",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
@@ -871,14 +871,14 @@
         "path": "packages/core/test/template-literals.test.ts"
       },
       {
-        "hash": "676f75d8e6b25154aff745109cf5b3758feeaca5451d0e2f4d0d34298e6a18b3",
+        "hash": "c5856194c9ce7000311bc907e025284d5738b7ebcaa2da9ad849734cd19b9c2d",
         "kind": "config",
         "language": "tsconfig",
         "module": null,
         "path": "packages/core/tsconfig.json"
       },
       {
-        "hash": "046f3d82722111cc4ca425608004d9e543d59a7812fab7655738a106bc5945db",
+        "hash": "17cc252896c1825efc8bee1b3a53bbc70ae103c5e8e3fc98588804be8330c231",
         "kind": "other",
         "language": "unknown",
         "module": null,
@@ -934,14 +934,14 @@
         "path": "packages/mcp/src/server.ts"
       },
       {
-        "hash": "30fe3bc09b54fd2d484955cad033d1a031ad04a31f102390a73ff3c9d5687c7c",
+        "hash": "c4d427e1a5f8ca33d3e73a65e21ec5e5ac2415a78d240f3de5b82be358c55863",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src/tools",
         "path": "packages/mcp/src/tools/definitions.ts"
       },
       {
-        "hash": "fcac3e889f315b69aeb9d6442b7d50b3d6da8354d925dc0be2f6cebc7e1e3c1c",
+        "hash": "a8549f67c0585d810da7d30dedabde7abf2830121a12b4607a0092829d4ffc4a",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src/tools",
@@ -955,7 +955,7 @@
         "path": "packages/mcp/src/version.ts"
       },
       {
-        "hash": "850d0fbb2dc3c03c1d58aa256ad2e55109b000e1a5dac21ddf2c289d0cc6fa34",
+        "hash": "eee34f8597f7dcb566bc5319a80adaec5e35342cc6d2ea774f1aa9ddfd294bfa",
         "kind": "test",
         "language": "typescript",
         "module": "packages/mcp/test",
@@ -983,7 +983,7 @@
         "path": "packages/mcp/test/public-api.lock.json"
       },
       {
-        "hash": "3237dee9e8e4fe205fe84cb6b19936427f4b5a34a7611d066f5f062303f18328",
+        "hash": "04fb92c690cd3c107b573e3978502b10a45320d746f76c4747b617de70b91383",
         "kind": "config",
         "language": "tsconfig",
         "module": null,
@@ -1004,7 +1004,7 @@
         "path": "tools/benchmark-repos.json"
       },
       {
-        "hash": "9dd02381ef14e95289b1dd4ad6fa066672ca35823baa6c54caceffc26e58dcb8",
+        "hash": "b50c29ee4a91acdb77a617803bd7a0b15fa47ea171ce2ac48be640e8ba7ab834",
         "kind": "source",
         "language": "javascript",
         "module": "tools",
@@ -1039,7 +1039,7 @@
         "path": "tools/exported-types.mjs"
       },
       {
-        "hash": "f18b47bf53092351655e7703b712069674d3ba407b0174eebad07d2d189093f5",
+        "hash": "0705b54fe5a3c3dab0e6bc97e02cc5a76b3cfd176869f89b9843e8ec155dbb2f",
         "kind": "source",
         "language": "javascript",
         "module": "tools",
@@ -1060,7 +1060,7 @@
         "path": "tools/ground-truth-public.mjs"
       },
       {
-        "hash": "6f7ab90aa578c22981e2ddfc8b3006a7ec858cf5380a4cadbf500e649c563260",
+        "hash": "69605ffc78dbf6fc5465e803dee6eea28cc546ce866ead2cd821477a1d0d1da8",
         "kind": "source",
         "language": "javascript",
         "module": "tools",
@@ -1081,7 +1081,7 @@
         "path": "tools/set-version.mjs"
       },
       {
-        "hash": "8273615b0ab856d5afbb59b876dad1ab8a3b389186de50af8c999621c856f54b",
+        "hash": "27593df6a096a973053e76cfd8220f119019374469f5bda4bf4193c23bcdc348",
         "kind": "test",
         "language": "javascript",
         "module": "tools",
@@ -1095,14 +1095,14 @@
         "path": "tools/trust-metrics.mjs"
       },
       {
-        "hash": "e40aaa38bb6430c4de6980cdbd5ab1a504cf1035f59cf94b935aefc93632d1e2",
+        "hash": "4fad60b19af73a4d864ee14489ec72dabdc1a3f3170394dbdbbe74e61b694c79",
         "kind": "config",
         "language": "tsconfig",
         "module": null,
         "path": "tsconfig.base.json"
       },
       {
-        "hash": "89f00bb9086b186bf25d1c0635eb2f112cbcd01cf7d35544027cb506b421a436",
+        "hash": "11193aa662bf8fe3f43fe247a199c547d78c03ce711c3d088ba908106f35bf18",
         "kind": "config",
         "language": "json",
         "module": null,
@@ -1113,7 +1113,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 47,
+    "commitsAnalyzed": 48,
     "enabled": true,
     "windowDays": 180
   },
@@ -1122,16 +1122,16 @@
       "assets": 0,
       "config": 12,
       "conventions": 16,
-      "decisions": 12,
+      "decisions": 13,
       "dependencies": 19,
       "docs": 9,
-      "entryPoints": 53,
+      "entryPoints": 54,
       "externalDependencies": 13,
       "files": 157,
       "modules": 13,
-      "source": 101,
-      "symbols": 875,
-      "tests": 32
+      "source": 100,
+      "symbols": 940,
+      "tests": 33
     },
     "isMonorepo": true,
     "languages": [

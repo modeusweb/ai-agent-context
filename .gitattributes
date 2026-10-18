@@ -1,0 +1,25 @@
+# Normalise line endings for every text file.
+#
+# `.agent/index.json` records a sha256 of every analyzed file, so the committed
+# context is only reproducible if every checkout of this repository is
+# byte-identical. A CRLF checkout (the default for git on Windows) produced
+# different hashes than an LF one (Linux, CI), which made the self-scan gate
+# fail on a clean clone no matter how the context was regenerated.
+#
+# This pins text to LF in the working tree on every platform, so the analyzer
+# sees the same bytes everywhere. Blobs are already LF; this changes no content.
+* text=auto eol=lf
+
+# Binary assets are never touched.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.mp4 binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

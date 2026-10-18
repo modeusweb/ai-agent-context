@@ -182,6 +182,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/src/core/conventions/detector.ts"
+        }
+      ],
+      "moduleId": "packages/core/src",
+      "path": "packages/core/src/core/conventions/detector.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/src/core/graph/knowledge-graph.ts"
         }
       ],
@@ -696,12 +708,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 16,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 16,
+        "historicalChanges": 17,
+        "lastChanged": "2026-10-18",
+        "recentChanges": 17,
         "topContributors": [
           {
-            "commits": 19,
+            "commits": 20,
             "name": "modeusweb"
           }
         ]
@@ -1218,12 +1230,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "low",
         "contributorCount": 1,
-        "historicalChanges": 8,
+        "historicalChanges": 9,
         "lastChanged": "2026-10-18",
-        "recentChanges": 8,
+        "recentChanges": 9,
         "topContributors": [
           {
-            "commits": 8,
+            "commits": 9,
             "name": "modeusweb"
           }
         ]
@@ -1300,6 +1312,7 @@
         "packages/core/src/util"
       ],
       "entryPoints": [
+        "packages/core/src/core/conventions/detector.ts",
         "packages/core/src/core/graph/knowledge-graph.ts",
         "packages/core/src/index.ts"
       ],
@@ -1358,12 +1371,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 20,
+        "historicalChanges": 21,
         "lastChanged": "2026-10-18",
-        "recentChanges": 20,
+        "recentChanges": 21,
         "topContributors": [
           {
-            "commits": 97,
+            "commits": 98,
             "name": "modeusweb"
           }
         ]
@@ -1643,6 +1656,7 @@
         "test:suite"
       ],
       "testFiles": [
+        "packages/core/src/core/conventions/detector.ts",
         "packages/core/src/core/graph/knowledge-graph.ts"
       ],
       "usedBy": [
@@ -1903,12 +1917,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 25,
+        "historicalChanges": 26,
         "lastChanged": "2026-10-18",
-        "recentChanges": 25,
+        "recentChanges": 26,
         "topContributors": [
           {
-            "commits": 31,
+            "commits": 32,
             "name": "modeusweb"
           }
         ]
@@ -2285,12 +2299,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "low",
         "contributorCount": 1,
-        "historicalChanges": 2,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 2,
+        "historicalChanges": 3,
+        "lastChanged": "2026-10-18",
+        "recentChanges": 3,
         "topContributors": [
           {
-            "commits": 5,
+            "commits": 6,
             "name": "modeusweb"
           }
         ]
@@ -2400,6 +2414,11 @@
           "file": "packages/core/src/util/paths.ts",
           "kind": "function",
           "name": "relativeTo"
+        },
+        {
+          "file": "packages/core/src/util/concurrency.ts",
+          "kind": "function",
+          "name": "runWithConcurrency"
         },
         {
           "file": "packages/core/src/util/paths.ts",
@@ -2716,12 +2735,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 13,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 13,
+        "historicalChanges": 14,
+        "lastChanged": "2026-10-18",
+        "recentChanges": 14,
         "topContributors": [
           {
-            "commits": 25,
+            "commits": 27,
             "name": "modeusweb"
           }
         ]
@@ -3007,12 +3026,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 9,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 9,
+        "historicalChanges": 10,
+        "lastChanged": "2026-10-18",
+        "recentChanges": 10,
         "topContributors": [
           {
-            "commits": 16,
+            "commits": 17,
             "name": "modeusweb"
           }
         ]
@@ -3126,12 +3145,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 12,
+        "historicalChanges": 13,
         "lastChanged": "2026-10-18",
-        "recentChanges": 12,
+        "recentChanges": 13,
         "topContributors": [
           {
-            "commits": 13,
+            "commits": 15,
             "name": "modeusweb"
           }
         ]
@@ -3206,12 +3225,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 17,
+        "historicalChanges": 18,
         "lastChanged": "2026-10-18",
-        "recentChanges": 17,
+        "recentChanges": 18,
         "topContributors": [
           {
-            "commits": 27,
+            "commits": 29,
             "name": "modeusweb"
           }
         ]
@@ -3307,7 +3326,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 53,
+    "entryPoints": 54,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,

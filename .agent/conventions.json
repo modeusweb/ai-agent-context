@@ -43,9 +43,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "exports:7656a52d",
+      "id": "exports:b7c96c6c",
       "origin": "observed",
-      "statement": "Modules use named exports rather than default exports (434/434 exported symbols are named)."
+      "statement": "Modules use named exports rather than default exports (445/445 exported symbols are named)."
     },
     {
       "category": "Imports",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:b34e3757",
+      "id": "naming:0175192e",
       "origin": "observed",
-      "statement": "Functions use camelCase (383/386 declarations)."
+      "statement": "Functions use camelCase (437/441 declarations)."
     },
     {
       "category": "Naming",
@@ -204,9 +204,9 @@
           "source": "packages/cli/test/public-api.lock.json"
         }
       ],
-      "id": "tests:e2d71666",
+      "id": "tests:c4156e43",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (30/32 test files)."
+      "statement": "Tests live in a dedicated test directory (30/33 test files)."
     },
     {
       "category": "Toolchain",

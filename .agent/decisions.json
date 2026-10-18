@@ -23,6 +23,25 @@
       "confidence": 0.45,
       "evidence": [
         {
+          "detail": "section \"architecture.json\" (line 496) matched decision vocabulary",
+          "source": "README.md"
+        },
+        {
+          "detail": "section may describe design context rather than a decision; verify before treating it as an ADR",
+          "source": "README.md"
+        }
+      ],
+      "id": "DOC-D8AAB1",
+      "kind": "documented-section",
+      "origin": "inferred",
+      "source": "README.md#L496",
+      "status": "unknown",
+      "title": "architecture.json"
+    },
+    {
+      "confidence": 0.45,
+      "evidence": [
+        {
           "detail": "commit message matched an architectural keyword (2026-10-17, 3 file(s) changed)",
           "source": "git:792c7c6e"
         }
