@@ -13,6 +13,26 @@
     {
       "declaredBy": [],
       "importance": {
+        "confidence": 0.3,
+        "evidence": [
+          {
+            "detail": "imported by source code but not declared as a dependency in any workspace package",
+            "source": "<package.json>"
+          },
+          {
+            "detail": "no specific classification signal matched",
+            "source": "<heuristic>"
+          }
+        ],
+        "value": "utility"
+      },
+      "importedByModules": 1,
+      "name": "@modelcontextprotocol/sdk",
+      "scope": "runtime"
+    },
+    {
+      "declaredBy": [],
+      "importance": {
         "confidence": 0.99,
         "evidence": [
           {
@@ -1225,6 +1245,19 @@
     },
     {
       "externalPackages": [
+        "@modelcontextprotocol/sdk",
+        "node:child_process",
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/mcp-client-check.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
         "node:fs",
         "node:path",
         "node:url"
@@ -1706,9 +1739,9 @@
   "summary": {
     "crossPackageEdges": 0,
     "cycles": 2,
-    "externalPackages": 12,
+    "externalPackages": 13,
     "internalModuleEdges": 19,
-    "unresolvedImports": 28
+    "unresolvedImports": 29
   },
   "unresolved": [
     {
@@ -1906,6 +1939,13 @@
       ],
       "file": "tools/ground-truth.mjs",
       "specifier": "../packages/core/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "tools/mcp-client-check.mjs",
+      "specifier": "../packages/mcp/dist/index.js"
     }
   ]
 }

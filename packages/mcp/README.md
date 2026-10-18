@@ -76,7 +76,42 @@ The server is **dual-era**: it selects its behaviour from how the client opens.
 | Modern (`_meta`, `server/discover`) | this server | Works for `2026-07-28`; other revisions get `-32022` with a retry list |
 | Legacy | modern-only server | Would fail; not applicable here, this server is dual-era |
 
-Verified here: legacy and modern sessions over a real stdio process, malformed input, cancellation and timeouts. **Not** verified here: integration against the shipping desktop clients listed above. Those presets encode the documented configuration format of each client; confirm against your own installation before relying on them.
+### Verified against a client written by someone else
+
+Everything else that exercises this server — the packaged smoke test and the test
+suite — speaks JSON-RPC by hand, which means it checks the server against the
+same understanding of the protocol that wrote it.
+
+```bash
+npm run mcp:client
+```
+
+That drives the server with `@modelcontextprotocol/sdk`, the reference
+implementation, as a real client over stdio. The SDK parses and validates every
+message, negotiates the revision itself, and throws on anything off-specification.
+It runs in CI as `mcp against a real client`.
+
+**23 checks:** the handshake and the negotiated revision, the tool list and every
+schema in it, six tool calls against a real repository, the `compact`/`full`
+size contract, and the fact that an argument the server rejects outright is a
+protocol error rather than a failed tool result.
+
+Two things it established by disagreeing with the assumptions written into the
+check: an invalid `detail` value is *rejected*, not returned as a tool error —
+which is the correct behaviour, since returning `isError` would tell the agent the
+call ran and failed when it never ran; and `compact` is a size budget rather than
+a different question, keeping the same shape while dropping the evidence.
+
+**Not verified, stated on every run of the check.** The reference SDK's newest
+revision is `2025-11-25`, so no third-party client can exercise the modern
+`_meta` era yet; the negotiation helpers are unit-tested and the era itself is
+not. And the shipping desktop clients listed above are applications — launching
+one is outside what a command-line check can do. Those presets encode the
+documented configuration format of each client; confirm against your own
+installation before relying on them.
+
+Verified here otherwise: legacy and modern sessions over a real stdio process,
+malformed input, cancellation and timeouts.
 
 ## Cancellation and timeouts
 

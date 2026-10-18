@@ -45,9 +45,11 @@
     "ground-truth:public": "npm run build && node tools/ground-truth-public.mjs",
     "benchmark:public": "npm run build && node tools/benchmark.mjs --public",
     "smoke": "npm run build && node tools/smoke.mjs",
+    "mcp:client": "npm run build && node tools/mcp-client-check.mjs",
     "pack:all": "npm run build && npm pack ./packages/core && npm pack ./packages/cli && npm pack ./packages/mcp"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "@types/node": "^24.0.0",
     "typescript": "^5.9.0"
   }

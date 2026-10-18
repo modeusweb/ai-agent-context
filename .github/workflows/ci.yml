@@ -259,6 +259,28 @@ jobs:
           name: public-benchmark
           path: /tmp/public-benchmark.json
 
+  # The MCP server driven by a client written by someone else.
+  #
+  # `packaged smoke` and the mcp test suite both speak JSON-RPC by hand, so they
+  # check the server against the same understanding of the protocol that wrote
+  # it. This uses the reference SDK as the client: it validates every message,
+  # negotiates the revision itself, and refuses anything off-specification.
+  mcp-client:
+    name: mcp against a real client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      # The reference SDK is a dev dependency precisely so this can run. It is
+      # not a runtime dependency of any published package.
+      - name: Drive the server with the reference client
+        run: node tools/mcp-client-check.mjs
+
   publish-check:
     name: publish dry run
     runs-on: ubuntu-latest

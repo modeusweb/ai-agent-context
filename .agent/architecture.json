@@ -1345,12 +1345,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 18,
+        "historicalChanges": 19,
         "lastChanged": "2026-10-18",
-        "recentChanges": 18,
+        "recentChanges": 19,
         "topContributors": [
           {
-            "commits": 92,
+            "commits": 94,
             "name": "modeusweb"
           }
         ]
@@ -1887,12 +1887,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 22,
+        "historicalChanges": 23,
         "lastChanged": "2026-10-18",
-        "recentChanges": 22,
+        "recentChanges": 23,
         "topContributors": [
           {
-            "commits": 27,
+            "commits": 28,
             "name": "modeusweb"
           }
         ]
@@ -2517,12 +2517,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 18,
+        "historicalChanges": 19,
         "lastChanged": "2026-10-18",
-        "recentChanges": 18,
+        "recentChanges": 19,
         "topContributors": [
           {
-            "commits": 36,
+            "commits": 37,
             "name": "modeusweb"
           }
         ]
@@ -3173,21 +3173,22 @@
         "tools/ground-truth-entry.mjs",
         "tools/ground-truth-public.mjs",
         "tools/ground-truth.mjs",
+        "tools/mcp-client-check.mjs",
         "tools/set-version.mjs",
         "tools/smoke.mjs",
         "tools/trust-metrics.mjs"
       ],
-      "files": 13,
+      "files": 14,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 14,
+        "historicalChanges": 15,
         "lastChanged": "2026-10-18",
-        "recentChanges": 14,
+        "recentChanges": 15,
         "topContributors": [
           {
-            "commits": 24,
+            "commits": 25,
             "name": "modeusweb"
           }
         ]
@@ -3308,21 +3309,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.16.0"
+        "version": "0.17.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.16.0"
+        "version": "0.17.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.16.0"
+        "version": "0.17.0"
       }
     ],
     "workspaceGlobs": [

@@ -57,6 +57,12 @@ Three of them exist because the analyzer cannot be trusted to grade itself:
 | `tools/ground-truth-entry.mjs` | Do the declared entry points agree with the manifests? |
 | `tools/ground-truth-public.mjs` | Do both agree on other people's code, not just ours? |
 | `tools/benchmark.mjs --public` | What does it do on repositories we did not write? |
+| `tools/mcp-client-check.mjs` | Does the MCP server satisfy a client written by someone else? |
+
+`@modelcontextprotocol/sdk` is a **dev** dependency, and only for that last tool.
+The point of it is that a hand-written JSON-RPC client shares our understanding of
+the protocol; the reference implementation does not. Two of the checks in it had
+to be corrected because the assumption was wrong, which is the argument for it.
 
 `tools/benchmark-repos.json` pins those third-party repositories by commit SHA.
 Bump a SHA deliberately, in its own change: a moving target makes every metric

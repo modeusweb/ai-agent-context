@@ -1,5 +1,39 @@
 # Migration guide
 
+## v0.17.0
+
+Tooling and documentation only. No behaviour change, no rescan required, nothing
+to migrate.
+
+### The MCP server is now checked by a client that is not ours
+
+`npm run mcp:client` drives the server with `@modelcontextprotocol/sdk`, the
+reference implementation, as a real client over stdio. It runs in CI as
+`mcp against a real client`.
+
+**23 checks:** handshake, negotiated revision, tool list and schemas, six tool
+calls against a real repository, the `compact`/`full` contract, argument
+rejection.
+
+**No behaviour change and no user-visible contract change.** Two of the check's
+own assumptions turned out to be wrong, and both in the direction of being more
+lenient than the server:
+
+- an invalid `detail` value is rejected as a protocol error, so a client sees a
+  thrown error rather than a failed tool result. That is the correct behaviour —
+  returning `isError` would tell the agent the call ran and failed when it never
+  ran;
+- `compact` keeps the same payload shape as `full` and only drops the evidence
+  (entry points carry `evidence: []`). It is a size budget, not a different
+  question.
+
+**Still unverified, and printed on every run of the check.** The reference SDK's
+newest revision is `2025-11-25`, so no third-party client can exercise the modern
+per-request `_meta` era yet. The shipping desktop clients listed in
+`packages/mcp/README.md` are applications and cannot be launched here.
+
+---
+
 ## v0.16.0
 
 A parser fix that changes what the analyzer sees. **Re-scan your repository**:

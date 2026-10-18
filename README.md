@@ -419,6 +419,13 @@ MCP protocol support spans five revisions; see
 [`packages/mcp/README.md`](packages/mcp/README.md) for the matrix and the
 configuration presets.
 
+The server is driven in CI by `@modelcontextprotocol/sdk` — the reference
+implementation — as a real client: handshake, negotiated revision, tool schemas and
+six tool calls against a real repository. Everything else that exercises it speaks
+JSON-RPC by hand, which checks the server against the same understanding of the
+protocol that wrote it. What no client can yet exercise is the modern per-request
+revision, because the SDK's newest is `2025-11-25`.
+
 [`STABILITY.md`](STABILITY.md) states which exported symbols are a compatibility
 promise, which are internal, and how a deprecation runs its course. The promise is
 enforced: `npm run api:check` fails when the exported surface changes without the

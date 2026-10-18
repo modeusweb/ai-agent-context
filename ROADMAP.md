@@ -733,6 +733,51 @@ is the standing method, not a one-off.
 
 ---
 
+## v0.17.0 — The MCP server checked by a client that is not ours (in progress)
+
+**Goal:** stop grading the server with the same understanding that wrote it.
+
+**The problem this release solved.** Every check of the MCP server spoke
+JSON-RPC by hand: the packaged smoke test, and the test suite. That proves the
+server answers, and it cannot prove the answers are shaped the way a client
+expects — because the client was ours too. A message our own client tolerates and
+a real one rejects is invisible until someone ships it.
+
+**Implemented**
+
+- **`@modelcontextprotocol/sdk` as a dev dependency** — the reference
+  implementation, used as a client. It parses and validates every message,
+  negotiates the protocol revision itself, and throws on anything
+  off-specification. It is not a runtime dependency of any published package, and
+  core remains at zero runtime dependencies.
+- **`tools/mcp-client-check.mjs`** launches the server over stdio and drives it
+  with the SDK client against a throwaway repository: the handshake, the
+  negotiated revision, the tool list and every schema in it, six tool calls, the
+  `compact`/`full` size contract, and the argument-rejection behaviour.
+- **CI job `mcp against a real client`.**
+
+**23 checks, all passing.**
+
+**Two assumptions the check corrected, which is the point of writing it.**
+Both were wrong in the direction of being more lenient than the server:
+
+- An argument the server rejects outright is a **protocol-level error**, so the
+  SDK throws. Returning `isError` would tell the agent the call ran and failed,
+  when it never ran. The check asserts the rejection, and the behaviour is better
+  than what the test had assumed.
+- `compact` is a **size budget, not a different question**. It keeps the same
+  payload shape and drops the justification — entry points carry `evidence: []` —
+  so an agent paying for tokens reads the same facts and asks for the evidence
+  only when it needs to justify them.
+
+**What is still not verified, printed on every run of the check.** The reference
+SDK's newest revision is `2025-11-25`, so **no third-party client can yet
+exercise the modern `_meta` era**; the negotiation helpers are unit-tested and
+the era itself is not. The shipping desktop clients remain unverified because they
+are applications this environment cannot launch.
+
+---
+
 ## v1.0 — Stable repository intelligence (in progress)
 
 **Goal:** a stable release with a proven API, mature integrations and
@@ -926,10 +971,15 @@ and the agent sends no telemetry.
 - weekly active users, active MCP installations;
 - support/issue volume per release.
 
-Separately: **a verified integration with at least three real MCP clients** is a
-v0.8 criterion that stays open. The configuration presets encode each client's
-documented format, but none of them was launched in the development
-environment.
+Separately: **integration with the shipping desktop MCP clients** is still open.
+The configuration presets encode each client's documented format, but none of
+them is an application this environment can launch. What *is* closed, since
+0.17.0, is the part that could be checked: the server is driven by
+`@modelcontextprotocol/sdk` — the reference implementation, and a client written
+by someone else — in CI. That covers the handshake, the negotiated revision, the
+tool schemas, and six tool calls against a real repository. What no client can yet
+exercise is the modern `_meta` era, because the SDK's newest revision is
+`2025-11-25`.
 
 ## Release checklist for every version
 
