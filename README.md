@@ -745,6 +745,12 @@ vendored — each repository is cloned into a temporary directory, measured, and
 deleted. "Single module" means the repository has no module edges to compare, so
 precision and recall are undefined there rather than 100%.
 
+**Parse coverage is complete: 1246 files, zero partial, zero failed.** That is a
+CI gate, not an observation. A partial parse means the extractor gave up partway
+through a file and dropped the statements after that point, so the repository
+would report fewer dependencies than it has while showing a clean result — which
+is what happened until v0.15.0.
+
 CI runs this as `public repositories`, on pushes to `master` and weekly, but not
 on pull requests: it needs the network, and a slow clone should not block a
 change that can be reviewed without it.

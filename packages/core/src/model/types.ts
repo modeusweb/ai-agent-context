@@ -322,7 +322,19 @@ export interface ChangeSet {
 
 export interface ScanReport {
   changes: ChangeSet;
-  files: { total: number; source: number; tests: number; skipped: number; failed: number };
+  files: {
+    total: number;
+    source: number;
+    tests: number;
+    skipped: number;
+    /**
+     * Files the extractor only partly understood: facts were produced for the
+     * statements it reached and everything after the point it gave up was
+     * dropped. Distinct from `failed`, which produces no facts at all.
+     */
+    partial: number;
+    failed: number;
+  };
   modules: number;
   dependencies: number;
   externalDependencies: number;

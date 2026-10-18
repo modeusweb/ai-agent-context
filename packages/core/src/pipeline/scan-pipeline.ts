@@ -124,6 +124,13 @@ function buildReport(options: {
       source: files.filter((file) => file.kind === 'source').length,
       tests: files.filter((file) => file.kind === 'test').length,
       skipped: files.filter((file) => file.parseStatus === 'skipped').length,
+      // Reported separately from `failed` because the two mean different things.
+      // A failed file produced no facts; a partial file produced facts for the
+      // part the extractor understood and dropped the rest. A scan that silently
+      // returned fewer imports than the file contained was indistinguishable from
+      // a repository with fewer imports, and it was the mechanism behind two real
+      // defects found on third-party code.
+      partial: files.filter((file) => file.parseStatus === 'partial').length,
       failed: files.filter((file) => file.parseStatus === 'failed').length,
     },
     modules: graph.repository.modules.length,

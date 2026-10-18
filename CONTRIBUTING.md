@@ -68,6 +68,17 @@ defect found so far passed the full suite of tests on this repository and every
 fixture, and was caught only by pointing the oracle at code someone else wrote. A
 green local run is evidence about our conventions, not about the product.
 
+**A parse that is only partly understood is a silent data loss.** `files.partial`
+in the scan report counts files where the extractor gave up partway and dropped
+the statements after that point; `files.failed` counts files it could not read at
+all. The distinction matters because a partial file still yields a plausible
+graph. CI fails on either across the pinned repositories.
+
+**When writing a parser regression test, put the import after the construct.**
+An import written above the failing syntax still parses, and `parseStatus` stays
+`ok` even when the scan has swallowed the rest of the file — both of which make a
+test pass with the defect present.
+
 Only `packages/core` may be depended on by the other two. Core keeps **zero
 runtime dependencies** on purpose — it is what makes the tool installable
 anywhere and safe to run on untrusted repositories. Adding a dependency to core

@@ -336,33 +336,94 @@ function readTemplate(state: LexerState): void {
   state.push('template', start, state.index, state.source.slice(start, state.index));
 }
 
-/** Skips a balanced `{...}` region, respecting nested strings and comments. */
+/**
+ * Skips a balanced `{...}` region, scanning it the way a JavaScript expression
+ * is scanned.
+ *
+ * This runs inside `${ ... }`, so it has to survive everything an expression may
+ * contain. It used to handle comments, strings and nested templates and nothing
+ * else, and a bare `/` was always tested against the two comment forms. A regex
+ * literal ending in an escaped slash — the ordinary way to write "replace
+ * slashes", and common in a template literal — has the shape `/\//`, whose last
+ * two characters are adjacent slashes. That was read as the start of a line
+ * comment: the rest of the line was discarded, the scan carried on past the
+ * closing brace, and the file came out partial with the statements after it
+ * missing their imports.
+ *
+ * The previous token is tracked here for the same reason the main loop tracks
+ * it: `/` is a regex start or a division depending on what came before, and
+ * guessing wrong either way corrupts the scan.
+ */
 function skipBalancedExpression(state: LexerState, open: string, close: string): void {
   let depth = 1;
+  let previous: { type: TokenType; value: string } | null = null;
+
+  /** Reads a token through the shared readers, then drops it from the stream. */
+  const take = (read: () => void): void => {
+    const before = state.tokens.length;
+    read();
+    const token = state.tokens[before];
+    state.tokens.pop();
+    if (token !== undefined) previous = { type: token.type, value: token.value };
+  };
+  const remember = (type: TokenType, value: string): void => {
+    previous = { type, value };
+  };
+
   while (state.index < state.source.length && depth > 0) {
     const character = state.source[state.index]!;
+
+    if (character === '\\') {
+      state.index += 2;
+      continue;
+    }
     if (character === '/' && state.source[state.index + 1] === '/') {
-      skipLineComment(state);
-      state.tokens.pop();
+      take(() => skipLineComment(state));
       continue;
     }
     if (character === '/' && state.source[state.index + 1] === '*') {
-      skipBlockComment(state);
-      state.tokens.pop();
+      take(() => skipBlockComment(state));
+      continue;
+    }
+    if (character === '/' && regexAllowed(previous)) {
+      take(() => readRegex(state));
       continue;
     }
     if (character === '"' || character === "'") {
-      readString(state, character);
-      state.tokens.pop();
+      take(() => readString(state, character));
       continue;
     }
     if (character === '`') {
-      readTemplate(state);
-      state.tokens.pop();
+      take(() => readTemplate(state));
       continue;
     }
-    if (character === open) depth += 1;
-    else if (character === close) depth -= 1;
+    if (isDigit(character)) {
+      take(() => readNumber(state));
+      continue;
+    }
+    if (isIdentifierStart(character)) {
+      const start = state.index;
+      while (state.index < state.source.length && isIdentifierPart(state.source[state.index]!)) state.index += 1;
+      const value = state.source.slice(start, state.index);
+      remember(TS_KEYWORDS.has(value) ? 'keyword' : 'ident', value);
+      continue;
+    }
+    if (character === open) {
+      depth += 1;
+    } else if (character === close) {
+      depth -= 1;
+    } else {
+      const punctuator = PUNCTUATORS.find((candidate) => state.source.startsWith(candidate, state.index));
+      if (punctuator === undefined) {
+        remember('unknown', character);
+        state.index += 1;
+        continue;
+      }
+      remember('punct', punctuator);
+      state.index += punctuator.length;
+      continue;
+    }
+    remember('punct', character);
     state.index += 1;
   }
 }
@@ -416,7 +477,7 @@ function lastSignificant(tokens: readonly Token[]): Token | null {
   return null;
 }
 
-function regexAllowed(previous: Token | null): boolean {
+function regexAllowed(previous: { type: TokenType; value: string } | null): boolean {
   if (previous === null) return true;
   if (previous.type === 'punct') return REGEX_PRECEDING_PUNCT.has(previous.value);
   if (previous.type === 'keyword') return REGEX_PRECEDING_KEYWORDS.has(previous.value);

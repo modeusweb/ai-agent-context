@@ -255,6 +255,15 @@ async function measure(source) {
       files: report.files.total,
       sourceFiles: report.files.source,
       testFiles: report.files.test,
+      // Parse coverage, kept next to the file counts because it qualifies them.
+      // A partial file yields facts for the statements before the point the
+      // extractor gave up, so a repository can report full resolution while
+      // silently holding fewer imports than it has.
+      parse: {
+        partial: report.files.partial,
+        failed: report.files.failed,
+        skipped: report.files.skipped,
+      },
       modules: report.modules,
       imports: {
         resolved: dependencies.internal.length,
@@ -410,6 +419,8 @@ if (publicRepositories.length > 0) {
           : {
               files: row.files,
               modules: row.modules,
+              partialParses: row.parse.partial,
+              failedParses: row.parse.failed,
               resolutionRate: row.imports.resolutionRate,
               pathEscapes: row.imports.pathEscapes,
               moduleEdges: row.graph.moduleEdges,

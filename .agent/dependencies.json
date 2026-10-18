@@ -1036,6 +1036,15 @@
     },
     {
       "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/template-literals.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
         "node:path"
       ],
       "file": "packages/mcp/src/bin.ts",
@@ -1690,7 +1699,7 @@
     "cycles": 2,
     "externalPackages": 12,
     "internalModuleEdges": 19,
-    "unresolvedImports": 26
+    "unresolvedImports": 27
   },
   "unresolved": [
     {
@@ -1818,6 +1827,13 @@
       ],
       "file": "packages/core/test/scanner.test.ts",
       "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/template-literals.test.ts",
+      "specifier": "../../core/dist/index.js"
     },
     {
       "attempts": [

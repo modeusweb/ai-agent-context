@@ -442,6 +442,18 @@
       "type": "test"
     },
     {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/template-literals.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/template-literals.test.ts",
+      "type": "test"
+    },
+    {
       "confidence": 0.6,
       "details": "declared by @ai-agent-context/mcp",
       "evidence": [
@@ -1863,12 +1875,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 20,
+        "historicalChanges": 21,
         "lastChanged": "2026-10-18",
-        "recentChanges": 20,
+        "recentChanges": 21,
         "topContributors": [
           {
-            "commits": 24,
+            "commits": 25,
             "name": "modeusweb"
           }
         ]
@@ -2459,7 +2471,8 @@
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
         "packages/core/test/resolver.test.ts",
-        "packages/core/test/scanner.test.ts"
+        "packages/core/test/scanner.test.ts",
+        "packages/core/test/template-literals.test.ts"
       ],
       "fileList": [
         "packages/core/test/api-surface.test.ts",
@@ -2482,9 +2495,10 @@
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
         "packages/core/test/resolver.test.ts",
-        "packages/core/test/scanner.test.ts"
+        "packages/core/test/scanner.test.ts",
+        "packages/core/test/template-literals.test.ts"
       ],
-      "files": 21,
+      "files": 22,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
@@ -2628,7 +2642,8 @@
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
         "packages/core/test/resolver.test.ts",
-        "packages/core/test/scanner.test.ts"
+        "packages/core/test/scanner.test.ts",
+        "packages/core/test/template-literals.test.ts"
       ],
       "usedBy": [
         "packages/cli/test",
@@ -3254,7 +3269,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 50,
+    "entryPoints": 51,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3278,21 +3293,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.14.1"
+        "version": "0.15.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.14.1"
+        "version": "0.15.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.14.1"
+        "version": "0.15.0"
       }
     ],
     "workspaceGlobs": [

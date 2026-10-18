@@ -230,7 +230,13 @@ jobs:
       # Measuring fewer repositories than the manifest pins would be the worst
       # possible outcome here: the job would go green while quietly checking
       # less than it claims.
-      - name: Fail if a pinned repository was missed or escaped its root
+      #
+      # A partial parse is a failure, not a warning. It means the extractor gave
+      # up partway through a file and dropped the statements after that point, so
+      # the repository reports fewer imports than it actually contains — which
+      # looks exactly like a clean result. Both defects this gate was written after
+      # were invisible this way.
+      - name: Fail if a pinned repository was missed, escaped its root, or did not parse
         run: |
           node -e "
             const p = require('/tmp/public-benchmark.json').public;
@@ -239,6 +245,10 @@ jobs:
               if (r.error) { console.error(r.name + ': ' + r.error); process.exitCode = 1; continue; }
               console.log(r.name.padEnd(14), String(r.files).padStart(4) + ' files', 'resolution ' + r.resolutionRate, 'escapes ' + r.pathEscapes);
               if (r.pathEscapes > 0) { console.error(r.name + ': a path traversal was not rejected'); process.exitCode = 1; }
+              if (r.partialParses > 0 || r.failedParses > 0) {
+                console.error(r.name + ': ' + r.partialParses + ' partial and ' + r.failedParses + ' failed parse(s)');
+                process.exitCode = 1;
+              }
             }
             if (p.measured !== p.requested) { console.error('not every pinned repository was measured'); process.exitCode = 1; }
           "

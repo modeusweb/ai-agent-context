@@ -618,6 +618,59 @@ accuracy.
 
 ---
 
+## v0.15.0 — Parsing what real code contains (in progress)
+
+**Goal:** stop guessing at what "supported TypeScript/JavaScript" means.
+
+**The problem this release solved.** v0.13.0 introduced the public repository set
+and immediately found a parser defect on it. The obvious next step was to check
+the other thing those measurements had never checked: whether the extractor
+actually understands the code. Every repository was scanned and one file in
+`changesets` — one of 288 — came out `partial`, meaning the extractor gave up
+partway through and dropped the statements after that point.
+
+**Implemented**
+
+- **Expressions inside `${ ... }` are scanned as expressions.** Previously a bare
+  `/` was always tested against the two comment forms, so a regex literal ending
+  in an escaped slash — the ordinary way to write "replace slashes", and very
+  common in a template literal — was read as the start of a line comment. The
+  rest of that line was discarded and the scan carried on past the closing
+  brace. The same applied to a regex whose character class contains a comment
+  opener, `[/*]` and `[//]`, which silently swallowed the remainder of the file.
+  Escapes, comments, strings, nested templates, numbers, identifiers and regex
+  literals are now all recognised, and the previous token is tracked so `/` can
+  be told apart from a division.
+- **`files.partial` in the scan report**, separate from `files.failed`. A failed
+  file produced no facts; a partial file produced facts for the statements before
+  the point the extractor gave up. That distinction is the whole reason this
+  defect survived: the repository reported full resolution, no diagnostics and a
+  clean `detect`, while holding fewer imports than it contained.
+- **A CI gate on parse coverage.** The `public repositories` job fails on any
+  partial or failed parse among the pinned repositories, next to the existing
+  resolution and path-traversal checks.
+
+**Measured:** 1246 files across the eight pinned repositories, **100% parse
+coverage** — zero partial, zero failed. Before this release `changesets` had one.
+
+**What was nearly missed, and is worth writing down.** The first investigation
+checked whether the imports in the affected file were recorded. They were, because
+the file's only import sat at the top, above the construct. A test written that way
+passes with the defect present. `parseStatus` is not a reliable signal either: a
+scan that swallows the rest of a file still reports `ok`. The only position that
+discriminates is an import written *after* the construct — which is now what every
+case in `packages/core/test/template-literals.test.ts` checks. The tests were
+verified to fail against the unfixed lexer before being accepted.
+
+**Known limits, unchanged.** Parse coverage is complete on the pinned set, which
+is eight TypeScript and JavaScript repositories. There is no pinned repository
+containing TSX, decorators or a class-heavy codebase, so "supported" is still
+established on a sample rather than on a specification. That is the next thing to
+change, and changing it means choosing repositories for the syntax they contain
+rather than for their popularity.
+
+---
+
 ## v1.0 — Stable repository intelligence (in progress)
 
 **Goal:** a stable release with a proven API, mature integrations and

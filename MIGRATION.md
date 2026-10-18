@@ -1,5 +1,63 @@
 # Migration guide
 
+## v0.15.0
+
+A parser fix and a new field in the scan report. **Re-scan your repository:**
+the graph can gain edges it previously lost.
+
+No configuration or schema change. Nothing needs migrating.
+
+### Fixed: a regex inside a template literal was read as a comment
+
+Scanning over `${ ... }` inside a template literal did not know what a
+JavaScript expression could contain. A bare `/` was always tested against the two
+comment forms, so a regex literal ending in an escaped slash — the ordinary way
+to write "replace slashes", and very common in a template literal:
+
+```ts
+dir: `/packages/${name.replace(/^@/, "").replace(/\//g, "-")}`,
+```
+
+— was read as the start of a line comment. The rest of that line was discarded,
+the scan carried on past the closing brace, and every statement after it lost its
+imports.
+
+The same applied to a regex whose character class contains a comment opener —
+`/[/*]/` and `/[//]/` — which the scan also consumed as a comment and which
+silently swallowed the remainder of the file.
+
+Expressing `${ ... }` as an expression is now handled by scanning it as one:
+escapes, comments, strings, nested templates, numbers, identifiers and regex
+literals are all recognised, and the previous token is tracked so that `/` can be
+told apart from a division.
+
+**No action required beyond re-scanning.** This was found by running the analyzer
+over `changesets`, where it was the only file out of 288 that did not parse
+cleanly. It is in `MIGRATION.md` rather than a patch note because a repository
+can silently have been reporting fewer dependencies than it has.
+
+### Added: `files.partial` in the scan report
+
+`agent-context scan --json` now reports how many files the extractor only partly
+understood, separately from `files.failed`:
+
+```json
+{ "files": { "total": 288, "source": 204, "tests": 84, "skipped": 0, "partial": 0, "failed": 0 } }
+```
+
+The two mean different things. A failed file produced no facts at all. A partial
+file produced facts for the statements the extractor reached and dropped
+everything after the point it gave up — which is why this defect was invisible
+for so long: the affected repository still reported full import resolution and
+no diagnostics, while holding fewer imports than it had.
+
+**New CI gate.** The `public repositories` job now fails if any pinned
+third-party repository produces a partial or failed parse, alongside the existing
+checks on resolution and path traversal. Parse coverage across the set is 1246
+files, 100% complete.
+
+---
+
 ## v0.14.0
 
 Tooling only. No behaviour change, no rescan required, nothing to migrate.
