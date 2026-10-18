@@ -1,5 +1,66 @@
 # Migration guide
 
+## v0.16.0
+
+A parser fix that changes what the analyzer sees. **Re-scan your repository**:
+the graph can gain edges it previously lost.
+
+No configuration or schema change. Nothing needs migrating.
+
+### Fixed: TSX lost its imports
+
+JSX was never lexed. A `<` was treated as either a bracket or a type argument,
+and in
+
+```tsx
+<AlertDialog.Trigger onClick={(e) => { f(e); }}>delete</AlertDialog.Trigger>
+```
+
+the braces are attributes rather than a block, while `/>` does not close a type
+argument list. Counting them skewed the bracket balance of every statement
+scanner, which ran to the end of the file and dropped the statements after it. No
+diagnostic was raised: the affected files reported complete parses of the part
+that had been read.
+
+A JSX element is now skipped as a single token, the same way a template literal
+is. Deciding that a `<` opens an element rather than a type argument list uses its
+position — after an identifier or a closing bracket it is type arguments, in
+expression position it is an element — and `=>`, `&&`, `||` and `??` were all
+missing from the set of expression positions. Each one costs every file that
+returns an element or renders a conditional child.
+
+**Measured:** `radix-ui/primitives`, 686 files, **25 partial parses before, zero
+after.** It is now pinned in `tools/benchmark-repos.json` and checked in CI.
+
+### Fixed: an unbalanced `<` trapped the scan
+
+Pre-existing, and found while looking for the above. `const v = count < limit;`
+opens an angle bracket that never closes, so the `;` no longer ended the
+statement and the scan ran to the end of the file — losing every import written
+after it. This one is not JSX and affected ordinary TypeScript.
+
+Openers are now tracked as a stack rather than a count, so the scanner can see
+that the only thing left open is an angle bracket, which no valid TypeScript can
+be across a `;`.
+
+### Corrected: how the oracle reads a bare specifier
+
+Two errors in `tools/ground-truth.mjs`, both found by running it against the same
+repository and both cases where the analyzer was right:
+
+- a specifier was tested against the whole string, so
+  `@radix-ui/env-check/is-development` was not recognised as naming a package in
+  the repository. In a monorepo that is most imports, and the analyzer was
+  reported as inventing nineteen edges. The lookup is now on the package name.
+- a dependency declared with the `workspace:` protocol was counted as a registry
+  dependency. That protocol means the dependency *is* this repository's own
+  package, and it is the one declaration that cannot mean anything else.
+
+**No action required.** These change what the tooling reports, not what the
+analyzer does.
+
+---
+
 ## v0.15.0
 
 A parser fix and a new field in the scan report. **Re-scan your repository:**

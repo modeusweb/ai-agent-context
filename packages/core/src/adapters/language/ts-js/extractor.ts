@@ -186,12 +186,18 @@ function findNext(tokens: readonly Token[], from: number, value: string, limit =
  */
 function skipDeclarator(tokens: readonly Token[], from: number): number {
   const startLine = tokens[from]?.line ?? 0;
-  let depth = 0;
+  // The openers are tracked as a stack, not a count, because the two cases look
+  // identical from a counter. `count < limit;` has one `<` and no `>` and leaves
+  // the count at one, so a `;` no longer ended the statement and the scan ran to
+  // the end of the file, dropping every import written after it. A stack can
+  // see that the only thing left open is an angle bracket, and no valid
+  // TypeScript has a type argument list straddling a `;`.
+  const openers: string[] = [];
   for (let cursor = from; cursor < tokens.length; cursor += 1) {
     const token = tokens[cursor]!;
     if (token.type === 'punct') {
       if (token.value === '(' || token.value === '{' || token.value === '[' || token.value === '<') {
-        depth += 1;
+        openers.push(token.value);
         continue;
       }
       const closing =
@@ -200,14 +206,21 @@ function skipDeclarator(tokens: readonly Token[], from: number): number {
         closingCount(token.value, ']') +
         closingCount(token.value, '>');
       if (closing > 0) {
-        if (depth === 0) return cursor;
-        depth -= closing;
+        if (openers.length === 0) return cursor;
+        // A `>>` closes two levels at once, so it has to match twice.
+        for (let level = 0; level < closing; level += 1) openers.pop();
         continue;
       }
-      if (depth === 0 && (token.value === ';' || token.value === ',')) return cursor;
+      if (
+        openers.length > 0 &&
+        openers.every((opener) => opener === '<') &&
+        (token.value === ';' || token.value === ',')
+      ) {
+        return cursor;
+      }
       continue;
     }
-    if (depth === 0 && token.line > startLine && token.type === 'keyword' && STATEMENT_START.has(token.value)) {
+    if (openers.length === 0 && token.line > startLine && token.type === 'keyword' && STATEMENT_START.has(token.value)) {
       return cursor;
     }
   }

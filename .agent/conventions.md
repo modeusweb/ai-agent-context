@@ -24,14 +24,14 @@ evidence behind it are listed. Statements marked `config` come from declared con
 
 ## Imports
 
-- External dependencies are imported before internal modules (41/47 files). _(confidence 0.75, observed)_
+- External dependencies are imported before internal modules (42/48 files). _(confidence 0.75, observed)_
   - evidence: `<repository>` — import order observed across files that import both kinds of modules
-- Type-only dependencies use `import type` (59/116 files). _(confidence 0.80, observed)_
+- Type-only dependencies use `import type` (59/117 files). _(confidence 0.80, observed)_
   - evidence: `<repository>` — import type / export type statements detected
 
 ## Languages
 
-- Implementation mixes TypeScript (115 files) and JavaScript (12 files). _(confidence 0.90, observed)_
+- Implementation mixes TypeScript (116 files) and JavaScript (12 files). _(confidence 0.90, observed)_
   - evidence: `<repository>` — languages are derived from file extensions, not from content guessing
 
 ## Naming
@@ -40,7 +40,7 @@ evidence behind it are listed. Statements marked `config` come from declared con
   - evidence: `packages/cli/src/ui/console.ts` — class "ConsoleOutput" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/fs-adapter.ts` — class "FileSystemAdapter" uses PascalCase
   - evidence: `packages/core/src/adapters/filesystem/sensitive.ts` — class "SensitivePathFilter" uses PascalCase
-- Functions use camelCase (360/363 declarations). _(confidence 0.95, observed)_
+- Functions use camelCase (362/365 declarations). _(confidence 0.95, observed)_
   - evidence: `packages/cli/src/cli.ts` — function "appendFlag" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "parseArguments" uses camelCase
   - evidence: `packages/cli/src/cli.ts` — function "flagString" uses camelCase
@@ -59,7 +59,7 @@ evidence behind it are listed. Statements marked `config` come from declared con
 
 ## Tests
 
-- Tests live in a dedicated test directory (28/30 test files). _(confidence 0.80, observed)_
+- Tests live in a dedicated test directory (29/31 test files). _(confidence 0.80, observed)_
   - evidence: `packages/cli/test/cli.test.ts` — test located in a central tests directory
   - evidence: `packages/cli/test/public-api.lock.json` — test located in a central tests directory
 

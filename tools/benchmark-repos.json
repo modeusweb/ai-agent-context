@@ -11,6 +11,10 @@
     "Selection criteria, in priority order:",
     "  - TypeScript or JavaScript source, since those are the languages the",
     "    analyzer supports; a Python repository would measure nothing.",
+    "  - Chosen for the syntax it contains, not for how well known it is. A",
+    "    repository picked for its popularity measures the syntax its maintainers",
+    "    happened to use, which is how an entire language feature (TSX) went",
+    "    unexercised across eight well-chosen repositories.",
     "  - Permissively licensed, so the benchmark is unambiguous about what it is",
     "    doing with the code. Nothing is vendored: each repository is cloned into a",
     "    temporary directory, measured, and deleted.",
@@ -71,6 +75,12 @@
       "url": "https://github.com/changesets/changesets.git",
       "sha": "e2ee472cc6c901a0bb29781dac12603f6e4d5215",
       "note": "npm workspaces monorepo, so cross-package resolution is measured on something other than our own layout."
+    },
+    {
+      "name": "radix-primitives",
+      "url": "https://github.com/radix-ui/primitives.git",
+      "sha": "eb3a2b7091293e27df8f9ba906632d8daa3d81a3",
+      "note": "TSX at scale, and a pnpm workspace with dozens of packages importing each other by subpath. Chosen for the syntax it contains rather than its popularity: it is the repository that found the JSX gaps."
     }
   ]
 }

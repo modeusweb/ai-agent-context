@@ -671,6 +671,68 @@ rather than for their popularity.
 
 ---
 
+## v0.16.0 — TSX, and repositories chosen for what they contain (in progress)
+
+**Goal:** stop treating "supported TypeScript/JavaScript" as a sample.
+
+**The problem this release solved.** v0.15.0 stated that the pinned set contained
+no TSX, no decorators and no class-heavy codebase, so the word "supported" rested
+on eight repositories chosen for being popular and small. Choosing the next one
+for the *syntax it contains* rather than for its reputation is what turned up the
+largest gap in the analyzer so far.
+
+**Implemented**
+
+- **A JSX element is lexed as one token**, the same way a template literal is, so
+  the bracket balance never sees its interior. Previously a `<` was either a
+  bracket or a type argument, and in `<Trigger onClick={(e) => f(e)} />` the
+  braces are attributes rather than a block while `/>` does not close a type
+  argument list. Counting them skewed every statement scanner, which ran to the
+  end of the file and dropped the statements after it.
+- **`=>`, `&&`, `||` and `??` are recognised as expression positions.** The set
+  that decides "is a `<` an element or a type argument" — and "is a `/` a regex or
+  a division" — was missing all four. Each one costs every file that returns an
+  element or renders a conditional child: `render={() => <div />}`, `{ok && <Error />}`
+  are the ordinary shapes.
+- **A JSX element inside an expression.** `{cond ? <A /> : <B />}` nests the same
+  problem one level down, inside the balanced scan of `{ ... }`.
+- **Fragments.** `<>` has no tag name, so what follows it is children rather than
+  attributes. Treating that region as attributes consumed the first child and, if
+  it was self-closing, ended the fragment one element too early.
+- **An unbalanced `<` no longer traps the scan.** A related defect the TSX work
+  exposed, and pre-existing: `const v = count < limit;` opens an angle bracket
+  that never closes, so a `;` no longer ended the statement and the scan ran to
+  the end of the file. The openers are now tracked as a stack, so the case is
+  visible as "only angle brackets are open", which no valid TypeScript can be
+  across a `;`.
+- **`radix-ui/primitives` added to the pinned set**, pinned by commit SHA. It is
+  TSX at scale and a pnpm workspace where dozens of packages import each other by
+  subpath — the repository that found the gaps above.
+
+**Measured:** `radix-ui/primitives`, 686 files — **25 partial parses before,
+zero after.** Across the whole pinned set, 1932 files, 100% parse coverage, and
+100% precision and recall against the compiler on both oracles.
+
+**Two defects in the oracle, found by the same repository.** The analyzer was
+right and the measurement was wrong, twice:
+
+- A bare specifier was tested against the whole string, so `@radix-ui/env-check/is-development`
+  was not recognised as naming a package in the repository and was counted as an
+  external dependency. In a monorepo that is most of them, and the analyzer was
+  reported as inventing nineteen edges for dependencies the manifests declared
+  plainly. The lookup is now on the package name, without any subpath.
+- A dependency declared with the `workspace:` protocol was counted as a registry
+  dependency. That protocol is the one declaration that cannot mean anything else,
+  and trusting it also covers a case no glob can: in a pnpm workspace a package
+  can be depended on by name while matching no `packages/*` pattern at all.
+
+**Known limits, restated because the set now contains TSX.** TSX is covered;
+decorators, class-heavy code, and `.vue`/`.svelte` are not, and no repository in
+the set contains them. Choosing the next set members by the syntax they contain
+is the standing method, not a one-off.
+
+---
+
 ## v1.0 — Stable repository intelligence (in progress)
 
 **Goal:** a stable release with a proven API, mature integrations and

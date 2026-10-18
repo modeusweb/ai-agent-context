@@ -56,9 +56,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:cd518229",
+      "id": "imports:c4842456",
       "origin": "observed",
-      "statement": "External dependencies are imported before internal modules (41/47 files)."
+      "statement": "External dependencies are imported before internal modules (42/48 files)."
     },
     {
       "category": "Imports",
@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:8cf93f17",
+      "id": "imports:88d80bbf",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (59/116 files)."
+      "statement": "Type-only dependencies use `import type` (59/117 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:67de1ae6",
+      "id": "languages:044d4199",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (115 files) and JavaScript (12 files)."
+      "statement": "Implementation mixes TypeScript (116 files) and JavaScript (12 files)."
     },
     {
       "category": "Naming",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:a2682739",
+      "id": "naming:cb12859c",
       "origin": "observed",
-      "statement": "Functions use camelCase (360/363 declarations)."
+      "statement": "Functions use camelCase (362/365 declarations)."
     },
     {
       "category": "Naming",
@@ -204,9 +204,9 @@
           "source": "packages/cli/test/public-api.lock.json"
         }
       ],
-      "id": "tests:5460f920",
+      "id": "tests:7a912ba6",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (28/30 test files)."
+      "statement": "Tests live in a dedicated test directory (29/31 test files)."
     },
     {
       "category": "Toolchain",

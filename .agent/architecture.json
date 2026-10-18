@@ -386,6 +386,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/jsx.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/jsx.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/test/language.test.ts"
         }
       ],
@@ -1333,12 +1345,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 17,
+        "historicalChanges": 18,
         "lastChanged": "2026-10-18",
-        "recentChanges": 17,
+        "recentChanges": 18,
         "topContributors": [
           {
-            "commits": 90,
+            "commits": 92,
             "name": "modeusweb"
           }
         ]
@@ -1875,12 +1887,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 21,
+        "historicalChanges": 22,
         "lastChanged": "2026-10-18",
-        "recentChanges": 21,
+        "recentChanges": 22,
         "topContributors": [
           {
-            "commits": 25,
+            "commits": 27,
             "name": "modeusweb"
           }
         ]
@@ -2467,6 +2479,7 @@
         "packages/core/test/helpers.ts",
         "packages/core/test/incremental.test.ts",
         "packages/core/test/integration.test.ts",
+        "packages/core/test/jsx.test.ts",
         "packages/core/test/language.test.ts",
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
@@ -2491,6 +2504,7 @@
         "packages/core/test/helpers.ts",
         "packages/core/test/incremental.test.ts",
         "packages/core/test/integration.test.ts",
+        "packages/core/test/jsx.test.ts",
         "packages/core/test/language.test.ts",
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
@@ -2498,17 +2512,17 @@
         "packages/core/test/scanner.test.ts",
         "packages/core/test/template-literals.test.ts"
       ],
-      "files": 22,
+      "files": 23,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 17,
+        "historicalChanges": 18,
         "lastChanged": "2026-10-18",
-        "recentChanges": 17,
+        "recentChanges": 18,
         "topContributors": [
           {
-            "commits": 35,
+            "commits": 36,
             "name": "modeusweb"
           }
         ]
@@ -2638,6 +2652,7 @@
         "packages/core/test/helpers.ts",
         "packages/core/test/incremental.test.ts",
         "packages/core/test/integration.test.ts",
+        "packages/core/test/jsx.test.ts",
         "packages/core/test/language.test.ts",
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
@@ -2675,7 +2690,7 @@
       "files": 6,
       "git": {
         "architectureChangeSignals": [],
-        "changeFrequency": "high",
+        "changeFrequency": "medium",
         "contributorCount": 1,
         "historicalChanges": 13,
         "lastChanged": "2026-10-17",
@@ -3167,12 +3182,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 13,
+        "historicalChanges": 14,
         "lastChanged": "2026-10-18",
-        "recentChanges": 13,
+        "recentChanges": 14,
         "topContributors": [
           {
-            "commits": 23,
+            "commits": 24,
             "name": "modeusweb"
           }
         ]
@@ -3269,7 +3284,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 51,
+    "entryPoints": 52,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3293,21 +3308,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.15.0"
+        "version": "0.16.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.15.0"
+        "version": "0.16.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.15.0"
+        "version": "0.16.0"
       }
     ],
     "workspaceGlobs": [

@@ -738,6 +738,7 @@ npm run ground-truth:public     # both oracles, on the same set
 | `execa` | larger TypeScript | 673 | 100% | 0 | yes | 100% / 100% |
 | `got` | deep directory tree | 127 | 100% | 0 | yes | 100% / 100% |
 | `changesets` | pnpm workspace monorepo | 288 | 100% | 0 | yes | 100% / 100% |
+| `radix-primitives` | TSX at scale, pnpm workspace | 686 | 100% | 0 | yes | 100% / 100% |
 
 A commit SHA rather than a branch, so two runs compare each other; a moving
 target would make every measurement incomparable with the last. Nothing is
@@ -745,11 +746,16 @@ vendored — each repository is cloned into a temporary directory, measured, and
 deleted. "Single module" means the repository has no module edges to compare, so
 precision and recall are undefined there rather than 100%.
 
-**Parse coverage is complete: 1246 files, zero partial, zero failed.** That is a
+**Parse coverage is complete: 1932 files, zero partial, zero failed.** That is a
 CI gate, not an observation. A partial parse means the extractor gave up partway
 through a file and dropped the statements after that point, so the repository
 would report fewer dependencies than it has while showing a clean result — which
 is what happened until v0.15.0.
+
+Repositories are added for the **syntax they contain**, not for their
+popularity. That is how TSX was found at all: eight plain-TypeScript and
+CommonJS repositories were all passing, and the first one chosen for containing
+TSX had 25 files out of 686 silently losing their imports.
 
 CI runs this as `public repositories`, on pushes to `master` and weekly, but not
 on pull requests: it needs the network, and a slow clone should not block a

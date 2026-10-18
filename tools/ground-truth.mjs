@@ -113,22 +113,21 @@ function nearestManifest(file) {
 }
 
 /**
- * Whether a manifest declares `specifier` as a dependency.
+ * The version range a manifest declares for a package, or `null`.
  *
- * Subpath imports count as the package: `pkg/sub` is a dependency on `pkg`.
+ * Returning the range rather than a boolean is what lets the caller tell a
+ * `workspace:` protocol from a registry version, which are different facts.
  */
-function declaresDependency(manifest, specifier) {
-  if (manifest === null) return false;
-  const packageName = specifier.startsWith('@')
-    ? specifier.split('/').slice(0, 2).join('/')
-    : specifier.split('/')[0];
+function declaredRange(manifest, packageName) {
+  if (manifest === null) return null;
   for (const field of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
     const declared = manifest.parsed[field];
     if (declared !== null && typeof declared === 'object' && Object.hasOwn(declared, packageName)) {
-      return true;
+      const value = declared[packageName];
+      return typeof value === 'string' ? value : null;
     }
   }
-  return false;
+  return null;
 }
 
 const manifests = readManifests();
@@ -297,19 +296,36 @@ function buildGroundTruth() {
       // A bare specifier naming a package in this repository is usually an
       // in-repo dependency rather than an external one, but "usually" is doing
       // real work in that sentence and each case has to be decided separately.
-      if (packagesByName.has(specifier)) {
-        const declared = declaresDependency(nearestManifest(file), specifier);
+      //
+      // The lookup is on the *package name*, never the whole specifier:
+      // `@radix-ui/env-check/is-development` is a dependency on
+      // `@radix-ui/env-check`. Testing the whole string missed every subpath
+      // import, and in a monorepo that is most of them — each one was counted as
+      // an external package, so the analyzer was reported as inventing edges for
+      // dependencies the manifests declared plainly.
+      const packageName = specifier.startsWith('@')
+        ? specifier.split('/').slice(0, 2).join('/')
+        : specifier.split('/')[0];
+      if (packagesByName.has(packageName)) {
+        const range = declaredRange(nearestManifest(file), packageName);
+        const isWorkspaceProtocol = range !== null && range.startsWith('workspace:');
         // Declared as a registry range and not a workspace member: this is a
         // published package the repository depends on. `clsx` keeps a `bench/`
         // directory that pins `clsx@1.1.0` next to the `clsx` sources, on
         // purpose, to compare against the released build.
-        if (workspaceNames.has(specifier) || !declared) {
+        //
+        // A `workspace:` protocol is the opposite and is unconditional. It says
+        // the dependency *is* this repository's own package, and it is the one
+        // declaration that cannot mean anything else. Trusting it also covers the
+        // case no glob can: in a pnpm workspace a package can be depended on by
+        // name while matching no `packages/*` pattern at all.
+        if (workspaceNames.has(packageName) || range === null || isWorkspaceProtocol) {
           // Otherwise it is either a workspace member or a self-reference. The
           // second case is `ky` importing `ky` from its own type tests, which
           // means the local entry point, not a download. An undeclared bare
           // import of your own package name is what self-reference looks like;
           // package managers require real dependencies to be declared.
-          packagePairs.add(`${toRelative(file)} -> ${specifier}`);
+          packagePairs.add(`${toRelative(file)} -> ${packageName}`);
           continue;
         }
       }

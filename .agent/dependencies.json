@@ -998,6 +998,15 @@
         "node:assert/strict",
         "node:test"
       ],
+      "file": "packages/core/test/jsx.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
       "file": "packages/core/test/language.test.ts",
       "internalModules": [],
       "module": "packages/core/test"
@@ -1699,7 +1708,7 @@
     "cycles": 2,
     "externalPackages": 12,
     "internalModuleEdges": 19,
-    "unresolvedImports": 27
+    "unresolvedImports": 28
   },
   "unresolved": [
     {
@@ -1799,6 +1808,13 @@
       ],
       "file": "packages/core/test/integration.test.ts",
       "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/jsx.test.ts",
+      "specifier": "../../core/dist/index.js"
     },
     {
       "attempts": [
