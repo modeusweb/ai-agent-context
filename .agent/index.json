@@ -31,7 +31,7 @@
         "path": "README.md"
       },
       {
-        "hash": "8c3d93b9674d0658214a30c9cbf8ea7540dd9c82a50e6ac1b578a585cdfd7ca5",
+        "hash": "c7ed23904a952d4d113c495be8dc8d854ae4d346d819c4474b2a3d7b4f5db8b8",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -45,7 +45,7 @@
         "path": "SECURITY.md"
       },
       {
-        "hash": "bfe3646a494831d96a3e5214505a240756c95dbd41928ce9dee0191d3c22d387",
+        "hash": "7a25a60f6f0793269220c6f98e973f289234879337c454697f314b39f1c1303e",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -59,7 +59,7 @@
         "path": "benchmark-report.json"
       },
       {
-        "hash": "0122372ba5f8dcacb149ca0e4ff8b236f185894d347ffce15f6f9978b5d0f741",
+        "hash": "feb611c66b42c2fa717002ff1ee01b7d90244edcbcb055db55355ecbb887193a",
         "kind": "config",
         "language": "json",
         "module": null,
@@ -87,7 +87,7 @@
         "path": "packages/cli/README.md"
       },
       {
-        "hash": "076a940af6489630c61d57a8fcb3b17304398cd0e6a44c2d85667c512ba504bb",
+        "hash": "947bb35a70eddd820088efbd380fb09d8a33a083a590aef5f0106edf91b96425",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -269,7 +269,7 @@
         "path": "packages/core/README.md"
       },
       {
-        "hash": "eeebd3dd789b6739727a55db9bc8abd4f2536593bfe803daeae11eb65e5b4299",
+        "hash": "bce7ced66893a6a0c6eb890113fed97d56a1a85ed38ae24a711dce75cb82d2f3",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -661,7 +661,7 @@
         "path": "packages/core/src/model/types.ts"
       },
       {
-        "hash": "f845400ac2e667fbb142e7e62de65a7c6bdcf282fa240bb5bce375da6858ad48",
+        "hash": "70447d64753e9633b4c21a26bec99708346b041eb2cd70eee1cbdf93640ca1b1",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
@@ -871,7 +871,7 @@
         "path": "packages/mcp/README.md"
       },
       {
-        "hash": "43e08cde677704c591fdd6baaa830e8a01e5600c1824aaea408d8164d0e34eca",
+        "hash": "b833c7471dc4cbb9cb33dc261e844fd5a60458ff25da6e336185d023a8e21349",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -1085,7 +1085,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 40,
+    "commitsAnalyzed": 41,
     "enabled": true,
     "windowDays": 180
   },

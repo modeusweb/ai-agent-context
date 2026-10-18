@@ -171,6 +171,33 @@ the most durable contract in the project.
 - **Consumers should check the version before reading.** `readPersistedContext`
   and `contextFileNames` are exported for exactly this.
 
+### Why there is no schema v2 yet
+
+Asked and answered for 1.0: nothing currently needs it, and a version bump that
+is not forced is not free — it makes every committed `.agent/` directory stale
+at once and puts a migration in front of every consumer for no benefit.
+
+Within `SCHEMA_VERSION = 1` the documents have been additive across every release
+so far, including two that changed what the analysis *means* rather than what it
+stores, which the rule above already classifies as a major release. That is the
+mechanism working, not a gap in it.
+
+Three things would force v2, and none of them is true today:
+
+1. **A field has to be removed or repurposed.** Not renamed — renamed within v1
+   is additive if the old name is kept — but changed so that what a reader would
+   make of it changes.
+2. **A document stops being per-repository.** The current layout assumes one
+   `.agent/` describes one repository at one commit. Incremental or partial
+   context cannot be expressed under that assumption.
+3. **A field is widely misread.** If a number can be persisted accurately but
+   read wrong more often than it is read right, the fix is a shape that cannot
+   be misread, and that is a new version rather than a reinterpretation.
+
+Until one of those is true, `SCHEMA_VERSION` stays at 1 and `agent-context
+migrate` stays unused. It is written, tested and ready, which is the point of
+having it before it is needed.
+
 ## What is not promised
 
 - a compiler-grade analyzer for languages other than TypeScript/JavaScript;

@@ -647,9 +647,10 @@ measurable value for teams.
 3. ~~Re-audit the exported surface against STABILITY.md.~~ Audited in 0.14.0, and
    the answer was mostly "promote fewer than expected", plus one mechanism that
    did not do what it claimed.
-4. **Decide whether `.agent/` schema v2 is worth the migration cost.** Nothing
-   currently needs it; the policy exists so the decision does not have to be
-   improvised when something does.
+4. ~~Decide whether `.agent/` schema v2 is worth the migration cost.~~ Decided in
+   0.14.1: no, and `STABILITY.md` now records the three conditions that would
+   force one, so the next decision is made against a stated trigger rather than
+   an impression.
 5. ~~Decide what to do about entry-point precision and recall.~~ Decided in
    0.14.0, and split rather than resolved: declared entry points are a fact and
    are now measured; the naming and signal heuristics have no oracle and are now
@@ -657,13 +658,29 @@ measurable value for teams.
 
 ### Release criteria
 
-- zero known critical/high vulnerabilities in the supported dependency graph;
-- verify, typecheck and the integration tests pass on every supported Node.js
-  version;
-- no known data-loss or path traversal defects;
-- API changes follow the published deprecation policy;
-- the release process is reproducible (`node tools/set-version.mjs`);
-- at least three real users or teams confirm regular use in an agent workflow.
+Five of the six are checked by something that can fail. The sixth is not, and
+that asymmetry is the reason 1.0 has not been tagged.
+
+| Criterion | Status | Checked by |
+| --- | --- | --- |
+| zero known critical/high vulnerabilities in the supported dependency graph | **met** | `npm audit --audit-level=high`, CI `audit` |
+| verify, typecheck and the integration tests pass on every supported Node.js version | **met** | CI `test` (Node 22.18/24 × Linux/macOS/Windows) and `packaged smoke` (Node 20.11/22.18/24) |
+| no known data-loss or path traversal defects | **met** | CI `self scan` fails on any path escape; two data-loss defects found and fixed this cycle (dry-run writes, parser dropping a file's imports) |
+| API changes follow the published deprecation policy | **met** | `STABILITY.md`, `npm run api:check` over values *and* types, `npm run stability:check` over the document |
+| the release process is reproducible (`node tools/set-version.mjs`) | **met** | every release from 0.8.0 onward used it; publish-before-push is documented in `CONTRIBUTING.md` with the reason |
+| at least three real users or teams confirm regular use in an agent workflow | **not met** | nothing — it is a fact about the world, not about the code |
+
+**On the sixth criterion.** It cannot be satisfied by writing more code or by
+running more checks. Everything this project can verify about itself, it now
+verifies, and the two cycles above were spent finding and fixing what it had
+missed. What remains is whether the tool is useful to people who did not write
+it, and the only honest way to establish that is for someone to try it and say
+so.
+
+Tagging 1.0 without it would make the release criteria decorative, in a project
+whose whole argument is that claims should be checkable. The engineering is
+ready: when three users confirm regular use, `node tools/set-version.mjs 1.0.0`
+followed by the publish sequence is the entire process.
 
 ### Not promised in 1.0
 
