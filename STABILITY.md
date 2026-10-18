@@ -6,7 +6,8 @@ consumer can tell which is which.
 The short version: **the `AgentContext` facade and the `.agent/` schema are the
 contract. Everything else is an implementation detail that happens to be
 reachable.** That is stated up front because a promise covering all 161 exports
-of `@ai-agent-context/core` would be a promise nobody could keep.
+and 41 exported types of `@ai-agent-context/core` would be a promise nobody
+could keep.
 
 ## Why this document exists
 
@@ -19,9 +20,17 @@ Two mechanisms make the promise checkable rather than aspirational:
 
 1. **The public API lock.** Every exported symbol of every package is recorded in
    `packages/core/test/public-api.lock.json`, `packages/cli/test/public-api.lock.json`
-   and `packages/mcp/test/public-api.lock.json`. A test and a dedicated CI job
-   (`api surface`) fail when the real exports differ from the lock.
+   and `packages/mcp/test/public-api.lock.json` — runtime exports under `exports`,
+   type-only exports under `types`. A test and a dedicated CI job
+   (`api surface`) fail when the real surface differs from the lock.
 2. **This document.** The lock records what exists; this says what is *promised*.
+
+The type half is the less obvious one. `Object.keys(module)` sees values at
+runtime, so before it existed a renamed or removed type changed the package
+without changing anything the lock could see — while this document claimed the
+lock recorded every exported symbol. Type exports are therefore read from the
+generated `.d.ts` through the TypeScript compiler, which resolves `export *`
+chains that a regular expression over the declaration file would miss.
 
 ## Stable from 1.0
 
@@ -36,6 +45,16 @@ Two mechanisms make the promise checkable rather than aspirational:
 | `escapesRoot`, `joinStrict` | Path-safety helpers used by embedders that resolve their own imports. |
 | `AgentContextError`, `ConfigError`, `AnalysisError`, `ContextStateError`, `ReadOnlyError`, `AdapterUnavailableError` | Error types and their `code` values. |
 | `SCHEMA_VERSION`, `AGENT_DIR`, `CONFIG_FILE`, `CONTEXT_FILES`, `GENERATOR_NAME` | Schema constants. |
+| `readPersistedContext`, `contextFileNames` | Reading a committed `.agent/` directory directly, without the CLI. |
+
+**The exported model types are stable too.** `Repository`, `ModuleNode`,
+`FileNode`, `EntryPoint`, `EntryPointType`, `Evidence`, `Confidence`, `DependencyEdge`,
+`WorkspaceInfo`, `WorkspacePackage`, `Convention`, `Decision`, `ScanReport`,
+`ContextDiff`, `ModuleExplanation` and the rest of `model/types.ts` describe the
+values the facade returns. A consumer that cannot name the type of what it was
+given cannot use the facade at all, so they are promised on the same terms as the
+methods that return them: fields may be added in a minor release, and a field may
+be removed or change its meaning only in a major one.
 
 ### `@ai-agent-context/mcp`
 
@@ -70,6 +89,32 @@ These are exported because the analyzer is easier to test and extend with them
 reachable, not because they are supported. **They may change or disappear in a
 minor release.** If you need one, open an issue: promoting a symbol to the stable
 list is a small change.
+
+### Why the internal surface was not promoted
+
+The audit for 1.0 asked which internal exports deserve a promise, and the honest
+answer was "fewer than expected, and for a reason". Everything a consumer needs
+to *use* the product is already on the stable list, and everything the internal
+exports offer is a second route to the same result:
+
+| Internal export | What the stable surface already offers |
+| --- | --- |
+| `build*Document`, `buildContextDocuments` | `AgentContext.get*()` |
+| `detectEntryPoints`, `detectModuleRoles`, `applyArchitectureDetection` | the same fields on `getRepository()` |
+| `runPipeline`, `scanRepository` | `AgentContext.load()` + `scan()` |
+| `ImportResolver`, `buildKnowledgeGraph`, `findModuleCycles` | `getDependencies()`, `getChangeImpact()` |
+| `TsJsAdapter` and friends | nothing — see below |
+
+Promoting them would widen the promise without adding capability, and every
+addition to a stable list is a promise someone has to keep for the life of the
+project. The one genuine gap was the ability to read a committed `.agent/`
+directory without the CLI, which is now covered by `readPersistedContext` and
+`contextFileNames`.
+
+Language adapters are the deliberate exception in the other direction: they are
+**not** promoted, because an extension point that is promised becomes an
+extension point that cannot change. Supporting a second language is a fork, and
+this document says so rather than implying otherwise.
 
 ## Semver rules
 

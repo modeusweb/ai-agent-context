@@ -16,6 +16,7 @@ import { describe, test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { exportedTypeNames } from '../../../tools/exported-types.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..', '..', '..');
@@ -26,10 +27,16 @@ const PACKAGES = [
   { name: 'mcp', entry: path.join(repoRoot, 'packages/mcp/dist/index.js'), lock: path.join(repoRoot, 'packages/mcp/test/public-api.lock.json') },
 ];
 
+interface Lock {
+  package: string;
+  exports: string[];
+  types: string[];
+}
+
 describe('public API surface', () => {
   for (const pkg of PACKAGES) {
     test(`${pkg.name} exports exactly what the lock records`, async () => {
-      const locked = JSON.parse(readFileSync(pkg.lock, 'utf8')) as { package: string; exports: string[] };
+      const locked = JSON.parse(readFileSync(pkg.lock, 'utf8')) as Lock;
       assert.equal(locked.package, pkg.name, 'lock file names the wrong package');
 
       const module = (await import(`file://${pkg.entry.replace(/\\/g, '/')}`)) as Record<string, unknown>;
@@ -50,15 +57,43 @@ describe('public API surface', () => {
       );
       assert.deepEqual(actual, [...locked.exports].sort(), `${pkg.name} export order or set changed`);
     });
+
+    // `Object.keys(module)` cannot see a type: it has no runtime binding. Before
+    // the lock recorded these, `type Confidence` could be renamed or removed and
+    // this file stayed green while the package broke every consumer that used it.
+    test(`${pkg.name} exports exactly the types the lock records`, () => {
+      const locked = JSON.parse(readFileSync(pkg.lock, 'utf8')) as Lock;
+      const declaration = pkg.entry.replace(/\.js$/, '.d.ts');
+      const actual = exportedTypeNames(declaration);
+
+      const removed = locked.types.filter((name) => !actual.includes(name));
+      const added = actual.filter((name) => !locked.types.includes(name));
+
+      assert.deepEqual(
+        removed,
+        [],
+        `${pkg.name} no longer exports the types: ${removed.join(', ')}. Record it in MIGRATION.md, then run \`npm run api:lock\`.`,
+      );
+      assert.deepEqual(
+        added,
+        [],
+        `${pkg.name} newly exports the types: ${added.join(', ')}. Record them in MIGRATION.md, then run \`npm run api:lock\`.`,
+      );
+    });
   }
 
   test('the lock is sorted so a diff shows only real changes', async () => {
     for (const pkg of PACKAGES) {
-      const locked = JSON.parse(readFileSync(pkg.lock, 'utf8')) as { exports: string[] };
+      const locked = JSON.parse(readFileSync(pkg.lock, 'utf8')) as Lock;
       assert.deepEqual(
         locked.exports,
         [...locked.exports].sort(),
         `${pkg.name} lock must stay sorted`,
+      );
+      assert.deepEqual(
+        locked.types,
+        [...locked.types].sort(),
+        `${pkg.name} type lock must stay sorted`,
       );
     }
   });

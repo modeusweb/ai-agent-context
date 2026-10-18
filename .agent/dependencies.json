@@ -836,7 +836,9 @@
         "node:url"
       ],
       "file": "packages/core/test/api-surface.test.ts",
-      "internalModules": [],
+      "internalModules": [
+        "tools"
+      ],
       "module": "packages/core/test"
     },
     {
@@ -1154,11 +1156,29 @@
     },
     {
       "externalPackages": [
+        "typescript"
+      ],
+      "file": "tools/exported-types.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
         "node:fs",
         "node:path",
         "node:url"
       ],
       "file": "tools/generate-fixtures.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "file": "tools/ground-truth-entry.mjs",
       "internalModules": [],
       "module": "tools"
     },
@@ -1563,6 +1583,22 @@
       "confidence": 0.99,
       "evidence": [
         {
+          "detail": "1 file(s) import tools",
+          "source": "packages/core/test"
+        },
+        {
+          "detail": "relative import resolved to tools/exported-types.mjs",
+          "source": "packages/core/test/api-surface.test.ts"
+        }
+      ],
+      "from": "packages/core/test",
+      "kind": "internal-module",
+      "to": "tools"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
           "detail": "1 file(s) import @ai-agent-context/core",
           "source": "packages/mcp/src/tools"
         },
@@ -1653,8 +1689,8 @@
     "crossPackageEdges": 0,
     "cycles": 2,
     "externalPackages": 12,
-    "internalModuleEdges": 18,
-    "unresolvedImports": 25
+    "internalModuleEdges": 19,
+    "unresolvedImports": 26
   },
   "unresolved": [
     {
@@ -1823,6 +1859,13 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "tools/benchmark.mjs",
+      "specifier": "../packages/core/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "tools/ground-truth-entry.mjs",
       "specifier": "../packages/core/dist/index.js"
     },
     {

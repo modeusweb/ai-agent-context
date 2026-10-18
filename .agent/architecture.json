@@ -1321,12 +1321,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 16,
+        "historicalChanges": 17,
         "lastChanged": "2026-10-18",
-        "recentChanges": 16,
+        "recentChanges": 17,
         "topContributors": [
           {
-            "commits": 89,
+            "commits": 90,
             "name": "modeusweb"
           }
         ]
@@ -1863,12 +1863,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 18,
+        "historicalChanges": 19,
         "lastChanged": "2026-10-18",
-        "recentChanges": 18,
+        "recentChanges": 19,
         "topContributors": [
           {
-            "commits": 22,
+            "commits": 23,
             "name": "modeusweb"
           }
         ]
@@ -2435,7 +2435,9 @@
     {
       "basis": "directory",
       "boundaries": [],
-      "dependsOn": [],
+      "dependsOn": [
+        "tools"
+      ],
       "entryPoints": [
         "packages/core/test/api-surface.test.ts",
         "packages/core/test/architecture.test.ts",
@@ -2487,12 +2489,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 15,
+        "historicalChanges": 16,
         "lastChanged": "2026-10-18",
-        "recentChanges": 15,
+        "recentChanges": 16,
         "topContributors": [
           {
-            "commits": 32,
+            "commits": 33,
             "name": "modeusweb"
           }
         ]
@@ -3135,24 +3137,27 @@
         "tools/benchmark.mjs",
         "tools/check-stability.mjs",
         "tools/clean.mjs",
+        "tools/exported-types.d.mts",
+        "tools/exported-types.mjs",
         "tools/generate-fixtures.mjs",
+        "tools/ground-truth-entry.mjs",
         "tools/ground-truth-public.mjs",
         "tools/ground-truth.mjs",
         "tools/set-version.mjs",
         "tools/smoke.mjs",
         "tools/trust-metrics.mjs"
       ],
-      "files": 10,
+      "files": 13,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 11,
+        "historicalChanges": 12,
         "lastChanged": "2026-10-18",
-        "recentChanges": 11,
+        "recentChanges": 12,
         "topContributors": [
           {
-            "commits": 14,
+            "commits": 17,
             "name": "modeusweb"
           }
         ]
@@ -3172,6 +3177,11 @@
           "file": "tools/trust-metrics.mjs",
           "kind": "function",
           "name": "evidenceCoverage"
+        },
+        {
+          "file": "tools/exported-types.d.mts",
+          "kind": "function",
+          "name": "exportedTypeNames"
         },
         {
           "file": "tools/trust-metrics.mjs",
@@ -3207,11 +3217,11 @@
               "source": "tools/trust-metrics.mjs"
             },
             {
-              "detail": "exports hashDocuments (function)",
-              "source": "tools/trust-metrics.mjs"
+              "detail": "exports exportedTypeNames (function)",
+              "source": "tools/exported-types.d.mts"
             }
           ],
-          "value": "public API: collectJudgements, evidenceCoverage, hashDocuments, writeAllFixtures"
+          "value": "public API: collectJudgements, evidenceCoverage, exportedTypeNames, hashDocuments, writeAllFixtures"
         }
       ],
       "roles": [
@@ -3236,7 +3246,9 @@
         "tools/set-version.mjs",
         "tools/smoke.mjs"
       ],
-      "usedBy": []
+      "usedBy": [
+        "packages/core/test"
+      ]
     }
   ],
   "schemaVersion": 1,
@@ -3266,21 +3278,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.13.0"
+        "version": "0.14.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.13.0"
+        "version": "0.14.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.13.0"
+        "version": "0.14.0"
       }
     ],
     "workspaceGlobs": [

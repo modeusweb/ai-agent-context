@@ -17,6 +17,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { exportedTypeNames } from './exported-types.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -24,9 +25,14 @@ const core = await import(`file://${path.join(root, 'packages/core/dist/index.js
 const mcp = await import(`file://${path.join(root, 'packages/mcp/dist/index.js').replace(/\\/g, '/')}`);
 const exported = new Set([...Object.keys(core), ...Object.keys(mcp)]);
 
+// Types are promised in the document too, so they have to be exported. Scraping
+// identifiers out of `index.d.ts` looked like it covered them and did not: the
+// model types are reached through `export *`, so their names appear in
+// `model/types.d.ts` rather than in the barrel. Asking the compiler for the
+// resolved export list uses the same authoritative set as the API lock, so the
+// document and the lock cannot disagree about what exists.
 for (const declaration of ['packages/core/dist/index.d.ts', 'packages/mcp/dist/index.d.ts']) {
-  const text = readFileSync(path.join(root, declaration), 'utf8');
-  for (const match of text.matchAll(/\b([A-Za-z_][A-Za-z0-9_]*)\b/g)) exported.add(match[1]);
+  for (const name of exportedTypeNames(path.join(root, declaration))) exported.add(name);
 }
 
 const doc = readFileSync(path.join(root, 'STABILITY.md'), 'utf8');
@@ -36,8 +42,8 @@ for (const match of doc.matchAll(/`([A-Za-z_][A-Za-z0-9_]*)`/g)) referenced.add(
 // Identifiers that appear in backticks but are not API symbols: command and flag
 // names, file names, property names, and prose about behaviour.
 const notApiSymbols = new Set([
-  'npm', 'json', 'ts', 'exports', 'exit', 'agent', 'tools', 'dist',
-  'schemaVersion', 'readPersistedContext', 'contextFileNames',
+  'npm', 'json', 'ts', 'exports', 'types', 'exit', 'agent', 'tools', 'dist',
+  'schemaVersion',
   'api:check', 'api:lock', 'check', 'lock',
   'code', 'verify', 'invalid', 'full', 'compact', 'auto',
 ]);

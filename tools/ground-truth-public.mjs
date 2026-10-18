@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * Runs the TypeScript-compiler oracle against the pinned public repositories.
+ * Runs the oracles against the pinned public repositories.
  *
- * Measuring ourselves is not evidence. The oracle is exact against a compiler,
- * but this repository is the one codebase we wrote the analyzer for; a defect
- * that only exists in other people's code would never show up. Each repository
- * below is a third-party codebase at a pinned commit, so a run is a check on
- * the product rather than on our own habits.
+ * Measuring ourselves is not evidence. Both oracles are exact, but this
+ * repository is the one codebase we wrote the analyzer for; a defect that only
+ * exists in other people's code would never show up. Each repository below is a
+ * third-party codebase at a pinned commit, so a run is a check on the product
+ * rather than on our own habits.
  *
  * This is the check that found a real bug: a nested generic in a type
  * annotation closed with `>>`, which the lexer had merged into a single shift
@@ -14,13 +14,20 @@
  * it silently lost its imports and exports, and the parse still reported
  * success. In a barrel file that is most of the public surface.
  *
+ * Two oracles run per repository, because they answer different questions:
+ *
+ *  - `ground-truth.mjs` compares the dependency graph with the answer the
+ *    TypeScript compiler gives.
+ *  - `ground-truth-entry.mjs` compares declared entry points with the manifests
+ *    that declare them.
+ *
  * Nothing is vendored: each repository is cloned into a temporary directory,
  * measured, and deleted.
  *
- * Usage: npm run ground-truth:public [-- --only <name>]
+ * Usage: npm run ground-truth:public [-- --only <name>] [-- --json]
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,8 +40,10 @@ const onlyIndex = args.indexOf('--only');
 const only = onlyIndex === -1 ? null : args[onlyIndex + 1];
 const asJson = args.includes('--json');
 
-/** Fields read back out of `ground-truth.mjs` output. */
-const FIELDS = ['files', 'specifiers', 'analyzer edges', 'precision', 'recall'];
+const ORACLES = [
+  { name: 'graph', script: 'tools/ground-truth.mjs', metrics: ['precision', 'recall'] },
+  { name: 'entry', script: 'tools/ground-truth-entry.mjs', metrics: ['declared entry points', 'precision', 'recall'] },
+];
 
 function parseReport(output) {
   const metrics = {};
@@ -46,15 +55,42 @@ function parseReport(output) {
   return metrics;
 }
 
-/** True when a metric is exactly 100%, or when it does not apply at all. */
-function isSatisfied(metrics) {
-  const precision = metrics.precision ?? 'n/a';
-  const recall = metrics.recall ?? 'n/a';
-  // `n/a` means the repository has no module edges to compare, which is a
-  // property of the repository rather than a result. Refusing to pass those
-  // would make a single-module package a permanent CI failure.
-  if (precision === 'n/a' || recall === 'n/a') return { ok: true, comparable: false };
-  return { ok: precision === '100%' && recall === '100%', comparable: true };
+/**
+ * Runs one oracle and returns its metrics.
+ *
+ * A non-zero exit is the normal way these report a metric below 100%, so the
+ * partial output is the result rather than a failure to have one. Output that
+ * is entirely absent is a real failure and is rethrown.
+ */
+function runOracle(script, directory) {
+  try {
+    return parseReport(
+      execFileSync('node', [path.join(root, script), directory], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+        maxBuffer: 64 * 1024 * 1024,
+      }),
+    );
+  } catch (error) {
+    const output = typeof error.stdout === 'string' ? error.stdout : '';
+    if (output.trim() === '') throw error;
+    return parseReport(output);
+  }
+}
+
+/**
+ * Whether an oracle passed.
+ *
+ * `n/a` means the repository has no module edges to compare, which is a
+ * property of the repository rather than a result. Refusing to pass those would
+ * make a single-module package a permanent CI failure.
+ */
+function verdict(metrics, keys) {
+  const precision = metrics[keys.precision] ?? 'n/a';
+  const recall = metrics[keys.recall] ?? 'n/a';
+  if (precision === 'n/a' || recall === 'n/a') return { ok: true, comparable: false, text: 'no module edges' };
+  const ok = precision === '100%' && recall === '100%';
+  return { ok, comparable: true, text: `${precision} / ${recall}` };
 }
 
 function clonePinned(entry, target) {
@@ -73,23 +109,6 @@ function clonePinned(entry, target) {
   return target;
 }
 
-function measure(entry, directory) {
-  try {
-    const output = execFileSync('node', [path.join(root, 'tools/ground-truth.mjs'), directory], {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-      maxBuffer: 64 * 1024 * 1024,
-    });
-    return { metrics: parseReport(output) };
-  } catch (error) {
-    // A non-zero exit is the normal way this script reports a metric below
-    // 100%, so the partial output is the result, not a failure to have one.
-    const output = typeof error.stdout === 'string' ? error.stdout : '';
-    if (output.trim() === '') throw error;
-    return { metrics: parseReport(output) };
-  }
-}
-
 const entries = only === null ? manifest.repositories : manifest.repositories.filter((entry) => entry.name === only);
 if (entries.length === 0) {
   process.stderr.write(`no repository named "${only}" in tools/benchmark-repos.json\n`);
@@ -102,54 +121,58 @@ const results = [];
 for (const entry of entries) {
   const directory = path.join(workspace, entry.name);
   process.stderr.write(`measuring ${entry.name}...`);
-  let result;
+  const result = { name: entry.name, sha: entry.sha, oracles: {} };
   try {
     clonePinned(entry, directory);
-    const { metrics } = measure(entry, directory);
-    const verdict = isSatisfied(metrics);
-    result = { name: entry.name, sha: entry.sha, ...verdict, metrics };
+    for (const oracle of ORACLES) {
+      const metrics = runOracle(oracle.script, directory);
+      const check = verdict(metrics, { precision: 'precision', recall: 'recall' });
+      result.oracles[oracle.name] = {
+        ...check,
+        metrics: Object.fromEntries(oracle.metrics.map((key) => [key, metrics[key] ?? 'n/a'])),
+      };
+    }
+    result.ok = Object.values(result.oracles).every((outcome) => outcome.ok);
+    process.stderr.write(` graph ${result.oracles.graph.text}, entry ${result.oracles.entry.text}\n`);
   } catch (error) {
     // A clone that fails is a failure, not a skip. Silently measuring fewer
     // repositories is how a green run starts meaning nothing.
-    result = {
-      name: entry.name,
-      sha: entry.sha,
-      ok: false,
-      comparable: true,
-      error: error instanceof Error ? error.message.split('\n')[0] : String(error),
-    };
+    result.ok = false;
+    result.error = error instanceof Error ? error.message.split('\n')[0] : String(error);
+    process.stderr.write(' FAILED\n');
   }
-  process.stderr.write(
-    result.error === undefined
-      ? ` ${result.comparable ? `${result.metrics.precision}/${result.metrics.recall}` : 'no module edges'}\n`
-      : ` FAILED\n`,
-  );
   results.push(result);
 }
 
 rmSync(workspace, { recursive: true, force: true });
 
 const failures = results.filter((result) => !result.ok);
-const report = {
+const summary = {
   repositories: results.length,
   passed: results.length - failures.length,
-  notComparable: results.filter((result) => result.comparable === false).length,
-  failures: failures.map((result) => ({ name: result.name, ...(result.error === undefined ? {} : { error: result.error }), ...(result.metrics === undefined ? {} : { metrics: Object.fromEntries(FIELDS.map((field) => [field, result.metrics[field] ?? 'n/a'])) }) })),
-  results: results.map((result) => ({ name: result.name, sha: result.sha, ...(result.error === undefined ? {} : { error: result.error }), ...(result.metrics === undefined ? {} : { metrics: Object.fromEntries(FIELDS.map((field) => [field, result.metrics[field] ?? 'n/a'])) }) })),
+  graphNotComparable: results.filter((result) => result.oracles?.graph?.comparable === false).length,
+  entryNotComparable: results.filter((result) => result.oracles?.entry?.comparable === false).length,
 };
 
 if (asJson) {
-  process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+  process.stdout.write(`${JSON.stringify({ ...summary, results }, null, 2)}\n`);
 } else {
   const width = Math.max(...results.map((result) => result.name.length));
   for (const result of results) {
-    const verdict = result.error !== undefined ? `FAILED: ${result.error}` : result.comparable ? `${result.metrics.precision} / ${result.metrics.recall}` : 'no module edges to compare';
     const mark = result.ok ? 'ok  ' : 'LOW ';
-    process.stdout.write(`${mark} ${result.name.padEnd(width)}  ${verdict}\n`);
+    if (result.error !== undefined) {
+      process.stdout.write(`${mark} ${result.name.padEnd(width)}  FAILED: ${result.error}\n`);
+      continue;
+    }
+    const { graph, entry } = result.oracles;
+    const declared = entry.metrics['declared entry points'] === 'n/a' ? '' : ` of ${entry.metrics['declared entry points']} declared`;
+    process.stdout.write(
+      `${mark} ${result.name.padEnd(width)}  graph ${graph.text.padEnd(16)} entry ${entry.text}${declared}\n`,
+    );
   }
   process.stdout.write(
-    `\n${report.passed}/${report.repositories} at 100% precision and recall` +
-      (report.notComparable > 0 ? `, ${report.notComparable} without module edges to compare` : '') +
+    `\n${summary.passed}/${summary.repositories} at 100% precision and recall on both oracles` +
+      (summary.graphNotComparable > 0 ? `, ${summary.graphNotComparable} without module edges to compare` : '') +
       '\n',
   );
 }

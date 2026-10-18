@@ -425,6 +425,12 @@ enforced: `npm run api:check` fails when the exported surface changes without th
 lock being updated, and `npm run stability:check` fails when this file names a
 symbol the packages do not export.
 
+The lock covers both halves of a package's surface. Runtime exports come from the
+built module; **type-only exports come from the generated `.d.ts` read through
+the TypeScript compiler**, because a renamed type has no runtime binding and
+would otherwise change the package without changing anything a check could see.
+`core` has 161 exports and 112 exported types.
+
 ## Programmatic API
 
 ```typescript
@@ -719,7 +725,7 @@ Eight third-party repositories are therefore pinned by commit SHA in
 
 ```bash
 npm run benchmark:public        # clone, measure, delete
-npm run ground-truth:public     # the same oracle, on the same set
+npm run ground-truth:public     # both oracles, on the same set
 ```
 
 | Repository | Shape | Files | Resolution | Path escapes | Determinism | Precision / recall |
@@ -742,6 +748,26 @@ precision and recall are undefined there rather than 100%.
 CI runs this as `public repositories`, on pushes to `master` and weekly, but not
 on pull requests: it needs the network, and a slow clone should not block a
 change that can be reviewed without it.
+
+### Entry points that are declared rather than guessed
+
+Four sources produce entry points: declared `package.json` fields, npm scripts
+that name a file, naming conventions, and behavioural signals. Only the first is
+a fact — when a manifest says `"bin": { "agent-context": "./dist/bin.js" }`, the
+file that command runs does not depend on anything in this package.
+
+```bash
+npm run ground-truth:entry
+```
+
+Measured: **14 declared entry files on this repository, 82 across the pinned set,
+48 of them in a pnpm workspace where several packages declare more than one
+command. Precision 100%, recall 100%.**
+
+The other three sources are heuristics, and this project has no oracle for
+heuristics — a hand-labelled corpus would measure whoever labelled it, and a
+second heuristic written independently would measure itself. The tool says so on
+every run rather than printing a number it cannot defend.
 
 ## Measured, not asserted
 

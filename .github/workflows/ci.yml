@@ -102,6 +102,11 @@ jobs:
       - run: npm run build
       - name: Compare the graph with the compiler
         run: node tools/ground-truth.mjs
+      # Entry points declared in a manifest are a fact, so they can be checked
+      # against the manifest. The heuristics that find the other entry points
+      # cannot be, and the tool says so rather than reporting a number.
+      - name: Compare declared entry points with the manifests
+        run: node tools/ground-truth-entry.mjs
 
   audit:
     name: audit

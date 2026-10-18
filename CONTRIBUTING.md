@@ -54,7 +54,8 @@ Three of them exist because the analyzer cannot be trusted to grade itself:
 | Tool | Question it answers |
 | --- | --- |
 | `tools/ground-truth.mjs` | Does the dependency graph agree with the TypeScript compiler? |
-| `tools/ground-truth-public.mjs` | Does it agree on other people's code, not just ours? |
+| `tools/ground-truth-entry.mjs` | Do the declared entry points agree with the manifests? |
+| `tools/ground-truth-public.mjs` | Do both agree on other people's code, not just ours? |
 | `tools/benchmark.mjs --public` | What does it do on repositories we did not write? |
 
 `tools/benchmark-repos.json` pins those third-party repositories by commit SHA.

@@ -15,6 +15,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { exportedTypeNames } from './exported-types.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const write = process.argv.includes('--write');
@@ -36,17 +37,28 @@ for (const pkg of PACKAGES) {
   }
   const module = await import(`file://${entry.replace(/\\/g, '/')}`);
   const actual = Object.keys(module).sort();
+  // Types have no runtime binding, so they are read from the declaration file
+  // instead. Without this half a renamed type or interface changed the package
+  // without changing anything the lock could see.
+  const types = exportedTypeNames(path.join(root, pkg.entry.replace(/\.js$/, '.d.ts')));
   const lockPath = path.join(root, pkg.lock);
 
   if (write) {
-    const previous = existsSync(lockPath) ? JSON.parse(readFileSync(lockPath, 'utf8')).exports : [];
-    const removed = previous.filter((name) => !actual.includes(name));
-    const added = actual.filter((name) => !previous.includes(name));
-    writeFileSync(lockPath, `${JSON.stringify({ package: pkg.name, exports: actual }, null, 2)}\n`, 'utf8');
+    const previousLock = existsSync(lockPath) ? JSON.parse(readFileSync(lockPath, 'utf8')) : { exports: [], types: [] };
+    const removed = previousLock.exports.filter((name) => !actual.includes(name));
+    const added = actual.filter((name) => !previousLock.exports.includes(name));
+    const typesRemoved = (previousLock.types ?? []).filter((name) => !types.includes(name));
+    const typesAdded = types.filter((name) => !(previousLock.types ?? []).includes(name));
+    writeFileSync(
+      lockPath,
+      `${JSON.stringify({ package: pkg.name, exports: actual, types }, null, 2)}\n`,
+      'utf8',
+    );
+    const counts = `+${added.length} -${removed.length} values, +${typesAdded.length} -${typesRemoved.length} types`;
     console.log(
-      previous.length === 0
-        ? `  created ${pkg.lock} (${actual.length} exports)`
-        : `  updated ${pkg.lock} (+${added.length} -${removed.length})`,
+      previousLock.exports.length === 0
+        ? `  created ${pkg.lock} (${actual.length} exports, ${types.length} types)`
+        : `  updated ${pkg.lock} (${counts})`,
     );
     continue;
   }
@@ -61,15 +73,19 @@ for (const pkg of PACKAGES) {
 
   const removed = locked.exports.filter((name) => !actual.includes(name));
   const added = actual.filter((name) => !locked.exports.includes(name));
+  const typesRemoved = (locked.types ?? []).filter((name) => !types.includes(name));
+  const typesAdded = types.filter((name) => !(locked.types ?? []).includes(name));
 
-  if (added.length === 0 && removed.length === 0) {
-    console.log(`  ok   ${pkg.name}: ${actual.length} exports unchanged`);
+  if (added.length === 0 && removed.length === 0 && typesAdded.length === 0 && typesRemoved.length === 0) {
+    console.log(`  ok   ${pkg.name}: ${actual.length} exports, ${types.length} types, unchanged`);
     continue;
   }
   drifted += 1;
   console.error(`  DRIFT ${pkg.name}`);
-  for (const name of removed) console.error(`    removed: ${name}`);
-  for (const name of added) console.error(`    added:   ${name}`);
+  for (const name of removed) console.error(`    removed:        ${name}`);
+  for (const name of added) console.error(`    added:          ${name}`);
+  for (const name of typesRemoved) console.error(`    removed type:   ${name}`);
+  for (const name of typesAdded) console.error(`    added type:     ${name}`);
   console.error('');
   console.error('  The public API is a contract (see STABILITY.md). If the change is');
   console.error('  intentional, record it in MIGRATION.md and run:');

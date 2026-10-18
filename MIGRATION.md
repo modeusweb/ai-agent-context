@@ -1,5 +1,73 @@
 # Migration guide
 
+## v0.14.0
+
+Tooling only. No behaviour change, no rescan required, nothing to migrate.
+
+### Declared entry points are now measured
+
+`npm run ground-truth:entry` compares the entry points an analyzer reports with
+the ones its package manifests declare, read by the tool's own manifest reader.
+This is a real cross-check for the declared subset: when a manifest says
+`"bin": { "agent-context": "./dist/bin.js" }` then the file that command runs is
+a fact, not a judgement.
+
+**Measured:** 14 declared entry files on this repository, 82 across the pinned
+public set, 48 of them in a pnpm workspace where several packages declare more
+than one command. Precision 100%, recall 100% on both.
+
+CI gains a step, and `npm run ground-truth:public` now runs both oracles per
+repository.
+
+**What is still not measured, and is now stated rather than omitted.** Entry
+points found by npm script reference, naming convention or behavioural signal are
+heuristics, and this project has no oracle for heuristics — a hand-labelled corpus
+would measure the labeller. The tool prints this on every run instead of a
+number it cannot defend, and the roadmap records it as permanently unmeasured.
+
+### The API lock now covers types
+
+`STABILITY.md` said every exported symbol was recorded in the lock and that a test
+and a CI job fail when the real surface differs. That was true for values and not
+for types: the lock came from `Object.keys(await import(entry))`, which cannot see
+a type. `type Confidence` could be renamed or removed with every check green.
+
+- The lock gains a `types` array per package: **41 in `core` as first
+  implemented, 112 in fact**, 117 in `cli`, 15 in `mcp`.
+- The first implementation under-counted because `export type { X } from './y'`
+  produces the same alias symbol as `export { X } from './y'`, and an alias was
+  being read as a value declaration. Type names are now read from the generated
+  `.d.ts` through the TypeScript compiler, which also resolves the `export *`
+  chains the barrel hides.
+
+**No action required.** This adds checks; it does not change any signature.
+
+### Two things STABILITY.md promised and did not deliver
+
+Found by making the lock honest, not by inspection:
+
+- **`readPersistedContext` and `contextFileNames` are now stable.** The schema
+  section tells consumers to check `schemaVersion` before reading a committed
+  `.agent/` directory and names these two functions for the job, while the
+  checker had them on an exemption list. They are now promised and verified.
+- **The exported model types are now stable**, on the same terms as the methods
+  that return them: fields may be added in a minor release, and a field may be
+  removed or change its meaning only in a major one. `McpServerOptions` and
+  `McpTransport` were named as stable and were not visible to the checker at all,
+  because it scraped identifiers out of the barrel declaration file where those
+  names do not appear.
+
+### What was not promoted
+
+The audit for 1.0 was going to promote document builders, detectors, the
+pipeline and the graph internals to stable. It did not: each is a second route to
+a result `AgentContext` already returns, so promoting them would widen the
+promise without adding capability. Language adapters stay unstable for the same
+reason in reverse — an extension point that is promised becomes one that cannot
+change.
+
+---
+
 ## v0.13.0
 
 A parser fix that changes what the analyzer sees. **Re-scan your repository**:

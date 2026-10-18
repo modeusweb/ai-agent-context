@@ -544,6 +544,80 @@ independent exists for the others.
 
 ---
 
+## v0.14.0 — Measuring what is a fact (in progress)
+
+**Goal:** stop calling heuristics metrics.
+
+**The problem this release solved.** The metrics table listed "entry-point and
+dependency precision/recall" as one row with one verdict. Only half of it had
+ever been measured. The other half — entry points — had been marked "not
+measured" since v0.6 and stayed that way, which is indistinguishable from
+neglect.
+
+**Implemented**
+
+- **`tools/ground-truth-entry.mjs`** compares declared entry points with the
+  manifests that declare them, using its own manifest reader. Where
+  `tools/ground-truth.mjs` asks the TypeScript compiler, this asks `package.json`.
+- Two oracles now run per pinned repository in `ground-truth-public.mjs`, and a
+  CI step for the local one.
+
+**Measured:** 14 declared entry files on this repository, 82 across the pinned
+set, 48 of them in a pnpm workspace where several packages declare more than one
+command. Precision 100%, recall 100% everywhere.
+
+**The part that is still not measured, and will not be.** Entry points found by
+npm script reference, by naming convention, or by behavioural signal are
+heuristics. A hand-labelled corpus would measure whoever labelled it, and a
+second heuristic written independently would measure itself. The tool prints
+this as a limitation on every run rather than reporting a number it cannot
+defend, and the metrics table records it as permanently unmeasured.
+
+**The API lock did not cover half of what it claimed.** `STABILITY.md` said every
+exported symbol of every package was recorded in the lock and that a test and a CI
+job fail when the real surface differs. The lock was built from
+`Object.keys(await import(entry))`, which sees values at runtime and cannot see a
+type: `type Confidence` could be renamed or removed and every check stayed green
+while the package broke every consumer that used it. Type exports are now read
+from the generated `.d.ts` through the TypeScript compiler, which also resolves
+the `export *` chains that a regular expression would miss.
+
+That count is not a detail. The first implementation reported 41 type exports in
+`core`; the correct answer is **112**. The filtering bug was that
+`export type { X } from './y'` produces the same alias symbol as
+`export { X } from './y'`, and an alias was being read as "this is a value".
+
+Making the lock honest immediately exposed two more things:
+
+- **`STABILITY.md` promised `McpServerOptions` and `McpTransport`, which are
+  exported as types.** They had been invisible to the checker, which scraped
+  identifiers out of the barrel declaration file — and those names live in
+  `dist/server.d.ts`, not in `dist/index.d.ts`.
+- **`readPersistedContext` and `contextFileNames` were in the checker's exclusion
+  list**, so the document pointed readers at them while promising nothing about
+  them. The schema section said to check the version before reading a committed
+  `.agent/` directory and named the two functions for the job. They are now
+  stable, and the exported model types are promised on the same terms as the
+  methods that return them.
+
+**What was not promoted, and why.** The audit was supposed to promote a few
+internal exports. It did not, because everything they offer is a second route to
+a result the facade already returns: the document builders duplicate
+`getArchitecture()`, the detectors duplicate fields on `getRepository()`, the
+pipeline duplicates `load()` plus `scan()`, and the graph internals duplicate
+`getDependencies()` and `getChangeImpact()`. Promoting them would widen the
+promise without adding capability. Language adapters are the deliberate exception
+in the other direction — an extension point that is promised becomes an
+extension point that cannot change, so supporting a second language remains a
+fork and `STABILITY.md` says so.
+
+Two scope rules are declared rather than assumed: `types` fields and wildcard
+exports are excluded, because the analyzer deliberately does not report either
+as a runtime entry point, and measuring them would report a decision as an
+accuracy.
+
+---
+
 ## v1.0 — Stable repository intelligence (in progress)
 
 **Goal:** a stable release with a proven API, mature integrations and
@@ -570,18 +644,16 @@ measurable value for teams.
 2. ~~Add public repositories to the benchmark, pinned by commit SHA.~~ Done in
    0.13.0: eight repositories, all at 100% resolution and, where there are module
    edges to compare, 100% precision and recall.
-3. **Re-audit the exported surface against STABILITY.md.** The internal exports
-   are named as such, but promoting a few of them — the document builders and the
-   language adapters are the most likely candidates for embedders — would make the
-   package more useful without widening the promise by accident.
+3. ~~Re-audit the exported surface against STABILITY.md.~~ Audited in 0.14.0, and
+   the answer was mostly "promote fewer than expected", plus one mechanism that
+   did not do what it claimed.
 4. **Decide whether `.agent/` schema v2 is worth the migration cost.** Nothing
    currently needs it; the policy exists so the decision does not have to be
    improvised when something does.
-5. **Decide what to do about entry-point precision and recall.** The compiler is
-   an oracle for module resolution and says nothing about entry points. Either
-   hand-label a corpus and measure, or state it as a permanent limitation in the
-   metrics table. Leaving it as a metric marked "not measured" in v1.0 would be
-   the one part of the table that looks like an oversight.
+5. ~~Decide what to do about entry-point precision and recall.~~ Decided in
+   0.14.0, and split rather than resolved: declared entry points are a fact and
+   are now measured; the naming and signal heuristics have no oracle and are now
+   a stated limitation instead of a metric marked "not measured".
 
 ### Release criteria
 
@@ -639,7 +711,9 @@ it is only claimed.
 | cold/warm scan, parsed/reused | measured | `row.scan` |
 | evidence coverage: share of judgements citing at least one source | measured since 0.10.0 | `summary.trust.coveragePercent`, CI gate |
 | determinism: byte-identical context for one commit | measured since 0.10.0 | `summary.trust.nonDeterministic`, CI gate |
-| entry-point and dependency precision/recall | measured since 0.12.0, on third-party code since 0.13.0 | `npm run ground-truth`, `npm run ground-truth:public`, CI gates: 100% precision and recall against the TypeScript compiler |
+| dependency graph precision/recall | measured since 0.12.0, on third-party code since 0.13.0 | `npm run ground-truth`, `npm run ground-truth:public`, CI gates: 100% precision and recall against the TypeScript compiler |
+| declared entry-point precision/recall | measured since 0.14.0 | `npm run ground-truth:entry`, CI gate: 100% precision and recall against the manifests |
+| entry points found by naming or behaviour | **not measured, permanently** | no oracle exists; see below |
 
 **How the newer metrics are computed.** Evidence coverage walks the generated
 documents and counts objects carrying a numeric `confidence`: exactly the
@@ -681,6 +755,24 @@ means the headline resolution rate is overstated.
 repeats this over the eight pinned repositories in `tools/benchmark-repos.json`,
 which is where the nested-generic parser defect was found: every measurement on
 this repository had passed it.
+
+**Declared entry points are a fact, so they are measured too.** Entry points come
+from four sources. Three of them are heuristics — npm script references, naming
+conventions, behavioural signals — and this project has no oracle for heuristics:
+a corpus labelled by hand would measure the labeller. The fourth is different in
+kind. When a manifest says `"bin": { "agent-context": "./dist/bin.js" }` then the
+file that command runs is not a judgement, it exists independently of anything in
+`packages/core`. `npm run ground-truth:entry` reads the manifests with its own
+code and compares.
+
+Measured: 14 declared entry files on this repository and 82 across the pinned
+set, including 48 in a pnpm workspace with several commands per package.
+**Precision 100%, recall 100%** on both. `types` fields and wildcard exports are
+excluded, because the analyzer deliberately does not report either as a runtime
+entry point and measuring them would report a decision rather than an accuracy.
+
+The remaining two sources are recorded as **not measured, permanently** rather
+than left as a metric that looks like an oversight.
 
 **What this does not certify.** The compiler is an oracle for module resolution
 only. It says nothing about entry points, roles, conventions or decisions, which

@@ -33,5 +33,22 @@
     "toolByName",
     "unsupportedProtocolVersion",
     "validateToolArguments"
+  ],
+  "types": [
+    "ClientPreset",
+    "ClientPresetId",
+    "JsonRpcErrorObject",
+    "JsonRpcRequest",
+    "JsonSchema",
+    "McpServerOptions",
+    "McpTransport",
+    "MemoryTransport",
+    "ProtocolEra",
+    "ProtocolVersion",
+    "RenderOptions",
+    "ToolCallResult",
+    "ToolDefinition",
+    "ToolHandlerDependencies",
+    "ValidationResult"
   ]
 }
