@@ -1309,12 +1309,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 15,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 15,
+        "historicalChanges": 16,
+        "lastChanged": "2026-10-18",
+        "recentChanges": 16,
         "topContributors": [
           {
-            "commits": 87,
+            "commits": 89,
             "name": "modeusweb"
           }
         ]
@@ -1851,12 +1851,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 16,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 16,
+        "historicalChanges": 17,
+        "lastChanged": "2026-10-18",
+        "recentChanges": 17,
         "topContributors": [
           {
-            "commits": 20,
+            "commits": 21,
             "name": "modeusweb"
           }
         ]
@@ -2473,12 +2473,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 14,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 14,
+        "historicalChanges": 15,
+        "lastChanged": "2026-10-18",
+        "recentChanges": 15,
         "topContributors": [
           {
-            "commits": 30,
+            "commits": 32,
             "name": "modeusweb"
           }
         ]
@@ -3131,12 +3131,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 9,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 9,
+        "historicalChanges": 10,
+        "lastChanged": "2026-10-18",
+        "recentChanges": 10,
         "topContributors": [
           {
-            "commits": 12,
+            "commits": 13,
             "name": "modeusweb"
           }
         ]
@@ -3250,21 +3250,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "0.12.0"
+        "version": "0.12.1"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "0.12.0"
+        "version": "0.12.1"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "0.12.0"
+        "version": "0.12.1"
       }
     ],
     "workspaceGlobs": [

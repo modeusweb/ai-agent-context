@@ -107,14 +107,23 @@ try {
 
   console.log('installing into a clean project');
   writeFileSync(path.join(consumer, 'package.json'), JSON.stringify({ name: 'smoke-consumer', version: '1.0.0' }, null, 2));
+  const coreTarball = packed.find((name) => /^ai-agent-context-core-/.test(name));
   const cliTarball = packed.find((name) => /^ai-agent-context-\d/.test(name));
   const mcpTarball = packed.find((name) => name.startsWith('ai-agent-context-mcp-'));
+  check('core tarball found', coreTarball !== undefined, `packed: ${packed.join(', ')}`);
   check('cli tarball found', cliTarball !== undefined, `packed: ${packed.join(', ')}`);
   check('mcp tarball found', mcpTarball !== undefined, `packed: ${packed.join(', ')}`);
-  if (packed.length !== 3 || cliTarball === undefined || mcpTarball === undefined) {
-    throw new Error('cannot continue without both packed tarballs');
+  if (packed.length !== 3 || coreTarball === undefined || cliTarball === undefined || mcpTarball === undefined) {
+    throw new Error('cannot continue without all three packed tarballs');
   }
-  const installed = npm(['install', path.join(tarballs, cliTarball), path.join(tarballs, mcpTarball)], consumer);
+  // All three tarballs are installed together so npm satisfies the CLI's and
+  // adapter's dependency on core from the local pack output instead of the registry.
+  // That is what the artifacts under test actually are, and it removes a race with
+  // registry propagation that failed the release commit for no real reason.
+  const installed = npm(
+    ['install', path.join(tarballs, coreTarball), path.join(tarballs, cliTarball), path.join(tarballs, mcpTarball)],
+    consumer,
+  );
   const installOk = installed.status === 0;
   check('install packed tarballs', installOk, installed.stdout.slice(-200));
 
