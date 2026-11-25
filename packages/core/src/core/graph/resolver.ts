@@ -69,7 +69,7 @@ export interface ResolverInput {
   /** Path aliases collected from tsconfig files. */
   aliases: AliasEntry[];
   /** Workspace package name → package directory and entry candidates. */
-  workspacePackages: Map<string, { directory: string; entries: string[] }>;
+  workspacePackages: Map<string, { directory: string; entries: string[]; declared?: string[] }>;
   /**
    * Every `package.json` of the repository, with the dependency ranges it
    * declares. A package that declares a neighbouring package's name with a
@@ -262,7 +262,12 @@ export class ImportResolver {
       // file. Until 1.1.0 such an import was dropped as an asset import.
       for (const [name, info] of this.workspacePackages) {
         if (info.directory !== base) continue;
-        const entry = this.resolveWorkspaceEntry(name);
+        // The manifest decides what the package's entry is. The `src/index` and
+        // `index` fallbacks are for a manifest that declares nothing: where it
+        // declares build output, the source index is not what an import of the
+        // package gets, and an edge to it would be one the compiler does not draw.
+        const candidates = info.declared !== undefined && info.declared.length > 0 ? info.declared : info.entries;
+        const entry = candidates.map((candidate) => withExtensions(candidate, this.filePaths)).find((found) => found !== null) ?? null;
         if (entry !== null) {
           return {
             kind: 'workspace-package',
@@ -273,7 +278,7 @@ export class ImportResolver {
             attempts: [],
           };
         }
-        const pointsAtBuildOutput = info.entries.some((candidate) => /(^|\/)(dist|build|out)\//.test(candidate));
+        const pointsAtBuildOutput = candidates.some((candidate) => /(^|\/)(dist|build|out)\//.test(candidate));
         return unresolved(
           specifier,
           pointsAtBuildOutput

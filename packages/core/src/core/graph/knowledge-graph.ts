@@ -132,8 +132,8 @@ export function buildSymbols(
 export function resolverWorkspacePackages(
   workspace: WorkspaceInfo,
   filePaths: ReadonlySet<string>,
-): Map<string, { directory: string; entries: string[] }> {
-  const result = new Map<string, { directory: string; entries: string[] }>();
+): Map<string, { directory: string; entries: string[]; declared: string[] }> {
+  const result = new Map<string, { directory: string; entries: string[]; declared: string[] }>();
   for (const entry of workspace.packages) {
     const candidates: string[] = [];
     for (const declared of entry.entries) {
@@ -141,11 +141,32 @@ export function resolverWorkspacePackages(
       if (!/\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|json)$/.test(declared.value) && !declared.value.startsWith('.')) continue;
       candidates.push(join(entry.path, declared.value.replace(/^\.\//, '')));
     }
+    // What an import of the package *itself* gets, kept apart from the fallbacks
+    // below. `main`, `module`, `browser` and `types` define it. `bin` is an
+    // executable, and a value under `exports` is as likely to be a subpath
+    // (`"./package.json": "./package.json"`) as the root, so neither may stand
+    // for it. Where nothing else declares an entry, the root export does: the
+    // adapter flattens `exports` with its keys sorted, and `"."` sorts first.
+    const declared: string[] = [];
+    for (const item of entry.entries) {
+      if (item.value.includes('*')) continue;
+      if (!/\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|json)$/.test(item.value) && !item.value.startsWith('.')) continue;
+      if (item.field === 'main' || item.field === 'module' || item.field === 'browser' || item.field === 'types') {
+        declared.push(join(entry.path, item.value.replace(/^\.\//, '')));
+      }
+    }
+    if (declared.length === 0) {
+      const rootExport = entry.entries.find(
+        (item) => item.field === 'exports' && !item.value.includes('*') && item.value.startsWith('.'),
+      );
+      if (rootExport !== undefined) declared.push(join(entry.path, rootExport.value.replace(/^\.\//, '')));
+    }
     candidates.push(join(entry.path, 'src/index'), join(entry.path, 'index'), join(entry.path, 'src/main'));
     const resolvable = candidates.filter((candidate) => withExtensions(candidate, filePaths) !== null);
     result.set(entry.name, {
       directory: normalizeRelative(entry.path),
       entries: resolvable.length > 0 ? resolvable : candidates,
+      declared,
     });
   }
   return result;

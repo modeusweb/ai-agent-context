@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-11-25T12:45:11.010Z",
+  "generatedAt": "2026-11-25T13:21:37.285Z",
   "node": "v24.22.1",
   "summary": {
     "repositories": 6,
-    "files": 226,
+    "files": 227,
     "imports": {
       "resolved": 532,
-      "excludedOutput": 40,
+      "excludedOutput": 42,
       "actionableUnresolved": 0,
       "pathEscapes": 0,
       "resolutionRate": 1
     },
     "graph": {
-      "moduleEdges": 34,
+      "moduleEdges": 33,
       "cycles": 3
     },
     "trust": {
@@ -39,10 +39,10 @@
       },
       "over64Kb": {
         "modules": 3,
-        "sourceBytes": 803000,
-        "explainBytes": 47882,
-        "ratio": 0.0596,
-        "savedPercent": 94
+        "sourceBytes": 810611,
+        "explainBytes": 48135,
+        "ratio": 0.0594,
+        "savedPercent": 94.1
       }
     }
   },
@@ -73,14 +73,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 202,
-        "warmMs": 93,
+        "coldMs": 211,
+        "warmMs": 123,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 76,
+        "ms": 83,
         "bytes": 4832
       },
       "trust": {
@@ -156,14 +156,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 204,
-        "warmMs": 99,
+        "coldMs": 150,
+        "warmMs": 102,
         "parsed": 16,
         "warmParsed": 0,
         "warmReused": 16
       },
       "compact": {
-        "ms": 84,
+        "ms": 88,
         "bytes": 9037
       },
       "trust": {
@@ -257,14 +257,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 117,
-        "warmMs": 91,
+        "coldMs": 146,
+        "warmMs": 107,
         "parsed": 14,
         "warmParsed": 0,
         "warmReused": 14
       },
       "compact": {
-        "ms": 80,
+        "ms": 94,
         "bytes": 8227
       },
       "trust": {
@@ -346,14 +346,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 114,
-        "warmMs": 82,
+        "coldMs": 110,
+        "warmMs": 94,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 66,
+        "ms": 94,
         "bytes": 5060
       },
       "trust": {
@@ -423,14 +423,14 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 171,
-        "warmMs": 83,
+        "coldMs": 127,
+        "warmMs": 90,
         "parsed": 10,
         "warmParsed": 0,
         "warmReused": 10
       },
       "compact": {
-        "ms": 74,
+        "ms": 81,
         "bytes": 8043
       },
       "trust": {
@@ -482,7 +482,7 @@
     },
     {
       "repository": "ai-agent-context",
-      "files": 172,
+      "files": 173,
       "sourceFiles": 106,
       "parse": {
         "partial": 0,
@@ -492,7 +492,7 @@
       "modules": 13,
       "imports": {
         "resolved": 486,
-        "excludedOutput": 40,
+        "excludedOutput": 42,
         "actionableUnresolved": 0,
         "pathEscapes": 0,
         "resolutionRate": 1
@@ -517,35 +517,35 @@
           "reason": "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
         },
         {
-          "bucket": "missing",
+          "bucket": "excluded-build-output",
           "file": "packages/core/test/config.test.ts",
-          "specifier": "../dist/index.js",
-          "reason": "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+          "specifier": "..",
+          "reason": "\"packages/core\" is the directory of package \"@ai-agent-context/core\", whose manifest points at build output the analysis excludes"
         },
         {
           "bucket": "missing",
-          "file": "packages/core/test/conventions.test.ts",
+          "file": "packages/core/test/config.test.ts",
           "specifier": "../dist/index.js",
           "reason": "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
         }
       ],
       "graph": {
-        "moduleEdges": 20,
-        "crossPackageEdges": 6,
+        "moduleEdges": 19,
+        "crossPackageEdges": 5,
         "externalPackages": 13,
         "cycles": 2,
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 1003,
-        "warmMs": 316,
-        "parsed": 172,
+        "coldMs": 1277,
+        "warmMs": 518,
+        "parsed": 173,
         "warmParsed": 0,
-        "warmReused": 172
+        "warmReused": 173
       },
       "compact": {
-        "ms": 291,
-        "bytes": 20622
+        "ms": 252,
+        "bytes": 20635
       },
       "trust": {
         "judgements": 168,
@@ -554,7 +554,7 @@
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "2607ed3e"
+        "contextHash": "01df6bd0"
       },
       "tokenBudget": {
         "under8Kb": {
@@ -573,29 +573,29 @@
         },
         "over64Kb": {
           "modules": 3,
-          "sourceBytes": 803000,
-          "explainBytes": 47882,
-          "ratio": 0.0596,
-          "savedPercent": 94
+          "sourceBytes": 810611,
+          "explainBytes": 48135,
+          "ratio": 0.0594,
+          "savedPercent": 94.1
         },
         "largest": [
           {
             "module": "packages/core/src",
-            "bytes": 469108,
+            "bytes": 470917,
             "explainBytes": 16640,
-            "ratio": 0.0355
+            "ratio": 0.0353
           },
           {
             "module": "packages/core/test",
-            "bytes": 189938,
-            "explainBytes": 20228,
-            "ratio": 0.1065
+            "bytes": 195740,
+            "explainBytes": 20434,
+            "ratio": 0.1044
           },
           {
             "module": "tools",
             "bytes": 143954,
-            "explainBytes": 11014,
-            "ratio": 0.0765
+            "explainBytes": 11061,
+            "ratio": 0.0768
           },
           {
             "module": "packages/mcp/test",
