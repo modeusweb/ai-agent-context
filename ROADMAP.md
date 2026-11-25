@@ -960,6 +960,60 @@ followed by the publish sequence is the entire process.
 
 ---
 
+## v1.2 and beyond — what the 1.1.0 audit leaves open
+
+Ordered by what the audit measured, not by what is interesting to build.
+
+### P0 — Make the stricter measurement a gate
+
+- **Gate the file-level oracle.** `tools/ground-truth.mjs` now compares at the
+  level of files, where no lift to modules can hide an import. It is reported,
+  not enforced: CI still fails only on the module level, which is the level
+  that could not see a missing `require()`.
+- **Close the two "not compared" buckets.** The oracle skips every
+  dot-directory and does not read `.agent/config.json`, so `outsideConfiguration`
+  (43 pairs here) and `outsideOracleWalk` (2 in `changesets`) are counted
+  rather than compared. Neither can be gated until both sides read the same
+  tree.
+- **Workspace `exports` maps.** `@scope/pkg/sub` resolves to the package, not
+  to the file, so navigation across packages is package-level. This is the
+  defect recorded since v0.18.0 (`playwright`: precision 69.8%, recall 91.1%).
+- **Components are unparsed.** A `.vue` or `.svelte` file is a source file the
+  analyzer cannot read, so imports inside it are invisible and `unused` lowers
+  its confidence to 0.6 in such repositories.
+
+### P1 — The warm path
+
+Measured on a 2,953-file repository: cold scan 8.2 s, and **every warm command
+3.0 s** however little changed, of a 0.26 s process start.
+
+- About 1.3 s is the pipeline: module detection normalises each file's path
+  against every module candidate (437 ms), test-convention detection compares
+  every test file with every file (355 ms), and the walk costs 281 ms. Indexing
+  directories once removes all three.
+- The rest is thousands of small cache reads and Node's start-up. One
+  consolidated cache file instead of one file per source file is the larger half.
+- An MCP session that never ran `scan` has no parse cache at all, because a
+  query writes nothing: its first call of every session is a cold scan.
+
+### P2 — Capabilities the audit found demand for
+
+- MCP tools for the new navigation (`get_file_outline`, `find_references`,
+  `find_unused_exports`): core and the CLI have them, the server does not.
+- Usage lines inside the importing files; today a reference is the import line.
+- `impact` at the level of a file; today it is module-level, and the file
+  closure is only in `outline.importers`.
+- `git blame` per line, a route inventory (routes are extracted and used only as
+  an entry-point signal), and declared-but-never-imported dependencies.
+- A token budget on every tool, and `structuredContent` with `outputSchema`
+  as the 2026-07-28 specification defines them.
+
+### P3 — Ecosystem
+
+- A Python adapter first: the adapter contract exists, and Python is the
+  largest audience the analyzer cannot read.
+- Editor integration, a remote transport, and a shared team registry.
+
 ## After 1.0
 
 Priority directions are decided by usage data:
