@@ -506,6 +506,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/package-directory.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/package-directory.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/test/policy.test.ts"
         }
       ],
@@ -1517,12 +1529,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 22,
+        "historicalChanges": 23,
         "lastChanged": "2026-11-25",
-        "recentChanges": 1,
+        "recentChanges": 2,
         "topContributors": [
           {
-            "commits": 115,
+            "commits": 117,
             "name": "modeusweb"
           }
         ]
@@ -2646,7 +2658,6 @@
       "basis": "directory",
       "boundaries": [],
       "dependsOn": [
-        "@ai-agent-context/core",
         "tools"
       ],
       "entryPoints": [
@@ -2673,6 +2684,7 @@
         "packages/core/test/language.test.ts",
         "packages/core/test/module-loads.test.ts",
         "packages/core/test/navigation.test.ts",
+        "packages/core/test/package-directory.test.ts",
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
         "packages/core/test/reported-numbers.test.ts",
@@ -2706,6 +2718,7 @@
         "packages/core/test/language.test.ts",
         "packages/core/test/module-loads.test.ts",
         "packages/core/test/navigation.test.ts",
+        "packages/core/test/package-directory.test.ts",
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
         "packages/core/test/reported-numbers.test.ts",
@@ -2715,17 +2728,17 @@
         "packages/core/test/template-literals.test.ts",
         "packages/core/test/verify-baseline.test.ts"
       ],
-      "files": 31,
+      "files": 32,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 21,
+        "historicalChanges": 22,
         "lastChanged": "2026-11-25",
-        "recentChanges": 1,
+        "recentChanges": 2,
         "topContributors": [
           {
-            "commits": 48,
+            "commits": 49,
             "name": "modeusweb"
           }
         ]
@@ -2862,6 +2875,7 @@
         "packages/core/test/language.test.ts",
         "packages/core/test/module-loads.test.ts",
         "packages/core/test/navigation.test.ts",
+        "packages/core/test/package-directory.test.ts",
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
         "packages/core/test/reported-numbers.test.ts",
@@ -3503,7 +3517,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 63,
+    "entryPoints": 64,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,

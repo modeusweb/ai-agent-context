@@ -53,7 +53,7 @@
         "path": "STABILITY.md"
       },
       {
-        "hash": "d498e12be7be011a3ea4f7d5c0dd3c84c4b8e00415171d37a6e695644d9d8ab5",
+        "hash": "09d320dd47fafa2682cd83e241ec1fb66ca17404a2fe22453e3b4d7a05ff349c",
         "kind": "config",
         "language": "json",
         "module": null,
@@ -529,7 +529,7 @@
         "path": "packages/core/src/core/graph/aliases.ts"
       },
       {
-        "hash": "99405e7984f070140ac7ce10f0310b4fa75ba61ccab32657f9778d61704eb841",
+        "hash": "49b0ed6056fa0495a05d8214f1801649bb745988914a58b015539ffaf6b56f5b",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/src",
@@ -543,7 +543,7 @@
         "path": "packages/core/src/core/graph/modules.ts"
       },
       {
-        "hash": "d1e6619a73e722ee69dbf1ae494deeb4ea0a6ad424fdae7917989c9f64fb7d7d",
+        "hash": "d43570a987ef3399da19d5a5f35c8cc957aa452a6a2f748b4dcb8977dbc2ca8a",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
@@ -907,6 +907,13 @@
         "path": "packages/core/test/navigation.test.ts"
       },
       {
+        "hash": "de977e8359e5697842a6f1536b9637297c04b8e00982dd2b553140fa66d5e878",
+        "kind": "test",
+        "language": "typescript",
+        "module": "packages/core/test",
+        "path": "packages/core/test/package-directory.test.ts"
+      },
+      {
         "hash": "ec7be1eced212f00ba99956008833d95edade697472ae3a7ef217ef1d23ac619",
         "kind": "test",
         "language": "typescript",
@@ -1219,7 +1226,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 53,
+    "commitsAnalyzed": 55,
     "enabled": true,
     "windowDays": 180
   },
@@ -1229,15 +1236,15 @@
       "config": 12,
       "conventions": 16,
       "decisions": 13,
-      "dependencies": 20,
+      "dependencies": 19,
       "docs": 9,
-      "entryPoints": 63,
+      "entryPoints": 64,
       "externalDependencies": 13,
-      "files": 172,
+      "files": 173,
       "modules": 13,
       "source": 106,
-      "symbols": 1060,
-      "tests": 42
+      "symbols": 1064,
+      "tests": 43
     },
     "isMonorepo": true,
     "languages": [

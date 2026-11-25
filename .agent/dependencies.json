@@ -949,9 +949,7 @@
         "node:url"
       ],
       "file": "packages/core/test/config.test.ts",
-      "internalModules": [
-        "@ai-agent-context/core"
-      ],
+      "internalModules": [],
       "module": "packages/core/test"
     },
     {
@@ -1142,6 +1140,15 @@
         "node:test"
       ],
       "file": "packages/core/test/navigation.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/package-directory.test.ts",
       "internalModules": [],
       "module": "packages/core/test"
     },
@@ -1806,22 +1813,6 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "1 file(s) import @ai-agent-context/core",
-          "source": "packages/core/test"
-        },
-        {
-          "detail": "relative specifier \"..\" names the directory of workspace package \"@ai-agent-context/core\", whose entry is packages/core/package.json",
-          "source": "packages/core/test/config.test.ts"
-        }
-      ],
-      "from": "packages/core/test",
-      "kind": "workspace-package",
-      "to": "@ai-agent-context/core"
-    },
-    {
-      "confidence": 0.99,
-      "evidence": [
-        {
           "detail": "1 file(s) import tools",
           "source": "packages/core/test"
         },
@@ -1933,14 +1924,14 @@
   ],
   "schemaVersion": 1,
   "summary": {
-    "crossPackageEdges": 6,
+    "crossPackageEdges": 5,
     "cycles": 2,
     "externalPackages": 13,
-    "fileImports": 127,
-    "fileImportsTotal": 127,
+    "fileImports": 128,
+    "fileImportsTotal": 128,
     "fileImportsTruncated": false,
-    "internalModuleEdges": 20,
-    "unresolvedImports": 40
+    "internalModuleEdges": 19,
+    "unresolvedImports": 42
   },
   "unresolved": [
     {
@@ -1966,6 +1957,14 @@
       "file": "packages/core/test/canonical.test.ts",
       "reason": "missing",
       "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "\"packages/core\" is the directory of package \"@ai-agent-context/core\", whose manifest points at build output the analysis excludes"
+      ],
+      "file": "packages/core/test/config.test.ts",
+      "reason": "excluded-build-output",
+      "specifier": ".."
     },
     {
       "attempts": [
@@ -2116,6 +2115,14 @@
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
       "file": "packages/core/test/navigation.test.ts",
+      "reason": "missing",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/package-directory.test.ts",
       "reason": "missing",
       "specifier": "../dist/index.js"
     },

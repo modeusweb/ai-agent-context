@@ -56,9 +56,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:d77b2b27",
+      "id": "imports:d9d08ed2",
       "origin": "observed",
-      "statement": "External dependencies are imported before internal modules (51/59 files)."
+      "statement": "External dependencies are imported before internal modules (52/60 files)."
     },
     {
       "category": "Imports",
@@ -69,9 +69,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "imports:d7f99bf0",
+      "id": "imports:7a9f8a14",
       "origin": "observed",
-      "statement": "Type-only dependencies use `import type` (64/134 files)."
+      "statement": "Type-only dependencies use `import type` (64/135 files)."
     },
     {
       "category": "Languages",
@@ -82,9 +82,9 @@
           "source": "<repository>"
         }
       ],
-      "id": "languages:d4890810",
+      "id": "languages:beb76367",
       "origin": "observed",
-      "statement": "Implementation mixes TypeScript (131 files) and JavaScript (14 files)."
+      "statement": "Implementation mixes TypeScript (132 files) and JavaScript (14 files)."
     },
     {
       "category": "Naming",
@@ -124,9 +124,9 @@
           "source": "packages/cli/src/cli.ts"
         }
       ],
-      "id": "naming:8bc21235",
+      "id": "naming:219e7fd3",
       "origin": "observed",
-      "statement": "Functions use camelCase (503/507 declarations)."
+      "statement": "Functions use camelCase (506/510 declarations)."
     },
     {
       "category": "Naming",
@@ -204,9 +204,9 @@
           "source": "packages/cli/test/fresh-clone.test.ts"
         }
       ],
-      "id": "tests:d625cbef",
+      "id": "tests:8bd5d804",
       "origin": "observed",
-      "statement": "Tests live in a dedicated test directory (39/42 test files)."
+      "statement": "Tests live in a dedicated test directory (40/43 test files)."
     },
     {
       "category": "Toolchain",
