@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T13:21:37.285Z",
+  "generatedAt": "2026-11-25T13:34:03.615Z",
   "node": "v24.22.1",
   "summary": {
     "repositories": 6,
@@ -73,14 +73,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 211,
-        "warmMs": 123,
+        "coldMs": 185,
+        "warmMs": 93,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 83,
+        "ms": 80,
         "bytes": 4832
       },
       "trust": {
@@ -156,14 +156,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 150,
-        "warmMs": 102,
+        "coldMs": 139,
+        "warmMs": 90,
         "parsed": 16,
         "warmParsed": 0,
         "warmReused": 16
       },
       "compact": {
-        "ms": 88,
+        "ms": 85,
         "bytes": 9037
       },
       "trust": {
@@ -257,14 +257,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 146,
-        "warmMs": 107,
+        "coldMs": 118,
+        "warmMs": 105,
         "parsed": 14,
         "warmParsed": 0,
         "warmReused": 14
       },
       "compact": {
-        "ms": 94,
+        "ms": 116,
         "bytes": 8227
       },
       "trust": {
@@ -346,14 +346,14 @@
         "layeringViolations": 0
       },
       "scan": {
-        "coldMs": 110,
-        "warmMs": 94,
+        "coldMs": 139,
+        "warmMs": 139,
         "parsed": 7,
         "warmParsed": 0,
         "warmReused": 7
       },
       "compact": {
-        "ms": 94,
+        "ms": 103,
         "bytes": 5060
       },
       "trust": {
@@ -423,14 +423,14 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 127,
-        "warmMs": 90,
+        "coldMs": 137,
+        "warmMs": 94,
         "parsed": 10,
         "warmParsed": 0,
         "warmReused": 10
       },
       "compact": {
-        "ms": 81,
+        "ms": 75,
         "bytes": 8043
       },
       "trust": {
@@ -537,14 +537,14 @@
         "layeringViolations": 1
       },
       "scan": {
-        "coldMs": 1277,
-        "warmMs": 518,
+        "coldMs": 858,
+        "warmMs": 313,
         "parsed": 173,
         "warmParsed": 0,
         "warmReused": 173
       },
       "compact": {
-        "ms": 252,
+        "ms": 337,
         "bytes": 20635
       },
       "trust": {
@@ -554,7 +554,7 @@
         "coveragePercent": 100,
         "unsupportedEvidence": [],
         "deterministic": true,
-        "contextHash": "01df6bd0"
+        "contextHash": "a85faacb"
       },
       "tokenBudget": {
         "under8Kb": {

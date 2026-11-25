@@ -1,5 +1,28 @@
 # Migration guide
 
+<!-- id="v111" -->
+## v1.1.1
+
+A patch release: one fix in the resolver, no API or schema change.
+
+### Fixed: an import of a package's directory followed the wrong entry
+
+`from '..'` in a package's test folder, or `require('../..')` in an example,
+is an import of the package. In 1.1.0 the resolver took the source index
+through the fallback meant for a manifest that declares nothing, and where it
+did read the manifest it accepted any declared value: `bin`, or a subpath
+under `exports` such as `"./package.json": "./package.json"`. Both drew a
+module edge the compiler does not draw — on this repository,
+`packages/core/test -> @ai-agent-context/core`.
+
+Such an import now gets what `main`, `module`, `browser` or `types` declare,
+or the root export when nothing else does. Where the declared entry is build
+output the analysis excludes, the import is reported as such instead of
+becoming an edge.
+
+The release also updates four transitive development dependencies that
+`npm audit` flagged; no published package has a runtime dependency.
+
 <!-- id="v110" -->
 ## v1.1.0
 

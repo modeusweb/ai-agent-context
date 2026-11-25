@@ -3541,21 +3541,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "1.1.0"
+        "version": "1.1.1"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "1.1.0"
+        "version": "1.1.1"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "1.1.0"
+        "version": "1.1.1"
       }
     ],
     "workspaceGlobs": [
