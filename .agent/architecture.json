@@ -816,12 +816,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 17,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 18,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 20,
+            "commits": 21,
             "name": "modeusweb"
           }
         ]
@@ -1011,12 +1011,12 @@
         ],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 10,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 0,
+        "historicalChanges": 11,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 22,
+            "commits": 40,
             "name": "modeusweb"
           }
         ]
@@ -1194,12 +1194,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "low",
         "contributorCount": 1,
-        "historicalChanges": 3,
-        "lastChanged": "2026-10-17",
-        "recentChanges": 0,
+        "historicalChanges": 4,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 4,
+            "commits": 6,
             "name": "modeusweb"
           }
         ]
@@ -1373,12 +1373,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "low",
         "contributorCount": 1,
-        "historicalChanges": 9,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 10,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 9,
+            "commits": 11,
             "name": "modeusweb"
           }
         ]
@@ -1517,12 +1517,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 21,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 22,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 98,
+            "commits": 115,
             "name": "modeusweb"
           }
         ]
@@ -2063,12 +2063,12 @@
         ],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 26,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 27,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 32,
+            "commits": 33,
             "name": "modeusweb"
           }
         ]
@@ -2445,12 +2445,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "low",
         "contributorCount": 1,
-        "historicalChanges": 3,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 4,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 6,
+            "commits": 7,
             "name": "modeusweb"
           }
         ]
@@ -2720,12 +2720,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 20,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 21,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 39,
+            "commits": 48,
             "name": "modeusweb"
           }
         ]
@@ -2903,12 +2903,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 14,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 15,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 27,
+            "commits": 29,
             "name": "modeusweb"
           }
         ]
@@ -3194,12 +3194,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 10,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 11,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 17,
+            "commits": 19,
             "name": "modeusweb"
           }
         ]
@@ -3320,12 +3320,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
-        "historicalChanges": 13,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 14,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 15,
+            "commits": 16,
             "name": "modeusweb"
           }
         ]
@@ -3402,12 +3402,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 19,
-        "lastChanged": "2026-10-18",
-        "recentChanges": 0,
+        "historicalChanges": 20,
+        "lastChanged": "2026-11-25",
+        "recentChanges": 1,
         "topContributors": [
           {
-            "commits": 30,
+            "commits": 32,
             "name": "modeusweb"
           }
         ]
