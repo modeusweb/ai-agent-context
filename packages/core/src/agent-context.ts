@@ -19,7 +19,8 @@ import path from 'node:path';
 import { existsSync, statSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import type { LanguageRegistry } from './adapters/language/registry.ts';
-import type { ConfigOverrides, AgentContextConfig } from './config/types.ts';
+import type { ParsedFile } from './adapters/language/types.ts';
+import type { ConfigOverrides, AgentContextConfig, LoadedConfig } from './config/types.ts';
 import type { ProgressReporter } from './logging/diagnostics.ts';
 import { Logger } from './logging/diagnostics.ts';
 import { GitAdapter } from './adapters/git/git-adapter.ts';
@@ -46,9 +47,25 @@ import { loadConfig, writeConfigFile } from './config/load.ts';
 import { runPipeline, type PipelineResult } from './pipeline/scan-pipeline.ts';
 import { readPersistedContext, type PersistedContext } from './core/serialization/reader.ts';
 import { LocalStateStore, type LocalState } from './core/scanner/cache.ts';
+import { workingTreeFingerprint } from './core/scanner/fingerprint.ts';
 import type { ArchitectureDocument, DependenciesDocument, IndexDocument } from './core/serialization/types.ts';
-import { explainModule } from './core/context/explain.ts';
+import { explainModule, resolveTarget, type ResolvedTarget } from './core/context/explain.ts';
 import type { ExplainDetail } from './core/context/explain.ts';
+import type { KnowledgeGraph } from './core/graph/knowledge-graph.ts';
+import { withExtensions } from './core/graph/resolver.ts';
+import {
+  buildFileOutline,
+  buildReferenceIndex,
+  buildReferenceReport,
+  buildUnusedExports,
+  emptyReferenceReport,
+  type FileOutline,
+  type ReferenceIndex,
+  type ReferenceReport,
+  type ReferenceTarget,
+  type UnusedExportsReport,
+} from './core/navigation/references.ts';
+import { isInside, normalizeRelative } from './util/paths.ts';
 import { detectIssues } from './core/context/diagnostics.ts';
 import type { DetectionReport } from './core/context/diagnostics.ts';
 import { buildRepositoryContext } from './core/context/repository-context.ts';
@@ -84,6 +101,11 @@ export interface ScanOptions {
 export interface StatusReport {
   status: 'up-to-date' | 'stale' | 'missing';
   lastScanAt: string | null;
+  /**
+   * What the working tree was compared with: the local state, the committed
+   * `index.json` (a fresh clone has no local state), or nothing.
+   */
+  baseline: 'local-state' | 'committed-index' | 'none';
   configPath: string | null;
   configHashMatches: boolean;
   contextFiles: { present: string[]; missing: string[]; invalid: Array<{ file: string; reason: string }> };
@@ -108,6 +130,8 @@ export class AgentContext {
   private readOnlySource: string | undefined;
   private pipeline: PipelineResult | null = null;
   private pipelineMode: 'dry' | 'full' | null = null;
+  /** Navigation index of the cached pipeline; rebuilt whenever the pipeline is. */
+  private referenceIndex: ReferenceIndex | null = null;
 
   private persisted: PersistedContext | null = null;
 
@@ -137,10 +161,57 @@ export class AgentContext {
       ...(options.ignorePolicy === undefined ? {} : { ignorePolicy: options.ignorePolicy }),
     });
     const context = new AgentContext(root, options, loaded.config);
-    context.configSource = loaded.source;
-    if (loaded.policySource !== null) context.readOnlySource = loaded.policySource;
-    context.persisted = await readPersistedContext(root);
+    await context.adoptConfiguration(loaded);
     return context;
+  }
+
+  /** Adopts a loaded configuration: the config, its source, the policy that applied and the persisted context. */
+  private async adoptConfiguration(loaded: LoadedConfig): Promise<void> {
+    this.resolvedConfig = loaded.config;
+    this.configSource = loaded.source;
+    this.readOnlySource = loaded.policySource === null ? undefined : loaded.policySource;
+    this.persisted = await readPersistedContext(this.root);
+  }
+
+  /**
+   * Whether the repository moved since the analysis in memory was produced.
+   *
+   * A query re-runs no analysis while the facade lives, which is what makes
+   * repeated queries cheap — and what makes a long-lived host answer from a
+   * repository that no longer exists once its first edit lands. This is the
+   * check such a host makes between queries: the configuration, then the files
+   * the analysis read (by path, size and modification time; nothing is opened).
+   *
+   * Always `false` before the first query: there is nothing to be stale.
+   */
+  async isStale(): Promise<boolean> {
+    if (this.pipeline === null) return false;
+    const loaded = await this.loadConfiguration();
+    if (loaded.hash !== this.pipeline.configHash) return true;
+    return (await workingTreeFingerprint({ root: this.root, config: loaded.config })) !== this.pipeline.fingerprint;
+  }
+
+  /**
+   * Drops the analysis in memory and re-reads the configuration, so the next
+   * query describes the repository as it is now.
+   *
+   * Writes nothing and reads no source file.
+   */
+  async invalidate(): Promise<void> {
+    this.pipeline = null;
+    this.pipelineMode = null;
+    this.referenceIndex = null;
+    await this.adoptConfiguration(await this.loadConfiguration());
+  }
+
+  /** Loads the configuration with this facade's overrides. */
+  private loadConfiguration(): Promise<LoadedConfig> {
+    return loadConfig({
+      root: this.root,
+      ...(this.options.config === undefined ? {} : { overrides: this.options.config }),
+      ...(this.options.configPath === undefined ? {} : { configPath: this.options.configPath }),
+      ...(this.options.ignorePolicy === undefined ? {} : { ignorePolicy: this.options.ignorePolicy }),
+    });
   }
 
   /** Resolved configuration (defaults + config file + overrides). */
@@ -197,6 +268,7 @@ export class AgentContext {
     const result = await runPipeline(this.pipelineOptions(scanOptions));
     this.pipeline = result;
     this.pipelineMode = dryRun ? 'dry' : 'full';
+    this.referenceIndex = null;
     return result;
   }
 
@@ -210,6 +282,7 @@ export class AgentContext {
     const result = await runPipeline(pipelineOptions);
     this.pipeline = result;
     this.pipelineMode = 'full';
+    this.referenceIndex = null;
     this.persisted = await readPersistedContext(this.root);
     return result.report;
   }
@@ -372,22 +445,40 @@ export class AgentContext {
     };
   }
 
+  /**
+   * Git history of a module, a directory or a file.
+   *
+   * The history is scoped by asking git for the commits that touch the target's
+   * paths, rather than by taking the most recent commits of the whole repository
+   * and keeping the ones that touch it. The second form silently returns almost
+   * nothing for any target that is not under constant change: in a repository
+   * with fifty commits since the last edit to `src/legacy`, the history of
+   * `src/legacy` was empty.
+   */
   async getModuleHistory(target: string, options: { limit?: number } = {}): Promise<ModuleHistoryEntry[]> {
-    const explanation = await this.explain(target);
-    if (explanation === null) throw new Error(`no module or file matched "${target}"`);
+    const result = await this.ensurePipeline({ dryRun: true });
+    const resolved = resolveTarget(result.graph, target);
+    if (resolved === null || resolved.moduleId === null) throw new Error(`no module or file matched "${target}"`);
     const adapter = this.options.gitAdapter ?? new GitAdapter(this.root);
-    const commits = await adapter.log({ windowDays: 3650, maxCommits: Math.max(1, Math.min(options.limit ?? 50, 200)) });
-    const files = new Set(explanation.relatedFiles);
+    const limit = Math.max(1, Math.min(options.limit ?? 50, 200));
+    const paths = historyScope(result.graph, resolved);
+    // No time window: the paths are the bound. A window would cut off the last
+    // change to a file that has not been touched for years, which is precisely
+    // the file someone asks the history of.
+    const commits = await adapter.log({ windowDays: 0, maxCommits: limit, ...(paths === null ? {} : { paths }) });
+    const inScope = (file: string): boolean => paths === null || paths.some((scope) => isInside(scope, file));
+    const patterns = result.config.features.git ? result.config.analysis.git.architectureSignalPatterns : [];
+    const signal = new RegExp(patterns.map((pattern) => pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'i');
     return commits
-      .filter((commit) => commit.files.some((file) => files.has(file)))
-      .slice(0, Math.max(1, Math.min(options.limit ?? 50, 200)))
+      .filter((commit) => commit.files.some(inScope))
+      .slice(0, limit)
       .map((commit) => ({
         sha: commit.sha.slice(0, 8),
         date: commit.date.slice(0, 10),
         author: commit.author,
         subject: commit.subject,
-        files: commit.files.filter((file) => files.has(file)).sort(compareStrings),
-        architectureSignal: /refactor|architecture|adr|breaking|migrat|restructure|rewrite/i.test(commit.subject),
+        files: commit.files.filter(inScope).sort(compareStrings),
+        architectureSignal: patterns.length > 0 && signal.test(commit.subject),
       }));
   }
 
@@ -458,6 +549,102 @@ export class AgentContext {
     return service.search(query, options);
   }
 
+  /** The analysis with its navigation index, which is built on first use. */
+  private async navigation(): Promise<NavigationBundle> {
+    const result = await this.ensurePipeline({ dryRun: true });
+    this.referenceIndex ??= buildReferenceIndex(result.graph, result.parsed);
+    return {
+      graph: result.graph,
+      parsed: result.parsed,
+      index: this.referenceIndex,
+      analyzed: new Set(result.graph.repository.files.map((file) => file.path)),
+    };
+  }
+
+  /**
+   * Outline of one file: what it exports, what it imports, and who imports it.
+   *
+   * This is the file-level view `explain` does not give — `explain` of a file
+   * describes the module that owns it. `null` when the target is not an
+   * analyzed file.
+   */
+  async getFileOutline(target: string): Promise<FileOutline | null> {
+    const navigation = await this.navigation();
+    const file = resolveAnalyzedFile(navigation, target);
+    return file === null ? null : buildFileOutline(navigation.graph, navigation.parsed, navigation.index, file);
+  }
+
+  /**
+   * Where a symbol is imported.
+   *
+   * The target is `symbol`, `file#symbol`, or `symbol` with `options.file`.
+   * A name alone must be unambiguous; when several files export it, the report
+   * says so and lists them instead of guessing.
+   */
+  async findReferences(target: string, options: { file?: string } = {}): Promise<ReferenceReport> {
+    const navigation = await this.navigation();
+    const { graph, parsed, index } = navigation;
+    const separator = target.indexOf('#');
+    const fileTarget = separator === -1 ? options.file : target.slice(0, separator);
+    const symbol = (separator === -1 ? target : target.slice(separator + 1)).trim();
+    const report = emptyReferenceReport();
+
+    if (symbol.length === 0) {
+      report.caveats.push('Name the symbol: <symbol>, or <file>#<symbol> when several files export the name.');
+      return report;
+    }
+    if (fileTarget !== undefined && fileTarget.trim().length > 0) {
+      const file = resolveAnalyzedFile(navigation, fileTarget);
+      if (file === null) {
+        report.caveats.push(`no analyzed file matched "${fileTarget}"`);
+        return report;
+      }
+      const declared = parsed.get(file)?.symbols.find((entry) => (symbol === 'default' ? entry.isDefault : entry.name === symbol));
+      const exported = index.ownExports(file).get(symbol);
+      if (declared === undefined && exported === undefined) {
+        report.caveats.push(`"${symbol}" is not declared in ${file}`);
+        return report;
+      }
+      return buildReferenceReport(graph, index, {
+        file,
+        symbol,
+        kind: declared?.kind ?? exported?.kind ?? 'unknown',
+        line: declared?.line ?? exported?.line ?? 0,
+        exported: exported !== undefined,
+        isDefault: symbol === 'default',
+      });
+    }
+
+    const candidates: ReferenceTarget[] = [];
+    for (const node of graph.repository.files) {
+      if (node.sensitive || (node.language !== 'typescript' && node.language !== 'javascript')) continue;
+      const own = index.ownExports(node.path).get(symbol);
+      if (own !== undefined) {
+        candidates.push({ file: node.path, symbol, kind: own.kind, line: own.line, exported: true, isDefault: own.isDefault });
+      }
+    }
+    if (candidates.length === 1) return buildReferenceReport(graph, index, candidates[0]!);
+    report.candidates = candidates;
+    report.status = candidates.length === 0 ? 'not-found' : 'ambiguous';
+    report.caveats.push(
+      candidates.length === 0
+        ? `No analyzed file exports "${symbol}".`
+        : `${candidates.length} files export "${symbol}"; name the file: <file>#${symbol}`,
+    );
+    return report;
+  }
+
+  /**
+   * Named exports that no analyzed file imports and no entry point reaches.
+   *
+   * A finding is a statement about the analyzed tree, with a confidence that
+   * reflects its coverage; the report names what was not assessed and why.
+   */
+  async findUnusedExports(options: { limit?: number } = {}): Promise<UnusedExportsReport> {
+    const navigation = await this.navigation();
+    return buildUnusedExports(navigation.graph, navigation.index, options);
+  }
+
   /** Compares the working tree with the persisted context. */
   async status(): Promise<StatusReport> {
     const result = await this.ensurePipeline({ dryRun: true });
@@ -466,7 +653,16 @@ export class AgentContext {
     // after this facade was loaded (notably the CI verification command).
     const persisted = await readPersistedContext(this.root);
     const state = await new LocalStateStore(this.root).read();
-    const configHashMatches = state !== null && state.configHash === result.configHash;
+    // Which record the change set was measured against decides how the
+    // configuration is checked. Against the local state, its hash is compared;
+    // against the committed index, the hash that index recorded. A document
+    // written before 1.1.0 records none: the question then cannot be asked, and
+    // answering it "no" would fail every such repository on upgrade.
+    const recordedConfigHash = persisted.index?.configHash;
+    const configHashMatches =
+      result.baseline === 'committed-index'
+        ? recordedConfigHash === undefined || recordedConfigHash === result.configHash
+        : state !== null && state.configHash === result.configHash;
     const changes = result.report.changes;
     const pending = changes.added.length > 0 || changes.modified.length > 0 || changes.deleted.length > 0;
     const present: string[] = [];
@@ -482,17 +678,21 @@ export class AgentContext {
     return {
       status,
       lastScanAt: state?.lastScanAt ?? null,
+      baseline: result.baseline,
       configPath: this.configSource,
       configHashMatches,
       contextFiles: { present, missing: [...persisted.missing], invalid: [...persisted.invalid] },
       changes,
+      // With no local state the counts come from the analysis just run, which
+      // is what the working tree holds; zeros would describe the machine, not
+      // the repository.
       counts: state?.counts ?? {
-        files: 0,
-        modules: 0,
-        dependencies: 0,
-        entryPoints: 0,
-        conventions: 0,
-        decisions: 0,
+        files: result.report.files.total,
+        modules: result.report.modules,
+        dependencies: result.report.dependencies,
+        entryPoints: result.report.entryPoints,
+        conventions: result.report.conventions,
+        decisions: result.report.decisions,
       },
       git: {
         available: result.git.availability.available,
@@ -545,4 +745,40 @@ export class AgentContext {
     }
     return persisted;
   }
+}
+
+/**
+ * The analysis of one repository state, with what navigation needs on top of
+ * the graph: the parsed facts and the import/export index built from them.
+ */
+interface NavigationBundle {
+  graph: KnowledgeGraph;
+  parsed: Map<string, ParsedFile>;
+  index: ReferenceIndex;
+  analyzed: Set<string>;
+}
+
+/** The analyzed file a target names, with or without its extension. */
+function resolveAnalyzedFile(navigation: NavigationBundle, rawTarget: string): string | null {
+  const target = normalizeRelative(rawTarget);
+  if (target.length === 0) return null;
+  if (navigation.analyzed.has(target)) return target;
+  return withExtensions(target, navigation.analyzed);
+}
+
+/**
+ * The paths whose history a resolved target asks for, or `null` for the whole
+ * repository.
+ *
+ * A directory rather than a list of files: the files that used to be in it and
+ * are gone now are part of its history too, and only git knows them.
+ */
+function historyScope(graph: KnowledgeGraph, resolved: ResolvedTarget): string[] | null {
+  if (resolved.scopeDirectory !== null) return [resolved.scopeDirectory];
+  if (resolved.filePath !== null) return [resolved.filePath];
+  const module = graph.repository.modules.find((entry) => entry.id === resolved.moduleId);
+  if (module === undefined) return null;
+  if (module.basis === 'single-file') return [module.files[0] ?? module.path];
+  // The package at the repository root is the whole repository.
+  return module.path.length === 0 ? null : [module.path];
 }

@@ -3,7 +3,7 @@
  * Executable entry point of the MCP adapter (`agent-context-mcp`).
  *
  * Usage:
- *   agent-context-mcp [--root <path>]
+ *   agent-context-mcp [--root <path>] [--staleness-check <ms>] [--pretty-json]
  *   agent-context-mcp config <client> [--root <path>] [--command <exe>] [--command-arg <arg> ...]
  *   agent-context-mcp config --all
  *   agent-context-mcp config --list
@@ -60,19 +60,29 @@ function optionValues(argv: readonly string[], flag: string): string[] {
 function usage(): string {
   return [
     'Usage:',
-    '  agent-context-mcp [--root <path>]        run the stdio MCP server',
-    '  agent-context-mcp config <client>        print a client config snippet',
-    '  agent-context-mcp config --all           print every supported client',
-    '  agent-context-mcp config --list          list supported clients',
+    '  agent-context-mcp [options]          run the stdio MCP server',
+    '  agent-context-mcp config <client>    print a client config snippet',
+    '  agent-context-mcp config --all       print every supported client',
+    '  agent-context-mcp config --list      list supported clients',
     '  agent-context-mcp --version',
     '',
     'Options:',
-    '  --root <path>          repository to analyze',
-    '  --command <exe>        executable that starts the server (default: npx)',
-    '  --command-arg <arg>    argument for that executable (repeatable, default: -y @ai-agent-context/mcp)',
+    '  --root <path>            repository to analyze',
+    '  --staleness-check <ms>   re-check the repository for edits at most this often (default: 1000; 0 = before every call)',
+    '  --pretty-json            indent tool results (default: compact, which costs fewer tokens)',
+    '  --command <exe>          executable that starts the server (default: npx)',
+    '  --command-arg <arg>      argument for that executable (repeatable, default: -y @ai-agent-context/mcp)',
     '',
     `Clients: ${CLIENT_PRESETS.map((preset) => preset.id).join(', ')}`,
   ].join('\n');
+}
+
+/** Milliseconds between two staleness checks, or `null` when the flag is invalid. */
+function parseStalenessCheck(argv: readonly string[]): number | undefined | null {
+  const raw = optionValue(argv, '--staleness-check');
+  if (raw === undefined) return undefined;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
 }
 
 /** Prints configuration for a client, or the usage text with exit code 2. */
@@ -120,12 +130,21 @@ if (process.argv.includes('--version')) {
   process.stdout.write(`${usage()}\n`);
 } else {
   const root = parseRoot(argv);
-  const server = new McpServer({
-    root,
-    transport: createStdioTransport(),
-    log: (line) => process.stderr.write(`${line}\n`),
-  });
-  server.start();
-  // stderr only: stdout is the JSON-RPC channel and must stay parseable.
-  process.stderr.write(`ai-agent-context MCP server ready (root: ${root})\n`);
+  const stalenessCheckMs = parseStalenessCheck(argv);
+  if (stalenessCheckMs === null) {
+    process.stderr.write('--staleness-check must be a number of milliseconds (0 or more)\n\n');
+    process.stderr.write(`${usage()}\n`);
+    process.exitCode = 2;
+  } else {
+    const server = new McpServer({
+      root,
+      transport: createStdioTransport(),
+      log: (line) => process.stderr.write(`${line}\n`),
+      ...(stalenessCheckMs === undefined ? {} : { stalenessCheckMs }),
+      ...(argv.includes('--pretty-json') ? { prettyJson: true } : {}),
+    });
+    server.start();
+    // stderr only: stdout is the JSON-RPC channel and must stay parseable.
+    process.stderr.write(`ai-agent-context MCP server ready (root: ${root})\n`);
+  }
 }

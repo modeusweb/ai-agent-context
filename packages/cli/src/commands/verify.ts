@@ -15,7 +15,7 @@ export async function runVerifyCommand(context: CliCommandContext, dependencies:
 
   if (context.json) {
     const payload = flagBoolean(parsed, 'full') ? status : compactStatusPayload(status);
-    output.print(JSON.stringify({ ...payload, valid }, null, 2));
+    output.json({ ...payload, valid });
   } else {
     for (const line of renderStatus(status)) output.print(line);
     output.blank();

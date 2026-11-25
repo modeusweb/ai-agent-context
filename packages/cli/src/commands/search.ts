@@ -31,7 +31,7 @@ export async function runSearchCommand(context: CliCommandContext, dependencies:
   const results = await agentContext.search(query, searchOptions);
 
   if (context.json) {
-    output.print(JSON.stringify({ query, backend: 'bm25', results }, null, 2));
+    output.json({ query, backend: 'bm25', results });
     return results.length === 0 ? 1 : 0;
   }
 

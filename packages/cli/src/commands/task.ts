@@ -20,7 +20,7 @@ export async function runTaskCommand(context: CliCommandContext, dependencies: C
     ...(target === undefined ? {} : { target }),
   });
   if (context.json) {
-    output.print(JSON.stringify(payload, null, 2));
+    output.json(payload);
     return 0;
   }
   output.heading(`Task context: ${task}`);

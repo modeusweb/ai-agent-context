@@ -10,9 +10,13 @@ export async function runHistoryCommand(context: CliCommandContext, dependencies
   if (Number.isNaN(limit) || limit <= 0) return (output.error('--limit-history must be a positive integer'), 2);
   try {
     const payload = await (await dependencies.createContext(contextOptions(parsed, io))).getModuleHistory(target, { limit });
-    if (context.json) { output.print(JSON.stringify(payload, null, 2)); return 0; }
+    if (context.json) { output.json(payload); return 0; }
     output.heading(`History: ${target}`);
     output.blank();
+    if (payload.length === 0) {
+      output.print('No commits touch this target in the local history.');
+      return 0;
+    }
     for (const entry of payload) output.print(`${entry.sha} ${entry.date} ${entry.subject}`);
     return 0;
   } catch (error) { output.error(error instanceof Error ? error.message : String(error)); return 1; }

@@ -11,7 +11,7 @@ export async function runExplainCommand(context: CliCommandContext, dependencies
   if (target === undefined) {
     const repositoryContext = await agentContext.getRepositoryContext();
     if (context.json) {
-      output.print(JSON.stringify(repositoryContext, null, 2));
+      output.json(repositoryContext);
       return 0;
     }
     for (const line of renderRepositoryContext(repositoryContext)) output.print(line);
@@ -42,7 +42,7 @@ export async function runExplainCommand(context: CliCommandContext, dependencies
   }
 
   if (context.json) {
-    output.print(JSON.stringify(explanation, null, 2));
+    output.json(explanation);
     return 0;
   }
 

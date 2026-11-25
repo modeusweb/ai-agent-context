@@ -4,6 +4,25 @@
       "confidence": 0.45,
       "evidence": [
         {
+          "detail": "section \"architecture.json\" (line 552) matched decision vocabulary",
+          "source": "README.md"
+        },
+        {
+          "detail": "section may describe design context rather than a decision; verify before treating it as an ADR",
+          "source": "README.md"
+        }
+      ],
+      "id": "DOC-8A6EEB",
+      "kind": "documented-section",
+      "origin": "inferred",
+      "source": "README.md#L552",
+      "status": "unknown",
+      "title": "architecture.json"
+    },
+    {
+      "confidence": 0.45,
+      "evidence": [
+        {
           "detail": "section \"Architecture Detection\" (line 92) matched decision vocabulary",
           "source": "packages/core/README.md"
         },
@@ -18,25 +37,6 @@
       "source": "packages/core/README.md#L92",
       "status": "unknown",
       "title": "Architecture Detection"
-    },
-    {
-      "confidence": 0.45,
-      "evidence": [
-        {
-          "detail": "section \"architecture.json\" (line 496) matched decision vocabulary",
-          "source": "README.md"
-        },
-        {
-          "detail": "section may describe design context rather than a decision; verify before treating it as an ADR",
-          "source": "README.md"
-        }
-      ],
-      "id": "DOC-D8AAB1",
-      "kind": "documented-section",
-      "origin": "inferred",
-      "source": "README.md#L496",
-      "status": "unknown",
-      "title": "architecture.json"
     },
     {
       "confidence": 0.45,

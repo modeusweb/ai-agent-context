@@ -21,7 +21,7 @@ export async function runScanCommand(context: CliCommandContext, dependencies: C
   const nothingAnalyzed = report.files.total === 0;
 
   if (context.json) {
-    output.print(JSON.stringify(report, null, 2));
+    output.json(report);
     return nothingAnalyzed ? 1 : 0;
   }
 

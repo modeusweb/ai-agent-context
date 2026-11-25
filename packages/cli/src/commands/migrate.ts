@@ -89,7 +89,7 @@ export async function runMigrateCommand(context: CliCommandContext, dependencies
   const upToDate = report.state === 'current';
 
   if (context.json) {
-    output.print(JSON.stringify(report, null, 2));
+    output.json(report);
     return upToDate || !checkOnly ? 0 : 1;
   }
 

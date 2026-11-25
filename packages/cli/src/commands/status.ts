@@ -10,7 +10,7 @@ export async function runStatusCommand(context: CliCommandContext, dependencies:
 
   if (context.json) {
     const payload = flagBoolean(parsed, 'full') ? status : compactStatusPayload(status);
-    output.print(JSON.stringify(payload, null, 2));
+    output.json(payload);
     return status.status === 'missing' ? 1 : 0;
   }
 

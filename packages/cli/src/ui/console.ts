@@ -13,6 +13,8 @@ export interface ConsoleOptions {
   color: boolean;
   quiet: boolean;
   verbose: boolean;
+  /** Minify `--json` output instead of indenting it. */
+  compactJson?: boolean;
 }
 
 const CODES = {
@@ -86,6 +88,15 @@ export class ConsoleOutput {
   /** User facing output (stdout). */
   print(line = ''): void {
     this.options.stdout(line);
+  }
+
+  /**
+   * `--json` output. Indented for a person reading a terminal; with
+   * `--compact`, minified for an agent — the indentation measured about a
+   * quarter more tokens for the same data.
+   */
+  json(value: unknown): void {
+    this.options.stdout(JSON.stringify(value, null, this.options.compactJson === true ? 0 : 2));
   }
 
   /** Diagnostic/progress output (stderr). */

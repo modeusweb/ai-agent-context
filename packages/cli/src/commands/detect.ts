@@ -18,7 +18,7 @@ export async function runDetectCommand(context: CliCommandContext, dependencies:
   const report: DetectionReport = await agentContext.detect();
 
   if (context.json) {
-    output.print(JSON.stringify(report, null, 2));
+    output.json(report);
     return exitCode(report);
   }
 

@@ -24,6 +24,14 @@ export interface IndexDocument {
   schemaVersion: number;
   generatedBy: string;
   generatedAt?: string;
+  /**
+   * Hash of the resolved configuration the context was generated with.
+   *
+   * Committed, so that a reader without the local state — a fresh clone, a CI
+   * checkout — can tell whether the configuration moved since (`verify`).
+   * Absent from documents generated before 1.1.0.
+   */
+  configHash?: string;
   repository: {
     name: string;
     /** Repository name only: absolute paths are machine specific and not canonical. */
@@ -122,6 +130,14 @@ export interface DependenciesDocument {
     externalPackages: number;
     unresolvedImports: number;
     cycles: number;
+    /** Entries in `fileImports`. */
+    fileImports: number;
+    /** Files with imports, including those left out of `fileImports`. */
+    fileImportsTotal: number;
+    /** `true` when `fileImports` holds fewer entries than the repository has files with imports. */
+    fileImportsTruncated: boolean;
+    /** The bound that was reached; present only when `fileImportsTruncated` is `true`. */
+    fileImportsLimit?: number;
   };
   /** Module → module edges (the architectural dependency graph). */
   internal: Array<{
@@ -132,7 +148,10 @@ export interface DependenciesDocument {
     evidence: Array<{ source: string; detail: string }>;
   }>;
   external: ExternalDependency[];
-  /** Per-file projection: what each file imports (module ids and package names). */
+  /**
+   * Per-file projection: what each file imports (module ids and package names).
+   * Bounded; `summary.fileImportsTruncated` says when it is.
+   */
   fileImports: Array<{ file: string; module: string | null; internalModules: string[]; externalPackages: string[] }>;
   cycles: string[][];
   unresolved: Array<{ file: string; specifier: string; attempts: string[] }>;
@@ -166,4 +185,11 @@ export interface DocumentBuildOptions {
   generatedAt?: string;
   diagnostics: DiagnosticPayload[];
   commitsAnalyzed: number;
+  /** Hash of the resolved configuration, as computed by `loadConfig`. */
+  configHash: string;
+  /**
+   * Upper bound on the entries of `dependencies.json#fileImports`.
+   * Defaults to {@link MAX_FILE_IMPORTS}; a smaller value is how the bound is tested.
+   */
+  maxFileImports?: number;
 }

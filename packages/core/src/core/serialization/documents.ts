@@ -37,6 +37,7 @@ export function buildIndexDocument(
   const document: IndexDocument = {
     schemaVersion: SCHEMA_VERSION,
     generatedBy: GENERATOR_NAME,
+    configHash: options.configHash,
     repository: {
       name: graph.repository.name,
       rootName: graph.repository.name,
@@ -152,7 +153,17 @@ export function buildArchitectureDocument(
   return withTimestamp(document, options);
 }
 
-const MAX_FILE_IMPORTS = 400;
+/**
+ * Upper bound on the per-file projection in `dependencies.json`.
+ *
+ * The bound keeps the committed document finite on a very large tree; it is
+ * not where a document of ordinary size stops. The bound was 400 until 1.1.0
+ * and nothing said when it was reached: a repository with 3,000 importing
+ * files had a committed `fileImports` that described 400 of them and read as
+ * complete. The summary now reports the total and whether anything was left
+ * out.
+ */
+export const MAX_FILE_IMPORTS = 20_000;
 
 /** Builds `dependencies.json` (module edges, external packages, per-file imports). */
 export function buildDependenciesDocument(
@@ -185,7 +196,7 @@ export function buildDependenciesDocument(
     if (edge.toKind === 'package') entry.external.add(edge.to);
   }
 
-  const fileImports = [...perFile.entries()]
+  const fileImportEntries = [...perFile.entries()]
     .map(([file, entry]) => ({
       file,
       module: entry.module,
@@ -193,8 +204,9 @@ export function buildDependenciesDocument(
       externalPackages: uniqueSorted(entry.external),
     }))
     .filter((entry) => entry.internalModules.length > 0 || entry.externalPackages.length > 0)
-    .sort((a, b) => compareStrings(a.file, b.file))
-    .slice(0, MAX_FILE_IMPORTS);
+    .sort((a, b) => compareStrings(a.file, b.file));
+  const bound = options.maxFileImports ?? MAX_FILE_IMPORTS;
+  const fileImports = fileImportEntries.slice(0, bound);
 
   const internal = graph.moduleEdges
     .map((edge) => ({
@@ -217,6 +229,10 @@ export function buildDependenciesDocument(
       externalPackages: graph.externalDependencies.length,
       unresolvedImports: graph.unresolved.length,
       cycles: graph.cycles.length,
+    fileImports: fileImports.length,
+    fileImportsTotal: fileImportEntries.length,
+    fileImportsTruncated: fileImports.length < fileImportEntries.length,
+    ...(bound < fileImportEntries.length ? { fileImportsLimit: bound } : {}),
     },
     internal,
     external: [...graph.externalDependencies].sort((a, b) => compareStrings(a.name, b.name)),

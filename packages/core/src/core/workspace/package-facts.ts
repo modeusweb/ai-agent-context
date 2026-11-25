@@ -46,6 +46,7 @@ export function packageFactsFromParsed(parsed: ParsedFile): PackageFacts | null 
     dependencies: stringArray(metadata['package.dependencies']),
     devDependencies: stringArray(metadata['package.devDependencies']),
     peerDependencies: stringArray(metadata['package.peerDependencies']),
+    dependencyRanges: stringRecord(metadata['package.dependencyRanges']),
     workspaces: stringArray(metadata['package.workspaces']),
     entries: entries.sort((a, b) =>
       a.field === b.field ? (a.value < b.value ? -1 : 1) : a.field < b.field ? -1 : 1,

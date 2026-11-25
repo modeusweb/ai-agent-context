@@ -43,7 +43,7 @@ export async function runCleanCommand(context: CliCommandContext, dependencies: 
   removed.sort();
 
   if (context.json) {
-    output.print(JSON.stringify({ root, removed, cacheOnly, removedConfig: !cacheOnly && removeConfig }, null, 2));
+    output.json({ root, removed, cacheOnly, removedConfig: !cacheOnly && removeConfig });
     return 0;
   }
   output.success(`Removed ${removed.length} path(s) inside .agent/:`);

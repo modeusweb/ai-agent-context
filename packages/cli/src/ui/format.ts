@@ -7,11 +7,15 @@
  */
 import type {
   ContextDiff,
+  FileOutline,
+  ImportLine,
   ModuleExplanation,
+  ReferenceReport,
   RepositoryContext,
   ScanReport,
   SearchResult,
   StatusReport,
+  UnusedExportsReport,
 } from '@ai-agent-context/core';
 import { formatDuration, formatNumber } from './console.ts';
 
@@ -68,9 +72,9 @@ export function renderStatus(status: StatusReport): string[] {
   lines.push('Repository context');
   lines.push('');
   lines.push(`Status: ${status.status}`);
-  lines.push(`Last scan: ${status.lastScanAt ?? 'never'}`);
+  lines.push(`Baseline: ${describeBaseline(status.baseline, status.lastScanAt)}`);
   lines.push(`Config file: ${status.configPath ?? 'defaults (run agent-context init)'}`);
-  lines.push(`Config hash matches local state: ${status.configHashMatches ? 'yes' : 'no'}`);
+  lines.push(`Config hash matches baseline: ${status.configHashMatches ? 'yes' : 'no'}`);
   lines.push('');
   lines.push(`Files: ${formatNumber(status.counts.files)}`);
   lines.push(`Modules: ${formatNumber(status.counts.modules)}`);
@@ -98,8 +102,25 @@ export function renderStatus(status: StatusReport): string[] {
     lines.push('');
     lines.push('Run:');
     lines.push('  agent-context scan');
+    if (status.baseline === 'committed-index') lines.push('  git add .agent            # the context is committed, so commit the regenerated one');
   }
   return lines;
+}
+
+/**
+ * What the working tree was compared with. Said in the output because the two
+ * baselines answer different situations: a developer who scanned a moment ago,
+ * and a CI checkout that has never scanned and never will.
+ */
+function describeBaseline(baseline: StatusReport['baseline'], lastScanAt: string | null): string {
+  switch (baseline) {
+    case 'local-state':
+      return lastScanAt === null ? 'local scan state' : `local scan state (last scan ${lastScanAt})`;
+    case 'committed-index':
+      return 'committed .agent/index.json (no local scan on this machine)';
+    default:
+      return 'none (no committed context and no local scan)';
+  }
 }
 
 export function renderExplain(explanation: ModuleExplanation): string[] {
@@ -328,5 +349,177 @@ export function renderSearchResults(results: readonly SearchResult[]): string[] 
     lines.push(`   reason: ${result.reason}`);
     if (result.snippet !== undefined) lines.push(`   ${result.snippet}`);
   });
+  return lines;
+}
+/** The kind of an import statement, in the words of the line that shows it. */
+function syntaxLabel(syntax: string): string {
+  switch (syntax) {
+    case 'reexport':
+      return 're-export';
+    case 'type-only':
+      return 'type-only';
+    case 'dynamic':
+      return 'dynamic import';
+    case 'require':
+      return 'require';
+    case 'side-effect':
+      return 'side effect';
+    case 'import-equals':
+      return 'import =';
+    default:
+      return '';
+  }
+}
+
+/** What an import resolves to, as one short phrase. */
+function targetLabel(line: ImportLine): string {
+  switch (line.targetKind) {
+    case 'internal-file':
+      return `→ ${line.target}`;
+    case 'workspace-package':
+      return `→ workspace package ${line.target}`;
+    case 'external-package':
+      return `→ external package ${line.target}`;
+    case 'node-builtin':
+      return `→ Node built-in ${line.target}`;
+    default:
+      return `unresolved${line.reason === undefined ? '' : ` (${line.reason})`}`;
+  }
+}
+
+const truncateList = (items: readonly string[], limit: number): string[] =>
+  items.length > limit ? [...items.slice(0, limit), `…and ${items.length - limit} more`] : [...items];
+
+export function renderOutline(outline: FileOutline): string[] {
+  const lines: string[] = [];
+  lines.push(outline.file);
+  lines.push(`module ${outline.module ?? '<none>'} · ${outline.language} · ${outline.kind}`);
+  if (outline.parseStatus !== 'ok') lines.push(`parse status: ${outline.parseStatus} — facts may be incomplete`);
+  lines.push('');
+
+  lines.push(`Exports (${outline.exports.length}):`);
+  if (outline.exports.length === 0) lines.push('  <none>');
+  for (const entry of outline.exports) {
+    const origin = entry.reexportedFrom === undefined ? '' : `  re-exported from ${entry.reexportedFrom}:${entry.declaredLine}`;
+    const possible = entry.possibleReferences > 0 ? ` (+${entry.possibleReferences} possible)` : '';
+    lines.push(
+      `  line ${String(entry.line).padStart(4)}  ${entry.name.padEnd(28)} ${entry.kind.padEnd(10)} imported by ${entry.references}${possible}${origin}`,
+    );
+  }
+  lines.push('');
+
+  if (outline.internalSymbols.length > 0) {
+    lines.push(`Not exported (${outline.internalSymbols.length}):`);
+    for (const symbol of outline.internalSymbols.slice(0, 25)) {
+      lines.push(`  line ${String(symbol.line).padStart(4)}  ${symbol.name.padEnd(28)} ${symbol.kind}`);
+    }
+    lines.push('');
+  }
+
+  lines.push(`Imports (${outline.imports.length}):`);
+  if (outline.imports.length === 0) lines.push('  <none>');
+  for (const line of outline.imports) {
+    const names = line.names.length > 0 ? `  { ${line.names.join(', ')} }` : '';
+    const label = syntaxLabel(line.syntax);
+    lines.push(`  line ${String(line.line).padStart(4)}  '${line.specifier}' ${targetLabel(line)}${names}${label.length === 0 ? '' : `  [${label}]`}`);
+  }
+  lines.push('');
+
+  const { importers } = outline;
+  lines.push(`Imported by, directly (${importers.direct.length}):`);
+  if (importers.direct.length === 0) lines.push('  <no analyzed file imports it>');
+  for (const entry of importers.direct) {
+    const names = entry.names.length > 0 ? `  { ${entry.names.join(', ')} }` : '';
+    const label = syntaxLabel(entry.syntax);
+    lines.push(`  ${entry.file}:${entry.line}${names}${label.length === 0 ? '' : `  [${label}]`}`);
+  }
+  lines.push('');
+  lines.push(`Depended on by, through other files (${importers.transitiveCount}):`);
+  for (const file of truncateList(importers.transitive, 40)) lines.push(`  ${file}`);
+  lines.push('');
+  lines.push(`Tests among the importers (${importers.tests.length}):`);
+  for (const file of truncateList(importers.tests, 20)) lines.push(`  ${file}`);
+  if (outline.routes.length > 0) {
+    lines.push('');
+    lines.push('HTTP routes registered here:');
+    for (const route of outline.routes) lines.push(`  line ${route.line}  ${route.method} ${route.path}`);
+  }
+  if (outline.caveats.length > 0) {
+    lines.push('');
+    lines.push('Limits of this answer:');
+    for (const caveat of outline.caveats) lines.push(`  - ${caveat}`);
+  }
+  return lines;
+}
+
+export function renderReferences(report: ReferenceReport): string[] {
+  const lines: string[] = [];
+  const target = report.target;
+  if (target === null) {
+    lines.push(`References: ${report.status === 'ambiguous' ? 'ambiguous name' : 'not found'}`);
+    lines.push('');
+    for (const caveat of report.caveats) lines.push(caveat);
+    if (report.candidates.length > 0) {
+      lines.push('');
+      lines.push('Candidates:');
+      for (const candidate of report.candidates) lines.push(`  ${candidate.file}#${candidate.symbol}  (${candidate.kind}, line ${candidate.line})`);
+    }
+    return lines;
+  }
+
+  lines.push(`References: ${target.symbol}`);
+  lines.push(`declared in ${target.file}:${target.line} (${target.kind}${target.exported ? ', exported' : ', not exported'})`);
+  lines.push('');
+  lines.push(`Imported by ${report.references.length} statement(s):`);
+  if (report.references.length === 0) lines.push('  <none>');
+  for (const reference of report.references) {
+    const through = reference.via.length > 0 ? `  through ${reference.via.join(' → ')}` : '';
+    const typeOnly = reference.typeOnly ? '  [type-only]' : '';
+    lines.push(`  ${reference.file}:${reference.line}  as ${reference.importedAs}${through}${typeOnly}`);
+  }
+  if (report.possibleReferences.length > 0) {
+    lines.push('');
+    lines.push(`Possibly used through a namespace import (${report.possibleReferences.length}) — whether it is, is not in the statement:`);
+    for (const reference of report.possibleReferences) {
+      const through = reference.via.length > 0 ? `  through ${reference.via.join(' → ')}` : '';
+      lines.push(`  ${reference.file}:${reference.line}  as ${reference.importedAs}${through}`);
+    }
+  }
+  if (report.reexportedBy.length > 0) {
+    lines.push('');
+    lines.push('Re-exported by:');
+    for (const entry of report.reexportedBy) lines.push(`  ${entry.file}:${entry.line}  as ${entry.name}`);
+  }
+  lines.push('');
+  lines.push(`Reachable from an entry point: ${report.externallyReachable ? 'yes — a consumer outside the analyzed files may import it' : 'no'}`);
+  if (report.caveats.length > 0) {
+    lines.push('');
+    lines.push('Limits of this answer:');
+    for (const caveat of report.caveats) lines.push(`  - ${caveat}`);
+  }
+  return lines;
+}
+
+export function renderUnused(report: UnusedExportsReport): string[] {
+  const lines: string[] = [];
+  const { counts } = report;
+  lines.push('Unused exports');
+  lines.push('');
+  lines.push(
+    `${counts.unused} of ${counts.exported} assessed named exports are imported by no analyzed file ` +
+      `(${counts.referenced} imported, ${counts.publicApi} reachable from an entry point, ${counts.unassessable} not assessable).`,
+  );
+  lines.push('');
+  if (report.unused.length === 0) {
+    lines.push('Nothing to report.');
+  }
+  for (const entry of report.unused) {
+    const reexported = entry.reexportedBy.length > 0 ? `  re-exported by ${entry.reexportedBy.join(', ')}` : '';
+    lines.push(`  ${entry.file}:${entry.line}  ${entry.name}  (${entry.kind})${reexported}`);
+  }
+  if (report.truncated) lines.push(`  …and ${counts.unused - report.unused.length} more (--limit)`);
+  lines.push('');
+  lines.push(`Confidence per finding: ${report.unused[0]?.confidence ?? 'n/a'}. A finding says that nothing in the analyzed files imports the export; it does not say the export is safe to delete.`);
+  for (const caveat of report.caveats) lines.push(`  - ${caveat}`);
   return lines;
 }

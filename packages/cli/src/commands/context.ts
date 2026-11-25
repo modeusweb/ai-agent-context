@@ -22,7 +22,7 @@ export async function runContextCommand(context: CliCommandContext, dependencies
     ...(positiveFlag(parsed, 'max-cycles') === undefined ? {} : { maxCycles: positiveFlag(parsed, 'max-cycles') }),
   });
   if (context.json) {
-    output.print(JSON.stringify(repositoryContext, null, 2));
+    output.json(repositoryContext);
     return 0;
   }
   for (const line of renderRepositoryContext(repositoryContext)) output.print(line);

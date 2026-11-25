@@ -9,6 +9,19 @@
 export { AgentContext } from './agent-context.ts';
 export type { AgentContextOptions, ScanOptions, StatusReport, InitResult } from './agent-context.ts';
 
+/* Navigation: the file and symbol level the module graph does not describe. */
+export type {
+  FileOutline,
+  ImportLine,
+  OwnExport,
+  ReferenceReport,
+  ReferenceTarget,
+  SymbolReference,
+  SurfaceEntry,
+  UnusedExport,
+  UnusedExportsReport,
+} from './core/navigation/references.ts';
+
 export { runPipeline, detectWorkspaceFromScan, documentHash } from './pipeline/scan-pipeline.ts';
 export type { PipelineOptions, PipelineResult } from './pipeline/scan-pipeline.ts';
 

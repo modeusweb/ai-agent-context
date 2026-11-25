@@ -26,6 +26,14 @@ export interface GitCommit {
 export interface GitLogOptions {
   windowDays: number;
   maxCommits: number;
+  /**
+   * Restrict the history to these repository-relative paths (`git log -- <paths>`).
+   *
+   * Git then walks back until it has found `maxCommits` commits that touch one
+   * of them, so a path that is rarely changed gets its real history instead of
+   * whatever happens to be among the most recent commits of the whole tree.
+   */
+  paths?: string[];
 }
 
 export interface GitRevision {
@@ -154,6 +162,7 @@ export class GitAdapter {
       `--format=${LOG_FORMAT}`,
       '--name-only',
       '--date-order',
+      ...(options.paths === undefined || options.paths.length === 0 ? [] : ['--', ...options.paths]),
     ]);
     if (!result.ok) return [];
     return parseGitLog(result.stdout);

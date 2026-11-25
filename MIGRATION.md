@@ -1,5 +1,87 @@
 # Migration guide
 
+<!-- id="v110" -->
+## v1.1.0
+
+A minor release: additive API, no configuration change, `SCHEMA_VERSION` stays 1.
+Three changes alter what the analysis reports, so **re-scan your repository**
+after upgrading. You do not need to clear anything: a parse result written by
+another release is no longer reused.
+
+### New: navigation at the level of a file and a symbol
+
+`explain` describes a module. These answer for one file or one symbol:
+
+- `agent-context outline <file>` — what the file exports and imports, which
+  files import it, and which tests depend on it (`AgentContext.getFileOutline`);
+- `agent-context references <symbol>` — where an exported symbol is imported,
+  through barrels included; `file#symbol` when several files export the name
+  (`AgentContext.findReferences`);
+- `agent-context unused` — named exports that no analyzed file imports and no
+  entry point reaches, each with a confidence and its evidence
+  (`AgentContext.findUnusedExports`).
+
+They are exported types as well: `FileOutline`, `ImportLine`, `ReferenceReport`,
+`ReferenceTarget`, `SymbolReference`, `UnusedExportsReport`, `UnusedExport`,
+`OwnExport`, `SurfaceEntry`.
+
+### Fixed: most `require()` and dynamic `import()` calls were invisible
+
+The statement scanners skip the initializer of a declaration and the body of a
+function, which is where nearly every module load is written. The extractor saw
+`require()` only as a bare statement. Measured: **2 of 410** `require()` calls in
+`express`, **21 of 89** dynamic `import()` calls in `@nestjs/nest`. Nothing
+reported it, because an import that is never recorded cannot be unresolved.
+`express` is now in the pinned repository set.
+
+### Fixed: an MCP session answered from a stale graph
+
+The server kept one analysis for the life of the process. After the agent's
+first edit, every answer described the tree as it was when the session started.
+It now checks whether the repository moved (`stalenessCheckMs`, default 1000;
+`--staleness-check <ms>`, `0` for every call) and re-reads when it did.
+Tool results are compact JSON by default (`prettyJson` / `--pretty-json` to
+indent): indentation measured about 28% more tokens for the same data. Every
+tool declares `readOnlyHint`.
+
+### Fixed: `verify` failed on every fresh clone
+
+`.agent/.local/state.json` is gitignored, so a checkout has none and every file
+was reported as added. The committed `index.json` is now the baseline when
+there is no local state; `index.json` also records the `configHash` the context
+was generated with, so a configuration change is detected without local state.
+`StatusReport.baseline` says which was used.
+
+### Fixed: `history` of a rarely changed target was empty
+
+It took the most recent N commits of the repository and kept the ones touching
+the target. It now asks git for the commits that touch the target's paths.
+
+### Fixed: the parse cache outlived an upgrade and ignored configuration
+
+Cache entries now carry the release that wrote them; `--force` bypasses the
+cache; the cache key includes the enabled languages and the registered adapters.
+
+### Fixed: numbers and rules that could not be right
+
+- `detect`: `imports.resolved` and the resolution rate count import statements
+  on both sides. The numerator counted module edges, so a repository with one
+  module reported 0 for a single unresolved import.
+- `dependencies.json`: `summary.crossPackageEdges` was always 0; module edges
+  now carry the `workspace-package` kind. `fileImports` was cut at 400 entries
+  without saying so; the bound is 20,000 and `fileImportsTotal` /
+  `fileImportsTruncated` report it.
+- Ignore patterns with a leading `/` never matched; nested `.gitignore` files
+  and `.git/info/exclude` were not read. The configured `ignore` list now
+  outranks every `.gitignore`, as command-line excludes do in git.
+- `require('../..')` (the repository root) did not resolve; an unresolved
+  directory specifier was dropped as an asset import.
+- A package that declares a neighbouring package with a registry range depends
+  on the published package, not on the source next door.
+- `agent-context --compact` minifies `--json` output.
+
+---
+
 ## v1.0.0
 
 The first stable release. The public API is unchanged — `npm run api:check`

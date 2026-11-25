@@ -12,6 +12,7 @@
  * | `{a,b}`         | alternation                                                    |
  * | `prefix/**`     | everything below `prefix`, including the directory itself      |
  * | `name/`         | the directory `name` and everything below it                   |
+ * | `/name`         | anchored: only at the root of the pattern list, never deeper    |
  * | `!pattern`      | negation; the last matching rule wins (see {@link PatternSet}) |
  *
  * Patterns without a `/` match by basename at any depth.
@@ -117,6 +118,8 @@ export interface CompiledRule {
   negated: boolean;
   /** `true` when the rule also matches paths below a matched directory. */
   directoryScoped: boolean;
+  /** `true` when the pattern is relative to the directory of its list, not matched by basename. */
+  anchored: boolean;
   regex: RegExp;
 }
 
@@ -131,6 +134,13 @@ export function compileRule(rawPattern: string): CompiledRule {
     negated = true;
     pattern = pattern.slice(1);
   }
+  // A leading slash anchors the pattern to the directory the pattern list
+  // belongs to. It has to be read before the path is normalised, because that
+  // is what strips it: until 1.1.0 the slash survived into the regular
+  // expression as `^\/…`, which no normalised path begins with, so an anchored
+  // pattern matched nothing at all. `/dist`, `/.env.local` and every other
+  // anchored line of a `.gitignore` were silently dead rules.
+  const anchored = pattern.startsWith('/');
   let directoryScoped = false;
   if (pattern.endsWith('/')) {
     pattern = pattern.slice(0, -1);
@@ -140,14 +150,18 @@ export function compileRule(rawPattern: string): CompiledRule {
     pattern = pattern.slice(0, -3);
     directoryScoped = true;
   }
+  pattern = normalizePatternPath(pattern);
+  // Without a slash the pattern is matched against the basename at any depth,
+  // as in `.gitignore`; with one it is relative to the directory of the list.
   const hasSlash = pattern.includes('/');
   const body = translatePattern(pattern);
-  const prefix = hasSlash ? '^' : '^(?:.*/)?';
+  const prefix = anchored || hasSlash ? '^' : '^(?:.*/)?';
   const suffix = directoryScoped ? '(?:/.*)?$' : '$';
   return {
     raw: rawPattern,
     negated,
     directoryScoped,
+    anchored: anchored || hasSlash,
     regex: new RegExp(`${prefix}${body}${suffix}`),
   };
 }
@@ -176,9 +190,16 @@ export class PatternSet {
   }
 
   /**
-   * Evaluates rules in declaration order; the last matching rule wins (as in
-   * `.gitignore`). Directory-scoped rules also match descendants.
+   * What the rules of this list decide for a path: `true` (ignored), `false`
+   * (explicitly re-included by a `!` rule) or `undefined` when no rule of the
+   * list matches.
    *
+   * The third value is what lets several lists be layered the way git layers
+   * `.gitignore` files: a deeper list only overrides a shallower one where it
+   * says something, and says nothing for every path none of its rules touch.
+   *
+   * Rules are evaluated in declaration order and the last matching rule wins
+   * (as in `.gitignore`). Directory-scoped rules also match descendants.
    * `isDirectory` is accepted so callers can document at the call site whether
    * they are testing a directory or a file; evaluation is identical for both,
    * because a directory-scoped rule already matches the directory itself.
@@ -187,11 +208,11 @@ export class PatternSet {
    * the ancestor list — which costs one array plus one string per path segment
    * — is built lazily and only for the rules that actually need it.
    */
-  test(path: string, isDirectory = false): boolean {
+  decision(path: string, isDirectory = false): boolean | undefined {
     const normalized = normalizePatternPath(path);
-    if (normalized.length === 0) return false;
+    if (normalized.length === 0) return undefined;
     let parents: string[] | null = null;
-    let ignored = false;
+    let ignored: boolean | undefined;
     for (const rule of this.rules) {
       let matched = rule.regex.test(normalized);
       if (!matched && rule.directoryScoped) {
@@ -202,6 +223,11 @@ export class PatternSet {
     }
     void isDirectory;
     return ignored;
+  }
+
+  /** `true` when the rules of this list ignore the path. */
+  test(path: string, isDirectory = false): boolean {
+    return this.decision(path, isDirectory) === true;
   }
 
   /** `true` when at least one positive pattern matches the path. */

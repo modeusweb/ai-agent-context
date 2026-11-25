@@ -44,7 +44,13 @@
       "name": "ansi-styles",
       "url": "https://github.com/chalk/ansi-styles.git",
       "sha": "8cf247afbecf29a8227f7d0beb69c2997fc6bc61",
-      "note": "Older CommonJS codebase, to check the analyzer does not assume modern module syntax."
+      "note": "Older CommonJS codebase, to check the analyzer does not assume modern module syntax. It assigns to `module.exports` and contains no `require()` call at all, so it says nothing about whether a `require()` is seen; `express` was added for that."
+    },
+    {
+      "name": "express",
+      "url": "https://github.com/expressjs/express.git",
+      "sha": "43fca52d28a422c8be48fd489cbd4f2d6152bab6",
+      "note": "CommonJS with `require()` where CommonJS code actually writes it: at the top of a file inside a `const` declaration, in a destructuring, inside functions and class methods. Until 1.1.0 the extractor saw 2 of its 410 `require()` calls, and no repository in this set could show that."
     },
     {
       "name": "ky",

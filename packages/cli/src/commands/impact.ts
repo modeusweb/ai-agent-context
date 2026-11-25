@@ -17,7 +17,7 @@ export async function runImpactCommand(context: CliCommandContext, dependencies:
   try {
     const payload = await (await dependencies.createContext(contextOptions(parsed, io))).getChangeImpact(target, { maxFiles });
     if (context.json) {
-      output.print(JSON.stringify(payload, null, 2));
+      output.json(payload);
       return 0;
     }
     output.heading(`Change impact: ${payload.target}`);

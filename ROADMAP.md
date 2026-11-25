@@ -837,6 +837,54 @@ on the first one large enough to have a file the analysis declines to read.
 
 ---
 
+## v1.1.0 — What the audit found (completed)
+
+**Goal:** find out whether the numbers the project publishes are true, by
+measuring at a finer grain than the project had been measuring itself.
+
+**What the audit did.** Every command was run against throwaway repositories
+built to contain one suspicious case each, and on third-party repositories. The
+oracle was then made stricter than the product: it now extracts dynamic
+`import()` calls, and compares at the level of files, where no lift to modules
+can hide an import.
+
+**The largest finding.** The module-level comparison lifts file pairs to module
+edges and drops every pair inside one module. The extractor was recording
+`require()` and dynamic `import()` only where a statement scanner happened to
+visit — a bare `require('./x');` — and neither `express` nor any repository
+with a lazy route was in the pinned set. Measured: 2 of 410 `require()` calls
+in `express` were in the graph; 21 of 89 dynamic `import()` calls in
+`@nestjs/nest`. The resolution rate stayed at 100% throughout, because an
+import that is never recorded cannot be unresolved.
+
+**Made stricter, and what it then found on the product.** With `express` added
+to the pinned set and the file level compared, three more defects appeared in
+the analyzer and were fixed before this release: `require('../..')` did not
+resolve; a package declared with a registry range was drawn to the source
+package next door; `summary.crossPackageEdges` was 0 for every repository.
+
+**Result.** All ten pinned repositories at 100% precision and recall against
+the compiler at both levels.
+
+**Fixed besides**, each with a test that failed before the fix:
+
+- an MCP session answered from a stale graph after the first edit;
+- `verify` failed on every fresh clone, which made the published CI gate unusable;
+- the parse cache outlived an upgrade, so parser fixes never reached unchanged
+  files, and `--force` did not bypass it;
+- `history` of a target not under constant change came back empty;
+- the resolution rate divided module edges by import statements;
+- `fileImports` was cut at 400 entries without saying so;
+- anchored ignore patterns matched nothing, and nested `.gitignore` files were unread.
+
+**New.** Navigation at the level of a file and a symbol: `outline`,
+`references`, `unused`.
+
+**Known limits, stated.** The oracle skips every dot-directory and does not
+read `.agent/config.json`; pairs it cannot compare are counted, not hidden.
+
+---
+
 ## v1.0 — Stable repository intelligence (in progress)
 
 **Goal:** a stable release with a proven API, mature integrations and

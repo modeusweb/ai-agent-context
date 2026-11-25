@@ -61,16 +61,19 @@ export interface DetectionReport {
     parsedShare: number;
   };
   /**
- * Import resolution. `unresolved` counts only imports the analyzer could have
- * resolved; `excludedOutput` and `pathEscapes` are reported separately and are
- * excluded from the rate, because neither is a resolution failure.
- */
+   * Import resolution, counted in import statements on both sides of the rate.
+   *
+   * `unresolved` counts only imports the analyzer could have resolved;
+   * `excludedOutput`, `excludedFiles` and `pathEscapes` are reported separately
+   * and are excluded from the rate, because none of them is a resolution
+   * failure.
+   */
   imports: {
     resolved: number;
     unresolved: number;
     excludedOutput: number;
-  /** Imports of files that exist but were excluded from the analysis. */
-  excludedFiles: number;
+    /** Imports of files that exist but were excluded from the analysis. */
+    excludedFiles: number;
     pathEscapes: number;
     resolutionRate: number;
   };
@@ -258,11 +261,19 @@ export function detectIssues(
   // The rate covers only imports the analyzer could in principle have resolved.
   // Imports of excluded build output and rejected path escapes are reported
   // separately: counting them here would report a healthy repository as broken.
-  const resolvedEdges = graph.repository.dependencies.filter(
-    (edge) => edge.kind === 'internal-module',
+  //
+  // Both sides of the ratio are import statements. The numerator used to count
+  // module edges, which fold many imports into one and do not exist inside a
+  // module: a repository with a single module had no module edges at all, so
+  // one unresolved import made the rate 0 however many others resolved, and
+  // `resolved: 18` described 18 edges where more than 600 imports had resolved.
+  const resolvedImports = graph.fileEdges.filter(
+    (edge) =>
+      (edge.relationship === 'imports' || edge.relationship === 'exports') &&
+      (edge.kind === 'internal-file' || edge.kind === 'workspace-package'),
   ).length;
   const resolvableMisses = missing.length + unresolvedAliases.length;
-  const resolvableTotal = resolvedEdges + resolvableMisses;
+  const resolvableTotal = resolvedImports + resolvableMisses;
   return {
     schemaVersion,
     clean: present.every((issue) => issue.severity === 'info'),
@@ -281,7 +292,7 @@ export function detectIssues(
       parsedShare: files === 0 ? 1 : Number((parsed.size / files).toFixed(4)),
     },
     imports: {
-      resolved: resolvedEdges,
+      resolved: resolvedImports,
       // Imports that should have resolved and did not.
       unresolved: resolvableMisses,
       // Reported above, excluded from the rate on purpose.
@@ -292,7 +303,7 @@ export function detectIssues(
       excludedFiles: excludedFiles.length,
       pathEscapes: escapes.length,
       resolutionRate:
-        resolvableTotal === 0 ? 1 : Number((resolvedEdges / resolvableTotal).toFixed(4)),
+        resolvableTotal === 0 ? 1 : Number((resolvedImports / resolvableTotal).toFixed(4)),
     },
   };
 }

@@ -9,7 +9,7 @@ export async function runInitCommand(context: CliCommandContext, dependencies: C
   const result = await agentContext.init({ force });
 
   if (context.json) {
-    output.print(JSON.stringify(result, null, 2));
+    output.json(result);
     return 0;
   }
 

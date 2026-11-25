@@ -14,6 +14,7 @@
  */
 import type {
   DependencyEdge,
+  DependencyKind,
   Detection,
   ExternalDependency,
   FileNode,
@@ -27,10 +28,11 @@ import type {
 import type { ParsedFile } from '../../adapters/language/types.ts';
 import { compareStrings, uniqueSorted } from '../../model/canonical.ts';
 import { CONFIDENCE } from '../../model/schema.ts';
-import { extname, join, normalizeRelative } from '../../util/paths.ts';
-import { ImportResolver, withExtensions, RESOLUTION_EXTENSIONS, type AliasEntry } from './resolver.ts';
+import { extname, dirname, join, normalizeRelative } from '../../util/paths.ts';
+import { ImportResolver, withExtensions, RESOLUTION_EXTENSIONS, type AliasEntry, type ManifestDeclaration } from './resolver.ts';
 import { collectAliases } from './aliases.ts';
 import { buildModules } from './modules.ts';
+import { packageFactsFromParsed } from '../workspace/package-facts.ts';
 import type { ScanOutput } from '../scanner/scanner.ts';
 
 export interface KnowledgeGraphInput {
@@ -149,6 +151,24 @@ export function resolverWorkspacePackages(
   return result;
 }
 
+/**
+ * Every manifest of the repository, with the dependency ranges it declares.
+ *
+ * Every manifest, not only the workspace members: a directory that is not a
+ * package of the workspace still declares what it depends on, and that is what
+ * tells the resolver whether a name means the package next door or the one on
+ * the registry.
+ */
+function manifestDeclarations(scan: ScanOutput): ManifestDeclaration[] {
+  const manifests: ManifestDeclaration[] = [];
+  for (const [filePath, parsed] of scan.parsed) {
+    const facts = packageFactsFromParsed(parsed);
+    if (facts === null) continue;
+    manifests.push({ directory: normalizeRelative(dirname(filePath)), ranges: facts.dependencyRanges });
+  }
+  return manifests.sort((a, b) => compareStrings(a.directory, b.directory));
+}
+
 const INFRASTRUCTURE_PACKAGES = new Set([
   '@prisma/client',
   'prisma',
@@ -241,17 +261,33 @@ export class ModuleEdgeAccumulator {
     {
       from: string;
       to: string;
+      kind: DependencyKind;
       files: Set<string>;
       relationships: Set<Relationship>;
       evidence: Array<{ source: string; detail: string }>;
     }
   >();
 
-  add(from: string, to: string, relationship: Relationship, sourceFile: string, detail: string): void {
+  /**
+   * `kind` is the kind of the file-level import the edge is lifted from. It is
+   * what tells an edge between two packages (`import x from '@scope/pkg'`)
+   * from one between two directories of the same package, which is what
+   * `summary.crossPackageEdges` counts. Until 1.1.0 every edge was recorded as
+   * `internal-module`, so that count was 0 for every repository, including
+   * this one, whose two packages import the third by name.
+   */
+  add(
+    from: string,
+    to: string,
+    relationship: Relationship,
+    sourceFile: string,
+    detail: string,
+    kind: DependencyKind = 'internal-module',
+  ): void {
     const key = `${from}|${to}`;
     let entry = this.entries.get(key);
     if (entry === undefined) {
-      entry = { from, to, files: new Set(), relationships: new Set(), evidence: [] };
+      entry = { from, to, kind, files: new Set(), relationships: new Set(), evidence: [] };
       this.entries.set(key, entry);
     }
     entry.files.add(sourceFile);
@@ -278,7 +314,7 @@ export class ModuleEdgeAccumulator {
         to: entry.to,
         toKind: 'module' as const,
         relationship: 'depends-on' as Relationship,
-        kind: 'internal-module' as const,
+        kind: entry.kind,
         confidence: CONFIDENCE.declared,
         evidence: [
           {
@@ -361,6 +397,8 @@ export function buildKnowledgeGraph(input: KnowledgeGraphInput): KnowledgeGraph 
     excludedFiles,
     aliases,
     workspacePackages: resolverWorkspacePackages(workspace, resolvableFiles),
+    manifests: manifestDeclarations(scan),
+    workspaceMembers: workspace.isMonorepo,
   });
 
   const fileEdges: DependencyEdge[] = [];
@@ -424,7 +462,7 @@ export function buildKnowledgeGraph(input: KnowledgeGraphInput): KnowledgeGraph 
           evidence,
         });
         if (fromModule !== null && resolved.target !== fromModule) {
-          moduleEdges.add(fromModule, resolved.target, relationship, file.path, resolved.evidence);
+          moduleEdges.add(fromModule, resolved.target, relationship, file.path, resolved.evidence, 'workspace-package');
         }
         continue;
       }
@@ -458,8 +496,13 @@ export function buildKnowledgeGraph(input: KnowledgeGraphInput): KnowledgeGraph 
       const lastSegment = record.specifier.slice(record.specifier.lastIndexOf('/') + 1);
       const extension = lastSegment.includes('.') ? lastSegment.slice(lastSegment.lastIndexOf('.')) : '';
       const isPathEscape = resolved.attempts.some((attempt) => attempt.includes('outside the repository root'));
+      // A specifier that ends in a slash, a dot or `..` names a directory —
+      // `./styles/`, `../..` for the repository root. Nothing in it says which
+      // kind of file it expects, so the extension test below cannot classify
+      // it; left to that test, an unresolved one was dropped as an asset import.
+      const namesDirectory = lastSegment === '' || lastSegment === '.' || lastSegment === '..';
       const looksLikeCode =
-        isPathEscape || !lastSegment.includes('.') || CODE_EXTENSIONS.has(extension);
+        isPathEscape || namesDirectory || !lastSegment.includes('.') || CODE_EXTENSIONS.has(extension);
       if (looksLikeCode) {
         unresolved.push({
           file: file.path,

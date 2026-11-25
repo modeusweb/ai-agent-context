@@ -321,6 +321,24 @@
     },
     {
       "externalPackages": [],
+      "file": "packages/cli/src/commands/outline.ts",
+      "internalModules": [
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/cli/src/commands/references.ts",
+      "internalModules": [
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
       "file": "packages/cli/src/commands/revision-diff.ts",
       "internalModules": [
         "packages/cli/src"
@@ -366,6 +384,15 @@
     },
     {
       "externalPackages": [],
+      "file": "packages/cli/src/commands/unused.ts",
+      "internalModules": [
+        "packages/cli/src",
+        "packages/cli/src/ui"
+      ],
+      "module": "packages/cli/src/commands"
+    },
+    {
+      "externalPackages": [],
       "file": "packages/cli/src/commands/verify.ts",
       "internalModules": [
         "packages/cli/src",
@@ -401,6 +428,21 @@
         "node:url"
       ],
       "file": "packages/cli/test/cli.test.ts",
+      "internalModules": [
+        "packages/core/test"
+      ],
+      "module": "packages/cli/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:child_process",
+        "node:fs",
+        "node:path",
+        "node:test",
+        "node:url"
+      ],
+      "file": "packages/cli/test/fresh-clone.test.ts",
       "internalModules": [
         "packages/core/test"
       ],
@@ -485,7 +527,8 @@
       "file": "packages/core/src/agent-context.ts",
       "internalModules": [
         "packages/core/src/config",
-        "packages/core/src/model"
+        "packages/core/src/model",
+        "packages/core/src/util"
       ],
       "module": "packages/core/src"
     },
@@ -663,12 +706,30 @@
       "module": "packages/core/src"
     },
     {
+      "externalPackages": [],
+      "file": "packages/core/src/core/navigation/references.ts",
+      "internalModules": [
+        "packages/core/src/model",
+        "packages/core/src/util"
+      ],
+      "module": "packages/core/src"
+    },
+    {
       "externalPackages": [
         "node:fs/promises",
         "node:path"
       ],
       "file": "packages/core/src/core/scanner/cache.ts",
       "internalModules": [
+        "packages/core/src/model"
+      ],
+      "module": "packages/core/src"
+    },
+    {
+      "externalPackages": [],
+      "file": "packages/core/src/core/scanner/fingerprint.ts",
+      "internalModules": [
+        "packages/core/src/config",
         "packages/core/src/model"
       ],
       "module": "packages/core/src"
@@ -888,7 +949,9 @@
         "node:url"
       ],
       "file": "packages/core/test/config.test.ts",
-      "internalModules": [],
+      "internalModules": [
+        "@ai-agent-context/core"
+      ],
       "module": "packages/core/test"
     },
     {
@@ -1002,6 +1065,28 @@
     {
       "externalPackages": [
         "node:assert/strict",
+        "node:child_process",
+        "node:test"
+      ],
+      "file": "packages/core/test/history-scope.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:child_process",
+        "node:fs",
+        "node:path",
+        "node:test"
+      ],
+      "file": "packages/core/test/ignore-files.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
         "node:fs",
         "node:path",
         "node:test"
@@ -1025,6 +1110,8 @@
     {
       "externalPackages": [
         "node:assert/strict",
+        "node:fs",
+        "node:path",
         "node:test"
       ],
       "file": "packages/core/test/jsx.test.ts",
@@ -1043,12 +1130,48 @@
     {
       "externalPackages": [
         "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/module-loads.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/navigation.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
         "node:fs",
         "node:os",
         "node:path",
         "node:test"
       ],
       "file": "packages/core/test/policy.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/reported-numbers.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/core/test/resolution-scopes.test.ts",
       "internalModules": [],
       "module": "packages/core/test"
     },
@@ -1078,6 +1201,17 @@
         "node:test"
       ],
       "file": "packages/core/test/template-literals.test.ts",
+      "internalModules": [],
+      "module": "packages/core/test"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:fs",
+        "node:path",
+        "node:test"
+      ],
+      "file": "packages/core/test/verify-baseline.test.ts",
       "internalModules": [],
       "module": "packages/core/test"
     },
@@ -1123,6 +1257,17 @@
         "@ai-agent-context/core"
       ],
       "module": "packages/mcp/src"
+    },
+    {
+      "externalPackages": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "file": "packages/mcp/test/freshness.test.ts",
+      "internalModules": [
+        "packages/core/test"
+      ],
+      "module": "packages/mcp/test"
     },
     {
       "externalPackages": [
@@ -1338,14 +1483,14 @@
         }
       ],
       "from": "packages/cli/src/commands",
-      "kind": "internal-module",
+      "kind": "workspace-package",
       "to": "@ai-agent-context/core"
     },
     {
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "15 file(s) import packages/cli/src",
+          "detail": "18 file(s) import packages/cli/src",
           "source": "packages/cli/src/commands"
         },
         {
@@ -1373,7 +1518,7 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "7 file(s) import packages/cli/src/ui",
+          "detail": "10 file(s) import packages/cli/src/ui",
           "source": "packages/cli/src/commands"
         },
         {
@@ -1390,7 +1535,7 @@
         },
         {
           "detail": "relative import resolved to packages/cli/src/ui/format.ts",
-          "source": "packages/cli/src/commands/scan.ts"
+          "source": "packages/cli/src/commands/outline.ts"
         }
       ],
       "from": "packages/cli/src/commands",
@@ -1410,7 +1555,7 @@
         }
       ],
       "from": "packages/cli/src/ui",
-      "kind": "internal-module",
+      "kind": "workspace-package",
       "to": "@ai-agent-context/core"
     },
     {
@@ -1430,7 +1575,7 @@
         }
       ],
       "from": "packages/cli/src",
-      "kind": "internal-module",
+      "kind": "workspace-package",
       "to": "@ai-agent-context/core"
     },
     {
@@ -1493,12 +1638,16 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "1 file(s) import packages/core/test",
+          "detail": "2 file(s) import packages/core/test",
           "source": "packages/cli/test"
         },
         {
           "detail": "relative import resolved to packages/core/test/helpers.ts",
           "source": "packages/cli/test/cli.test.ts"
+        },
+        {
+          "detail": "relative import resolved to packages/core/test/helpers.ts",
+          "source": "packages/cli/test/fresh-clone.test.ts"
         }
       ],
       "from": "packages/cli/test",
@@ -1573,7 +1722,7 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "8 file(s) import packages/core/src/config",
+          "detail": "9 file(s) import packages/core/src/config",
           "source": "packages/core/src"
         },
         {
@@ -1601,7 +1750,7 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "37 file(s) import packages/core/src/model",
+          "detail": "39 file(s) import packages/core/src/model",
           "source": "packages/core/src"
         },
         {
@@ -1629,7 +1778,7 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "17 file(s) import packages/core/src/util",
+          "detail": "19 file(s) import packages/core/src/util",
           "source": "packages/core/src"
         },
         {
@@ -1652,6 +1801,22 @@
       "from": "packages/core/src",
       "kind": "internal-module",
       "to": "packages/core/src/util"
+    },
+    {
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "detail": "1 file(s) import @ai-agent-context/core",
+          "source": "packages/core/test"
+        },
+        {
+          "detail": "relative specifier \"..\" names the directory of workspace package \"@ai-agent-context/core\", whose entry is packages/core/package.json",
+          "source": "packages/core/test/config.test.ts"
+        }
+      ],
+      "from": "packages/core/test",
+      "kind": "workspace-package",
+      "to": "@ai-agent-context/core"
     },
     {
       "confidence": 0.99,
@@ -1682,7 +1847,7 @@
         }
       ],
       "from": "packages/mcp/src/tools",
-      "kind": "internal-module",
+      "kind": "workspace-package",
       "to": "@ai-agent-context/core"
     },
     {
@@ -1698,11 +1863,15 @@
         },
         {
           "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
+          "source": "packages/mcp/src/server.ts"
+        },
+        {
+          "detail": "specifier resolves to workspace package \"@ai-agent-context/core\" (packages/core)",
           "source": "packages/mcp/src/version.ts"
         }
       ],
       "from": "packages/mcp/src",
-      "kind": "internal-module",
+      "kind": "workspace-package",
       "to": "@ai-agent-context/core"
     },
     {
@@ -1737,8 +1906,12 @@
       "confidence": 0.99,
       "evidence": [
         {
-          "detail": "3 file(s) import packages/core/test",
+          "detail": "4 file(s) import packages/core/test",
           "source": "packages/mcp/test"
+        },
+        {
+          "detail": "relative import resolved to packages/core/test/helpers.ts",
+          "source": "packages/mcp/test/freshness.test.ts"
         },
         {
           "detail": "relative import resolved to packages/core/test/helpers.ts",
@@ -1760,11 +1933,14 @@
   ],
   "schemaVersion": 1,
   "summary": {
-    "crossPackageEdges": 0,
+    "crossPackageEdges": 6,
     "cycles": 2,
     "externalPackages": 13,
-    "internalModuleEdges": 19,
-    "unresolvedImports": 31
+    "fileImports": 127,
+    "fileImportsTotal": 127,
+    "fileImportsTruncated": false,
+    "internalModuleEdges": 20,
+    "unresolvedImports": 40
   },
   "unresolved": [
     {
@@ -1883,6 +2059,22 @@
       "attempts": [
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
+      "file": "packages/core/test/history-scope.test.ts",
+      "reason": "missing",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/ignore-files.test.ts",
+      "reason": "missing",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
       "file": "packages/core/test/incremental.test.ts",
       "reason": "missing",
       "specifier": "../dist/index.js"
@@ -1915,9 +2107,41 @@
       "attempts": [
         "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
       ],
+      "file": "packages/core/test/module-loads.test.ts",
+      "reason": "missing",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/navigation.test.ts",
+      "reason": "missing",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
       "file": "packages/core/test/policy.test.ts",
       "reason": "missing",
       "specifier": "../../core/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/reported-numbers.test.ts",
+      "reason": "missing",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/resolution-scopes.test.ts",
+      "reason": "missing",
+      "specifier": "../dist/index.js"
     },
     {
       "attempts": [
@@ -1942,6 +2166,30 @@
       "file": "packages/core/test/template-literals.test.ts",
       "reason": "missing",
       "specifier": "../../core/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/core/test/verify-baseline.test.ts",
+      "reason": "missing",
+      "specifier": "../dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/core/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/mcp/test/freshness.test.ts",
+      "reason": "missing",
+      "specifier": "../../core/dist/index.js"
+    },
+    {
+      "attempts": [
+        "no analyzed file matched \"packages/mcp/dist/index.js\" with a known extension or index file"
+      ],
+      "file": "packages/mcp/test/freshness.test.ts",
+      "reason": "missing",
+      "specifier": "../../mcp/dist/index.js"
     },
     {
       "attempts": [

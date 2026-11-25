@@ -118,6 +118,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/cli/test/fresh-clone.test.ts"
+        }
+      ],
+      "moduleId": "packages/cli/test",
+      "path": "packages/cli/test/fresh-clone.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/cli/test/public-api.lock.json"
         }
       ],
@@ -398,6 +410,30 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/history-scope.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/history-scope.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/ignore-files.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/ignore-files.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/test/incremental.test.ts"
         }
       ],
@@ -446,6 +482,30 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/module-loads.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/module-loads.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/navigation.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/navigation.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "packages/core/test/policy.test.ts"
         }
       ],
@@ -463,6 +523,30 @@
       ],
       "moduleId": "packages/core/test",
       "path": "packages/core/test/public-api.lock.json",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/reported-numbers.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/reported-numbers.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/resolution-scopes.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/resolution-scopes.test.ts",
       "type": "test"
     },
     {
@@ -499,6 +583,18 @@
       ],
       "moduleId": "packages/core/test",
       "path": "packages/core/test/template-literals.test.ts",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/core/test/verify-baseline.test.ts"
+        }
+      ],
+      "moduleId": "packages/core/test",
+      "path": "packages/core/test/verify-baseline.test.ts",
       "type": "test"
     },
     {
@@ -601,6 +697,18 @@
       "moduleId": "packages/mcp/src",
       "path": "packages/mcp/src/server.ts",
       "type": "application"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
+          "source": "packages/mcp/test/freshness.test.ts"
+        }
+      ],
+      "moduleId": "packages/mcp/test",
+      "path": "packages/mcp/test/freshness.test.ts",
+      "type": "test"
     },
     {
       "confidence": 0.95,
@@ -710,7 +818,7 @@
         "contributorCount": 1,
         "historicalChanges": 17,
         "lastChanged": "2026-10-18",
-        "recentChanges": 17,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 20,
@@ -882,14 +990,17 @@
         "packages/cli/src/commands/impact.ts",
         "packages/cli/src/commands/init.ts",
         "packages/cli/src/commands/migrate.ts",
+        "packages/cli/src/commands/outline.ts",
+        "packages/cli/src/commands/references.ts",
         "packages/cli/src/commands/revision-diff.ts",
         "packages/cli/src/commands/scan.ts",
         "packages/cli/src/commands/search.ts",
         "packages/cli/src/commands/status.ts",
         "packages/cli/src/commands/task.ts",
+        "packages/cli/src/commands/unused.ts",
         "packages/cli/src/commands/verify.ts"
       ],
-      "files": 15,
+      "files": 18,
       "git": {
         "architectureChangeSignals": [
           {
@@ -902,7 +1013,7 @@
         "contributorCount": 1,
         "historicalChanges": 10,
         "lastChanged": "2026-10-17",
-        "recentChanges": 10,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 22,
@@ -972,6 +1083,16 @@
           "name": "runMigrateCommand"
         },
         {
+          "file": "packages/cli/src/commands/outline.ts",
+          "kind": "function",
+          "name": "runOutlineCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/references.ts",
+          "kind": "function",
+          "name": "runReferencesCommand"
+        },
+        {
           "file": "packages/cli/src/commands/revision-diff.ts",
           "kind": "function",
           "name": "runRevisionDiffCommand"
@@ -995,6 +1116,11 @@
           "file": "packages/cli/src/commands/task.ts",
           "kind": "function",
           "name": "runTaskCommand"
+        },
+        {
+          "file": "packages/cli/src/commands/unused.ts",
+          "kind": "function",
+          "name": "runUnusedCommand"
         },
         {
           "file": "packages/cli/src/commands/verify.ts",
@@ -1070,7 +1196,7 @@
         "contributorCount": 1,
         "historicalChanges": 3,
         "lastChanged": "2026-10-17",
-        "recentChanges": 3,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 4,
@@ -1122,6 +1248,16 @@
         {
           "file": "packages/cli/src/ui/format.ts",
           "kind": "function",
+          "name": "renderOutline"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
+          "name": "renderReferences"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
           "name": "renderRepositoryContext"
         },
         {
@@ -1138,6 +1274,11 @@
           "file": "packages/cli/src/ui/format.ts",
           "kind": "function",
           "name": "renderStatus"
+        },
+        {
+          "file": "packages/cli/src/ui/format.ts",
+          "kind": "function",
+          "name": "renderUnused"
         }
       ],
       "responsibilities": [
@@ -1177,7 +1318,7 @@
               "source": "packages/cli/src/ui/format.ts"
             }
           ],
-          "value": "public API: ConsoleOptions, ConsoleOutput, compactStatusPayload, formatDuration, formatNumber, renderDiff, renderExplain, renderRepositoryContext"
+          "value": "public API: ConsoleOptions, ConsoleOutput, compactStatusPayload, formatDuration, formatNumber, renderDiff, renderExplain, renderOutline"
         }
       ],
       "roles": [
@@ -1219,20 +1360,22 @@
       ],
       "entryPoints": [
         "packages/cli/test/cli.test.ts",
+        "packages/cli/test/fresh-clone.test.ts",
         "packages/cli/test/public-api.lock.json"
       ],
       "fileList": [
         "packages/cli/test/cli.test.ts",
+        "packages/cli/test/fresh-clone.test.ts",
         "packages/cli/test/public-api.lock.json"
       ],
-      "files": 2,
+      "files": 3,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "low",
         "contributorCount": 1,
         "historicalChanges": 9,
         "lastChanged": "2026-10-18",
-        "recentChanges": 9,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 9,
@@ -1296,6 +1439,7 @@
       ],
       "testFiles": [
         "packages/cli/test/cli.test.ts",
+        "packages/cli/test/fresh-clone.test.ts",
         "packages/cli/test/public-api.lock.json"
       ],
       "usedBy": []
@@ -1347,7 +1491,9 @@
         "packages/core/src/core/graph/knowledge-graph.ts",
         "packages/core/src/core/graph/modules.ts",
         "packages/core/src/core/graph/resolver.ts",
+        "packages/core/src/core/navigation/references.ts",
         "packages/core/src/core/scanner/cache.ts",
+        "packages/core/src/core/scanner/fingerprint.ts",
         "packages/core/src/core/scanner/scanner.ts",
         "packages/core/src/core/scanner/types.ts",
         "packages/core/src/core/search/analyzer.ts",
@@ -1366,14 +1512,14 @@
         "packages/core/src/logging/diagnostics.ts",
         "packages/core/src/pipeline/scan-pipeline.ts"
       ],
-      "files": 48,
+      "files": 50,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
         "historicalChanges": 21,
         "lastChanged": "2026-10-18",
-        "recentChanges": 21,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 98,
@@ -1685,7 +1831,7 @@
         "contributorCount": 1,
         "historicalChanges": 3,
         "lastChanged": "2026-10-17",
-        "recentChanges": 3,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 10,
@@ -1919,7 +2065,7 @@
         "contributorCount": 1,
         "historicalChanges": 26,
         "lastChanged": "2026-10-18",
-        "recentChanges": 26,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 32,
@@ -2301,7 +2447,7 @@
         "contributorCount": 1,
         "historicalChanges": 3,
         "lastChanged": "2026-10-18",
-        "recentChanges": 3,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 6,
@@ -2500,6 +2646,7 @@
       "basis": "directory",
       "boundaries": [],
       "dependsOn": [
+        "@ai-agent-context/core",
         "tools"
       ],
       "entryPoints": [
@@ -2518,15 +2665,22 @@
         "packages/core/test/generics.test.ts",
         "packages/core/test/git.test.ts",
         "packages/core/test/helpers.ts",
+        "packages/core/test/history-scope.test.ts",
+        "packages/core/test/ignore-files.test.ts",
         "packages/core/test/incremental.test.ts",
         "packages/core/test/integration.test.ts",
         "packages/core/test/jsx.test.ts",
         "packages/core/test/language.test.ts",
+        "packages/core/test/module-loads.test.ts",
+        "packages/core/test/navigation.test.ts",
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
+        "packages/core/test/reported-numbers.test.ts",
+        "packages/core/test/resolution-scopes.test.ts",
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts",
-        "packages/core/test/template-literals.test.ts"
+        "packages/core/test/template-literals.test.ts",
+        "packages/core/test/verify-baseline.test.ts"
       ],
       "fileList": [
         "packages/core/test/api-surface.test.ts",
@@ -2544,24 +2698,31 @@
         "packages/core/test/generics.test.ts",
         "packages/core/test/git.test.ts",
         "packages/core/test/helpers.ts",
+        "packages/core/test/history-scope.test.ts",
+        "packages/core/test/ignore-files.test.ts",
         "packages/core/test/incremental.test.ts",
         "packages/core/test/integration.test.ts",
         "packages/core/test/jsx.test.ts",
         "packages/core/test/language.test.ts",
+        "packages/core/test/module-loads.test.ts",
+        "packages/core/test/navigation.test.ts",
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
+        "packages/core/test/reported-numbers.test.ts",
+        "packages/core/test/resolution-scopes.test.ts",
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts",
-        "packages/core/test/template-literals.test.ts"
+        "packages/core/test/template-literals.test.ts",
+        "packages/core/test/verify-baseline.test.ts"
       ],
-      "files": 24,
+      "files": 31,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
         "historicalChanges": 20,
         "lastChanged": "2026-10-18",
-        "recentChanges": 20,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 39,
@@ -2693,15 +2854,22 @@
         "packages/core/test/generics.test.ts",
         "packages/core/test/git.test.ts",
         "packages/core/test/helpers.ts",
+        "packages/core/test/history-scope.test.ts",
+        "packages/core/test/ignore-files.test.ts",
         "packages/core/test/incremental.test.ts",
         "packages/core/test/integration.test.ts",
         "packages/core/test/jsx.test.ts",
         "packages/core/test/language.test.ts",
+        "packages/core/test/module-loads.test.ts",
+        "packages/core/test/navigation.test.ts",
         "packages/core/test/policy.test.ts",
         "packages/core/test/public-api.lock.json",
+        "packages/core/test/reported-numbers.test.ts",
+        "packages/core/test/resolution-scopes.test.ts",
         "packages/core/test/resolver.test.ts",
         "packages/core/test/scanner.test.ts",
-        "packages/core/test/template-literals.test.ts"
+        "packages/core/test/template-literals.test.ts",
+        "packages/core/test/verify-baseline.test.ts"
       ],
       "usedBy": [
         "packages/cli/test",
@@ -2737,7 +2905,7 @@
         "contributorCount": 1,
         "historicalChanges": 14,
         "lastChanged": "2026-10-18",
-        "recentChanges": 14,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 27,
@@ -3028,7 +3196,7 @@
         "contributorCount": 1,
         "historicalChanges": 10,
         "lastChanged": "2026-10-18",
-        "recentChanges": 10,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 17,
@@ -3046,6 +3214,11 @@
           "file": "packages/mcp/src/tools/handlers.ts",
           "kind": "class",
           "name": "ContextPool"
+        },
+        {
+          "file": "packages/mcp/src/tools/handlers.ts",
+          "kind": "const",
+          "name": "DEFAULT_STALENESS_CHECK_MS"
         },
         {
           "file": "packages/mcp/src/tools/definitions.ts",
@@ -3102,15 +3275,15 @@
               "source": "packages/mcp/src/tools/handlers.ts"
             },
             {
-              "detail": "exports JsonSchema (interface)",
-              "source": "packages/mcp/src/tools/definitions.ts"
+              "detail": "exports DEFAULT_STALENESS_CHECK_MS (const)",
+              "source": "packages/mcp/src/tools/handlers.ts"
             },
             {
-              "detail": "exports TOOL_DEFINITIONS (const)",
+              "detail": "exports JsonSchema (interface)",
               "source": "packages/mcp/src/tools/definitions.ts"
             }
           ],
-          "value": "public API: ContextPool, JsonSchema, TOOL_DEFINITIONS, ToolCallResult, ToolDefinition, ToolHandlerDependencies, ValidationResult, callTool"
+          "value": "public API: ContextPool, DEFAULT_STALENESS_CHECK_MS, JsonSchema, TOOL_DEFINITIONS, ToolCallResult, ToolDefinition, ToolHandlerDependencies, ValidationResult"
         }
       ],
       "roles": [],
@@ -3129,25 +3302,27 @@
         "packages/core/test"
       ],
       "entryPoints": [
+        "packages/mcp/test/freshness.test.ts",
         "packages/mcp/test/mcp.test.ts",
         "packages/mcp/test/presets.test.ts",
         "packages/mcp/test/protocol.test.ts",
         "packages/mcp/test/public-api.lock.json"
       ],
       "fileList": [
+        "packages/mcp/test/freshness.test.ts",
         "packages/mcp/test/mcp.test.ts",
         "packages/mcp/test/presets.test.ts",
         "packages/mcp/test/protocol.test.ts",
         "packages/mcp/test/public-api.lock.json"
       ],
-      "files": 4,
+      "files": 5,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "medium",
         "contributorCount": 1,
         "historicalChanges": 13,
         "lastChanged": "2026-10-18",
-        "recentChanges": 13,
+        "recentChanges": 0,
         "topContributors": [
           {
             "commits": 15,
@@ -3190,6 +3365,7 @@
         "test:suite"
       ],
       "testFiles": [
+        "packages/mcp/test/freshness.test.ts",
         "packages/mcp/test/mcp.test.ts",
         "packages/mcp/test/presets.test.ts",
         "packages/mcp/test/protocol.test.ts",
@@ -3226,12 +3402,12 @@
         "architectureChangeSignals": [],
         "changeFrequency": "high",
         "contributorCount": 1,
-        "historicalChanges": 18,
+        "historicalChanges": 19,
         "lastChanged": "2026-10-18",
-        "recentChanges": 18,
+        "recentChanges": 0,
         "topContributors": [
           {
-            "commits": 29,
+            "commits": 30,
             "name": "modeusweb"
           }
         ]
@@ -3327,7 +3503,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 54,
+    "entryPoints": 63,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3351,21 +3527,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "1.0.0"
+        "version": "1.1.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "1.0.0"
+        "version": "1.1.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "1.0.0"
+        "version": "1.1.0"
       }
     ],
     "workspaceGlobs": [

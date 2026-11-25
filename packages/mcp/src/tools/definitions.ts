@@ -24,7 +24,37 @@ export interface ToolDefinition {
   inputSchema: JsonSchema;
   /** Documented shape of the returned payload. */
   outputDescription: string;
+  /**
+   * Behavioural hints for the client. They are hints: the specification has
+   * clients treat them as untrusted unless the server is trusted, and they
+   * describe the tool rather than guarantee anything about it.
+   */
+  annotations?: {
+    readOnlyHint: boolean;
+    destructiveHint: boolean;
+    idempotentHint: boolean;
+    openWorldHint: boolean;
+  };
 }
+
+/**
+ * Every tool of this server reads the repository it was started on and does
+ * nothing else: no writes, no network, the same answer for the same call.
+ *
+ * The hints are declared per tool rather than applied to the whole list, so a
+ * tool that is not read-only cannot inherit them by accident.
+ *
+ * What they change for a user: a client that asks for confirmation before each
+ * tool can skip the prompt for a read-only one. For an agent that calls three
+ * tools in a row, that is three interruptions fewer — and a client that shows
+ * the hint can label the tool as a read in its interface.
+ */
+const READ_ONLY_ANNOTATIONS: NonNullable<ToolDefinition['annotations']> = Object.freeze({
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+});
 
 const ROOT_PROPERTY: JsonSchema = {
   type: 'string',
@@ -39,6 +69,7 @@ const MODULE_PROPERTY: JsonSchema = {
 export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
     name: 'detect_coverage_gaps',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Detect coverage gaps',
     description:
       'Reports what the analysis could NOT determine: unresolved imports (separated into real gaps, excluded build output and rejected path traversals), failed and partial parses, sensitive files skipped, import cycles, layering violations and modules with no resolved dependency. Call this before relying on the dependency graph, so you know which parts of it are missing.',
@@ -52,6 +83,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_context_for_task',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get context for task',
     description:
       'Bounded, task-oriented repository context. Searches relevant modules, then returns their summary, dependencies, dependents, public API, tests, conventions, decisions and evidence. Use this before proposing or implementing a change.',
@@ -70,6 +102,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_change_impact',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get change impact',
     description:
       'Bounded impact set for a proposed change: transitive dependent modules, affected files, tests, relevant conventions, decisions and evidence.',
@@ -87,6 +120,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_repository_context',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get repository context',
     description:
       'Compact, structured overview of the repository: languages, file counts, workspace layout, runnable commands, ranked modules with heuristic roles, entry points, external dependencies and documented decisions. Call this first to orient yourself.',
@@ -107,6 +141,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'explain_module',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Explain module',
     description:
       'Structured explanation of one module (or of the module owning a file path): entry points, internal dependencies, dependents, external packages, public API, relevant conventions and decisions, tests, neutral git activity and the transitive change impact set.',
@@ -130,6 +165,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_dependencies',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get dependencies',
     description:
       'Dependencies of a module or of the whole repository: internal module edges with evidence, external packages grouped by scope and heuristic importance, and imports that could not be resolved to a file.',
@@ -145,6 +181,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_dependents',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get dependents',
     description:
       'Modules that depend on a given module: direct dependents plus the transitive set, so you can reason about the impact of a change.',
@@ -158,6 +195,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'search_context',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Search context',
     description:
       'Deterministic lexical (BM25) search across files, modules, symbols, conventions, decisions and entry points; returns ranked nodes and the reason each matched. Example queries: "payment idempotency", "where are routes registered".',
@@ -180,6 +218,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_module_history',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get module history',
     description: 'Bounded local Git history for a module: commits, authors, dates, touched files and architecture-change signals.',
     inputSchema: {
@@ -192,6 +231,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_revision_diff',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get revision diff',
     description: 'Changed paths and statuses between two local Git revisions, including additions, deletions, modifications and renames.',
     inputSchema: {
@@ -204,6 +244,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_revision_snapshot',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get revision snapshot',
     description: 'Metadata and bounded structural summary for a local Git revision. Does not checkout or modify the working tree.',
     inputSchema: {
@@ -216,6 +257,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_architecture',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get architecture',
     description:
       'Architecture projection: workspace model, entry points and every detected module with heuristic roles (confidence + evidence), responsibilities, dependency edges and neutral git activity.',
@@ -228,6 +270,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_conventions',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get conventions',
     description:
       'Observable repository conventions (naming, imports, tests, error handling, exports, structure, toolchain). Every statement is a counted observation with confidence and evidence — never an invented rule.',
@@ -243,6 +286,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'get_decisions',
+    annotations: READ_ONLY_ANNOTATIONS,
     title: 'Get decisions',
     description:
       'Architecture decisions: documents found in docs/, adr/ and README sections (origin "explicit") plus heuristically derived signals (origin "inferred", with evidence and source).',

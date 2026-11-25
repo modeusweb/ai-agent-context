@@ -9,7 +9,7 @@ export async function runDiffCommand(context: CliCommandContext, dependencies: C
   const diff = await agentContext.diff();
 
   if (context.json) {
-    output.print(JSON.stringify(diff, null, 2));
+    output.json(diff);
     return 0;
   }
 

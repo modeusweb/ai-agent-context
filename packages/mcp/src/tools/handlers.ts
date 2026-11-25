@@ -14,7 +14,22 @@ export interface ToolHandlerDependencies {
   root: string;
   /** Injectable factory, used by tests. */
   createContext?: (options: AgentContextOptions) => Promise<AgentContext>;
+  /**
+   * Minimum interval between two staleness checks of the same root, in
+   * milliseconds. `0` checks before every call.
+   *
+   * A check walks the tree without opening a file, which is cheap on a small
+   * repository and not free on a large one, so it is not repeated for calls
+   * that arrive close together. The cost of the interval is that an edit can go
+   * unnoticed for up to that long.
+   */
+  stalenessCheckMs?: number;
+  /** Injectable clock (tests). */
+  now?: () => number;
 }
+
+/** How long a staleness check is trusted, unless configured otherwise. */
+export const DEFAULT_STALENESS_CHECK_MS = 1_000;
 
 export interface ToolCallResult {
   /** `true` when the tool could not satisfy the request. */
@@ -36,9 +51,19 @@ function asStringArray(value: unknown): string[] | undefined {
   return items.length > 0 ? items : undefined;
 }
 
-/** Per-root context cache: an MCP session should not rescan on every call. */
+/**
+ * Per-root context cache: an MCP session should not rescan on every call.
+ *
+ * Cached does not mean frozen. The agent using the session edits the very
+ * repository the context describes, so before a cached context answers, it is
+ * asked whether the tree moved since it was analysed (`AgentContext.isStale`),
+ * and dropped when it did. Without that, the second half of every session
+ * answered from the repository as it was at the start of the first.
+ */
 export class ContextPool {
   private readonly contexts = new Map<string, Promise<AgentContext>>();
+  /** When each root was last checked for staleness. */
+  private readonly checkedAt = new Map<string, number>();
   private readonly dependencies: ToolHandlerDependencies;
 
   constructor(dependencies: ToolHandlerDependencies) {
@@ -51,7 +76,7 @@ export class ContextPool {
     // each triggering a full scan.
     const key = path.resolve(root);
     const existing = this.contexts.get(key);
-    if (existing !== undefined) return existing;
+    if (existing !== undefined) return this.refreshIfMoved(key, await existing);
     const options: AgentContextOptions = { root: key };
     const pending =
       this.dependencies.createContext === undefined
@@ -64,11 +89,30 @@ export class ContextPool {
     void pending.catch(() => {
       if (this.contexts.get(key) === pending) this.contexts.delete(key);
     });
-    return pending;
+    const context = await pending;
+    this.checkedAt.set(key, this.now());
+    return context;
+  }
+
+  private now(): number {
+    return (this.dependencies.now ?? Date.now)();
+  }
+
+  /** Drops a context whose repository or configuration moved since it was analysed. */
+  private async refreshIfMoved(key: string, context: AgentContext): Promise<AgentContext> {
+    const interval = this.dependencies.stalenessCheckMs ?? DEFAULT_STALENESS_CHECK_MS;
+    const now = this.now();
+    const last = this.checkedAt.get(key);
+    if (interval > 0 && last !== undefined && now - last < interval) return context;
+    this.checkedAt.set(key, now);
+    if (!(await context.isStale())) return context;
+    await context.invalidate();
+    return context;
   }
 
   clear(): void {
     this.contexts.clear();
+    this.checkedAt.clear();
   }
 }
 

@@ -23,10 +23,21 @@ export interface PackageFacts {
   dependencies: string[];
   devDependencies: string[];
   peerDependencies: string[];
+  /**
+   * Dependency name → the range declared for it, over every dependency field.
+   *
+   * The names alone cannot tell the package next door from the package on the
+   * registry: both are declared the same way, and only the range distinguishes
+   * `workspace:^` from `1.0.0`.
+   */
+  dependencyRanges: Record<string, string>;
   workspaces: string[];
   entries: PackageEntryField[];
   packageManager: string | null;
 }
+
+/** The fields of a manifest that declare a dependency on another package. */
+const DEPENDENCY_FIELDS = ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'] as const;
 
 function stringRecord(value: unknown): Record<string, string> {
   if (!isPlainObject(value)) return {};
@@ -40,6 +51,18 @@ function stringRecord(value: unknown): Record<string, string> {
 function dependencyNames(value: unknown): string[] {
   if (!isPlainObject(value)) return [];
   return Object.keys(value).sort();
+}
+
+/** Dependency name → declared range. The first field to declare a name wins, as it does for npm. */
+function dependencyRanges(raw: Record<string, unknown>): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const field of DEPENDENCY_FIELDS) {
+    if (!isPlainObject(raw[field])) continue;
+    for (const [name, range] of Object.entries(raw[field])) {
+      if (typeof range === 'string' && result[name] === undefined) result[name] = range;
+    }
+  }
+  return Object.fromEntries(Object.entries(result).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
 }
 
 /**
@@ -110,6 +133,7 @@ export class PackageJsonAdapter implements LanguageAdapter {
         'package.dependencies': facts.dependencies,
         'package.devDependencies': facts.devDependencies,
         'package.peerDependencies': facts.peerDependencies,
+        'package.dependencyRanges': facts.dependencyRanges,
         'package.workspaces': facts.workspaces,
         'package.entries': facts.entries,
         'package.packageManagerField': facts.packageManager,
@@ -162,6 +186,7 @@ export function readPackageFacts(raw: Record<string, unknown>): PackageFacts {
     dependencies: dependencyNames(raw.dependencies),
     devDependencies: dependencyNames(raw.devDependencies),
     peerDependencies: dependencyNames(raw.peerDependencies),
+    dependencyRanges: dependencyRanges(raw),
     workspaces,
     entries: entries.sort((a, b) => (a.field === b.field ? (a.value < b.value ? -1 : 1) : a.field < b.field ? -1 : 1)),
     packageManager: typeof raw.packageManager === 'string' ? raw.packageManager : null,

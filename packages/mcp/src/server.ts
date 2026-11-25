@@ -13,7 +13,7 @@
  * The transport is injectable, so the protocol can be tested without a process.
  */
 import { MCP_VERSION } from './version.ts';
-import { TOOL_DEFINITIONS, toolByName, validateToolArguments } from './tools/definitions.ts';
+import { TOOL_DEFINITIONS, toolByName, validateToolArguments, type ToolDefinition } from './tools/definitions.ts';
 import { ContextPool, callTool } from './tools/handlers.ts';
 import type { AgentContextOptions } from '@ai-agent-context/core';
 import {
@@ -78,6 +78,22 @@ export interface McpServerOptions {
    * approaches; `0` disables the bound.
    */
   requestTimeoutMs?: number;
+  /**
+   * Minimum interval between two checks of whether the repository moved since
+   * the analysis in memory was produced, in milliseconds. `0` checks before
+   * every call. Defaults to one second.
+   *
+   * An agent edits the repository between tool calls; without the check, every
+   * answer after its first edit describes the tree as it was when the session
+   * started. The interval bounds the staleness check's cost on large trees.
+   */
+  stalenessCheckMs?: number;
+  /**
+   * Serialize tool results and resources with indentation. Off by default:
+   * the result is read by a model, and the indentation of pretty-printed JSON
+   * measured about a quarter more tokens for the same data.
+   */
+  prettyJson?: boolean;
 }
 
 interface McpResourceDefinition {
@@ -107,12 +123,13 @@ const SERVER_INSTRUCTIONS =
 
 const DEFAULT_REQUEST_TIMEOUT_MS = 120_000;
 
-function toMcpTools(): Array<{ name: string; title: string; description: string; inputSchema: unknown }> {
+function toMcpTools(): Array<{ name: string; title: string; description: string; inputSchema: unknown; annotations?: ToolDefinition['annotations'] }> {
   return TOOL_DEFINITIONS.map((tool) => ({
     name: tool.name,
     title: tool.title,
     description: `${tool.description}\n\nReturns: ${tool.outputDescription}`,
     inputSchema: tool.inputSchema,
+    ...(tool.annotations === undefined ? {} : { annotations: tool.annotations }),
   }));
 }
 
@@ -142,7 +159,13 @@ export class McpServer {
     this.pool = new ContextPool({
       root: options.root,
       ...(options.createContext === undefined ? {} : { createContext: options.createContext }),
+      ...(options.stalenessCheckMs === undefined ? {} : { stalenessCheckMs: options.stalenessCheckMs }),
     });
+  }
+
+  /** JSON for a tool result or resource, indented only when asked for. */
+  private serialize(payload: unknown): string {
+    return this.options.prettyJson === true ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
   }
 
   /** Wires the transport and starts serving. Calling it twice is a no-op. */
@@ -329,7 +352,7 @@ export class McpServer {
           // -32002 (resource not found) is reserved by the current specification;
           // an unknown resource reports Invalid params instead.
           if (resource === undefined) { respondError({ code: ErrorCode.InvalidParams, message: `unknown resource: ${String(uri)}` }); return; }
-          respond({ contents: [{ uri: resource.uri, mimeType: resource.mimeType, text: JSON.stringify(await resource.read(this.pool, this.options.root), null, 2) }] });
+          respond({ contents: [{ uri: resource.uri, mimeType: resource.mimeType, text: this.serialize(await resource.read(this.pool, this.options.root)) }] });
           return;
         }
         case 'prompts/list':
@@ -371,7 +394,7 @@ export class McpServer {
           }
           const result = await callTool(name, args, this.pool, this.options.root);
           respond({
-            content: [{ type: 'text', text: JSON.stringify(result.payload, null, 2) }],
+            content: [{ type: 'text', text: this.serialize(result.payload) }],
             isError: result.isError,
           });
           return;

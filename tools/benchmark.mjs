@@ -156,36 +156,19 @@ async function measure(source) {
     const modules = await context.getModules();
     const architecture = await context.getArchitecture();
 
-    // Import resolution, classified by whether the import was ever resolvable.
+    // Import resolution, in import statements, from the analyzer's own report.
     //
-    // A single "unresolved / total" ratio is not a useful metric: an import of
-    // `../dist/index.js` can never resolve in a repository that excludes build
-    // output, and counting it would make a healthy repository look broken.
-    // Unresolved specifiers are therefore bucketed, and the rate is computed
-    // over the ones the analyzer could in principle have resolved.
-    const classified = { excludedOutput: [], pathEscape: [], missing: [], other: [] };
-    for (const entry of dependencies.unresolved) {
-      const reason = entry.attempts[0] ?? '';
-      if (reason.includes('outside the repository root')) classified.pathEscape.push(entry);
-      else if (/(^|\/)(dist|build|out|lib|coverage|node_modules)(\/|$)/.test(entry.specifier)) {
-        classified.excludedOutput.push(entry);
-      } else if (reason.includes('no analyzed file matched')) classified.missing.push(entry);
-      else classified.other.push(entry);
-    }
-    const expectedUnresolved = classified.excludedOutput.length;
-    const actionableUnresolved = classified.missing.length + classified.other.length;
-    const resolvable = dependencies.internal.length + actionableUnresolved;
-
-    const unresolvedDetail = [
-      ...classified.pathEscape.slice(0, 5),
-      ...classified.missing.slice(0, 5),
-      ...classified.other.slice(0, 5),
-    ].map((entry) => ({
-      bucket: classified.pathEscape.includes(entry)
-        ? 'path-escape'
-        : classified.missing.includes(entry)
-          ? 'missing'
-          : 'other',
+    // `detect` is the one place the classification lives: it names the reason an
+    // import did not resolve. This script used to infer the reason from the
+    // wording of a message and from the path's directory name, and it counted
+    // module edges against import statements, as `detect` did until 1.1.0.
+    const detection = await context.detect();
+    // Expected: build output and files the configuration excludes. Not a defect.
+    const expectedUnresolved = detection.imports.excludedOutput + detection.imports.excludedFiles;
+    // Defects: imports that should have resolved and did not.
+    const actionableUnresolved = detection.imports.unresolved;
+    const unresolvedDetail = dependencies.unresolved.slice(0, 5).map((entry) => ({
+      bucket: entry.reason ?? 'unspecified',
       file: entry.file,
       specifier: entry.specifier,
       reason: entry.attempts[0] ?? 'unknown',
@@ -266,14 +249,12 @@ async function measure(source) {
       },
       modules: report.modules,
       imports: {
-        resolved: dependencies.internal.length,
-        // Expected: build output the configuration excludes. Not a defect.
+        resolved: detection.imports.resolved,
         excludedOutput: expectedUnresolved,
-        // Defects: imports that should have resolved and did not.
         actionableUnresolved,
         // Security events. Must be zero.
-        pathEscapes: classified.pathEscape.length,
-        resolutionRate: ratio(dependencies.internal.length, resolvable),
+        pathEscapes: detection.imports.pathEscapes,
+        resolutionRate: detection.imports.resolutionRate,
       },
       unresolvedSample: unresolvedDetail,
       graph: {

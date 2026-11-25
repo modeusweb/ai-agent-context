@@ -12,7 +12,7 @@
 import { builtinModules } from 'node:module';
 import type { DependencyKind } from '../../model/types.ts';
 import type { UnresolvedReason } from '../../model/types.ts';
-import { escapesRoot, extname, dirname, join, joinStrict, normalizeRelative } from '../../util/paths.ts';
+import { escapesRoot, extname, dirname, isInside, join, joinStrict, normalizeRelative } from '../../util/paths.ts';
 import { compareStrings } from '../../model/canonical.ts';
 import { packageNameFromSpecifier } from '../../adapters/language/ts-js/package-signals.ts';
 
@@ -70,6 +70,26 @@ export interface ResolverInput {
   aliases: AliasEntry[];
   /** Workspace package name → package directory and entry candidates. */
   workspacePackages: Map<string, { directory: string; entries: string[] }>;
+  /**
+   * Every `package.json` of the repository, with the dependency ranges it
+   * declares. A package that declares a neighbouring package's name with a
+   * registry range depends on the *published* package, not on the source next
+   * door; see {@link ImportResolver.resolve}.
+   */
+  manifests?: readonly ManifestDeclaration[];
+  /**
+   * Whether the workspace packages were matched by workspace globs. A member
+   * of a workspace is depended on through the workspace, whatever range its
+   * neighbour declares; the range only decides for a package that stands alone.
+   */
+  workspaceMembers?: boolean;
+}
+
+export interface ManifestDeclaration {
+  /** Repository-relative POSIX directory of the `package.json` (empty at the root). */
+  directory: string;
+  /** Dependency name → declared range, over every dependency field. */
+  ranges: Readonly<Record<string, string>>;
 }
 
 export interface ResolvedImport {
@@ -86,25 +106,37 @@ export interface ResolvedImport {
   reason?: UnresolvedReason;
 }
 
-/** Tries the extension and index-file candidates of a specifier base path. */
-export function withExtensions(base: string, filePaths: ReadonlySet<string>): string | null {
+/**
+ * Every path a specifier base could refer to, in the order they are tried.
+ *
+ * One list serves both lookups, so that a file which exists but was excluded
+ * is found by the same rules that would otherwise have resolved to it.
+ */
+function candidatesOf(base: string): string[] {
   const normalized = normalizeRelative(base);
-  if (filePaths.has(normalized)) return normalized;
+  // An empty base is the repository root (`require('../..')`, `require('.')`),
+  // and its index file sits there: `/index.js`, which the generic form gives
+  // for an empty base, begins with a slash no repository-relative path has.
+  const prefix = normalized.length === 0 ? '' : `${normalized}/`;
+  const candidates = [normalized];
   const extension = extname(normalized);
   if (extension.length > 0) {
     const rewrites = ESM_TO_TS[extension];
-    if (rewrites === undefined) return null;
-    const stem = normalized.slice(0, -extension.length);
-    for (const candidate of rewrites) {
-      if (filePaths.has(`${stem}${candidate}`)) return `${stem}${candidate}`;
+    if (rewrites !== undefined) {
+      const stem = normalized.slice(0, -extension.length);
+      for (const candidate of rewrites) candidates.push(`${stem}${candidate}`);
     }
-    return null;
+  } else {
+    for (const candidate of RESOLUTION_EXTENSIONS) candidates.push(`${normalized}${candidate}`);
+    for (const candidate of RESOLUTION_EXTENSIONS) candidates.push(`${prefix}index${candidate}`);
   }
-  for (const candidate of RESOLUTION_EXTENSIONS) {
-    if (filePaths.has(`${normalized}${candidate}`)) return `${normalized}${candidate}`;
-  }
-  for (const candidate of RESOLUTION_EXTENSIONS) {
-    if (filePaths.has(`${normalized}/index${candidate}`)) return `${normalized}/index${candidate}`;
+  return candidates;
+}
+
+/** Tries the extension and index-file candidates of a specifier base path. */
+export function withExtensions(base: string, filePaths: ReadonlySet<string>): string | null {
+  for (const candidate of candidatesOf(base)) {
+    if (filePaths.has(candidate)) return candidate;
   }
   return null;
 }
@@ -121,35 +153,14 @@ function unresolved(specifier: string, attempts: string[], reason: UnresolvedRea
   };
 }
 
-/**
- * The paths a specifier base could refer to, in the order they are tried.
- *
- * The same set the resolver searches for analyzed files, so that a file which
- * exists but is excluded is found by the same rules that would have found it
- * otherwise.
- */
-function excludedCandidates(base: string): string[] {
-  const normalized = normalizeRelative(base);
-  const candidates = [normalized];
-  const extension = extname(normalized);
-  if (extension.length > 0) {
-    const rewrites = ESM_TO_TS[extension];
-    if (rewrites !== undefined) {
-      const stem = normalized.slice(0, -extension.length);
-      for (const candidate of rewrites) candidates.push(`${stem}${candidate}`);
-    }
-  } else {
-    for (const candidate of RESOLUTION_EXTENSIONS) candidates.push(`${normalized}${candidate}`);
-    for (const candidate of RESOLUTION_EXTENSIONS) candidates.push(`${normalized}/index${candidate}`);
-  }
-  return candidates;
-}
-
 export class ImportResolver {
   private readonly filePaths: ReadonlySet<string>;
   private readonly excludedFiles: ReadonlyMap<string, string>;
   private readonly aliases: AliasEntry[];
   private readonly workspacePackages: ResolverInput['workspacePackages'];
+  /** Manifests by the directory they sit in, deepest first: the nearest wins. */
+  private readonly manifests: readonly ManifestDeclaration[];
+  private readonly workspaceMembers: boolean;
 
   constructor(input: ResolverInput) {
     this.filePaths = input.filePaths;
@@ -159,6 +170,34 @@ export class ImportResolver {
       a.base.length === b.base.length ? compareStrings(a.pattern, b.pattern) : b.base.length - a.base.length,
     );
     this.workspacePackages = input.workspacePackages;
+    this.workspaceMembers = input.workspaceMembers === true;
+    // Deepest directory first, so the manifest nearest the importing file is found first.
+    this.manifests = [...(input.manifests ?? [])].sort((a, b) =>
+      a.directory.length === b.directory.length ? compareStrings(a.directory, b.directory) : b.directory.length - a.directory.length,
+    );
+  }
+
+  /**
+   * Whether the package that owns `fromFile` declares `packageName` as a
+   * dependency with a registry range.
+   *
+   * A name that matches a package of the same tree usually names that package.
+   * The manifest is what says when it does not: `clsx` keeps a `bench/`
+   * directory that pins `clsx@1.1.0` from the registry, next to the `clsx`
+   * sources, to compare against the released build. Declared with a registry
+   * range, the dependency is the published package; declared with the
+   * `workspace:` protocol, or not declared, it is the one next door. Package
+   * managers enforce exactly this, so the declaration is evidence rather than
+   * a convention.
+   */
+  private declaredFromRegistry(packageName: string, fromFile: string, targetDirectory: string): boolean {
+    if (this.workspaceMembers) return false;
+    const owner = this.manifests.find((manifest) => manifest.directory.length === 0 || isInside(manifest.directory, fromFile));
+    if (owner === undefined) return false;
+    // A package importing its own name depends on its own entry point.
+    if (owner.directory === targetDirectory) return false;
+    const range = owner.ranges[packageName];
+    return range !== undefined && !range.startsWith('workspace:');
   }
 
   /**
@@ -170,7 +209,7 @@ export class ImportResolver {
    */
   private excludedTarget(base: string): { path: string; reason: string } | null {
     if (this.excludedFiles.size === 0) return null;
-    for (const candidate of excludedCandidates(base)) {
+    for (const candidate of candidatesOf(base)) {
       const reason = this.excludedFiles.get(candidate);
       if (reason !== undefined) return { path: candidate, reason };
     }
@@ -216,6 +255,33 @@ export class ImportResolver {
           'excluded-file',
         );
       }
+      // A directory that is a package is imported through that package's
+      // declared entry: `from '..'` in a package's test folder, `require('../..')`
+      // in an example. When the entry is not an analyzed file, it is because the
+      // manifest points at build output — a limit of the analysis, not a missing
+      // file. Until 1.1.0 such an import was dropped as an asset import.
+      for (const [name, info] of this.workspacePackages) {
+        if (info.directory !== base) continue;
+        const entry = this.resolveWorkspaceEntry(name);
+        if (entry !== null) {
+          return {
+            kind: 'workspace-package',
+            target: name,
+            entry,
+            confidence: 0.95,
+            evidence: `relative specifier "${specifier}" names the directory of workspace package "${name}", whose entry is ${entry}`,
+            attempts: [],
+          };
+        }
+        const pointsAtBuildOutput = info.entries.some((candidate) => /(^|\/)(dist|build|out)\//.test(candidate));
+        return unresolved(
+          specifier,
+          pointsAtBuildOutput
+            ? [`"${base.length === 0 ? '.' : base}" is the directory of package "${name}", whose manifest points at build output the analysis excludes`]
+            : [`"${base}" is the directory of package "${name}", which has no entry file in the analyzed tree`],
+          pointsAtBuildOutput ? 'excluded-build-output' : 'missing',
+        );
+      }
       return unresolved(specifier, [`no analyzed file matched "${base}" with a known extension or index file`]);
     }
 
@@ -235,6 +301,16 @@ export class ImportResolver {
     if (packageName !== null) {
       const workspacePackage = this.workspacePackages.get(packageName);
       if (workspacePackage !== undefined) {
+        if (this.declaredFromRegistry(packageName, fromFile, workspacePackage.directory)) {
+          return {
+            kind: 'external-package',
+            target: packageName,
+            entry: null,
+            confidence: 0.9,
+            evidence: `the package containing ${fromFile} declares "${packageName}" as a dependency with a registry range, so it depends on the published package rather than on the one in this repository`,
+            attempts: [],
+          };
+        }
         return {
           kind: 'workspace-package',
           target: packageName,

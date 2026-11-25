@@ -401,6 +401,62 @@ Every result carries `score` and a `reason` explaining why the node matched:
 
 Exit code is `1` when nothing matched, which is convenient in scripts.
 
+### `outline <file>`
+
+What one file exports and imports, and who imports it — the file-level view
+`explain` does not give:
+
+```bash
+agent-context outline src/payments/pay.ts
+```
+
+```
+src/payments/pay.ts
+module src/payments · typescript · source
+
+Exports (3):
+  line    1  charge                        function   imported by 1
+  line    4  CURRENCY                      const      imported by 1
+  line    5  legacy                        function   imported by 0
+
+Imported by, directly (1):
+  src/payments/index.ts:1  { charge, CURRENCY }  [re-export]
+
+Depended on by, through other files (5):
+  src/api/routes.ts
+  …
+
+Tests among the importers (1):
+  test/orders.test.ts
+```
+
+### `references <symbol>`
+
+Where an exported symbol is imported, following re-export chains to the file
+that declares it. When several files export the name, use `file#symbol` or
+`--file`:
+
+```bash
+agent-context references charge
+agent-context references src/payments/pay.ts#charge
+```
+
+A namespace import (`import * as ns`) is listed as *possible*: whether the
+member is used is not in the statement.
+
+### `unused`
+
+Named exports that no analyzed file imports and no entry point reaches:
+
+```bash
+agent-context unused            # exit 1 when there is a finding
+```
+
+A report, not a lint error. Every finding carries a confidence and its
+evidence, and the report names what was not assessed and why: default exports,
+test and declaration files, and files reached only through a namespace or
+CommonJS import.
+
 ## Node.js compatibility
 
 | Version | Published packages | This repository's test suite |

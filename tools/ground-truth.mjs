@@ -33,7 +33,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { AgentContext } from '../packages/core/dist/index.js';
+import { AgentContext, Logger, runPipeline } from '../packages/core/dist/index.js';
 
 const explicitRoot = process.argv.slice(2).find((argument) => !argument.startsWith('--'));
 const repoRoot = path.resolve(explicitRoot ?? path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'));
@@ -260,6 +260,11 @@ function specifiersIn(file) {
     } else if (ts.isCallExpression(node) && node.expression.getText(source) === 'require') {
       const [argument] = node.arguments;
       if (argument && ts.isStringLiteral(argument)) specifiers.push(argument.text);
+    } else if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) {
+      // A dynamic `import('x')`. The compiler sees it wherever it is written,
+      // including inside a function body, which is where lazy loading puts it.
+      const [argument] = node.arguments;
+      if (argument && ts.isStringLiteral(argument)) specifiers.push(argument.text);
     }
     ts.forEachChild(node, visit);
   };
@@ -398,7 +403,18 @@ function buildGroundTruth() {
       if (owning !== null) packagePairs.add(`${toRelative(file)} -> ${owning}`);
     }
   }
-  return { filePairs, packagePairs, files: files.length, specifiers, inRepo, external, unresolved, excludedOutput };
+  return {
+    filePairs,
+    packagePairs,
+    files: files.length,
+    /** The files the oracle looked at, relative: what its walk reached and what it did not. */
+    scanned: new Set(files.map(toRelative)),
+    specifiers,
+    inRepo,
+    external,
+    unresolved,
+    excludedOutput,
+  };
 }
 
 /**
@@ -419,14 +435,72 @@ async function analyzerGraph() {
   }
   const edges = new Set();
   for (const edge of document.internal) {
-    if (edge.kind !== 'internal-module') continue;
+    // Both kinds are module edges and both are compared: an edge to a workspace
+    // package is matched to the file the compiler resolved by `targetsMatch`.
     edges.add(`${edge.from} -> ${edge.to}`);
   }
   return { moduleOf, edges, document };
 }
 
+/**
+ * Every import the analyzer resolved, at the level of files.
+ *
+ * `getDependencies()` publishes module edges only. A file-level pair is where
+ * an import that the analyzer never recorded shows: lifted to modules, an
+ * import between two files of one module is not an edge at all, so a missing
+ * one leaves nothing to miss. Until 1.1.0 the extractor did not record a
+ * `require()` or a dynamic `import()` written inside a declaration or a
+ * function — which is where nearly all of them are written — and the
+ * module-level comparison could not see it.
+ */
+async function analyzerFilePairs() {
+  // A dry run: this is a check, and it must leave `.agent/` as it found it.
+  const result = await runPipeline({ root: repoRoot, dryRun: true, logger: new Logger({ level: 'silent' }) });
+  const files = new Set();
+  const packages = new Map();
+  /** Every file the analyzer resolved an importer to, for rules that match by name. */
+  const targetsByFrom = new Map();
+  for (const edge of result.graph.fileEdges) {
+    if (edge.relationship !== 'imports' && edge.relationship !== 'exports') continue;
+    if (edge.kind === 'internal-file') {
+      files.add(`${edge.from} -> ${edge.to}`);
+      const targets = targetsByFrom.get(edge.from) ?? new Set();
+      targets.add(edge.to);
+      targetsByFrom.set(edge.from, targets);
+      continue;
+    }
+    // A workspace package is recorded by name; the compiler resolves it to a
+    // file inside the package, which is the rule `targetsMatch` applies.
+    if (edge.kind === 'workspace-package') {
+      const names = packages.get(edge.from) ?? new Set();
+      names.add(edge.to);
+      packages.set(edge.from, names);
+    }
+  }
+  // Every file the analyzer read, of any kind: what tells a pair outside the
+  // analyzer's configuration from a pair it should have had and did not.
+  const analyzed = new Set(result.graph.repository.files.map((file) => file.path));
+  return { files, packages, targetsByFrom, analyzed };
+}
+
 const truth = buildGroundTruth();
 const { moduleOf, edges: analyzerEdges, document } = await analyzerGraph();
+/** Truth targets per importer, for the file-level rules that match by name. */
+const truthPairsByFrom = new Map();
+/** Truth packages per importer: the oracle records a package where the analyzer may record a file in it. */
+const truthPackagesByFrom = new Map();
+for (const pair of truth.filePairs) {
+  const [from, to] = pair.split(' -> ');
+  const targets = truthPairsByFrom.get(from) ?? new Set();
+  targets.add(to);
+  truthPairsByFrom.set(from, targets);
+}
+for (const pair of truth.packagePairs) {
+  const [from, packageName] = pair.split(' -> ');
+  const names = truthPackagesByFrom.get(from) ?? new Set();
+  names.add(packageName);
+  truthPackagesByFrom.set(from, names);
+}
 
 // Lift the ground truth to module edges using the file-to-module partition.
 const truthModuleEdges = new Set();
@@ -442,6 +516,10 @@ for (const pair of truth.packagePairs) {
   const [from, packageName] = pair.split(' -> ');
   const fromModule = moduleOf.get(from);
   if (fromModule === undefined) continue;
+  // A package importing its own name depends on its own entry point. That is
+  // an import inside one module, like any other between two of its files, and
+  // is not lifted to a module edge either.
+  if (fromModule === packageName) continue;
   truthModuleEdges.add(`${fromModule} -> ${packageName}`);
 }
 
@@ -489,6 +567,95 @@ for (const candidate of truthModuleEdges) {
   }
   if (!matched) falseNegatives.push(candidate);
 }
+
+/**
+ * The same comparison at the level of files, where no lift can hide an import.
+ *
+ * Three things make a truth pair (importer → resolved file) and an analyzer
+ * pair describe one dependency without being the same string, and each is
+ * counted so that none can absorb a real disagreement:
+ *
+ *  - **Package rule.** The analyzer resolved the importer to a workspace
+ *    package; the compiler resolved it to a file inside that package.
+ *  - **Declaration rule.** The compiler resolved to a declaration file
+ *    (`x.d.ts`, `x.d.mts`) that stands next to its implementation; the analyzer
+ *    resolved to the implementation. They are one dependency: for "who imports
+ *    this file" the implementation is the more useful of the two to name.
+ *
+ * A truth pair whose importer or target the analyzer was not configured to
+ * read at all is outside the comparison. The oracle walks the tree with its own
+ * rules and does not read `.agent/config.json`, so a directory the repository
+ * excludes is analyzed by neither the oracle's ignorance or the analyzer's
+ * instruction. Those pairs are counted as `outsideConfiguration` — reported,
+ * because a walk that silently dropped files would look exactly like this.
+ */
+const analyzerFiles = await analyzerFilePairs();
+/** `x.d.ts`, `x.d.mts` and `x.d.cts` describe an implementation; they are not files of their own. */
+const isDeclaration = (file) => /\.d\.(mts|cts|ts)$/.test(file);
+/** A path without its last extension: `x.d.mts` and `x.mjs` both have the stem `x`. */
+const stemOf = (file) => file.replace(/\.d\.(mts|cts|ts)$/, '').replace(/\.[^./]+$/, '');
+const fileTargetsMatch = (analyzerTarget, truthTarget) =>
+  analyzerTarget === truthTarget ||
+  (isDeclaration(truthTarget) && !isDeclaration(analyzerTarget) && stemOf(analyzerTarget) === stemOf(truthTarget));
+
+const fileFalseNegatives = [];
+const outsideConfiguration = [];
+let fileTruePositive = 0;
+let fileMatchedViaPackage = 0;
+let fileMatchedViaDeclaration = 0;
+for (const pair of truth.filePairs) {
+  const [from, to] = pair.split(' -> ');
+  if (analyzerFiles.files.has(pair)) {
+    fileTruePositive += 1;
+    continue;
+  }
+  const viaPackage = [...(analyzerFiles.packages.get(from) ?? [])].some((packageName) => targetsMatch(packageName, to));
+  if (viaPackage) {
+    fileTruePositive += 1;
+    fileMatchedViaPackage += 1;
+    continue;
+  }
+  const declaration = [...(analyzerFiles.targetsByFrom.get(from) ?? [])].find((target) => fileTargetsMatch(target, to));
+  if (declaration !== undefined) {
+    fileTruePositive += 1;
+    fileMatchedViaDeclaration += 1;
+    continue;
+  }
+  if (!analyzerFiles.analyzed.has(from) || !analyzerFiles.analyzed.has(to)) {
+    outsideConfiguration.push(pair);
+    continue;
+  }
+  fileFalseNegatives.push(pair);
+}
+// An analyzer pair is unexplained when no truth pair covers it under the same
+// three rules — the package rule included in the other direction: the oracle
+// records a workspace package where the analyzer, having read the same tsconfig,
+// resolved to a file inside it.
+const outsideWalk = [];
+let fileExtraViaPackage = 0;
+const fileFalsePositives = [];
+for (const pair of analyzerFiles.files) {
+  const [from, to] = pair.split(' -> ');
+  if (truth.filePairs.has(pair)) continue;
+  if ([...(truthPairsByFrom.get(from) ?? [])].some((target) => fileTargetsMatch(to, target))) continue;
+  if ([...(truthPackagesByFrom.get(from) ?? [])].some((packageName) => targetsMatch(packageName, to))) {
+    fileExtraViaPackage += 1;
+    continue;
+  }
+  // A file the oracle's own walk never reached — it skips every dot-directory
+  // — is not something the analyzer can be compared against. Counted, not hidden.
+  if (!truth.scanned.has(from) || !truth.scanned.has(to)) {
+    outsideWalk.push(pair);
+    continue;
+  }
+  fileFalsePositives.push(pair);
+}
+const filePrecision = fileTruePositive + fileFalsePositives.length === 0 ? null : fileTruePositive / (fileTruePositive + fileFalsePositives.length);
+// The denominator is what was comparable. A pair outside the configuration was
+// never compared, so counting it as found would flatter and counting it as
+// missing would accuse; it is reported on its own line instead.
+const fileComparable = fileTruePositive + fileFalseNegatives.length;
+const fileRecall = fileComparable === 0 ? null : fileTruePositive / fileComparable;
 
 /**
  * File-level cross-check of the headline claim.
@@ -579,6 +746,24 @@ const result = {
   missedSample: unresolvedCrossCheck.missed,
   falsePositiveSample: falsePositives.slice(0, 5),
   falseNegativeSample: falseNegatives.slice(0, 5),
+  fileLevel: {
+    truthPairs: truth.filePairs.size,
+    analyzerPairs: analyzerFiles.files.size,
+    truePositive: fileTruePositive,
+    falsePositive: fileFalsePositives.length,
+    falseNegative: fileFalseNegatives.length,
+    matchedViaPackageRule: fileMatchedViaPackage,
+    matchedViaDeclarationRule: fileMatchedViaDeclaration,
+    analyzerPairsViaPackageRule: fileExtraViaPackage,
+    outsideConfiguration: outsideConfiguration.length,
+    outsideConfigurationSample: outsideConfiguration.slice(0, 5),
+    outsideOracleWalk: outsideWalk.length,
+    outsideOracleWalkSample: outsideWalk.slice(0, 5),
+    precisionPercent: percent(filePrecision),
+    recallPercent: percent(fileRecall),
+    falsePositiveSample: fileFalsePositives.slice(0, 5),
+    falseNegativeSample: fileFalseNegatives.slice(0, 5),
+  },
 };
 
 if (asJson) {
@@ -596,6 +781,16 @@ if (asJson) {
   console.log(`package rule:     ${result.matchedViaPackageRule} match(es) needed package-level normalisation`);
   console.log(`precision:        ${result.precisionPercent === null ? 'n/a' : `${result.precisionPercent}%`}`);
   console.log(`recall:           ${result.recallPercent === null ? 'n/a' : `${result.recallPercent}%`}`);
+  const file = result.fileLevel;
+  console.log(`file level:       ${file.truePositive} of ${file.truthPairs} truth pair(s) found by the analyzer (${file.matchedViaPackageRule} via a workspace package, ${file.matchedViaDeclarationRule} via a declaration file)`);
+  console.log(`file precision:   ${file.precisionPercent === null ? 'n/a' : `${file.precisionPercent}%`}  ${file.falsePositive} extra  ${file.falsePositiveSample.join('   ')}`);
+  console.log(`file recall:      ${file.recallPercent === null ? 'n/a' : `${file.recallPercent}%`}  ${file.falseNegative} missing  ${file.falseNegativeSample.join('   ')}`);
+  if (file.outsideConfiguration > 0) {
+    console.log(`outside config:   ${file.outsideConfiguration} truth pair(s) involve a file the analyzer is configured not to read; not compared  ${file.outsideConfigurationSample.slice(0, 2).join('   ')}`);
+  }
+  if (file.outsideOracleWalk > 0 || file.analyzerPairsViaPackageRule > 0) {
+    console.log(`not in the truth: ${file.outsideOracleWalk} analyzer pair(s) involve a file the oracle's walk does not reach (dot-directories); not compared. ${file.analyzerPairsViaPackageRule} analyzer pair(s) name a file where the truth names its package`);
+  }
 console.log(`unresolved cross-check: ${result.unresolvedCrossCheck.total} reported (${result.unresolvedCrossCheck.expectedBuildOutput} build output, ${result.unresolvedCrossCheck.excludedFile} excluded file, ${result.unresolvedCrossCheck.agreedMissing} agreed missing, ${result.unresolvedCrossCheck.missed} MISSED)`);
   if (result.missedSample.length > 0) console.log(`  missed: ${result.missedSample.join('   ')}`);
 }

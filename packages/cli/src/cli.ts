@@ -22,6 +22,9 @@ import { runHistoryCommand } from './commands/history.ts';
 import { runRevisionDiffCommand } from './commands/revision-diff.ts';
 import { runVerifyCommand } from './commands/verify.ts';
 import { runMigrateCommand } from './commands/migrate.ts';
+import { runOutlineCommand } from './commands/outline.ts';
+import { runReferencesCommand } from './commands/references.ts';
+import { runUnusedCommand } from './commands/unused.ts';
 
 export const CLI_NAME = 'agent-context';
 /** Re-exported from the core package so there is a single version source. */
@@ -67,6 +70,7 @@ const VALUED_FLAGS = new Set([
   'revision',
   'limit-history',
   'detail',
+  'file',
 ]);
 
 const KNOWN_FLAGS = new Set([
@@ -104,6 +108,8 @@ const KNOWN_FLAGS = new Set([
   'revision',
   'limit-history',
   'detail',
+  'compact',
+  'file',
 ]);
 
 function appendFlag(flags: Map<string, string | boolean>, name: string, value: string): void {
@@ -256,6 +262,9 @@ Commands:
   verify               CI check: fail when context is missing, invalid, or stale
   migrate              Bring .agent/ up to the current schema (--check reports only)
   explain <path>       Explain a module, directory or file (--detail auto|full|compact)
+  outline <file>       One file: its exports, its imports, and who imports it
+  references <symbol>  Where an exported symbol is imported (file#symbol if ambiguous)
+  unused               Named exports that no analyzed file imports
   detect               Report what the analysis could NOT determine
   search <query>       Deterministic lexical search over the context
   context              Compact repository context summary
@@ -273,6 +282,9 @@ Options:
   --ignore <glob>      Additional ignore patterns
   --language <name>    Restrict language analysis (repeatable)
   --detail <level>     explain: auto (default), full or compact
+  --file <path>        references: the file the symbol is declared in
+  --limit <n>          search / unused: maximum results (default 10 / 200)
+  --compact            --json: minified output (about a quarter fewer tokens for an agent)
   --force              init: overwrite config · scan: ignore the local state
   --read-only          Refuse every write; queries keep working
   --check              migrate: report whether migration is needed, write nothing
@@ -287,6 +299,7 @@ Options:
 Exit codes:
   0 success · 1 analysis error · 2 usage error
   detect: 0 nothing above info · 1 warnings · 2 errors
+  references: 1 when the symbol was not found or is ambiguous · unused: 1 when there is a finding
 `;
 
 /** Runs the CLI and returns the process exit code. */
@@ -311,6 +324,7 @@ export async function runCli(argv: readonly string[], ioOverrides: Partial<CliIo
     color,
     quiet: flagBoolean(parsed, 'quiet'),
     verbose: flagBoolean(parsed, 'verbose'),
+    compactJson: flagBoolean(parsed, 'compact'),
   });
 
   if (flagBoolean(parsed, 'version')) {
@@ -352,6 +366,12 @@ export async function runCli(argv: readonly string[], ioOverrides: Partial<CliIo
         return await runMigrateCommand(commandContext, dependencies);
       case 'explain':
         return await runExplainCommand(commandContext, dependencies);
+      case 'outline':
+        return await runOutlineCommand(commandContext, dependencies);
+      case 'references':
+        return await runReferencesCommand(commandContext, dependencies);
+      case 'unused':
+        return await runUnusedCommand(commandContext, dependencies);
       case 'detect':
         return await runDetectCommand(commandContext, dependencies);
       case 'search':

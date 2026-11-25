@@ -15,7 +15,7 @@ import type { ChangeSet, FileKind, FileNode } from '../../model/types.ts';
 import type { ParsedFile } from '../../adapters/language/types.ts';
 import type { AgentContextConfig } from '../../config/types.ts';
 import { PatternSet } from '../../util/glob.ts';
-import { compareStrings, sha256 } from '../../model/canonical.ts';
+import { compareStrings, hashValue, sha256 } from '../../model/canonical.ts';
 import { TOOL_VERSION } from '../../model/version.ts';
 import { basename, extname } from '../../util/paths.ts';
 import { mapWithConcurrency, runWithConcurrency, defaultConcurrency } from '../../util/concurrency.ts';
@@ -99,6 +99,18 @@ export interface ScanOptions {
   fsAdapter?: FileSystemAdapter;
   /** Previous local state, when available (enables the incremental path). */
   state: LocalState | null;
+  /**
+   * Hashes recorded by the committed `index.json`, used as the baseline when
+   * there is no local state.
+   *
+   * `.agent/.local/state.json` is gitignored, so a fresh clone — every CI
+   * checkout — has none. Without a baseline every file then classifies as
+   * "added" and the context reads as stale no matter how well it matches the
+   * tree. The committed index records a hash for each analyzed file, which is
+   * exactly the comparison `verify` needs: do these files still have the
+   * contents the context was generated from?
+   */
+  baseline?: ReadonlyMap<string, string>;
   cache: ParseCache;
   /**
    * When true, nothing is written to `.agent/`, including the parse cache.
@@ -110,6 +122,15 @@ export interface ScanOptions {
    * read-only mode.
    */
   dryRun?: boolean;
+  /**
+   * Bypass the parse cache as well as the local state.
+   *
+   * `--force` means "analyse this again from the source". Reading every file
+   * and then serving its parse result from the cache is not that, and it made
+   * the flag useless in the one situation a user reaches for it: suspecting
+   * that what is cached no longer describes the file.
+   */
+  force?: boolean;
   diagnostics: DiagnosticsCollector;
   logger: Logger;
   progress?: ProgressReporter;
@@ -148,23 +169,24 @@ function emptyChanges(incremental: boolean): ChangeSet {
   return { added: [], modified: [], deleted: [], unchanged: [], incremental };
 }
 
-/** Builds the include/exclude/ignore pattern sets, merging the root .gitignore. */
-async function buildPatterns(
-  config: AgentContextConfig,
-  fsAdapter: FileSystemAdapter,
-): Promise<{ include: PatternSet; exclude: PatternSet; ignore: PatternSet }> {
-  const include = new PatternSet(config.include.map((pattern) => (pattern.endsWith('/') ? `${pattern}**` : pattern)));
-  const exclude = new PatternSet(config.exclude);
-  const ignorePatterns = [...config.ignore];
-  const gitignore = await fsAdapter.tryReadText('.gitignore');
-  if (gitignore !== null) {
-    for (const line of gitignore.split('\n')) {
-      const trimmed = line.trim();
-      if (trimmed.length === 0 || trimmed.startsWith('#')) continue;
-      if (!ignorePatterns.includes(trimmed)) ignorePatterns.push(trimmed);
-    }
-  }
-  return { include, exclude, ignore: new PatternSet(ignorePatterns) };
+/**
+ * Builds the include/exclude/ignore pattern sets.
+ *
+ * `.gitignore` files are deliberately not among them. The walker reads those
+ * itself, one per directory, the way git does. Folding the root file into one
+ * flat list — as this did until 1.1.0 — is what left every package's own
+ * `.gitignore` unread.
+ */
+export function buildPatterns(config: AgentContextConfig): {
+  include: PatternSet;
+  exclude: PatternSet;
+  ignore: PatternSet;
+} {
+  return {
+    include: new PatternSet(config.include.map((pattern) => (pattern.endsWith('/') ? `${pattern}**` : pattern))),
+    exclude: new PatternSet(config.exclude),
+    ignore: new PatternSet(config.ignore),
+  };
 }
 
 /**
@@ -180,7 +202,7 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
     allowSensitiveFiles: config.security.allowSensitiveFiles,
     extraSensitivePatterns: config.security.extraSensitivePatterns,
   });
-  const patterns = await buildPatterns(config, fsAdapter);
+  const patterns = buildPatterns(config);
 
   options.progress?.({ phase: 'walk', message: 'Scanning repository...' });
   const walked = await fsAdapter.walk({
@@ -193,6 +215,7 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
 
   const presentFiles = new Set(walked.map((file) => file.path));
   const previous = options.state?.files ?? {};
+  const baseline = options.baseline ?? null;
   const incremental =
     options.state !== null &&
     options.state.configHash === options.configHash &&
@@ -209,7 +232,7 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
       record !== undefined && record.hash.length > 0 && record.size === file.size && record.mtimeMs === file.mtimeMs;
     return {
       walked: file,
-      previousHash: record?.hash ?? null,
+      previousHash: record?.hash ?? baseline?.get(file.path) ?? null,
       fastUnchanged,
       sensitive,
       tooLarge,
@@ -233,6 +256,16 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
   let reused = 0;
   let parsedNow = 0;
   const cacheWrites: Array<() => Promise<void>> = [];
+  // What a file parses to depends on more than its bytes: the enabled languages
+  // decide whether it is parsed at all, and the registered adapters decide how.
+  // Keyed by content alone, the cache served TypeScript facts for a file under
+  // `languages: ["json"]`, and the default adapter's parse to a custom adapter
+  // that was registered to replace it. The key therefore carries both.
+  const cacheNamespace = hashValue({
+    languages: [...config.languages].sort(compareStrings),
+    adapters: registry.list().map((adapter) => adapter.id).sort(compareStrings),
+  });
+  const cacheKey = (contentHash: string): string => sha256(`${contentHash}\u0000${cacheNamespace}`);
 
   options.progress?.({
     phase: 'parse',
@@ -242,7 +275,7 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
   });
 
   const parseWithCache = async (entry: ScanEntry, contents: string, hash: string): Promise<void> => {
-    const snapshot = await options.cache.get(hash);
+    const snapshot = options.force === true ? null : await options.cache.get(cacheKey(hash));
     if (snapshot !== null) {
       entry.parse = fromSnapshot(snapshot);
       reused += 1;
@@ -257,7 +290,7 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
     if (options.dryRun !== true) {
       cacheWrites.push(async () => {
         try {
-          await options.cache.put(hash, toSnapshot(parsed));
+          await options.cache.put(cacheKey(hash), toSnapshot(parsed));
         } catch (error) {
           diagnostics.warn('WARN_CACHE_WRITE', error instanceof Error ? error.message : String(error));
         }
@@ -288,7 +321,7 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
 
   await mapWithConcurrency(toReuse, concurrency, async (entry) => {
     entry.hash = entry.previousHash ?? '';
-    const snapshot = entry.hash.length > 0 ? await options.cache.get(entry.hash) : null;
+    const snapshot = entry.hash.length > 0 ? await options.cache.get(cacheKey(entry.hash)) : null;
     if (snapshot !== null) {
       entry.parse = fromSnapshot(snapshot);
       reused += 1;
@@ -334,6 +367,13 @@ export async function scanRepository(options: ScanOptions): Promise<ScanOutput> 
   }
   for (const path of Object.keys(previous)) {
     if (!presentFiles.has(path)) changes.deleted.push(path);
+  }
+  // A file the committed context describes that is no longer in the tree was
+  // deleted since the context was generated.
+  if (baseline !== null) {
+    for (const path of baseline.keys()) {
+      if (!presentFiles.has(path) && !(path in previous)) changes.deleted.push(path);
+    }
   }
   changes.added.sort(compareStrings);
   changes.modified.sort(compareStrings);

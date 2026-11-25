@@ -26,6 +26,7 @@ import { compareStrings } from '../model/canonical.ts';
 import { FileSystemAdapter } from '../adapters/filesystem/fs-adapter.ts';
 import { GitAdapter, type GitAvailability } from '../adapters/git/git-adapter.ts';
 import { scanRepository, type ScanOutput } from '../core/scanner/scanner.ts';
+import { treeFingerprint } from '../core/scanner/fingerprint.ts';
 import { LocalStateStore, ParseCache, type LocalState } from '../core/scanner/cache.ts';
 import { detectWorkspace } from '../core/workspace/workspace.ts';
 import { packageFactsFromParsed } from '../core/workspace/package-facts.ts';
@@ -73,6 +74,26 @@ export interface PipelineResult {
   workspace: WorkspaceInfo;
   git: { availability: GitAvailability; commitsAnalyzed: number };
   diagnostics: DiagnosticsCollector;
+  /**
+   * What the change set was measured against: the local state, the committed
+   * `index.json` (when there is no local state, as on a fresh clone), or nothing.
+   */
+  baseline: 'local-state' | 'committed-index' | 'none';
+  /** Working-tree fingerprint at the time of the analysis (see {@link isStale}). */
+  fingerprint: string;
+}
+
+/**
+ * File hashes recorded by the committed `index.json`, when it has them.
+ *
+ * The document is the only record of the analysis that survives a clone: the
+ * local state is gitignored by design.
+ */
+export function committedFileHashes(index: PersistedContext['index']): Map<string, string> | null {
+  if (index === null) return null;
+  const hashes = new Map<string, string>();
+  for (const entry of index.files.entries) hashes.set(entry.path, entry.hash);
+  return hashes.size === 0 ? null : hashes;
 }
 
 /** Rebuilds the workspace model from the parsed `package.json` files. */
@@ -190,6 +211,10 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
   }
 
   const fsAdapter = new FileSystemAdapter(root);
+  // `--force` ignores every record of a previous analysis, the committed one
+  // included: the point of the flag is a change set relative to nothing.
+  const committed = options.force === true ? null : committedFileHashes(persisted.index);
+  const baseline = previousState !== null ? 'local-state' : committed !== null ? 'committed-index' : 'none';
   options.progress?.({ phase: 'start', message: 'Scanning repository...' });
   const scan = await scanRepository({
     root,
@@ -198,7 +223,9 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
     ...(options.registry === undefined ? {} : { registry: options.registry }),
     fsAdapter,
     state: previousState,
+    ...(committed === null ? {} : { baseline: committed }),
     dryRun: options.dryRun === true,
+    ...(options.force === true ? { force: true } : {}),
     cache,
     diagnostics,
     logger,
@@ -252,6 +279,7 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
     ...(generatedAt === undefined ? {} : { generatedAt }),
     diagnostics: diagnostics.list(),
     commitsAnalyzed: gitResult.commits.length,
+    configHash: loaded.hash,
   });
 
   const diff = diffContext({
@@ -318,6 +346,8 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
     workspace,
     git: { availability: gitResult.availability, commitsAnalyzed: gitResult.commits.length },
     diagnostics,
+    baseline,
+    fingerprint: treeFingerprint(scan.files),
   };
 }
 

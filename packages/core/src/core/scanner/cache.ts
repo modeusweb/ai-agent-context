@@ -11,6 +11,7 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { FileKind, ParsedFileSnapshot } from './types.ts';
 import { AGENT_DIR, LOCAL_DIR, SCHEMA_VERSION, STATE_FILE, GENERATOR_NAME } from '../../model/schema.ts';
+import { TOOL_VERSION } from '../../model/version.ts';
 import { stringifyCanonical } from '../../model/canonical.ts';
 
 export interface FileStateRecord {
@@ -120,8 +121,13 @@ export class ParseCache {
     if (hash.length === 0) return null;
     try {
       const contents = await readFile(shardPath(this.root, hash), 'utf8');
-      const parsed = JSON.parse(contents) as { schemaVersion?: number; file?: ParsedFileSnapshot };
+      const parsed = JSON.parse(contents) as { schemaVersion?: number; toolVersion?: string; file?: ParsedFileSnapshot };
       if (parsed.schemaVersion !== SCHEMA_VERSION || parsed.file === undefined) return null;
+      // An entry written by another release of this tool describes the file as
+      // that release parsed it. Reusing it after an upgrade kept the previous
+      // release's parser defects in unchanged files — a fix shipped in a new
+      // version never reached them until their content happened to change.
+      if (parsed.toolVersion !== TOOL_VERSION) return null;
       return parsed.file;
     } catch {
       return null;
@@ -132,7 +138,7 @@ export class ParseCache {
     if (hash.length === 0) return;
     const target = shardPath(this.root, hash);
     await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, stringifyCanonical({ schemaVersion: SCHEMA_VERSION, file }), 'utf8');
+    await writeFile(target, stringifyCanonical({ schemaVersion: SCHEMA_VERSION, toolVersion: TOOL_VERSION, file }), 'utf8');
   }
 
   async clear(): Promise<void> {
