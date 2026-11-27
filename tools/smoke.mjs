@@ -251,8 +251,11 @@ try {
 
   check('mcp initialize responds', mcpResult?.init?.result?.protocolVersion !== undefined, JSON.stringify(mcpResult ?? {}).slice(0, 160));
   const toolNames = (mcpResult?.tools?.result?.tools ?? []).map((tool) => tool.name);
-  check('mcp exposes at least 14 tools', toolNames.length >= 14, `${toolNames.length}`);
+  check('mcp exposes at least 17 tools', toolNames.length >= 17, `${toolNames.length}`);
   check('mcp exposes detect_coverage_gaps', toolNames.includes('detect_coverage_gaps'));
+  for (const tool of ['get_file_outline', 'find_references', 'find_unused_exports']) {
+    check(`mcp exposes ${tool}`, toolNames.includes(tool));
+  }
   const detectPayload = mcpResult?.detectCall?.result
     ? JSON.parse(mcpResult.detectCall.result.content[0].text)
     : undefined;

@@ -25,11 +25,13 @@ async function setup() {
 }
 
 describe('mcp tool definitions', () => {
-  test('exposes the fourteen documented tools', () => {
+  test('exposes the seventeen documented tools', () => {
     const names = TOOL_DEFINITIONS.map((tool) => tool.name).sort();
     assert.deepEqual(names, [
       'detect_coverage_gaps',
       'explain_module',
+      'find_references',
+      'find_unused_exports',
       'get_architecture',
       'get_change_impact',
       'get_context_for_task',
@@ -37,6 +39,7 @@ describe('mcp tool definitions', () => {
       'get_decisions',
       'get_dependencies',
       'get_dependents',
+      'get_file_outline',
       'get_module_history',
       'get_repository_context',
       'get_revision_diff',
@@ -110,6 +113,45 @@ describe('mcp tool handlers', () => {
     assert.ok(payload.summary.length > 0);
   });
 
+
+  test('get_file_outline exposes the file-level view to MCP clients', async () => {
+    const { root, pool } = await setup();
+    const result = await callTool('get_file_outline', { path: 'src/utils/format-user-name.ts' }, pool, root);
+    assert.equal(result.isError, false);
+    const payload = result.payload as {
+      file: string;
+      exports: Array<{ name: string }>;
+      importers: { direct: Array<{ file: string }> };
+    };
+    assert.equal(payload.file, 'src/utils/format-user-name.ts');
+    assert.ok(payload.exports.some((entry) => entry.name === 'formatUserName'));
+    assert.ok(payload.importers.direct.some((entry) => entry.file === 'src/index.ts'));
+  });
+
+  test('find_references follows an import through the analyzed tree', async () => {
+    const { root, pool } = await setup();
+    const result = await callTool('find_references', { symbol: 'greet' }, pool, root);
+    assert.equal(result.isError, false);
+    const payload = result.payload as { status: string; count: number; references: Array<{ file: string }> };
+    assert.equal(payload.status, 'found');
+    assert.ok(payload.count >= 1);
+    assert.ok(payload.references.some((entry) => entry.file === 'test/index.test.ts'));
+  });
+
+  test('find_unused_exports returns confidence-carrying findings and counts', async () => {
+    const { root, pool } = await setup();
+    const result = await callTool('find_unused_exports', { limit: 5 }, pool, root);
+    assert.equal(result.isError, false);
+    const payload = result.payload as {
+      schemaVersion: number;
+      unused: Array<{ confidence: number; evidence: unknown[] }>;
+      counts: { exported: number; unused: number };
+    };
+    assert.equal(payload.schemaVersion, 1);
+    assert.ok(Array.isArray(payload.unused));
+    assert.ok(payload.counts.exported > 0);
+    assert.equal(payload.unused.length, payload.counts.unused);
+  });
 
   test('explain_module reports a helpful error for unknown paths', async () => {
     const { root, pool } = await setup();

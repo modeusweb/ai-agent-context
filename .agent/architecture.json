@@ -775,6 +775,18 @@
       "evidence": [
         {
           "detail": "file name matches the test conventions of the repository",
+          "source": "tools/ground-truth.test.mjs"
+        }
+      ],
+      "moduleId": "tools",
+      "path": "tools/ground-truth.test.mjs",
+      "type": "test"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "detail": "file name matches the test conventions of the repository",
           "source": "tools/smoke.mjs"
         }
       ],
@@ -3392,6 +3404,7 @@
       "boundaries": [],
       "dependsOn": [],
       "entryPoints": [
+        "tools/ground-truth.test.mjs",
         "tools/smoke.mjs"
       ],
       "fileList": [
@@ -3406,12 +3419,14 @@
         "tools/ground-truth-entry.mjs",
         "tools/ground-truth-public.mjs",
         "tools/ground-truth.mjs",
+        "tools/ground-truth.test.mjs",
         "tools/mcp-client-check.mjs",
+        "tools/oracle-gate.mjs",
         "tools/set-version.mjs",
         "tools/smoke.mjs",
         "tools/trust-metrics.mjs"
       ],
-      "files": 15,
+      "files": 17,
       "git": {
         "architectureChangeSignals": [],
         "changeFrequency": "high",
@@ -3453,6 +3468,11 @@
           "name": "hashDocuments"
         },
         {
+          "file": "tools/oracle-gate.mjs",
+          "kind": "function",
+          "name": "oracleFailures"
+        },
+        {
           "file": "tools/generate-fixtures.mjs",
           "kind": "function",
           "name": "writeAllFixtures"
@@ -3485,7 +3505,7 @@
               "source": "tools/exported-types.d.mts"
             }
           ],
-          "value": "public API: collectJudgements, evidenceCoverage, exportedTypeNames, hashDocuments, writeAllFixtures"
+          "value": "public API: collectJudgements, evidenceCoverage, exportedTypeNames, hashDocuments, oracleFailures, writeAllFixtures"
         }
       ],
       "roles": [
@@ -3507,6 +3527,7 @@
         "test:suite"
       ],
       "testFiles": [
+        "tools/ground-truth.test.mjs",
         "tools/smoke.mjs"
       ],
       "usedBy": [
@@ -3517,7 +3538,7 @@
   "schemaVersion": 1,
   "summary": {
     "cycles": 2,
-    "entryPoints": 64,
+    "entryPoints": 65,
     "layeringViolations": 1,
     "modules": 13,
     "rolesDetected": 17,
@@ -3541,21 +3562,21 @@
         "name": "ai-agent-context",
         "path": "packages/cli",
         "private": false,
-        "version": "1.1.1"
+        "version": "1.2.0"
       },
       {
         "entries": 5,
         "name": "@ai-agent-context/core",
         "path": "packages/core",
         "private": false,
-        "version": "1.1.1"
+        "version": "1.2.0"
       },
       {
         "entries": 6,
         "name": "@ai-agent-context/mcp",
         "path": "packages/mcp",
         "private": false,
-        "version": "1.1.1"
+        "version": "1.2.0"
       }
     ],
     "workspaceGlobs": [

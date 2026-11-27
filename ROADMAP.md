@@ -32,15 +32,15 @@ The principles the product is built on:
 
 ## Current baseline
 
-Current package version: `0.10.1`.
+Current package version: `1.2.0`.
 
 Implemented:
 
 - a scanner core with no runtime dependencies;
 - CLI: `init`, `scan`, `status`, `explain`, `context`, `task`, `impact`,
   `search`, `diff`, `detect`, `history`, `revision-diff`, `verify`, `migrate`,
-  `clean`;
-- MCP stdio server: 14 tools, Resources, Prompts, strict argument validation;
+  `clean`, `outline`, `references`, `unused`;
+- MCP stdio server: 17 tools, Resources, Prompts, strict argument validation;
 - dual-era MCP: five protocol revisions, negotiation, `server/discover`,
   cancellation, timeouts, an error taxonomy, and configuration presets for four
   clients;
@@ -966,15 +966,21 @@ Ordered by what the audit measured, not by what is interesting to build.
 
 ### P0 — Make the stricter measurement a gate
 
-- **Gate the file-level oracle.** `tools/ground-truth.mjs` now compares at the
-  level of files, where no lift to modules can hide an import. It is reported,
-  not enforced: CI still fails only on the module level, which is the level
-  that could not see a missing `require()`.
-- **Close the two "not compared" buckets.** The oracle skips every
-  dot-directory and does not read `.agent/config.json`, so `outsideConfiguration`
-  (43 pairs here) and `outsideOracleWalk` (2 in `changesets`) are counted
-  rather than compared. Neither can be gated until both sides read the same
-  tree.
+- ~~**Gate the file-level oracle.**~~ Done in 1.2.0. `tools/ground-truth.mjs`
+  and the public oracle now fail CI on any extra or missing file pair, not just
+  on the rounded module percentage. The verdict lives in `tools/oracle-gate.mjs`
+  so a report with one missing pair is a test rather than a claim: the check
+  that gates CI is itself gated. `falsePositive`/`falseNegative` counts are used
+  because one error among thousands still rounds to `100.0%`.
+- ~~**Close the two "not compared" buckets.**~~ Done in 1.2.0. The oracle
+  walks dot-directories the analyzer reads and applies the repository's own
+  `.agent/config.json` (include/exclude/ignore, including organization policy)
+  to its own walk. `outsideConfiguration` fell from 43 pairs to 0 on this
+  repository and `outsideOracleWalk` from 2 to 0 on `changesets`; excluded
+  source files are still counted and reported under `scope.filesExcludedByConfig`.
+  Only the *scope* is shared with the analyzer; specifier extraction and
+  resolution remain independent, and the gap between the two scopes is now a
+  test rather than an unexplained hole in the denominator.
 - **Workspace `exports` maps.** `@scope/pkg/sub` resolves to the package, not
   to the file, so navigation across packages is package-level. This is the
   defect recorded since v0.18.0 (`playwright`: precision 69.8%, recall 91.1%).
@@ -998,8 +1004,11 @@ Measured on a 2,953-file repository: cold scan 8.2 s, and **every warm command
 
 ### P2 — Capabilities the audit found demand for
 
-- MCP tools for the new navigation (`get_file_outline`, `find_references`,
-  `find_unused_exports`): core and the CLI have them, the server does not.
+- ~~MCP tools for the new navigation~~ Done in 1.2.0: `get_file_outline`,
+  `find_references` and `find_unused_exports` are advertised by `tools/list`,
+  validated against their own schemas and dispatched through `AgentContext`.
+  The MCP surface grows from 14 to 17 tools; no existing tool was renamed or
+  repurposed, so the change is additive under `STABILITY.md`.
 - Usage lines inside the importing files; today a reference is the import line.
 - `impact` at the level of a file; today it is module-level, and the file
   closure is only in `outline.importers`.

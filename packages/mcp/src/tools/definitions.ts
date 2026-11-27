@@ -66,6 +66,11 @@ const MODULE_PROPERTY: JsonSchema = {
   description: 'Module id, module directory, file path or workspace package name (for example "src/payments").',
 };
 
+const FILE_PROPERTY: JsonSchema = {
+  type: 'string',
+  description: 'Repository-relative file path (or a unique suffix of one), for example "src/payments/pay.ts".',
+};
+
 export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
     name: 'detect_coverage_gaps',
@@ -162,6 +167,54 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     },
     outputDescription:
       'Module explanation with confidence-carrying heuristics and their evidence. A narrow directory is answered with a "scope" field instead of widening to the whole module.',
+  },
+  {
+    name: 'get_file_outline',
+    annotations: READ_ONLY_ANNOTATIONS,
+    title: 'Get file outline',
+    description:
+      'Outline of one file: what it exports and imports, which files import it (directly and transitively), which tests depend on it, and what routes it declares. Use this instead of explain_module when the question is about one file rather than a module.',
+    inputSchema: {
+      type: 'object',
+      properties: { path: FILE_PROPERTY, root: ROOT_PROPERTY },
+      required: ['path'],
+      additionalProperties: false,
+    },
+    outputDescription: 'File outline with resolved import lines, importers, tests, routes and caveats.',
+  },
+  {
+    name: 'find_references',
+    annotations: READ_ONLY_ANNOTATIONS,
+    title: 'Find references',
+    description:
+      'Where an exported symbol is imported, through barrels and re-export chains. Pass "<symbol>", "<file>#<symbol>" when several files export the same name, or a separate "file" argument. Namespace imports are reported as possible references, not as certain ones.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        symbol: { type: 'string', description: 'Exported symbol name, or "<file>#<symbol>".' },
+        file: { type: 'string', description: 'Optional file that declares the symbol, when the name is ambiguous.' },
+        root: ROOT_PROPERTY,
+      },
+      required: ['symbol'],
+      additionalProperties: false,
+    },
+    outputDescription: 'Reference report with status, references, possible references, caveats and evidence.',
+  },
+  {
+    name: 'find_unused_exports',
+    annotations: READ_ONLY_ANNOTATIONS,
+    title: 'Find unused exports',
+    description:
+      'Named exports that no analyzed file imports and no entry point reaches. Each finding carries a confidence and its evidence; exports that cannot be assessed are counted separately so a low number cannot be read as certainty.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        limit: { type: 'number', description: 'Maximum number of findings (default 50, capped by the core API).' },
+        root: ROOT_PROPERTY,
+      },
+      additionalProperties: false,
+    },
+    outputDescription: 'Unused export findings with confidence, evidence and assessment counts.',
   },
   {
     name: 'get_dependencies',

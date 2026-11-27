@@ -18,21 +18,21 @@
         "path": "CONTRIBUTING.md"
       },
       {
-        "hash": "b96f09c9a6f2dec683534f3dd1737825d72b81ee60f226356734c0d3a66bc70d",
+        "hash": "b01958a119124ff4b76e049ae12e1b525356df66c47a4e5992fc143b831bc9bc",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "MIGRATION.md"
       },
       {
-        "hash": "531a7df69854b80cf6f84c80a3bf84a5e0f405d803b16cd691a550c77bb5d57e",
+        "hash": "c3ef245dc8fa229e6e8966d7c7363560e5dbd68e368e1ccfa0b2ffb3a102f596",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "README.md"
       },
       {
-        "hash": "7e3bc854ee1c8fed4be7fcf94d805a9deb5a6cd9598119ad533dfba4440a2ce9",
+        "hash": "1a3e911fdb2ec04a5cba8b0465b5941600998a654ed5014ff5cfb71d29b17d72",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -60,14 +60,14 @@
         "path": "benchmark-report.json"
       },
       {
-        "hash": "12c70bbc8a99651618a94b229d2077ec2a342f23342b36a86b4e736795de87f3",
+        "hash": "12196dbd1cbabc9031a2c80004c952a2d3f481b6f085281a127f51ab02bc0c7b",
         "kind": "config",
         "language": "json",
         "module": null,
         "path": "package-lock.json"
       },
       {
-        "hash": "ac6ec656249ce2ac95ed9f486708be658f686f2d7959252af64cb2ada21aba1c",
+        "hash": "5d15fa400fc576641315fb5cb3b0199844c7e7fe6c2c209a1498fabe8d425190",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -88,7 +88,7 @@
         "path": "packages/cli/README.md"
       },
       {
-        "hash": "15b9dec8e04ba04682293888ca50b4234a52f398c78de39c6da021cfdee405ee",
+        "hash": "885033788365e1d0f53bb92ad9a44b4c9d94504b731304a8d63dce617c31ec3e",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -298,7 +298,7 @@
         "path": "packages/core/README.md"
       },
       {
-        "hash": "94594c60b0653ee2e4618c9795e761e9889352072f7c65a8e146f1ba622e5dc7",
+        "hash": "0cde7e8d0c9c59925eda107e062fb2c22ac5033e75a14e9263bb2d491960f2af",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -704,7 +704,7 @@
         "path": "packages/core/src/model/types.ts"
       },
       {
-        "hash": "61d7879cdd18d806cc098fc579e9da8ccfdca91461861743cc6222fad06ca27e",
+        "hash": "c2bb90e43a3e53c3ed5eba57026fd268a93f5c537b4a08ff6987dd837dc3f7d4",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src/model",
@@ -984,14 +984,14 @@
         "path": "packages/mcp/LICENSE"
       },
       {
-        "hash": "8f7724d3f127c8c790818e295b3c4cc3584f9aea2db5ff668634c122e894a476",
+        "hash": "b161ab9b86e54d89876e04f53905cc25d12a92263c44651aa97b3b94a8627d8f",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "packages/mcp/README.md"
       },
       {
-        "hash": "da17f6f06622e014f03d23c6505527e2c16c5e39fa58d70e881092d2784f0955",
+        "hash": "c6310f153666216177b69730ea17d2c679ae6bc830f28e97f825d6709999dd88",
         "kind": "config",
         "language": "package-json",
         "module": null,
@@ -1026,21 +1026,21 @@
         "path": "packages/mcp/src/protocol.ts"
       },
       {
-        "hash": "064b6461db3d5ec9e856aa466d9a8eb0098ef281a2a96df3d56215e11c5754d9",
+        "hash": "aeef219e0c743c746c20260f77167e4dcae8fbf47adc8afa5e204372738a5531",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src",
         "path": "packages/mcp/src/server.ts"
       },
       {
-        "hash": "c0d2c0ab358b9ce32c056da565b9569d0ef791ff6ac3dd44c76de18ae6c77689",
+        "hash": "490c134284f19b760bbc114f30ae7119b6e5d41c0b371c67b1aafc952c2987d1",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src/tools",
         "path": "packages/mcp/src/tools/definitions.ts"
       },
       {
-        "hash": "511a1cad03e13e1731942de81edf0b8e305c98e0e7413f4abe8e6d86b8cc9e0a",
+        "hash": "cf21a46db1baf49718e2c8167a8b439b411cdfb81f69564f7405453725016cfc",
         "kind": "source",
         "language": "typescript",
         "module": "packages/mcp/src/tools",
@@ -1061,7 +1061,7 @@
         "path": "packages/mcp/test/freshness.test.ts"
       },
       {
-        "hash": "eee34f8597f7dcb566bc5319a80adaec5e35342cc6d2ea774f1aa9ddfd294bfa",
+        "hash": "57b2e6c4d27f5db90e05962098e7efff3be2d04652cab6cec767ef1ab01d2417",
         "kind": "test",
         "language": "typescript",
         "module": "packages/mcp/test",
@@ -1166,25 +1166,39 @@
         "path": "tools/ground-truth-entry.mjs"
       },
       {
-        "hash": "e6251f5860573634f4451a5781b16afc558829480d6f2845c467a2578f5182f6",
+        "hash": "0ccb443b4152580bfc9805be946cbc7c9630f7af30ba3e7f4805cefdf778e1d4",
         "kind": "source",
         "language": "javascript",
         "module": "tools",
         "path": "tools/ground-truth-public.mjs"
       },
       {
-        "hash": "27cce8906be00951b1939df068384111b00317d56989d70134311681b537a03e",
+        "hash": "1909b83f4a6e62dc443fe7bd4326d1c4ad662c664d58811b56de853a84e8821a",
         "kind": "source",
         "language": "javascript",
         "module": "tools",
         "path": "tools/ground-truth.mjs"
       },
       {
-        "hash": "4364d5c63f23ee0ddfb75d6541057a9d0183190e99cb6660702b2be1ed486ed4",
+        "hash": "348b69b520e21a497fcf7e6c9d113dae476a1a9470f0fabc3f8a08b3df3c19bc",
+        "kind": "test",
+        "language": "javascript",
+        "module": "tools",
+        "path": "tools/ground-truth.test.mjs"
+      },
+      {
+        "hash": "a110b178481621f2790384c910c8fad317446b9d8d865249daea69def7428b10",
         "kind": "source",
         "language": "javascript",
         "module": "tools",
         "path": "tools/mcp-client-check.mjs"
+      },
+      {
+        "hash": "2fe351b52d41c797893e6597ea3a5f3c11440144cfaaeded8fc9f7b90044b30b",
+        "kind": "source",
+        "language": "javascript",
+        "module": "tools",
+        "path": "tools/oracle-gate.mjs"
       },
       {
         "hash": "38f52ee754742c03238e7f53363ee0fd685e426713ad045d753e8f1277b67bbc",
@@ -1194,7 +1208,7 @@
         "path": "tools/set-version.mjs"
       },
       {
-        "hash": "27593df6a096a973053e76cfd8220f119019374469f5bda4bf4193c23bcdc348",
+        "hash": "ba476a16657ce4e6300b3a4141c4251a26277d1680c18b70b1c4c39b15b00db3",
         "kind": "test",
         "language": "javascript",
         "module": "tools",
@@ -1226,7 +1240,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 57,
+    "commitsAnalyzed": 58,
     "enabled": true,
     "windowDays": 180
   },
@@ -1238,13 +1252,13 @@
       "decisions": 13,
       "dependencies": 19,
       "docs": 9,
-      "entryPoints": 64,
+      "entryPoints": 65,
       "externalDependencies": 13,
-      "files": 173,
+      "files": 175,
       "modules": 13,
-      "source": 106,
-      "symbols": 1064,
-      "tests": 43
+      "source": 107,
+      "symbols": 1075,
+      "tests": 44
     },
     "isMonorepo": true,
     "languages": [

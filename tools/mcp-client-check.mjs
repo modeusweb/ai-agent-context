@@ -146,8 +146,11 @@ try {
   process.stdout.write('\ntools\n');
   await withClient(fixture, 'tools', async (client) => {
     const { tools } = await client.listTools();
-    check('listTools returns at least 14 tools', tools.length >= 14, `got ${tools.length}`);
+    check('listTools returns at least 17 tools', tools.length >= 17, `got ${tools.length}`);
     const names = tools.map((tool) => tool.name).sort();
+    for (const tool of ['get_file_outline', 'find_references', 'find_unused_exports']) {
+      check(`listTools returns ${tool}`, names.includes(tool));
+    }
     check(
       'every tool has a description the SDK accepts',
       tools.every((tool) => typeof tool.description === 'string' && tool.description.length > 0),

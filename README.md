@@ -711,7 +711,10 @@ parses, cycles and layering violations.
 ## Dependency graph checked against an independent resolver
 
 `tools/ground-truth.mjs` compares the dependency graph with the answer produced by
-the TypeScript compiler, which shares no code with this project:
+the TypeScript compiler. Specifier extraction and resolution share no code with
+this project; only the *scope* is deliberately shared — the oracle reads
+`.agent/config.json` so it asks about exactly the files the analyzer was told
+to read, and walks dot-directories the analyzer walks:
 
 ```bash
 npm run ground-truth
@@ -719,19 +722,21 @@ npm run ground-truth -- --json
 ```
 
 It runs in CI as `dependency graph vs typescript`, and exits non-zero when
-precision or recall falls below 100%.
+precision or recall falls below 100% at **either** the module or the file level,
+or when an import the analyzer called unresolved is resolvable by the compiler.
 
 **Current result on this repository:**
 
 | Metric | Value |
 | --- | --- |
-| Specifiers examined | 663 (462 in-repo, 165 external) |
-| File-level import pairs | 410 |
-| Module edges, ground truth | 18 |
-| Module edges, analyzer | 18 |
-| **Precision** | **100%** (0 false positives) |
-| **Recall** | **100%** (0 false negatives) |
-| Unresolved imports cross-checked | 25 — all imports of excluded build output, **0 missed** |
+| Specifiers examined | 724 (469 in-repo, 202 external) |
+| File-level import pairs | 413 |
+| Module edges, ground truth | 19 |
+| Module edges, analyzer | 19 |
+| **Module precision / recall** | **100% / 100%** (0 false positives, 0 false negatives) |
+| **File precision / recall** | **100% / 100%** (0 extra, 0 missing pairs) |
+| Pairs outside the configured scope | 0 (35 excluded source files counted and reported) |
+| Unresolved imports cross-checked | 42 — all imports of excluded build output, **0 missed** |
 
 **Why this is not the same number twice.** `summary.imports.resolutionRate` is
 produced by the analyzer describing itself: it counts what its own resolver
@@ -853,6 +858,8 @@ The benchmark measures the claims rather than restating them, and CI fails on re
 | import resolution rate | 100% | yes |
 | dependency graph precision vs the TypeScript compiler | 100% (0 false positives) | yes |
 | dependency graph recall vs the TypeScript compiler | 100% (0 false negatives) | yes |
+| file-level precision vs the TypeScript compiler | 100% (0 extra pairs) | yes |
+| file-level recall vs the TypeScript compiler | 100% (0 missing pairs) | yes |
 | path escapes | 0 | yes |
 | evidence coverage | 100% (363/363 judgements cite a source) | yes |
 | determinism | 0 non-deterministic repositories | yes |

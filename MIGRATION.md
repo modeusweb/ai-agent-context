@@ -1,5 +1,28 @@
 # Migration guide
 
+<!-- id="v120" -->
+## v1.2.0
+
+A minor release: the MCP adapter gains three tools. No CLI or schema change,
+and all three published packages move together from 1.1.1 to 1.2.0.
+
+- `tools/ground-truth.mjs` now applies the repository's `.agent/config.json`
+  include/exclude/ignore patterns to its own walk and reads dot-directories the
+  analyzer reads. Pairs the analyzer was configured not to read are no longer
+  an unexplained gap in the denominator.
+- File-level precision and recall are now CI gates, locally and across the
+  pinned public repositories. The gate is tested with a synthetic report that
+  has one missing file pair.
+- `npm test` and `npm run verify` include `tools/**/*.test.mjs`.
+- Added MCP tools `get_file_outline` (`path`), `find_references` (`symbol`,
+  optional `file`) and `find_unused_exports` (optional `limit`). They expose
+  core navigation that was already available through the CLI. This is a minor
+  API addition under `STABILITY.md`: no tool was renamed or repurposed, and
+  existing clients see the same tools as before.
+
+No re-scan is needed: the `.agent/` schema and the analysis result are unchanged
+(this repository's own committed context was regenerated as usual).
+
 <!-- id="v111" -->
 ## v1.1.1
 

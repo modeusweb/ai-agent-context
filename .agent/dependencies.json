@@ -42,7 +42,7 @@
         ],
         "value": "infrastructure"
       },
-      "importedByModules": 3,
+      "importedByModules": 4,
       "name": "node:assert/strict",
       "scope": "runtime"
     },
@@ -177,16 +177,20 @@
     {
       "declaredBy": [],
       "importance": {
-        "confidence": 0.99,
+        "confidence": 0.3,
         "evidence": [
           {
-            "detail": "Node.js built-in module",
-            "source": "<node>"
+            "detail": "imported by source code but not declared as a dependency in any workspace package",
+            "source": "<package.json>"
+          },
+          {
+            "detail": "no specific classification signal matched",
+            "source": "<heuristic>"
           }
         ],
-        "value": "infrastructure"
+        "value": "utility"
       },
-      "importedByModules": 3,
+      "importedByModules": 4,
       "name": "node:test",
       "scope": "runtime"
     },
@@ -1420,6 +1424,20 @@
     },
     {
       "externalPackages": [
+        "node:assert/strict",
+        "node:child_process",
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:test",
+        "node:url"
+      ],
+      "file": "tools/ground-truth.test.mjs",
+      "internalModules": [],
+      "module": "tools"
+    },
+    {
+      "externalPackages": [
         "@modelcontextprotocol/sdk",
         "node:child_process",
         "node:fs",
@@ -1927,8 +1945,8 @@
     "crossPackageEdges": 5,
     "cycles": 2,
     "externalPackages": 13,
-    "fileImports": 128,
-    "fileImportsTotal": 128,
+    "fileImports": 129,
+    "fileImportsTotal": 129,
     "fileImportsTruncated": false,
     "internalModuleEdges": 19,
     "unresolvedImports": 42

@@ -21,6 +21,9 @@ build/
 .temp/
 *.local
 
+# Agent workspace data (session memory, not part of the product)
+.workbuddy-ai/
+
 # IDE
 .vscode/
 .idea/

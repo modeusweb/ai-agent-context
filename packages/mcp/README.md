@@ -162,6 +162,9 @@ Read-only, exposed as MCP resources:
 | `get_context_for_task` | `task` |
 | `get_change_impact` | `target` |
 | `explain_module` | `path` |
+| `get_file_outline` | `path` |
+| `find_references` | `symbol` (optionally `file` when the name is ambiguous) |
+| `find_unused_exports` | — (optional `limit`) |
 | `get_dependencies` | — |
 | `get_dependents` | `module` |
 | `search_context` | `query` |

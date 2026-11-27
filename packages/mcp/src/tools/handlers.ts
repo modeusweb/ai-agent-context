@@ -204,6 +204,33 @@ async function runTool(
       return { isError: false, payload: explanation };
     }
 
+    case 'get_file_outline': {
+      const target = asString(args['path']);
+      if (target === undefined) return errorPayload('get_file_outline requires the "path" argument');
+      const context = await pool.get(root);
+      const outline = await context.getFileOutline(target);
+      if (outline === null) {
+        return errorPayload(`no analyzed file matched "${target}"`, {
+          hint: 'Use search_context to find the file, or get_repository_context to list modules.',
+        });
+      }
+      return { isError: false, payload: outline };
+    }
+
+    case 'find_references': {
+      const target = asString(args['symbol']);
+      if (target === undefined) return errorPayload('find_references requires the "symbol" argument');
+      const file = asString(args['file']);
+      const context = await pool.get(root);
+      return { isError: false, payload: await context.findReferences(target, file === undefined ? {} : { file }) };
+    }
+
+    case 'find_unused_exports': {
+      const limit = asNumber(args['limit']);
+      const context = await pool.get(root);
+      return { isError: false, payload: await context.findUnusedExports(limit === undefined ? {} : { limit }) };
+    }
+
     case 'get_dependencies': {
       const context = await pool.get(root);
       const module = asString(args['module']);

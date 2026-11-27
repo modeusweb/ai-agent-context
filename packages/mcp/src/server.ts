@@ -119,7 +119,7 @@ const MCP_PROMPTS = [
 ] as const;
 
 const SERVER_INSTRUCTIONS =
-  'Repository context layer. Start with get_context_for_task or get_repository_context, then use explain_module, get_change_impact, get_dependencies, get_dependents, search_context, get_architecture, get_conventions and get_decisions. All data is generated locally from the repository; heuristic values carry a confidence and their evidence.';
+  'Repository context layer. Start with get_context_for_task or get_repository_context, then use explain_module, get_file_outline, find_references, find_unused_exports, get_change_impact, get_dependencies, get_dependents, search_context, get_architecture, get_conventions and get_decisions. All data is generated locally from the repository; heuristic values carry a confidence and their evidence.';
 
 const DEFAULT_REQUEST_TIMEOUT_MS = 120_000;
 

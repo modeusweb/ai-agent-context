@@ -42,7 +42,7 @@ jobs:
         run: npm run typecheck
 
       - name: Test
-        run: node --test "packages/core/test/**/*.test.ts" "packages/cli/test/**/*.test.ts" "packages/mcp/test/**/*.test.ts"
+        run: node --test "packages/core/test/**/*.test.ts" "packages/cli/test/**/*.test.ts" "packages/mcp/test/**/*.test.ts" "tools/**/*.test.mjs"
 
   # Proves the `engines.node >= 20.11.0` claim instead of assuming it.
   #

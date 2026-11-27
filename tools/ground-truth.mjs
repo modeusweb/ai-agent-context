@@ -16,6 +16,15 @@
  * a partition of the file list rather than a claim about dependencies. Everything
  * that decides whether an edge exists comes from the compiler.
  *
+ * The dependency claims are independent of the analyzer, but the *scope* is
+ * deliberately shared: the oracle reads the repository's `.agent/config.json`
+ * and applies its include/exclude/ignore patterns to its own walk. Before that,
+ * a truth pair could involve a file the analyzer was configured not to read —
+ * 43 pairs under `fixtures/` here — and was counted as "not compared". A metric
+ * with an unexplained hole in its denominator cannot be a gate. The patterns
+ * are the repository's own instructions, borrowed only to decide which files
+ * are in scope, never to decide whether an import exists or resolves.
+ *
  * Two representation differences are normalised explicitly, and both are counted
  * and reported so the normalisation cannot quietly absorb a disagreement:
  *
@@ -33,11 +42,36 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { AgentContext, Logger, runPipeline } from '../packages/core/dist/index.js';
+import { AgentContext, Logger, PatternSet, loadConfig, runPipeline } from '../packages/core/dist/index.js';
+import { oracleFailures } from './oracle-gate.mjs';
 
 const explicitRoot = process.argv.slice(2).find((argument) => !argument.startsWith('--'));
 const repoRoot = path.resolve(explicitRoot ?? path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'));
 const asJson = process.argv.includes('--json');
+
+/**
+ * The scope both sides are compared on.
+ *
+ * `loadConfig` reads the repository's own file, its defaults and any
+ * organization policy. `PatternSet` is the analyzer's glob engine: using it here
+ * is not borrowing an answer about dependencies, it is making sure the oracle
+ * and the analyzer agree on which files exist for the purpose of this check.
+ */
+const loadedConfig = await loadConfig({ root: repoRoot });
+const scope = {
+  source: loadedConfig.source ?? 'defaults and organization policy',
+  include: new PatternSet(loadedConfig.config.include),
+  exclude: new PatternSet(loadedConfig.config.exclude),
+  ignore: new PatternSet(loadedConfig.config.ignore),
+};
+const configExcludedFiles = [];
+
+/** Whether a repository-relative source file is inside the configured scope. */
+function inScope(relative) {
+  const normalized = relative.split(path.sep).join('/');
+  if (scope.exclude.test(normalized) || scope.ignore.test(normalized)) return false;
+  return scope.include.isEmpty || scope.include.matchesAny(normalized);
+}
 
 const SOURCE_EXTENSIONS = new Set(['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs']);
 /** Never analyzed here, so never part of ground truth either. */
@@ -49,10 +83,16 @@ function toRelative(absolute) {
   return path.relative(repoRoot, absolute).split(path.sep).join('/');
 }
 
-/** Walks the tree with rules written here rather than borrowed from the analyzer. */
+/**
+ * Walks the tree with rules written here rather than borrowed from the analyzer.
+ *
+ * Dot-directories are not skipped wholesale: `.changeset/` and `.github/` can
+ * hold authored TypeScript, and the analyzer reads them. Skipping them here
+ * produced analyzer pairs the oracle could not compare. Only the hard excludes
+ * below, which neither side analyzes, prune directories.
+ */
 function walk(dir, { extensions, manifests }, acc = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name.startsWith('.')) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       if (ALWAYS_EXCLUDED.has(entry.name)) continue;
@@ -62,8 +102,17 @@ function walk(dir, { extensions, manifests }, acc = []) {
     // Symlinks are skipped for the same reason the analyzer skips them: they can
     // point outside the repository and would make the two graphs incomparable.
     if (entry.isSymbolicLink()) continue;
-    if (manifests && entry.name === 'package.json') acc.push(full);
-    else if (!manifests && extensions.has(path.extname(entry.name))) acc.push(full);
+    if (manifests && entry.name === 'package.json') {
+      acc.push(full);
+      continue;
+    }
+    if (manifests || !extensions.has(path.extname(entry.name))) continue;
+    const relative = toRelative(full);
+    if (!inScope(relative)) {
+      configExcludedFiles.push(relative);
+      continue;
+    }
+    acc.push(full);
   }
   return acc;
 }
@@ -582,12 +631,13 @@ for (const candidate of truthModuleEdges) {
  *    resolved to the implementation. They are one dependency: for "who imports
  *    this file" the implementation is the more useful of the two to name.
  *
- * A truth pair whose importer or target the analyzer was not configured to
- * read at all is outside the comparison. The oracle walks the tree with its own
- * rules and does not read `.agent/config.json`, so a directory the repository
- * excludes is analyzed by neither the oracle's ignorance or the analyzer's
- * instruction. Those pairs are counted as `outsideConfiguration` — reported,
- * because a walk that silently dropped files would look exactly like this.
+ * A truth pair whose importer or target the analyzer did not read at all is
+ * outside the comparison and counted as `outsideConfiguration`. Since both
+ * walks apply the repository's configured scope, such a pair is now an
+ * anomaly — a file the configuration allows but the analyzer did not read,
+ * for example because a `.gitignore` or the sensitive-file policy excluded it
+ * — rather than a known instruction the oracle failed to honour. It is still
+ * reported and never silently dropped.
  */
 const analyzerFiles = await analyzerFilePairs();
 /** `x.d.ts`, `x.d.mts` and `x.d.cts` describe an implementation; they are not files of their own. */
@@ -724,6 +774,12 @@ const percent = (value) => (value === null ? null : Number((value * 100).toFixed
 const result = {
   repository: toRelative(repoRoot) || '.',
   source: 'typescript compiler',
+  scope: {
+    source: scope.source,
+    filesIncluded: truth.files,
+    filesExcludedByConfig: configExcludedFiles.length,
+    excludedSample: configExcludedFiles.slice(0, 5),
+  },
   filesScanned: truth.files,
   specifiers: {
     total: truth.specifiers,
@@ -748,6 +804,7 @@ const result = {
   falseNegativeSample: falseNegatives.slice(0, 5),
   fileLevel: {
     truthPairs: truth.filePairs.size,
+    truthSample: [...truth.filePairs].slice(0, 5),
     analyzerPairs: analyzerFiles.files.size,
     truePositive: fileTruePositive,
     falsePositive: fileFalsePositives.length,
@@ -771,7 +828,7 @@ if (asJson) {
 } else {
   console.log(`repository:        ${result.repository}`);
   console.log(`ground truth:     ${result.source}`);
-  console.log(`files scanned:    ${result.filesScanned}`);
+  console.log(`files scanned:    ${result.filesScanned} (scope: ${result.scope.source}, ${result.scope.filesExcludedByConfig} excluded by config)`);
   console.log(`specifiers:       ${result.specifiers.total} total (${result.specifiers.inRepo} in-repo, ${result.specifiers.external} external, ${result.specifiers.unresolvedByCompiler} unresolved)`);
   console.log(`pairs:            ${result.filePairs} file + ${result.packagePairs} package -> ${result.truthModuleEdges} module edges`);
   console.log(`analyzer edges:   ${result.analyzerModuleEdges}`);
@@ -795,17 +852,9 @@ console.log(`unresolved cross-check: ${result.unresolvedCrossCheck.total} report
   if (result.missedSample.length > 0) console.log(`  missed: ${result.missedSample.join('   ')}`);
 }
 
-if (result.precisionPercent !== null && result.recallPercent !== null) {
-  if (result.recallPercent < 100 || result.precisionPercent < 100) process.exitCode = 1;
-}
-
-// A "missed" specifier is one the analyzer reported as unresolved although the
-// compiler resolves it to in-repo source. It was printed but never gated, so the
-// headline resolution rate could be overstated while CI stayed green.
-if (result.unresolvedCrossCheck.missed > 0) {
-  console.error(
-    `\n${result.unresolvedCrossCheck.missed} import(s) reported unresolved but resolvable by the compiler:`,
-  );
-  for (const sample of result.missedSample) console.error(`  ${sample}`);
-  process.exitCode = 1;
-}
+// One verdict for all three gates — module edges, file pairs and unresolved
+// claims. `oracleFailures` is a separate module so the gate can be tested with
+// a report that contains exactly one missing file pair.
+const failures = oracleFailures(result);
+for (const failure of failures) console.error(`\n${failure}`);
+if (failures.length > 0) process.exitCode = 1;

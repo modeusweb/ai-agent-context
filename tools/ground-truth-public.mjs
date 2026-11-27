@@ -17,7 +17,9 @@
  * Two oracles run per repository, because they answer different questions:
  *
  *  - `ground-truth.mjs` compares the dependency graph with the answer the
- *    TypeScript compiler gives.
+ *    TypeScript compiler gives, at both the module level and the file level.
+ *    The file level is the one that can see a missing import between two files
+ *    of one module, so both levels are gates.
  *  - `ground-truth-entry.mjs` compares declared entry points with the manifests
  *    that declare them.
  *
@@ -41,8 +43,21 @@ const only = onlyIndex === -1 ? null : args[onlyIndex + 1];
 const asJson = args.includes('--json');
 
 const ORACLES = [
-  { name: 'graph', script: 'tools/ground-truth.mjs', metrics: ['precision', 'recall'] },
-  { name: 'entry', script: 'tools/ground-truth-entry.mjs', metrics: ['declared entry points', 'precision', 'recall'] },
+  {
+    name: 'graph',
+    script: 'tools/ground-truth.mjs',
+    metrics: ['precision', 'recall', 'file precision', 'file recall'],
+    checks: [
+      { label: 'module', precision: 'precision', recall: 'recall' },
+      { label: 'file', precision: 'file precision', recall: 'file recall' },
+    ],
+  },
+  {
+    name: 'entry',
+    script: 'tools/ground-truth-entry.mjs',
+    metrics: ['declared entry points', 'precision', 'recall'],
+    checks: [{ label: 'entry', precision: 'precision', recall: 'recall' }],
+  },
 ];
 
 function parseReport(output) {
@@ -85,9 +100,16 @@ function runOracle(script, directory) {
  * property of the repository rather than a result. Refusing to pass those would
  * make a single-module package a permanent CI failure.
  */
+/** The first percentage on a line; the oracle prints diagnostic counts after it. */
+function percentage(metrics, key) {
+  const value = metrics[key] ?? 'n/a';
+  const match = /^(\d+(?:\.\d+)?)%/.exec(value);
+  return match === null ? value : `${match[1]}%`;
+}
+
 function verdict(metrics, keys) {
-  const precision = metrics[keys.precision] ?? 'n/a';
-  const recall = metrics[keys.recall] ?? 'n/a';
+  const precision = percentage(metrics, keys.precision);
+  const recall = percentage(metrics, keys.recall);
   if (precision === 'n/a' || recall === 'n/a') return { ok: true, comparable: false, text: 'no module edges' };
   const ok = precision === '100%' && recall === '100%';
   return { ok, comparable: true, text: `${precision} / ${recall}` };
@@ -126,9 +148,18 @@ for (const entry of entries) {
     clonePinned(entry, directory);
     for (const oracle of ORACLES) {
       const metrics = runOracle(oracle.script, directory);
-      const check = verdict(metrics, { precision: 'precision', recall: 'recall' });
+      // Every level an oracle reports is a separate gate. Collapsing them into
+      // one verdict would reintroduce the hole the file-level check was added
+      // to close: a perfect module percentage beside a missing file import.
+      const checks = oracle.checks.map(({ label, precision, recall }) => ({
+        label,
+        ...verdict(metrics, { precision, recall }),
+      }));
       result.oracles[oracle.name] = {
-        ...check,
+        ok: checks.every((check) => check.ok),
+        comparable: checks.some((check) => check.comparable),
+        text: checks.length === 1 ? checks[0].text : checks.map((check) => `${check.label} ${check.text}`).join(', '),
+        checks,
         metrics: Object.fromEntries(oracle.metrics.map((key) => [key, metrics[key] ?? 'n/a'])),
       };
     }
@@ -171,7 +202,7 @@ if (asJson) {
     );
   }
   process.stdout.write(
-    `\n${summary.passed}/${summary.repositories} at 100% precision and recall on both oracles` +
+    `\n${summary.passed}/${summary.repositories} at 100% precision and recall on both oracles, graph at module and file level` +
       (summary.graphNotComparable > 0 ? `, ${summary.graphNotComparable} without module edges to compare` : '') +
       '\n',
   );
