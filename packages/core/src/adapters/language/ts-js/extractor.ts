@@ -448,7 +448,14 @@ function parseExport(tokens: readonly Token[], index: number, result: Extraction
   }
 
   let typeOnly = false;
-  if (isKeyword(tokens[cursor], 'type') && isPunct(tokens[cursor + 1], '{')) {
+  // `export type { x } from` and `export type * from` are both type-only
+  // re-exports. Until 1.2.1 only the braced form was recognised, so the star
+  // form fell through to the declaration scanner and its import vanished:
+  // neither `got` nor `radix-primitives` had an edge to their type barrel.
+  if (
+    isKeyword(tokens[cursor], 'type') &&
+    (isPunct(tokens[cursor + 1], '{') || isPunct(tokens[cursor + 1], '*'))
+  ) {
     typeOnly = true;
     cursor += 1;
   }

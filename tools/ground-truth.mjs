@@ -314,6 +314,15 @@ function specifiersIn(file) {
       // including inside a function body, which is where lazy loading puts it.
       const [argument] = node.arguments;
       if (argument && ts.isStringLiteral(argument)) specifiers.push(argument.text);
+    } else if (ts.isImportTypeNode(node)) {
+      // `typeof import('./x')` is an ImportTypeNode, not a CallExpression. The
+      // analyzer records it (as it records every type-only import), so the
+      // oracle must too or the pair appears as a false positive. `radix-primitives`
+      // has one in `aria-hidden.bench.mts`.
+      const argument = node.argument;
+      if (ts.isLiteralTypeNode(argument) && ts.isStringLiteral(argument.literal)) {
+        specifiers.push(argument.literal.text);
+      }
     }
     ts.forEachChild(node, visit);
   };

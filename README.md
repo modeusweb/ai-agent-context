@@ -729,8 +729,8 @@ or when an import the analyzer called unresolved is resolvable by the compiler.
 
 | Metric | Value |
 | --- | --- |
-| Specifiers examined | 724 (469 in-repo, 202 external) |
-| File-level import pairs | 413 |
+| Specifiers examined | 741 (478 in-repo, 209 external) |
+| File-level import pairs | 415 |
 | Module edges, ground truth | 19 |
 | Module edges, analyzer | 19 |
 | **Module precision / recall** | **100% / 100%** (0 false positives, 0 false negatives) |

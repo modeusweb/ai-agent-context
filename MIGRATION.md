@@ -1,5 +1,24 @@
 # Migration guide
 
+<!-- id="unreleased" -->
+## Unreleased
+
+Three defects found by the stricter file-level gate shipped in 1.2.0. No API,
+CLI, schema or configuration change; no re-scan is needed for existing
+`.agent/` documents, although re-analysing with the fixed resolver will add the
+imports described below.
+
+- `export type * from '...'` and `export type * as ns from '...'` are now
+  recognised as type-only re-exports. Only the braced form was read before, so
+  the star form lost its import edge (`got`, `radix-primitives`).
+- A dot inside a filename is no longer mistaken for a final extension. The
+  resolver now tries the known source extensions and index files for specifiers
+  such as `./roving-focus.client`, which names `roving-focus.client.tsx`
+  (`radix-primitives`).
+- The oracle counts `typeof import('./x')`, which TypeScript parses as an
+  `ImportTypeNode` rather than a call expression. The analyzer already recorded
+  it, so the compiler side had been calling a real pair an extra one.
+
 <!-- id="v120" -->
 ## v1.2.0
 

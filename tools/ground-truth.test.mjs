@@ -93,3 +93,32 @@ test('the oracle compares only the configured scope, including dot-directories',
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+test('the oracle counts typeof import() as a type-only dependency', () => {
+  const directory = mkdtempSync(path.join(os.tmpdir(), 'aac-oracle-typeof-'));
+  try {
+    const write = (file, contents) => {
+      mkdirSync(path.dirname(path.join(directory, file)), { recursive: true });
+      writeFileSync(path.join(directory, file), `${contents}\n`, 'utf8');
+    };
+    write('package.json', JSON.stringify({ name: 'oracle-typeof-fixture', version: '1.0.0', private: true }));
+    write('src/shared.ts', 'export const value = 1;');
+    // TypeScript parses this as ImportTypeNode, not as a CallExpression. The
+    // analyzer records it; without this branch the oracle called it an extra pair.
+    write('src/types.ts', "declare const shared: typeof import('./shared');\nexport { shared };\n");
+
+    const output = execFileSync(process.execPath, [oracle, directory, '--json'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    const report = JSON.parse(output);
+    assert.ok(
+      report.fileLevel.truthSample.includes('src/types.ts -> src/shared.ts'),
+      `typeof import() must be in the truth: ${JSON.stringify(report.fileLevel.truthSample)}`,
+    );
+    assert.equal(report.fileLevel.falsePositive, 0);
+    assert.equal(report.fileLevel.falseNegative, 0);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});

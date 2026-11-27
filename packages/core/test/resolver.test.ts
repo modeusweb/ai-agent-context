@@ -101,6 +101,29 @@ describe('import resolution', () => {
     assert.equal(result.target, 'packages/core/src/util/paths.ts');
   });
 
+  test('a dot in the filename is not mistaken for a final extension', () => {
+    // `radix-primitives` imports './roving-focus.client' where the file is
+    // `roving-focus.client.tsx`. `extname` sees '.client' and, before the fix,
+    // tried only the literal path — the import was reported as missing.
+    const dotted = new ImportResolver({
+      filePaths: new Set([
+        'apps/app/page.tsx',
+        'apps/app/roving-focus.client.tsx',
+        'bench/aria-hidden.page.ts',
+      ]),
+      aliases: [],
+      workspacePackages: new Map(),
+    });
+    const client = dotted.resolve('./roving-focus.client', 'apps/app/page.tsx');
+    assert.equal(client.kind, 'internal-file');
+    assert.equal(client.target, 'apps/app/roving-focus.client.tsx');
+    const page = dotted.resolve('./aria-hidden.page', 'bench/aria-hidden.bench.mts');
+    assert.equal(page.kind, 'internal-file');
+    assert.equal(page.target, 'bench/aria-hidden.page.ts');
+    // An explicit source extension remains literal; no speculative `.ts` suffix.
+    assert.equal(dotted.resolve('./aria-hidden.page.ts', 'bench/aria-hidden.bench.mts').target, 'bench/aria-hidden.page.ts');
+  });
+
   test('applies the TypeScript ESM ".js" -> ".ts" rewrite after ".."', () => {
     const result = resolve('../../util/paths.js', 'packages/core/src/core/graph/modules.ts');
     assert.equal(result.kind, 'internal-file');

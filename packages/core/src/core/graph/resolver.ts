@@ -120,13 +120,18 @@ function candidatesOf(base: string): string[] {
   const prefix = normalized.length === 0 ? '' : `${normalized}/`;
   const candidates = [normalized];
   const extension = extname(normalized);
-  if (extension.length > 0) {
-    const rewrites = ESM_TO_TS[extension];
-    if (rewrites !== undefined) {
-      const stem = normalized.slice(0, -extension.length);
-      for (const candidate of rewrites) candidates.push(`${stem}${candidate}`);
-    }
-  } else {
+  const rewrites = ESM_TO_TS[extension];
+  if (rewrites !== undefined) {
+    // `./x.js` emitted from `./x.ts`: the written extension is a build suffix,
+    // not the name of the file in the repository.
+    const stem = normalized.slice(0, -extension.length);
+    for (const candidate of rewrites) candidates.push(`${stem}${candidate}`);
+  } else if (extension.length === 0 || !RESOLUTION_EXTENSIONS.includes(extension)) {
+    // A dot inside a filename is not always an extension. `./roving-focus.client`
+    // names `roving-focus.client.tsx`, and `./x.page` names `x.page.ts`: treating
+    // `.client` / `.page` as a final extension left only the literal candidate
+    // and reported a real import as missing. Known source extensions stay
+    // literal; anything else gets the ordinary extension and index candidates.
     for (const candidate of RESOLUTION_EXTENSIONS) candidates.push(`${normalized}${candidate}`);
     for (const candidate of RESOLUTION_EXTENSIONS) candidates.push(`${prefix}index${candidate}`);
   }

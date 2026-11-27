@@ -18,14 +18,14 @@
         "path": "CONTRIBUTING.md"
       },
       {
-        "hash": "b01958a119124ff4b76e049ae12e1b525356df66c47a4e5992fc143b831bc9bc",
+        "hash": "dab063cd5481ef6fe45589ed7b05f0d84d71ec3885ae3ad7f59595de073b7b0e",
         "kind": "docs",
         "language": "markdown",
         "module": null,
         "path": "MIGRATION.md"
       },
       {
-        "hash": "c3ef245dc8fa229e6e8966d7c7363560e5dbd68e368e1ccfa0b2ffb3a102f596",
+        "hash": "26d2d92d9c0be98c0c00d8dd9ea834f07cb24c216f9818b2775a7a9c2f455344",
         "kind": "docs",
         "language": "markdown",
         "module": null,
@@ -361,7 +361,7 @@
         "path": "packages/core/src/adapters/language/ts-js/adapter.ts"
       },
       {
-        "hash": "c0308db6f7239e62607bf2572ca658c5dab0a5f0883978445c7aff139e6b450c",
+        "hash": "fb771e9373b3b95fb90787322175e07870beb5c670e70d7230dbf11af32e4f50",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
@@ -543,7 +543,7 @@
         "path": "packages/core/src/core/graph/modules.ts"
       },
       {
-        "hash": "d43570a987ef3399da19d5a5f35c8cc957aa452a6a2f748b4dcb8977dbc2ca8a",
+        "hash": "e264467314cd8ac22c88a34aa7e1c527ed0a7b3c18b7fa2440ccd558321e0eb9",
         "kind": "source",
         "language": "typescript",
         "module": "packages/core/src",
@@ -893,7 +893,7 @@
         "path": "packages/core/test/language.test.ts"
       },
       {
-        "hash": "d20b4056d16d95a5aef6b8a7893674a46ddb04ebe4137e71da069193a5efccc3",
+        "hash": "66861196af3dc5de41a7ec4c840e6cfa71c02ba309920015eea82bb8e8b8aa49",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
@@ -942,7 +942,7 @@
         "path": "packages/core/test/resolution-scopes.test.ts"
       },
       {
-        "hash": "be836d30b5d6259526ad75fdb00d2f4cb9cf2cffcedba956dc248678d0a54b20",
+        "hash": "3725a3609ab2c42d7dde92923d3f04f6cf201c3bd8ab22001fada826466fc008",
         "kind": "test",
         "language": "typescript",
         "module": "packages/core/test",
@@ -1173,14 +1173,14 @@
         "path": "tools/ground-truth-public.mjs"
       },
       {
-        "hash": "1909b83f4a6e62dc443fe7bd4326d1c4ad662c664d58811b56de853a84e8821a",
+        "hash": "2bee824911228ab7849a66691e299700bb873e60d7e396e05505171540c97f3d",
         "kind": "source",
         "language": "javascript",
         "module": "tools",
         "path": "tools/ground-truth.mjs"
       },
       {
-        "hash": "348b69b520e21a497fcf7e6c9d113dae476a1a9470f0fabc3f8a08b3df3c19bc",
+        "hash": "dd1ee7705ac798e0dbdd113218750bc28fa3e3f7324a1b0c98e034f4bdc0e110",
         "kind": "test",
         "language": "javascript",
         "module": "tools",
@@ -1240,7 +1240,7 @@
   },
   "generatedBy": "ai-agent-context",
   "git": {
-    "commitsAnalyzed": 58,
+    "commitsAnalyzed": 59,
     "enabled": true,
     "windowDays": 180
   },

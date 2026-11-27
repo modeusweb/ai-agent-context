@@ -117,3 +117,29 @@ describe('the module-load scan does not disturb the rest', () => {
     assert.deepEqual(loads("require('./side-effect');\nmodule.exports = {};\n"), [['require', './side-effect', 1]]);
   });
 });
+
+describe('type-only star re-exports', () => {
+  test('export type * from is a re-export, not a declaration', () => {
+    const facts = extractModuleFacts(
+      "export type * from './types';\nexport type * as ns from './namespace';\n",
+    );
+    assert.equal(facts.parseStatus, 'ok');
+    assert.deepEqual(
+      facts.imports.map((record) => [record.specifier, record.syntax, record.typeOnly]),
+      [
+        ['./types', 'reexport', true],
+        ['./namespace', 'reexport', true],
+      ],
+    );
+    assert.ok(facts.exports.some((entry) => entry.name === '*' && entry.fromSpecifier === './types' && entry.typeOnly));
+    assert.ok(facts.exports.some((entry) => entry.name === 'ns' && entry.fromSpecifier === './namespace' && entry.typeOnly));
+  });
+
+  test('export * from stays a value re-export', () => {
+    const facts = extractModuleFacts("export * from './values';\n");
+    assert.deepEqual(
+      facts.imports.map((record) => [record.specifier, record.syntax, record.typeOnly]),
+      [['./values', 'reexport', false]],
+    );
+  });
+});
