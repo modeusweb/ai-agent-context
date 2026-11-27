@@ -32,7 +32,7 @@ The principles the product is built on:
 
 ## Current baseline
 
-Current package version: `1.2.0`.
+Current package version: `1.2.1`.
 
 Implemented:
 

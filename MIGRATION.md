@@ -1,12 +1,13 @@
 # Migration guide
 
-<!-- id="unreleased" -->
-## Unreleased
+<!-- id="v121" -->
+## v1.2.1
 
-Three defects found by the stricter file-level gate shipped in 1.2.0. No API,
-CLI, schema or configuration change; no re-scan is needed for existing
-`.agent/` documents, although re-analysing with the fixed resolver will add the
-imports described below.
+A patch release: three defects found by the stricter file-level gate shipped in
+1.2.0. All three published packages move together from 1.2.0 to 1.2.1. No API, CLI,
+schema or configuration change; no re-scan is needed for existing `.agent/`
+documents, although re-analysing with the fixed resolver will add the imports
+described below.
 
 - `export type * from '...'` and `export type * as ns from '...'` are now
   recognised as type-only re-exports. Only the braced form was read before, so
